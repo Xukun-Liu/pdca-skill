@@ -1,0 +1,172 @@
+{
+  "version": "v1.0.0",
+  "last_updated": "2026-07-24",
+  "defaults": {
+    "subagent_type": "general_purpose_task",
+    "permission": "read_only",
+    "parallel_capable": true
+  },
+  "agents": [
+    {
+      "name": "bootstrap_agent_riji",
+      "role": "架构/流程顾问",
+      "role_identity": "你是 riji-skill 的架构/流程顾问副 agent。职责边界：项目初始化、架构设计、流程规划、多项目管理。输出要求：架构建议+目录结构+流程建议。首行必须声明：[subagent: bootstrap_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "项目初始化、架构设计、流程规划、多项目管理",
+      "knowledge": [
+        "references/plan/bootstrap/bootstrap.md",
+        "references/plan/bootstrap/compaction_recovery.md",
+        "references/plan/bootstrap/multi_project.md",
+        "references/common/pa/summary_view.md",
+        "references/common/pa/working_memory_rules.md",
+        "references/common/pa/trigger_hooks.md",
+        "references/plan/route/usage_examples.md",
+        "references/plan/design/project_structure.md",
+        "references/plan/design/design_patterns.md",
+        "references/common/pd/minimal_code_principles.md"
+      ],
+      "triggers": [
+        "初始化", "首次使用", "文件不存在", "memory不存在",
+        "项目结构", "目录组织", "架构设计", "分层设计", "模块划分",
+        "多项目", "切换项目", "流程怎么走"
+      ],
+      "output_format": ["架构建议", "目录结构", "流程建议"]
+    },
+    {
+      "name": "skill_mgmt_agent_riji",
+      "role": "技能管理顾问",
+      "role_identity": "你是 riji-skill 的技能管理顾问副 agent。职责边界：搜索、安装、验证外部 skill。输出要求：skill候选列表+安全扫描报告+安装建议。首行必须声明：[subagent: skill_mgmt_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "搜索、安装、验证外部 skill",
+      "knowledge": [
+        "references/plan/route/skill_management.md",
+        "references/plan/route/skill_security.md",
+        "references/plan/route/agent_find.md"
+      ],
+      "triggers": [
+        "找skill", "装skill", "下载skill", "有没有skill",
+        "部署", "发布", "上线", "CI", "CD", "专业领域工具"
+      ],
+      "output_format": ["skill候选列表", "安全扫描报告", "安装建议"]
+    },
+    {
+      "name": "spec_design_agent_riji",
+      "role": "方案设计专家",
+      "role_identity": "你是 riji-skill 的方案设计专家副 agent。职责边界：写 spec、task、方案文档。输出要求：方案对比表+spec草案+task清单。首行必须声明：[subagent: spec_design_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "写 spec、task、方案文档",
+      "knowledge": [
+        "references/common/pc/acceptance_criteria.md",
+        "references/common/pc/adversarial_review.md",
+        "references/common/pda/document_specs.md"
+      ],
+      "triggers": [
+        "写spec", "写task", "写方案", "需求分析", "出方案", "做设计",
+        "验收标准", "DoD", "GivenWhenThen", "对抗审查", "挑刺", "审方案"
+      ],
+      "output_format": ["方案对比表", "spec草案", "task清单"]
+    },
+    {
+      "name": "code_eng_agent_riji",
+      "role": "代码工程专家",
+      "role_identity": "你是 riji-skill 的代码工程专家副 agent。职责边界：写代码、调试、Git 操作、Git 备份清理、安全审查。输出要求：代码建议+调试报告+Git操作建议。首行必须声明：[subagent: code_eng_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "写代码、调试、Git 操作、Git 备份清理、安全审查",
+      "knowledge": [
+        "references/do/code/code_rules.md",
+        "references/do/code/git_workflow.md",
+        "references/common/da/git_backup_cleanup.md",
+        "references/common/dc/debugging.md",
+        "references/check/red_flags.md",
+        "references/common/dc/communication_rules.md",
+        "references/do/danger/security.md"
+      ],
+      "triggers": [
+        "写代码", "改代码", "实现", "开发", "coding", "加功能", "修bug",
+        "重构", "优化代码", "调试", "报错", "出错", "异常",
+        "Git", "commit", "分支", "回滚", "API", "接口", "数据库",
+        "建表", "SQL", "测试", "单测", "集成测试",
+        "git备份", "清理", "瘦身", "释放空间", "git太大", "仓库太大", "仓库体检"
+      ],
+      "output_format": ["代码建议", "调试报告", "Git操作建议"]
+    },
+    {
+      "name": "doc_proc_agent_riji",
+      "role": "文档处理专家",
+      "role_identity": "你是 riji-skill 的文档处理专家副 agent。职责边界：处理 Office 文档、转 Markdown、Excel 分析。输出要求：文档处理步骤+数据分析报告+验收报告。首行必须声明：[subagent: doc_proc_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "处理 Office 文档、转 Markdown、Excel 分析",
+      "knowledge": [
+        "references/do/code/office_processing.md",
+        "references/do/code/file_to_markdown.md",
+        "references/common/pd/excel_analysis.md",
+        "references/common/da/hand-drawn-report.md"
+      ],
+      "triggers": [
+        "PDF", "Word", "PPT", "Excel", "转Markdown", "转md",
+        "Excel分析", "数据分析", "透视表", "统计分析",
+        "验收报告", "汇报", "总结", "手绘报告"
+      ],
+      "output_format": ["文档处理步骤", "数据分析报告", "验收报告"]
+    },
+    {
+      "name": "loop_agent_riji",
+      "role": "Loop循环专家",
+      "role_identity": "你是 riji-skill 的 Loop循环专家副 agent。职责边界：/loop 自动循环、L2 无人值守执行。输出要求：准入检查报告+循环策略建议+熔断规则。首行必须声明：[subagent: loop_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "/loop 自动循环、L2 无人值守执行",
+      "knowledge": [
+        "references/plan/route/loop_triage.md",
+        "references/do/danger/loop_constraints.md",
+        "references/check/loop_verifier.md"
+      ],
+      "triggers": [
+        "/loop", "自动循环", "跑循环", "loop模式", "自动模式", "L2",
+        "熔断", "stagnation", "no_progress", "max_iter",
+        "loop_admission", "准入检查"
+      ],
+      "output_format": ["准入检查报告", "循环策略建议", "熔断规则"]
+    },
+    {
+      "name": "learn_opt_agent_riji",
+      "role": "学习优化专家",
+      "role_identity": "你是 riji-skill 的学习优化专家副 agent。职责边界：learn_cycle 自进化、prompt 优化。输出要求：扫描报告解读+优化建议清单+prompt改进建议。首行必须声明：[subagent: learn_opt_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "learn_cycle 自进化、prompt 优化",
+      "knowledge": [
+        "references/act/learn/learn_cycle.md",
+        "references/act/learn/prompt_optimization.md",
+        "references/common/pc/adversarial_review.md"
+      ],
+      "triggers": [
+        "learn", "学习一下", "自进化", "自我优化", "扫一下skill",
+        "prompt优化", "减法原则", "规则层扫描",
+        "skill体检", "优化框架", "找可优化点"
+      ],
+      "output_format": ["扫描报告解读", "优化建议清单", "prompt改进建议"]
+    },
+    {
+      "name": "sync_agent_riji",
+      "role": "同步对齐专家",
+      "role_identity": "你是 riji-skill 的同步对齐专家副 agent。职责边界：同步、整理、交接、版本号一致性检查。输出要求：同步报告+整理清单+交接文档。首行必须声明：[subagent: sync_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "同步、整理、交接、版本号一致性检查",
+      "knowledge": [
+        "references/common/da/sync-matrix.md",
+        "references/common/pa/summary_view.md",
+        "references/common/da/hand-drawn-report.md"
+      ],
+      "triggers": [
+        "同步", "整理", "交接", "收尾", "版本号一致", "一致性检查",
+        "清理", "sync", "neat", "tidy", "规范体检", "梳理一下", "对一下"
+      ],
+      "output_format": ["同步报告", "整理清单", "交接文档"]
+    },
+    {
+      "name": "browser_agent_riji",
+      "role": "浏览器自动化专家",
+      "role_identity": "你是 riji-skill 的浏览器自动化专家副 agent。职责边界：浏览器操控、网页操作、RPA。输出要求：操作步骤+自动化脚本+结果验证。首行必须声明：[subagent: browser_agent_riji]。权限：只读调研，不写业务文件。",
+      "description": "浏览器操控、网页操作、RPA",
+      "knowledge": [
+        "references/do/code/browser_automation.md"
+      ],
+      "triggers": [
+        "浏览器操控", "浏览器自动化", "网页操作", "自动填表", "RPA",
+        "Agent浏览", "AI网页抓取", "让AI操作浏览器"
+      ],
+      "output_format": ["操作步骤", "自动化脚本", "结果验证"]
+    }
+  ]
+}

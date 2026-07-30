@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>riji-skill · AI 协作框架</title>
+<meta name="description" content="把管理学的 PDCA 戴明环，变成 AI 助手的协作宪法。一套给 AI 编程助手用的协作框架——7条铁律、Loop Engineering、三层记忆体系、36个参考手册、32个自动化脚本。纯本地文件，零云依赖。">
+<meta property="og:title" content="riji-skill · AI 协作框架">
+<meta property="og:description" content="把管理学的 PDCA 戴明环，变成 AI 助手的协作宪法。">
+<meta property="og:type" content="website">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0f1117; --bg2: #161822; --bg3: #1e2030; --card: #1a1d2e; --card-hover: #222640;
+  --border: #2a2e45; --text: #e4e6f0; --text2: #9ca0b8; --text3: #6b7094;
+  --accent: #6c8cff; --accent2: #a78bfa; --accent3: #34d399; --accent4: #f59e0b; --accent5: #f87171; --accent6: #38bdf8;
+  --gradient1: linear-gradient(135deg, #6c8cff 0%, #a78bfa 50%, #f472b6 100%);
+  --gradient2: linear-gradient(135deg, #34d399 0%, #38bdf8 100%);
+  --gradient3: linear-gradient(135deg, #f59e0b 0%, #f87171 100%);
+  --shadow: 0 4px 24px rgba(0,0,0,.4); --radius: 16px; --radius-sm: 10px;
+}
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7; overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent2); }
+
+/* Nav */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(15,17,23,.85); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); padding: 0 24px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+nav .logo { font-size: 20px; font-weight: 700; background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+nav .logo span { font-weight: 400; color: var(--text3); -webkit-text-fill-color: var(--text3); font-size: 14px; margin-left: 8px; }
+nav .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+nav .nav-links a { color: var(--text2); font-size: 13px; padding: 6px 12px; border-radius: 8px; transition: all .2s; }
+nav .nav-links a:hover { color: var(--text); background: var(--bg3); }
+
+/* Hero */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  padding: 120px 24px 80px; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(108,140,255,.12) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(167,139,250,.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 50% 50%, rgba(52,211,153,.05) 0%, transparent 50%);
+  animation: heroGlow 12s ease-in-out infinite alternate;
+}
+@keyframes heroGlow {
+  0% { transform: translate(0,0) rotate(0deg); }
+  100% { transform: translate(-2%,2%) rotate(3deg); }
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 100px; padding: 8px 20px; font-size: 13px; color: var(--text2);
+  margin-bottom: 32px; position: relative; z-index: 1;
+}
+.hero-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent3); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+.hero h1 { font-size: clamp(40px, 7vw, 72px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; position: relative; z-index: 1; }
+.hero h1 .gradient-text { background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero .subtitle { font-size: clamp(16px, 2.5vw, 20px); color: var(--text2); max-width: 720px; margin-bottom: 40px; position: relative; z-index: 1; }
+.hero .cta-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; transition: all .25s; cursor: pointer; border: none; }
+.btn-primary { background: var(--gradient1); color: #fff; box-shadow: 0 4px 20px rgba(108,140,255,.3); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,140,255,.4); }
+.btn-secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--card-hover); border-color: var(--accent); }
+
+/* Section Common */
+section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+.section-label { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 12px; }
+.section-title { font-size: clamp(28px, 4vw, 40px); font-weight: 700; margin-bottom: 16px; line-height: 1.2; }
+.section-desc { font-size: 17px; color: var(--text2); max-width: 640px; margin-bottom: 48px; }
+
+/* Pain Points */
+.pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+.pain-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; transition: all .3s; }
+.pain-card:hover { background: var(--card-hover); border-color: var(--accent5); transform: translateY(-4px); box-shadow: var(--shadow); }
+.pain-icon { font-size: 36px; margin-bottom: 16px; }
+.pain-card h3 { font-size: 18px; margin-bottom: 10px; color: var(--accent5); }
+.pain-card p { font-size: 14px; color: var(--text2); }
+.pain-card .solution { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 14px; color: var(--accent3); }
+.pain-card .solution::before { content: '✅ 解决：'; font-weight: 600; }
+
+/* Is / Is Not */
+.compare-table { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); margin-bottom: 32px; }
+.compare-col { padding: 32px; }
+.compare-col.yes { background: rgba(52,211,153,.06); border-right: 1px solid var(--border); }
+.compare-col.no { background: rgba(248,113,113,.04); }
+.compare-col h3 { font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+.compare-col.yes h3 { color: var(--accent3); }
+.compare-col.no h3 { color: var(--accent5); }
+.compare-col ul { list-style: none; }
+.compare-col li { padding: 10px 0; font-size: 15px; color: var(--text2); display: flex; align-items: flex-start; gap: 10px; }
+.compare-col li::before { font-size: 18px; flex-shrink: 0; margin-top: -1px; }
+.compare-col.yes li::before { content: '✅'; }
+.compare-col.no li::before { content: '❌'; }
+
+/* Analogy Box */
+.analogy-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; position: relative; overflow: hidden; }
+.analogy-box::before { content: '💡'; position: absolute; top: 20px; right: 24px; font-size: 48px; opacity: .15; }
+.analogy-box h3 { font-size: 20px; margin-bottom: 16px; color: var(--accent4); }
+.analogy-box p { font-size: 15px; color: var(--text2); margin-bottom: 12px; }
+.analogy-box .big-text { font-size: 22px; font-weight: 700; color: var(--text); background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 20px 0; }
+
+/* PDCA Section */
+.pdca-hero {
+  background: linear-gradient(135deg, rgba(108,140,255,.08) 0%, rgba(167,139,250,.06) 50%, rgba(52,211,153,.05) 100%);
+  border: 2px solid var(--accent); border-radius: var(--radius); padding: 48px 40px; margin: 32px 0; position: relative; overflow: hidden;
+}
+.pdca-hero::before { content: '🔄'; position: absolute; top: -20px; right: 20px; font-size: 160px; opacity: .04; }
+.pdca-hero h3 { font-size: 28px; font-weight: 800; margin-bottom: 20px; line-height: 1.3; }
+.pdca-hero h3 .hl { background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.pdca-hero p { font-size: 16px; color: var(--text2); line-height: 1.8; max-width: 800px; }
+.pdca-hero .pdca-history { margin-top: 24px; padding: 20px; background: rgba(26,29,46,.6); border-radius: var(--radius-sm); border-left: 3px solid var(--accent4); }
+.pdca-hero .pdca-history p { font-size: 14px; color: var(--text2); }
+.pdca-hero .pdca-history strong { color: var(--accent4); }
+
+/* Rules Grid */
+.rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 16px; }
+.rule-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all .3s; position: relative; overflow: hidden; }
+.rule-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
+.rule-num { position: absolute; top: -8px; right: 12px; font-size: 72px; font-weight: 900; color: var(--accent); opacity: .06; line-height: 1; }
+.rule-card .rule-icon { font-size: 28px; margin-bottom: 12px; }
+.rule-card h3 { font-size: 17px; margin-bottom: 8px; }
+.rule-card p { font-size: 14px; color: var(--text2); }
+.rule-card .rule-tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 100px; margin-top: 12px; font-weight: 600; }
+.tag-hard { background: rgba(248,113,113,.12); color: var(--accent5); }
+.tag-soft { background: rgba(108,140,255,.12); color: var(--accent); }
+
+/* Spine Flow */
+.spine-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+.spine-step { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; text-align: center; min-width: 120px; transition: all .3s; }
+.spine-step:hover { border-color: var(--accent); transform: scale(1.05); }
+.spine-step .step-icon { font-size: 28px; margin-bottom: 6px; }
+.spine-step .step-name { font-size: 14px; font-weight: 600; }
+.spine-step .step-desc { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.spine-arrow { font-size: 20px; color: var(--text3); }
+.spine-phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px,1fr)); gap: 16px; }
+.phase-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+.phase-card h4 { font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.phase-card ul { list-style: none; }
+.phase-card li { font-size: 13px; color: var(--text2); padding: 5px 0; display: flex; align-items: flex-start; gap: 8px; }
+.phase-card li::before { content: '▸'; color: var(--accent); flex-shrink: 0; }
+
+/* Loop Engineering */
+.loop-box { background: linear-gradient(135deg, rgba(167,139,250,.08) 0%, rgba(108,140,255,.06) 100%); border: 1px solid var(--accent2); border-radius: var(--radius); padding: 36px; margin-top: 32px; }
+.loop-box h3 { font-size: 22px; margin-bottom: 16px; color: var(--accent2); }
+.loop-box p { font-size: 14px; color: var(--text2); margin-bottom: 12px; }
+.loop-box .code-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; font-family: "Cascadia Code", Consolas, monospace; font-size: 13px; color: var(--accent3); overflow-x: auto; line-height: 1.8; margin: 12px 0; }
+
+/* Memory System */
+.memory-layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 20px; }
+.memory-layer { background: var(--card); border-radius: var(--radius); padding: 28px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+.memory-layer.hot { border-top: 3px solid var(--accent5); }
+.memory-layer.warm { border-top: 3px solid var(--accent4); }
+.memory-layer.cold { border-top: 3px solid var(--accent3); }
+.memory-layer .layer-badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 100px; font-weight: 700; margin-bottom: 12px; }
+.memory-layer.hot .layer-badge { background: rgba(248,113,113,.12); color: var(--accent5); }
+.memory-layer.warm .layer-badge { background: rgba(245,158,11,.12); color: var(--accent4); }
+.memory-layer.cold .layer-badge { background: rgba(52,211,153,.12); color: var(--accent3); }
+.memory-layer h4 { font-size: 18px; margin-bottom: 8px; }
+.memory-layer .layer-file { font-family: monospace; font-size: 13px; color: var(--accent6); margin-bottom: 12px; word-break: break-all; }
+.memory-layer p { font-size: 14px; color: var(--text2); margin-bottom: 8px; }
+.memory-layer ul { list-style: none; }
+.memory-layer li { font-size: 13px; color: var(--text2); padding: 4px 0; display: flex; gap: 8px; }
+.memory-layer li::before { content: '▸'; color: var(--accent); flex-shrink: 0; }
+
+/* Install */
+.install-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; }
+.install-method { margin-bottom: 32px; }
+.install-method:last-child { margin-bottom: 0; }
+.install-method h4 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.install-method p { font-size: 14px; color: var(--text2); margin-bottom: 12px; }
+.code-block { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 20px; font-family: "Cascadia Code", Consolas, monospace; font-size: 13px; color: var(--accent3); overflow-x: auto; line-height: 1.8; }
+.code-block .comment { color: var(--text3); }
+.code-block .cmd { color: var(--accent6); }
+
+/* Stats */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 16px; margin: 40px 0; }
+.stat-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; text-align: center; }
+.stat-num { font-size: 32px; font-weight: 800; background: var(--gradient1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-label { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Badges */
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.mini-badge { font-size: 11px; padding: 3px 10px; border-radius: 100px; font-weight: 600; }
+.mb-blue { background: rgba(108,140,255,.12); color: var(--accent); }
+.mb-green { background: rgba(52,211,153,.12); color: var(--accent3); }
+.mb-yellow { background: rgba(245,158,11,.12); color: var(--accent4); }
+.mb-red { background: rgba(248,113,113,.12); color: var(--accent5); }
+.mb-cyan { background: rgba(56,189,248,.12); color: var(--accent6); }
+.mb-purple { background: rgba(167,139,250,.12); color: var(--accent2); }
+
+/* Footer */
+footer { text-align: center; padding: 48px 24px; border-top: 1px solid var(--border); color: var(--text3); font-size: 13px; }
+footer .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+
+/* Divider */
+.divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 0 24px; }
+
+/* Feature Grid */
+.feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px,1fr)); gap: 20px; }
+.feature-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all .3s; }
+.feature-card:hover { border-color: var(--accent2); box-shadow: var(--shadow); }
+.feature-card h4 { font-size: 18px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.feature-card p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+.feature-card ul { list-style: none; margin-top: 12px; }
+.feature-card li { font-size: 13px; color: var(--text2); padding: 4px 0; display: flex; gap: 8px; }
+.feature-card li::before { content: '▸'; color: var(--accent); flex-shrink: 0; }
+
+/* Fade-in Animation */
+.fade-in { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { padding: 8px 12px; height: auto; flex-wrap: wrap; gap: 6px; }
+  nav .nav-links { gap: 4px; }
+  nav .nav-links a { font-size: 12px; padding: 4px 8px; }
+  .hero { padding: 100px 16px 56px; min-height: auto; }
+  .hero h1 { font-size: 34px; }
+  section { padding: 48px 16px; }
+  .section-title { font-size: 25px; }
+  .compare-table { grid-template-columns: 1fr; }
+  .compare-col.yes { border-right: none; border-bottom: 1px solid var(--border); }
+  .spine-flow { flex-direction: column; align-items: stretch; }
+  .spine-arrow { transform: rotate(90deg); margin: 6px 0; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .pdca-hero { padding: 28px 20px; }
+  .pdca-hero h3 { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="logo">riji-skill <span>v1.0.0</span></div>
+  <div class="nav-links">
+    <a href="#pdca">PDCA 戴明环</a>
+    <a href="#pain">痛点</a>
+    <a href="#what">是什么</a>
+    <a href="#rules">7条铁律</a>
+    <a href="#loop">Loop Engineering</a>
+    <a href="#memory">记忆系统</a>
+    <a href="#features">更多能力</a>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero" style="max-width:100%;padding-left:24px;padding-right:24px;">
+  <div class="hero-badge"><span class="dot"></span> v1.0.0 · Apache-2.0 · 开源</div>
+  <h1>把管理学的<br><span class="gradient-text">PDCA 戴明环，变成 AI 的协作宪法</span></h1>
+  <p class="subtitle">riji-skill 是一套给 AI 编程助手用的协作框架。核心理念：将质量管理中验证了70年的 PDCA（计划-执行-检查-处理）循环，嫁接到 AI 协作中，让 AI 助手从"凭感觉干活"变成"有章法协作"。</p>
+  <div class="cta-row">
+    <a href="#pdca" class="btn btn-primary">了解 PDCA 思想</a>
+  </div>
+  <div class="stats-row" style="max-width:800px;margin-top:60px;">
+    <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">条铁律</div></div>
+    <div class="stat-item"><div class="stat-num">36</div><div class="stat-label">个参考手册</div></div>
+    <div class="stat-item"><div class="stat-num">32</div><div class="stat-label">个自动化脚本</div></div>
+    <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">层记忆系统</div></div>
+    <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">外部依赖</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== PDCA 戴明环 ===== -->
+<section id="pdca" class="fade-in">
+  <div class="section-label">管理学的答案</div>
+  <h2 class="section-title">PDCA 戴明环——质量管理方法论 × AI 协作</h2>
+  <p class="section-desc">这不是拍脑袋想出来的流程，而是被全球制造业、服务业、软件开发验证了70年的管理科学。</p>
+
+  <div class="pdca-hero">
+    <h3><span class="hl">PDCA 是什么？</span></h3>
+    <p>PDCA（Plan-Do-Check-Act）循环，又称<strong>戴明环</strong>，由质量管理大师 W·爱德华兹·戴明在1950年代提出。它最初用于日本制造业的质量改进（丰田生产方式的核心），后来被 ISO 9001 国际标准采纳，成为全球公认的<strong>持续改进方法论</strong>。</p>
+    <div class="pdca-history">
+      <p><strong>核心思想</strong>：任何工作都可以拆成四步循环——先计划（Plan）、再执行（Do）、然后检查（Check）、最后处理改进（Act）。完成一轮后，把经验教训带入下一轮，形成<strong>螺旋上升的持续改进</strong>。</p>
+      <p style="margin-top:12px;"><strong>为什么适用于 AI 协作？</strong> AI 助手最大的问题不是"不聪明"，而是"没章法"——没计划就动手、做完了不检查、做错了不复盘。PDCA 正好解决了这4个问题。riji-skill 把 PDCA 变成 AI 助手的<strong>四步工作习惯</strong>：</p>
+    </div>
+  </div>
+
+  <div class="spine-flow" style="margin-top:40px;">
+    <div class="spine-step" style="border-color:var(--accent);border-width:2px;">
+      <div class="step-icon">📋</div>
+      <div class="step-name">/plan</div>
+      <div class="step-desc">Plan · 计划</div>
+    </div>
+    <div class="spine-arrow">→</div>
+    <div class="spine-step">
+      <div class="step-icon">🔨</div>
+      <div class="step-name">/do</div>
+      <div class="step-desc">Do · 执行</div>
+    </div>
+    <div class="spine-arrow">→</div>
+    <div class="spine-step">
+      <div class="step-icon">✅</div>
+      <div class="step-name">/check</div>
+      <div class="step-desc">Check · 检查</div>
+    </div>
+    <div class="spine-arrow">→</div>
+    <div class="spine-step">
+      <div class="step-icon">📦</div>
+      <div class="step-name">/act</div>
+      <div class="step-desc">Act · 处理</div>
+    </div>
+    <div class="spine-arrow">→</div>
+    <div class="spine-step" style="background:rgba(108,140,255,.1);border-color:var(--accent);">
+      <div class="step-icon">🔄</div>
+      <div class="step-name">下一轮</div>
+      <div class="step-desc">闭环迭代</div>
+    </div>
+  </div>
+
+  <div class="spine-phases">
+    <div class="phase-card">
+      <h4>📋 /plan（计划 · 6步）</h4>
+      <ul>
+        <li>读状态：获取全局记忆 + 项目记忆 + 5问定位</li>
+        <li>路由判断：三层挑选读取对应参考手册</li>
+        <li>需求澄清：默认用户零背景，追问到无歧义</li>
+        <li><strong>第一性原理拆解</strong>：本质目标→不可压缩约束→最优解</li>
+        <li>方案探索：至少2种方案对比，HARD-GATE确认</li>
+        <li>实施计划：生成 spec/task 文档，含对抗性审查</li>
+      </ul>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-red">只读纪律</span><span class="mini-badge mb-green">HARD-GATE</span></div>
+    </div>
+    <div class="phase-card">
+      <h4>🔨 /do（执行）</h4>
+      <ul>
+        <li>写代码前必读 code_rules.md</li>
+        <li>按 task.md 逐项推进，完成一个打勾一个</li>
+        <li>每步验证后才打勾（Verification-before-Completion）</li>
+        <li>No Placeholders：给完整代码，不给 TBD/伪代码</li>
+        <li>遇到报错先询问用户意图，不自动瞎试</li>
+      </ul>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-blue">code_rules</span><span class="mini-badge mb-cyan">逐项打勾</span></div>
+    </div>
+    <div class="phase-card">
+      <h4>✅ /check（检查）</h4>
+      <ul>
+        <li>对照 spec 逐项核对，不遗漏任何一条</li>
+        <li>大改后启动独立 AI 审查员做对抗性审查</li>
+        <li>6维度审查：一致性/完整性/可执行性/边界/安全/可维护</li>
+        <li>Reflexion 结构化反思三问</li>
+        <li>不通过→回 /do 修补，通过→进入 /act</li>
+      </ul>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-red">对抗审查</span><span class="mini-badge mb-yellow">逐条核对</span></div>
+    </div>
+    <div class="phase-card">
+      <h4>📦 /act（处理 · 闭环）</h4>
+      <ul>
+        <li>写项目记忆：自动落盘 + 全局聚合</li>
+        <li>刷新文档索引 SUMMARY_RJ.md</li>
+        <li>跑 handoff_tidy.py 整理归档</li>
+        <li>生成 TASK_STATE.md 作为下一轮 /plan 输入</li>
+        <li>询问是否跑 learn_cycle 自进化</li>
+      </ul>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-purple">记忆落盘</span><span class="mini-badge mb-green">闭环迭代</span></div>
+    </div>
+  </div>
+
+  <div class="analogy-box" style="margin-top:32px;">
+    <h3>🏭 制造业的智慧，用在 AI 协作上</h3>
+    <p>丰田用 PDCA 把汽车缺陷率降到百万分之一，ISO 用 PDCA 管理全球数百万企业的质量体系。</p>
+    <p>riji-skill 做的事很简单：<strong>把 PDCA 从"管理学课本"搬进"AI 助手的日常习惯"</strong>。你说 /plan，AI 就进入"计划模式"——先想清楚再动手；你说 /do，它才动手干；你说 /check，它对照标准逐条验收；你说 /act，它把经验教训存进记忆，下次用得上。</p>
+    <p class="big-text">PDCA 不是新东西，但把它固化到 AI 的协作流程中——这是 riji-skill 的核心创新。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== Pain Points ===== -->
+<section id="pain" class="fade-in">
+  <div class="section-label">先讲痛点</div>
+  <h2 class="section-title">你请的 AI 助手，为什么总让人不放心？</h2>
+  <p class="section-desc">不是 AI 不够聪明，而是它缺少一套"协作规矩"。以下4个问题，几乎所有 AI 助手用户都遇到过：</p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">🤦</div>
+      <h3>没问清就动手，做偏了返工</h3>
+      <p>你说"帮我优化一下"，AI 直接改了一大堆代码，结果改的方向和你想的完全不一样。来回返工，浪费时间。</p>
+      <div class="solution">HARD-GATE 硬规则——AI 必须先呈现方案，等你确认才动手。哪怕改一个参数，也要先说清楚。</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💥</div>
+      <h3>改着改着改崩了，找不回上一版</h3>
+      <p>AI 改代码没做备份，改着改着功能全崩了，想回退也回不去。就像装修没留图纸，砸了墙发现里面是承重墙。</p>
+      <div class="solution">回溯保障铁律——改代码前必须确保工作区已 commit，改错了一键回退。</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🤔</div>
+      <h3>聊着聊着它"忘了"之前定好的事</h3>
+      <p>上下文窗口是有限的，对话一长 AI 就"失忆"——上次确认过的方案、踩过的坑，全忘了，又要重新说一遍。</p>
+      <div class="solution">Memory First 铁律——重要信息自动写入文件（"存硬盘"），每次启动自动读取。就像开会有会议纪要。</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">😤</div>
+      <h3>出错了一直瞎试，试到崩</h3>
+      <p>AI 遇到报错就反复试同一个方法，试了3次还不行继续试，浪费 token 不说，还把代码改得更乱。</p>
+      <div class="solution">3-Strike 协议——同一方法试3次失败，立即停下，升级给你决策。不允许第4次瞎试。</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== What Is It ===== -->
+<section id="what" class="fade-in">
+  <div class="section-label">它是什么</div>
+  <h2 class="section-title">协作宪法 + 交通指挥中心</h2>
+  <p class="section-desc">riji-skill 自己不画图、不做表格、不跑爬虫——它只管"AI 怎么协作才靠谱"。</p>
+
+  <div class="compare-table">
+    <div class="compare-col yes">
+      <h3>✅ 它是</h3>
+      <ul>
+        <li>一套跨任务硬规则——7条铁律永不遗忘</li>
+        <li>技能编排器——需要什么能力，自动去调专业技能</li>
+        <li>按需加载的参考手册库——36个模块随查随用</li>
+        <li>自动化引擎——文档生成/记忆写入/整理归档/技能图谱</li>
+        <li>纯本地文件——零云依赖，内网可直接拷贝部署</li>
+      </ul>
+    </div>
+    <div class="compare-col no">
+      <h3>❌ 它不是</h3>
+      <ul>
+        <li>大杂烩技能包——不把几十个技能塞自己体内</li>
+        <li>万能工具箱——不自带画图/Excel/爬虫等具体业务能力</li>
+        <li>在线 SaaS 服务——不联网、不调外部 API 才能用</li>
+        <li>需要复杂安装的框架——拷贝到 skills 目录即可</li>
+        <li>替代你的判断——规则是辅助，最终决定权在你</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <h3>🏢 用公司打个比方</h3>
+    <p>想象你雇了一个新员工（AI），他很聪明但刚来公司什么规矩都不懂。你需要给他三样东西：</p>
+    <p class="big-text">员工手册 + 部门索引 + 行政助理</p>
+    <p><strong>员工手册</strong>就是 7 条铁律——"动手前必须请示""做完必须留记录""出错必须报告"，永远不忘。</p>
+    <p><strong>部门索引</strong>就是触发钩子表——遇到安全问题找安全部，遇到代码问题找技术部，不会瞎干。</p>
+    <p><strong>行政助理</strong>就是 32 个自动化脚本——帮你整理文件、写会议纪要、做交接归档、生成技能图谱。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== 7 Iron Rules ===== -->
+<section id="rules" class="fade-in">
+  <div class="section-label">核心约束</div>
+  <h2 class="section-title">7 条铁律——无论对话多长，永远不忘</h2>
+  <p class="section-desc">就像交通规则——红灯停绿灯行，不管你开什么车、去哪，这些规则永远不变。</p>
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rule-num">1</div>
+      <div class="rule-icon">🧠</div>
+      <h3>Memory First</h3>
+      <p>启动先读记忆，结束必写记忆。重要信息写进文件（"存硬盘"），不能只记在上下文里（"RAM"易失）。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">2</div>
+      <div class="rule-icon">🚧</div>
+      <h3>HARD-GATE</h3>
+      <p>动手前必须先呈现方案，等你明确说"可以/行/确认"才动手。没有"太简单不用确认"的豁免。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">3</div>
+      <div class="rule-icon">🧭</div>
+      <h3>流程优先</h3>
+      <p>接到任务第一步永远是判断走什么流程（1%原则），不能拿到就干。模糊输入先用澄清菜单。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">4</div>
+      <div class="rule-icon">📋</div>
+      <h3>No Placeholders</h3>
+      <p>给完整代码和命令，不给 TBD/省略号/伪代码。就像菜谱必须写全步骤和用量，不能写"适量"。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">5</div>
+      <div class="rule-icon">🔔</div>
+      <h3>触发钩子</h3>
+      <p>报错读调试手册、写代码读代码规范……凭记忆动手=偏离。就像生病了去看对应科室，不能凭感觉吃药。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">6</div>
+      <div class="rule-icon">🔙</div>
+      <h3>回溯保障</h3>
+      <p>动手改代码前必须确保工作区已 commit（Git 检查点），改错了能回退，任务中断能回到稳定点。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+    <div class="rule-card">
+      <div class="rule-num">7</div>
+      <div class="rule-icon">✅</div>
+      <h3>逐项核对</h3>
+      <p>执行按 task 逐项打勾，验收对照 spec 逐条核对。跳过任务项直接做后面的 = 偏离，必须立即停下补做。</p>
+      <div class="rule-tag tag-hard">硬性</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== Loop Engineering ===== -->
+<section id="loop" class="fade-in">
+  <div class="section-label">自动化</div>
+  <h2 class="section-title">Loop Engineering——让 AI 在约束下自动循环迭代</h2>
+  <p class="section-desc">管理学有一句话："你考核什么，就得到什么。" Loop Engineering 就是 AI 的考核与约束系统——让它在安全边界内自动循环，碰到问题自动停下。</p>
+
+  <div class="loop-box">
+    <h3>🔁 /loop 触发词——自动循环模式</h3>
+    <p><strong>定位</strong>：/loop 不是第5环，而是 /do+/check 的"自动循环模式"。用户说 /loop 后，AI 在约束下自动推进 /do→/check→/do→/check 循环，直到完成或触发熔断。</p>
+    <p style="margin-top:12px;"><strong>3 个前置条件（必须全满足）</strong>：</p>
+    <ul style="margin-top:8px;padding-left:20px;list-style:none;">
+      <li style="padding:4px 0;color:var(--text2);">▸ /plan 已得到用户明确确认</li>
+      <li style="padding:4px 0;color:var(--text2);">▸ 跑 <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--accent6);">python scripts/loop_admission.py .</code> 退码=0 且 level≥L2</li>
+      <li style="padding:4px 0;color:var(--text2);">▸ 必须是 git 仓库（铁律6 回溯保障）</li>
+    </ul>
+
+    <h4 style="margin-top:20px;color:var(--text);">四级任务等级</h4>
+    <div style="overflow-x:auto;margin-top:12px;">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);">
+            <th style="padding:8px;text-align:left;">等级</th>
+            <th style="padding:8px;text-align:left;">名称</th>
+            <th style="padding:8px;text-align:left;">定义</th>
+            <th style="padding:8px;text-align:left;">/loop 行为</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);background:rgba(248,113,113,.06);">
+            <td style="padding:8px;"><strong>L0</strong></td><td style="padding:8px;">拒绝</td><td style="padding:8px;">不具备 loop 条件</td><td style="padding:8px;color:var(--accent5);">不准入</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:rgba(245,158,11,.06);">
+            <td style="padding:8px;"><strong>L1</strong></td><td style="padding:8px;">Report-only</td><td style="padding:8px;">只分析/出报告，不改代码</td><td style="padding:8px;color:var(--accent4);">拒绝（全程人工决策）</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:rgba(108,140,255,.06);">
+            <td style="padding:8px;"><strong>L2</strong></td><td style="padding:8px;">Assisted</td><td style="padding:8px;">/plan 确认后，AI 在约束下自动执行小改动</td><td style="padding:8px;color:var(--accent);">可选半自动</td>
+          </tr>
+          <tr style="background:rgba(52,211,153,.06);">
+            <td style="padding:8px;"><strong>L3</strong></td><td style="padding:8px;">Unattended</td><td style="padding:8px;">完全无人值守自动执行</td><td style="padding:8px;color:var(--accent3);">可选全自动</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4 style="margin-top:20px;color:var(--accent5);">4 类熔断条件（触发即停回人工）</h4>
+    <ul style="margin-top:8px;padding-left:20px;list-style:none;">
+      <li style="padding:4px 0;color:var(--text2);">▸ 同一错误连续 3 次（stagnation 停滞）</li>
+      <li style="padding:4px 0;color:var(--text2);">▸ 任意失败连续 5 次（no_progress 无进展）</li>
+      <li style="padding:4px 0;color:var(--text2);">▸ 单次任务总迭代 ≥10 次</li>
+      <li style="padding:4px 0;color:var(--text2);">▸ 触碰 denylist 路径或改动文件数 >5</li>
+    </ul>
+    <p style="margin-top:16px;color:var(--accent4);font-size:13px;">🏢 类比：自动巡航——/loop 是自动巡航开关，但司机（用户）随时可踩刹车</p>
+  </div>
+
+  <p style="margin-top:24px;color:var(--text2);font-size:14px;">Loop Engineering 的设计哲学来自<strong>控制论</strong>（Cybernetics）：任何自动系统都需要反馈回路 + 安全边界。riji-skill 把这一思想落地为：loop_admission（准入审计 22项信号）→ loop_guard（运行时熔断）→ loop_audit（事后审计），形成完整的自动化治理闭环。</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== Memory System ===== -->
+<section id="memory" class="fade-in">
+  <div class="section-label">跨对话记忆</div>
+  <h2 class="section-title">三层记忆体系——让 AI 不再"失忆"</h2>
+  <p class="section-desc">AI 助手的上下文窗口是有限的（就像人的短期记忆），对话一长就会"忘记"。riji-skill 用三层记忆体系解决这个问题——把重要信息从"RAM"存到"硬盘"。</p>
+
+  <div class="memory-layers">
+    <div class="memory-layer hot">
+      <span class="layer-badge">热记忆 · 每次对话自动加载</span>
+      <h4>SKILL.md + references/</h4>
+      <div class="layer-file">riji-skill/SKILL.md</div>
+      <p>7条铁律、触发钩子表、PDCA流程——这些是"协作宪法"，每次对话开始时自动加载到 AI 的上下文中，永不遗忘。</p>
+      <ul>
+        <li>36个参考手册按需加载</li>
+        <li>触发钩子表自动路由</li>
+        <li>硬规则、不妥协</li>
+      </ul>
+    </div>
+    <div class="memory-layer warm">
+      <span class="layer-badge">全局聚合记忆 · 跨项目共享</span>
+      <h4>memory/memory_main.md</h4>
+      <div class="layer-file">~/.riji-skill/data/memory/memory_main.md</div>
+      <p>跨项目的长期经验沉淀——关键决策、踩过的坑、验证过的模式。按项目分段，自动 upsert 去重。<strong>外置存储，升级 0 丢失</strong>。</p>
+      <ul>
+        <li>跨项目共享经验</li>
+        <li>自动去重聚合</li>
+        <li>启动时必读</li>
+        <li>外置存储，升级不丢</li>
+      </ul>
+    </div>
+    <div class="memory-layer cold">
+      <span class="layer-badge">项目记忆 · 本项目专属</span>
+      <h4>docs_rj/memory_rj/</h4>
+      <div class="layer-file">~/.riji-skill/data/docs_rj/memory_rj/{task}_memory_*.md</div>
+      <p>单个项目的任务级记忆——每个 /act 阶段自动写入，包含决策、验证结果、经验教训。下一轮 /plan 自动读取。<strong>外置存储，升级 0 丢失</strong>。</p>
+      <ul>
+        <li>任务级细粒度</li>
+        <li>自动落盘 + 全局跟进</li>
+        <li>跨对话恢复</li>
+        <li>外置存储，升级不丢</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="analogy-box" style="margin-top:32px;">
+    <h3>💾 RAM vs 硬盘——一个关键类比</h3>
+    <p>AI 的上下文窗口 = 电脑的 RAM（内存）——易失、有限、速度快。</p>
+    <p>文件系统 = 电脑的硬盘——持久、无限、跨对话保留。</p>
+    <p class="big-text">任何重要信息必须写入文件。只在上下文里记着 = 没存。</p>
+    <p>riji-skill 的 Memory First 原则就是：<strong>启动先读硬盘（恢复记忆），结束必写硬盘（保存记忆），中间关键节点存盘（防止丢失）。</strong></p>
+    <p style="margin-top:16px;padding:12px 16px;background:rgba(52,211,153,.08);border-radius:8px;border-left:3px solid var(--accent3);">
+      <strong>📦 用户数据外置（方案B）：</strong>记忆、文档、输出等用户数据放在 <code style="color:var(--accent3);">~/.riji-skill/data/</code>，与框架文件物理分离。<strong>升级时解压覆盖框架文件，用户数据 0 丢失</strong>——再也不用担心升级覆盖丢数据。三级优先级路径解析（环境变量 > 配置文件 > 默认值），老用户首次启动自动迁移。
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== More Features ===== -->
+<section id="features" class="fade-in">
+  <div class="section-label">更多核心能力</div>
+  <h2 class="section-title">不止 PDCA —— 一套完整的 AI 协作方法论</h2>
+  <p class="section-desc">riji-skill 融合了多个领域的优秀思想，形成了一套完整的 AI 协作体系。</p>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <h4>🎯 第一性原理拆解</h4>
+      <p>复杂任务方案探索前必做三问：本质目标是什么？不可压缩的约束有哪些？从约束出发的最优解是什么？</p>
+      <ul><li>避免照搬已有方案</li><li>从本质推导最优解</li><li>管理学"回归本质"思维</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>🔍 对抗性审查</h4>
+      <p>大改后用独立 AI 审查员做6维度批判性审查：内部一致性/逻辑完整性/可执行性/边界case/安全性/可维护性。产出 HIGH/MEDIUM/LOW 分级报告，HIGH 清零才交付。</p>
+      <ul><li>独立 subagent 审查</li><li>6维度 + 3轮上限</li><li>安全 HIGH 特殊处理</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>📄 文档三件套</h4>
+      <p>spec（方案）+ task（执行步骤）+ handoff（交接）自动生成。统一命名规范，generate_docs.py 一键创建目录结构。</p>
+      <ul><li>spec = PRD + 技术规格</li><li>task = 怎么做 + 验证 + 边界条件</li><li>handoff = 变更历史 + 接手须知</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>🔔 触发钩子表</h4>
+      <p>36个参考手册不全部加载到上下文——而是按"你正在做什么"自动指引读取。写代码→读 code_rules.md，报错→先问意图再决定。</p>
+      <ul><li>按需加载，不占上下文</li><li>命中关键词自动路由</li><li>禁止"凭记忆跳过"</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>🧩 技能编排（可选）</h4>
+      <p>框架本身不实现具体业务能力，但内置 agent-find 动态搜索机制——需要浏览器操控、Office处理、金融分析等专业能力时，自动搜索并调度外部技能。<strong>此功能为可选，需配置 Exa API Key（见 README），不配置时降级为 WebSearch 兜底，不影响框架核心功能。</strong></p>
+      <ul><li>agent-find 全网搜索</li><li>安全扫描后安装</li><li>按需扩展，不臃肿</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>🌱 自进化（Learn Cycle）</h4>
+      <p>/act 后询问是否跑 learn——扫描整个 skill 找可优化点（重复规则/冲突/过时内容），生成建议清单，经确认后自动应用。框架越用越聪明。</p>
+      <ul><li>三阶段循环</li><li>scan→reflect→adopt</li><li>人工确认门控</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>🎨 手绘呈现</h4>
+      <p>验收/汇报时自动生成手绘风 SVG 速记图——内容→手绘 SVG 信息图，单文件自包含，零依赖。</p>
+      <ul><li>5种受众模式</li><li>7种关系→布局映射</li><li>SVG 抖动路径手绘效果</li></ul>
+    </div>
+    <div class="feature-card">
+      <h4>📊 技能图谱</h4>
+      <p>说一句"master_graph"，自动扫描所有 AI 工具的记忆，对比多源技能全集，生成"已掌握/未掌握"三段式技能图谱，三格式同步输出（md/csv/svg）。</p>
+      <ul><li>8白名单 + 关键词发现</li><li>多源融合（roadmap.sh等）</li><li>问答式可视化</li></ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== server_lite 说明 ===== -->
+<section id="server-lite" class="fade-in">
+  <div class="section-label">可选组件</div>
+  <h2 class="section-title">server_lite —— 已实现但不主动引导使用的可选组件</h2>
+  <p class="section-desc">server_lite（日积面板）是一套完整的本地 Web 管理台（Flask + 原生 JS），含仪表盘、项目管理、技能管理、知识管理、数据管理 5 大模块。</p>
+
+  <div class="analogy-box">
+    <h3>🔧 为什么当前不主动引导使用？</h3>
+    <p>server_lite 的功能与 riji-skill 的核心定位（AI 对话协作框架）存在重叠——查看文档、管理记忆、配置数据路径等操作，AI 对话都能完成。当前版本不再主动引导用户启动 server_lite，以减少用户认知负担。</p>
+    <p class="big-text">代码完整保留，用户可主动启用</p>
+    <p><strong>已实现的能力</strong>：完整的 Flask 应用（v2.0.0）+ 4 个 API blueprint + 前端界面 + 测试套件 + 7 轮对抗审查过的数据管理 API（路径遍历防护、系统目录黑名单、localhost 限制）。</p>
+    <p><strong>如需启用</strong>：运行 <code style="color:var(--accent3);">python run_server.py</code>，启动后访问 <code style="color:var(--accent3);">http://127.0.0.1:5210</code>。</p>
+    <p><strong>恢复引导的 checklist</strong>：见 <code style="color:var(--accent3);">docs_rj/spec_rj/server_lite_retention_spec_*.md</code>。</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ===== Install ===== -->
+<section id="install" class="fade-in">
+  <div class="section-label">安装</div>
+  <h2 class="section-title">拷贝即用，零依赖</h2>
+  <p class="section-desc">框架本身是纯本地 Markdown + Python 脚本，不联网、不调外部 API。把整个目录复制到 AI 助手的 skills 目录即可。</p>
+
+  <div class="install-box">
+    <div class="install-method">
+      <h4>📦 方式一：GitHub Clone</h4>
+      <p>从 GitHub 克隆到你的 AI 编程助手的 skills 目录：</p>
+      <div class="code-block">
+        <span class="comment"># 克隆到 AI 助手的 skills 目录</span><br>
+        <span class="cmd">git clone</span> https://github.com/yourname/riji-skill.git /path/to/your/ai/skills/riji-skill
+      </div>
+    </div>
+    <div class="install-method">
+      <h4>📋 方式二：直接复制</h4>
+      <p>下载 ZIP 解压，或直接复制整个 riji-skill/ 目录到 skills 目录：</p>
+      <div class="code-block">
+        <span class="comment"># 复制到 skills 目录</span><br>
+        <span class="cmd">cp -r</span> riji-skill/ /path/to/your/ai/skills/riji-skill/
+      </div>
+    </div>
+    <div class="install-method">
+      <h4>🚀 首次使用</h4>
+      <p>第一次对话时，框架会自动检测缺失文件并引导 Bootstrap 初始化，按提示确认创建即可。无需任何手动配置。</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-links">
+    <a href="HISTORY.md">riji-skill v1.0.0</a>
+    <a href="LICENSE">Apache-2.0 License</a>
+  </div>
+  <p>PDCA 戴明环 × AI 协作 · 纯本地文件 · 零云依赖 · 拷贝即用</p>
+</footer>
+
+<script>
+// Fade-in animation on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

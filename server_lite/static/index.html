@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日积面板 - riji-skill 管理台</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo">
+            <span class="logo-icon">日</span>
+            <span class="logo-text">日积面板</span>
+            <span class="logo-version" id="version">v2.0.0</span>
+        </div>
+        <div class="topbar-right">
+            <button class="btn-sync" onclick="syncAllData()" title="同步所有数据">🔄 同步数据</button>
+            <span class="health-status" id="healthStatus">检查中...</span>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav class="sidebar">
+            <a class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+                <span class="nav-icon">📊</span> 仪表盘
+            </a>
+            <a class="nav-item" data-page="intro" onclick="switchPage('intro')">
+                <span class="nav-icon">📖</span> 产品介绍
+            </a>
+            <a class="nav-item" data-page="docs" onclick="switchPage('docs')">
+                <span class="nav-icon">📁</span> 项目管理
+            </a>
+            <a class="nav-item" data-page="skills" onclick="switchPage('skills')">
+                <span class="nav-icon">🔧</span> 技能管理
+            </a>
+            <a class="nav-item" data-page="knowledge" onclick="switchPage('knowledge')">
+                <span class="nav-icon">🧠</span> 知识管理
+            </a>
+            <a class="nav-item" data-page="settings" onclick="switchPage('settings')">
+                <span class="nav-icon">⚙️</span> 数据管理
+            </a>
+        </nav>
+
+        <main class="main-content" id="mainContent">
+            <div id="page-dashboard" class="page active">
+                <h2>仪表盘</h2>
+                <div class="stats-cards" id="statsCards">
+                    <div class="stat-card"><div class="stat-value" id="statProjects">-</div><div class="stat-label">项目数</div></div>
+                    <div class="stat-card"><div class="stat-value" id="statSkills">-</div><div class="stat-label">参考模块</div></div>
+                    <div class="stat-card"><div class="stat-value" id="statAgents">-</div><div class="stat-label">子机器人</div></div>
+                    <div class="stat-card"><div class="stat-value" id="statZeroCall">-</div><div class="stat-label">零调用技能</div></div>
+                </div>
+
+                <div class="dashboard-section">
+                    <h3>API 契约</h3>
+                    <p>访问 <a href="/api/contracts.json" target="_blank">/api/contracts.json</a> 查看所有 API 返回类型定义（单源生成）</p>
+                </div>
+            </div>
+
+            <div id="page-intro" class="page">
+                <h2>产品介绍</h2>
+                <p style="color:var(--text-secondary);line-height:1.6;margin-bottom:20px;">
+                    <strong>riji-skill</strong> 是一个基于 PDCA 循环的协作框架，帮助你系统性地管理项目、积累知识、优化技能。
+                </p>
+                <div class="intro-grid">
+                    <div class="intro-card">
+                        <div class="intro-card-icon">📋</div>
+                        <div class="intro-card-title">7条铁律</div>
+                        <div class="intro-card-desc">Memory First / HARD-GATE / 无占位符 / 明确验收标准 / 多步任务用 TodoWrite / 测试先写 / 提交前自检</div>
+                    </div>
+                    <div class="intro-card">
+                        <div class="intro-card-icon">🔄</div>
+                        <div class="intro-card-title">PDCA 流程</div>
+                        <div class="intro-card-desc">Plan → Do → Check → Act，每个任务都遵循完整闭环</div>
+                    </div>
+                    <div class="intro-card">
+                        <div class="intro-card-icon">🤖</div>
+                        <div class="intro-card-title">多 Agent 协作</div>
+                        <div class="intro-card-desc">分工明确的子机器人：search、test、brainstorming、frontend-design 等</div>
+                    </div>
+                    <div class="intro-card">
+                        <div class="intro-card-icon">💾</div>
+                        <div class="intro-card-title">记忆沉淀</div>
+                        <div class="intro-card-desc">每次对话自动沉淀到 memory，形成可复用的经验库</div>
+                    </div>
+                </div>
+                <div class="intro-hint">
+                    <p>💡 <strong>提示：</strong>本面板为只读展示，如需修改请和 agent 对话</p>
+                </div>
+            </div>
+
+            <div id="page-docs" class="page">
+                <h2>项目管理</h2>
+                <div class="scan-roots-bar" id="scanRootsBar">
+                    <span class="scan-roots-label">扫描路径:</span>
+                    <div class="scan-roots-list" id="scanRootsList"></div>
+                    <button class="btn-small" onclick="showAddScanRoot()" title="添加扫描路径">+ 添加路径</button>
+                </div>
+                <div class="docs-layout">
+                    <div class="docs-list" id="docsProjectList">
+                        <p class="loading">加载项目列表...</p>
+                    </div>
+                    <div class="docs-filetree" id="docsFileTree">
+                        <p class="empty-state">选择项目查看文件</p>
+                    </div>
+                    <div class="docs-content" id="docsContent">
+                        <p class="empty-state">选择左侧项目查看文档</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-skills" class="page">
+                <h2>技能管理</h2>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchSkillTab('skills')">参考模块</button>
+                    <button class="tab" onclick="switchSkillTab('agents')">子机器人</button>
+                </div>
+                <div id="tab-skills" class="tab-content active">
+                    <table class="skill-table" id="skillTable">
+                        <thead><tr><th>名称</th><th>PDCA</th><th>描述</th><th>调用次数</th><th>频率</th><th>最后调用</th><th>关联机器人</th></tr></thead>
+                        <tbody id="skillTableBody"><tr><td colspan="7" class="loading">加载中...</td></tr></tbody>
+                    </table>
+                </div>
+                <div id="tab-agents" class="tab-content">
+                    <div id="agentGrid" class="agent-grid">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-knowledge" class="page">
+                <h2>记忆中心</h2>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchKnowledgeTab('memories')">全局记忆</button>
+                    <button class="tab" onclick="switchKnowledgeTab('sources')">记忆源文件</button>
+                    <button class="tab" onclick="switchKnowledgeTab('lessons')">精华经验</button>
+                </div>
+                <div id="tab-memories" class="tab-content active">
+                    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+                        <input type="text" id="memorySearch" placeholder="搜索记忆..." style="flex:1;min-width:200px;background:var(--black-light);border:1px solid var(--silver-border);color:var(--white-soft);border-radius:var(--radius);padding:8px 12px;" oninput="filterMemories()">
+                        <select id="memoryProjectFilter" onchange="filterMemories()" style="background:var(--black-light);border:1px solid var(--silver-border);color:var(--gray-light);border-radius:var(--radius);padding:8px 12px;">
+                            <option value="">全部项目</option>
+                        </select>
+                        <select id="memoryOutcomeFilter" onchange="filterMemories()" style="background:var(--black-light);border:1px solid var(--silver-border);color:var(--gray-light);border-radius:var(--radius);padding:8px 12px;">
+                            <option value="">全部结果</option>
+                            <option value="success">✅ 成功</option>
+                            <option value="fail">❌ 失败</option>
+                            <option value="mixed">~ 混合</option>
+                            <option value="unknown">? 未知</option>
+                        </select>
+                        <button class="btn-primary btn-small" onclick="openPromoteModal()">📥 从项目记忆提炼</button>
+                    </div>
+                    <div id="memoryStats" class="knowledge-stats"></div>
+                    <div id="memoryGrid" class="memory-grid">
+                        <p class="loading">加载中...</p>
+                    </div>
+                </div>
+                <div id="tab-sources" class="tab-content">
+                    <p class="hint">浏览记忆源文件（只读），这些是对话沉淀的原始数据</p>
+                    <div class="docs-layout">
+                        <div class="docs-list" id="sourceFileList">
+                            <p class="loading">加载中...</p>
+                        </div>
+                        <div class="docs-content" id="sourceFileContent">
+                            <p class="empty-state">选择左侧文件查看内容</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-lessons" class="tab-content">
+                    <p class="hint">经验库由 memory_distill 从 is_lesson=true 的记忆条目蒸馏产出，点击"采纳"通过 /act 流程确认为长期经验</p>
+                    <div id="lessonsStats" class="knowledge-stats"></div>
+                    <div id="lessonsList" class="memory-grid">
+                        <p class="loading">加载中...</p>
+                    </div>
+                </div>
+                <!-- 提炼弹窗 -->
+                <div id="promoteModal" class="modal-overlay" style="display:none;">
+                    <div class="modal-content" style="max-width:800px;">
+                        <div class="modal-header">
+                            <h3>📥 从项目记忆提炼到全局</h3>
+                            <button class="modal-close" onclick="closePromoteModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p style="margin-bottom:12px;color:var(--gray);font-size:13px;">勾选要提炼的项目级记忆，提升到全局记忆中：</p>
+                            <div id="promoteList" style="max-height:400px;overflow-y:auto;"></div>
+                            <div style="margin-top:12px;text-align:right;">
+                                <button class="btn-sync" onclick="closePromoteModal()">取消</button>
+                                <button class="btn-primary" style="margin-left:8px;" onclick="confirmPromote()">确认提炼</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-settings" class="page">
+                <h2>数据管理</h2>
+                <p class="hint">用户数据外置到独立目录，升级 skill 包时数据 0 丢失。路径仅允许在用户目录下自定义。</p>
+                <div class="settings-card">
+                    <h3>当前数据位置</h3>
+                    <div class="path-display" id="settingsCurrentPath">加载中...</div>
+                    <div class="settings-stats" id="settingsStats"></div>
+                </div>
+                <div class="settings-card">
+                    <h3>修改数据位置</h3>
+                    <p class="hint">输入新路径（必须在用户目录下，不能指向 skill 包内/系统目录/含 ..）：</p>
+                    <div class="settings-input-row">
+                        <input type="text" id="settingsNewPath" placeholder="如 C:\Users\你\.riji-skill\data 或 ~/.riji-skill/data" class="settings-input">
+                        <button class="btn-primary btn-small" onclick="saveDataPath()">💾 保存路径</button>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <h3>数据迁移</h3>
+                    <p class="hint">把当前数据迁移到新位置（先在上方填写新路径并保存，再点迁移）。迁移过程原子操作，中断不丢数据。</p>
+                    <div class="settings-input-row">
+                        <input type="text" id="settingsMigrateTarget" placeholder="迁移目标路径（用户目录下）" class="settings-input">
+                        <button class="migrate-btn" onclick="migrateData()">🚚 开始迁移</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" class="modal-overlay" style="display:none;" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalTitle">技能内容</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/app.js"></script>
+</body>
+</html>

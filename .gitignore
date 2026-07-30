@@ -1,0 +1,68 @@
+# Python 缓存（自动生成）
+__pycache__/
+*.pyc
+*.pyo
+
+# 备份文件（改前手动备份，不进 git）
+*.bak
+*.bak.*
+
+# 锁文件（运行时残留）
+*.lock
+
+# learn scan 临时目录（调试残留）
+docs_rj/learn_rj/*/
+
+# 临时验证输出
+validate_*.json
+scripts/validate_result.json
+
+# 临时调试脚本
+tmp_*.py
+
+# 工作目录
+.workbuddy/
+
+# 技能图谱数据（外部源，不进 git）
+skill_data/
+
+# 清理备份残留（不进 git）
+_cleanup_backup/
+
+# 全局记忆（每个用户从0开始积累，不进 git）
+memory/memory_main.md
+# 发布骨架例外：v1.0.0 发布时保留空骨架文件，使用者首次启动后由 Bootstrap 自动填充
+!memory/memory_main.md
+
+# T013 用户数据外置：排除用户数据目录（不进 git，每个用户独立）
+# 用户数据默认在 ~/.riji-skill/data/，但若用户误放包内也排除
+memory/*
+!memory/memory_main.md
+docs_rj/
+!docs_rj/SUMMARY_RJ.md
+!docs_rj/spec_rj/
+!docs_rj/spec_rj/spec_main_rj.md
+outputs_rj/
+server_lite_data/
+server_lite/data/
+# 副 agent 调用日志（运行时产物，不进 git）
+agents_rj/subagent_call_log.jsonl
+# 迁移标记文件（运行时产生，不进 git）
+*.migrated
+*.cleaning
+*.cleaned
+# 迁移锁文件（残留正常，O_CREAT 复用，但不应进 git 避免不同用户机器互相污染）
+.migrate.lock
+# 打包输出
+dist/
+# 临时截图
+tmp_*.png
+# 测试运行快照（不进 git，本地临时产物）
+_test_run/
+
+# API Key / Token 文件（绝不进 git，防止泄露）
+exa.env.json
+*.token
+*.secret
+.env
+.env.local

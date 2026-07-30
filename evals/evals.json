@@ -1,0 +1,152 @@
+{
+  "version": "v1.1.0",
+  "description": "riji-skill 测试用例库（INT-03 检查项）。每条用例含输入/预期/断言，供 validate_skill.py 校验。v1.1.0 补充 7 铁律 + HARD-GATE + 触发钩子 + 对抗审查覆盖。",
+  "evals": [
+    {
+      "id": "eval_handoff_tidy_trigger",
+      "name": "handoff_tidy 触发",
+      "category": "routing",
+      "input": "交接/收尾/给你接手/handoff",
+      "expected": "自动调用 python scripts/handoff_tidy.py --task {任务名}",
+      "assertion": "SKILL.md 触发钩子表含 handoff_tidy；handoff_tidy.py 可运行且输出 JSON"
+    },
+    {
+      "id": "eval_memory_new_path",
+      "name": "memory 新路径（docs_rj/memory_rj + memory_main.md）",
+      "category": "memory",
+      "input": "写记忆/存盘/write_project",
+      "expected": "项目级 memory 落 docs_rj/memory_rj/{task}_memory_*.md，全局聚合落 memory/memory_main.md",
+      "assertion": "memory_shadow_write.write_project 默认路径 docs_rj/memory_rj；GLOBAL_MEMORY_FILE 指向 memory_main.md"
+    },
+    {
+      "id": "eval_changelog_deprecated",
+      "name": "changelog 废弃",
+      "category": "docs",
+      "input": "生成文档/generate_docs --type all",
+      "expected": "generate_docs --type all 生成 spec/task/handoff/archive 4类，不生成 changelog_rj 目录",
+      "assertion": "generate_docs.py DOC_TYPES 不含 changelog；--type choices 不含 changelog；实跑无 changelog_rj 目录"
+    },
+    {
+      "id": "eval_r10_release_commit_valid",
+      "name": "release commit 正例：v1.0.0 格式合规",
+      "category": "commit_lint",
+      "input": "用户升级 riji-skill 到 v1.0.0，需要打 release commit",
+      "expected": "agent 应使用 `chore(release): v1.0.0` 格式，commit_lint.py 校验通过（exit_code=0，无 R10 issue）",
+      "assertion": "实跑 `python scripts/commit_lint.py lint \"chore(release): v1.0.0\" --json`，exit_code=0 且 issues 不含 rule=R10",
+      "test_command": "python scripts/commit_lint.py lint \"chore(release): v1.0.0\" --json",
+      "expected_exit_code": 0,
+      "source": "git_workflow.md §2.10"
+    },
+    {
+      "id": "eval_r10_release_commit_invalid",
+      "name": "release commit 反例：v1.0 缺补丁号",
+      "category": "commit_lint",
+      "input": "用户升级 riji-skill 到 v1.0，subject 缺补丁号（应为 v1.0.0）",
+      "expected": "commit_lint.py R10 应报 ERROR，阻断提交（exit_code=2，issues 含 rule=R10）",
+      "assertion": "实跑 `python scripts/commit_lint.py lint \"chore(release): v1.0\" --json`，exit_code=2 且 issues 含 rule=R10",
+      "test_command": "python scripts/commit_lint.py lint \"chore(release): v1.0\" --json",
+      "expected_exit_code": 2,
+      "expected_rule": "R10",
+      "source": "git_workflow.md §2.10"
+    },
+    {
+      "id": "eval_hard_gate_confirmation_words",
+      "name": "铁律2 HARD-GATE 确认词范围",
+      "category": "hard_gate",
+      "input": "用户说\"行\"\"可以\"\"嗯\"等模糊词，agent 应追问明确确认词",
+      "expected": "HARD-GATE 只接受\"开始吧/确认/同意/执行/动手吧/做吧\"等明确动词；模糊词不视为确认",
+      "assertion": "SKILL.md §0 HARD-GATE 确认词清单可枚举；agent 遇模糊词应追问\"是确认执行吗？\"",
+      "source": "SKILL.md §0 HARD-GATE"
+    },
+    {
+      "id": "eval_memory_first_startup_read",
+      "name": "铁律1 Memory First 启动必读",
+      "category": "memory",
+      "input": "新对话启动，用户直接给任务",
+      "expected": "agent 启动时先读 memory_main.md + docs_rj/SUMMARY_RJ.md + spec_main_rj.md §1 建立全局认知，再接任务",
+      "assertion": "SKILL.md §1 启动检查步骤1 明确读 memory；agent 响应首行含 [skill: riji-skill only] 声明",
+      "source": "SKILL.md §1 启动检查 + 铁律1"
+    },
+    {
+      "id": "eval_trigger_hooks_routing",
+      "name": "铁律5 触发钩子表路由",
+      "category": "routing",
+      "input": "用户说\"审一下/挑刺/对抗审查\"",
+      "expected": "agent 读 references/common/pc/adversarial_review.md 后再动手审查",
+      "assertion": "SKILL.md §0 触发钩子表含\"对抗审查\"→ adversarial_review.md 映射；agent 动手前 grep 确认读过对应 reference",
+      "source": "SKILL.md §0 触发钩子表 + 铁律5"
+    },
+    {
+      "id": "eval_git_clean_before_edit",
+      "name": "铁律6 回溯保障（git commit 前置）",
+      "category": "rollback",
+      "input": "agent 准备改文件，工作区有未 commit 改动",
+      "expected": "agent 动手前先 git status 确认工作区干净；不干净则先 commit 或告知用户",
+      "assertion": "SKILL.md §0 回溯保障明确\"动手前必须确保工作区已 commit\"；agent 改文件前有 git status 步骤",
+      "source": "SKILL.md §0 回溯保障 + 铁律6"
+    },
+    {
+      "id": "eval_verification_before_completion",
+      "name": "铁律7 Verification-before-Completion",
+      "category": "verification",
+      "input": "agent 声称任务完成",
+      "expected": "agent 必须实际跑验证步骤（跑测试/grep 核对/实跑命令），看到预期结果才能打勾",
+      "assertion": "TASK_STATE 的 Verification section total>0；status=completed 必须有 Sign-off + Verification 非 0/0",
+      "source": "SKILL.md §0 铁律7 + handoff_tidy.py _write_signoff 防御"
+    },
+    {
+      "id": "eval_file_change_declaration",
+      "name": "文件变动声明五要素",
+      "category": "transparency",
+      "input": "agent 修改了文件",
+      "expected": "agent 必须声明：改了哪个文件 + 行号 + 改动内容 + 修复问题 + 验证结果",
+      "assertion": "SKILL.md §2 文件变动声明规则；agent 每次改文件后有\"修改清单\"表格",
+      "source": "SKILL.md §2 文件变动声明"
+    },
+    {
+      "id": "eval_clarification_menu",
+      "name": "澄清菜单触发",
+      "category": "clarification",
+      "input": "用户指令模糊（如\"开始吧\"但范围不明）",
+      "expected": "agent 用 AskUserQuestion 工具提供 2-4 个明确选项让用户选，不猜",
+      "assertion": "SKILL.md §0 澄清菜单触发条件；agent 遇模糊指令有 AskUserQuestion 调用",
+      "source": "SKILL.md §0 澄清菜单 + 铁律3 流程优先"
+    },
+    {
+      "id": "eval_adversarial_review_after_big_change",
+      "name": "对抗性审查（大改后）",
+      "category": "review",
+      "input": "agent 完成≥3 文件或≥100 行的大改",
+      "expected": "agent 用 Task 工具启动独立 fresh subagent 做 6 维度批判性审查，HIGH 清零再继续",
+      "assertion": "SKILL.md §6 /plan 步骤6 + §6 /check 步骤6；对抗审查有 fresh subagent 调用记录",
+      "source": "SKILL.md §6 /plan 步骤6 + adversarial_review.md"
+    },
+    {
+      "id": "eval_process_priority_1pct",
+      "name": "铁律3 流程优先 + 1% 原则",
+      "category": "process",
+      "input": "agent 准备跳过 /plan 直接动手",
+      "expected": "agent 遇任务先走 /plan 呈现方案，HARD-GATE 确认后才进 /do；简单任务也至少呈现\"做什么/改哪里/怎么验证\"再动手",
+      "assertion": "SKILL.md §0 流程优先 + 1% 原则；agent 响应有方案呈现步骤",
+      "source": "SKILL.md §0 铁律3 + 1% 原则"
+    },
+    {
+      "id": "eval_no_placeholders",
+      "name": "铁律4 No Placeholders",
+      "category": "quality",
+      "input": "agent 写 spec/task/代码",
+      "expected": "禁止 TBD/TODO/适当处理/类似XX/省略号/伪代码占位符",
+      "assertion": "grep -r 'TBD\\|TODO\\|适当处理\\|类似XX' docs_rj/ 无匹配；spec/task 文件无占位符",
+      "source": "SKILL.md §0 铁律4"
+    },
+    {
+      "id": "eval_loop_guard_level_check",
+      "name": "Loop Guard 任务等级检查",
+      "category": "loop",
+      "input": "用户对 L0/L1 任务说 /loop",
+      "expected": "agent 拒绝 L0/L1 任务的 /loop 请求；只 L2/L3 允许 /loop",
+      "assertion": "SKILL.md §0 Loop Engineering 明确\"L1 → 拒绝 /loop\"；agent 遇 L1 /loop 有拒绝响应",
+      "source": "SKILL.md §0 Loop Engineering"
+    }
+  ]
+}
