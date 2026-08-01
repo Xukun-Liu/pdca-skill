@@ -7,7 +7,7 @@
 > 版本：v1.0.0 | 创建：2026-07-25 | riji-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
-> 本索引是 references/ 目录的导航地图。36 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
+> 本索引是 references/ 目录的导航地图。41 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
 
 ---
 
@@ -16,25 +16,28 @@
 ```
 references/
 ├── index.md                  ← 你在这里（导航索引）
-├── common/                   ← 跨 PDCA 阶段融合（14个）
-│   ├── pa/   (3个) P+A 启动规划+归档闭环
+├── common/                   ← 跨 PDCA 阶段融合（16个）
+│   ├── pa/   (4个) P+A 启动规划+归档闭环
 │   ├── pc/   (2个) P+C 方案设计+验证审查
 │   ├── pd/   (2个) P+D 方案设计+编码执行
 │   ├── pda/  (2个) P+D+A 贯穿全流程
 │   ├── dc/   (2个) D+C 执行+调试验证
-│   └── da/   (3个) D+A 执行+归档整理
-├── plan/                     ← P 环节：想清楚（10个）
+│   ├── da/   (3个) D+A 执行+归档整理
+│   └── style/ (1个) P+D 写作风格（特例）
+├── plan/                     ← P 环节：想清楚（11个）
 │   ├── bootstrap/  (3个) P.bootstrap 启动恢复
 │   ├── route/      (5个) P.route 路由判断
-│   └── design/     (2个) P.design 方案设计
-├── do/                       ← D 环节：动手做（7个）
+│   └── design/     (3个) P.design 方案设计
+├── do/                       ← D 环节：动手做（8个）
 │   ├── code/       (5个) D.code 编码
+│   ├── comm/       (1个) D.comm 执行期任务流
 │   └── danger/     (2个) D.danger 安全危险
 ├── check/                    ← C 环节：验结果（2个）
 │   ├── red_flags.md     C.reflexion 反思
 │   └── loop_verifier.md C.verify 验证
-└── act/                      ← A 环节：处理动作（3个）
-    └── learn/      (3个) A.learn 学习进化
+└── act/                      ← A 环节：处理动作（4个）
+    ├── learn/      (3个) A.learn 学习进化
+    └── persist/    (1个) A.persist 落盘细则
 ```
 
 ---
@@ -53,6 +56,7 @@ references/
 | `pda/` | P+D+A | 贯穿全流程 | 2 |
 | `dc/` | D+C | 执行 + 调试验证 | 2 |
 | `da/` | D+A | 执行 + 归档整理 | 3 |
+| `style/` | P+D | 写作风格（子文件夹命名特例，按主题命名） | 1 |
 
 ### 2.2 PDCA 单阶段归属规则
 
@@ -61,14 +65,16 @@ references/
 | 环节 | 子文件夹 | 子标签 | 含义 |
 |------|----------|--------|------|
 | `plan/` | `bootstrap/` | P.bootstrap | 启动恢复（3个） |
-| `plan/` | `route/` | P.route | 路由判断 |
-| `plan/` | `design/` | P.design | 方案设计 |
-| `do/` | `code/` | D.code | 编码 |
-| `do/` | `danger/` | D.danger | 安全危险 |
-| `check/` | （不细分） | C.verify / C.reflexion | 验证/反思 |
-| `act/` | `learn/` | A.learn | 学习进化 |
+| `plan/` | `route/` | P.route | 路由判断（5个） |
+| `plan/` | `design/` | P.design | 方案设计（3个） |
+| `do/` | `code/` | D.code | 编码（5个） |
+| `do/` | `comm/` | D.comm | 执行期任务流（1个） |
+| `do/` | `danger/` | D.danger | 安全危险（2个） |
+| `check/` | （不细分） | C.verify / C.reflexion | 验证/反思（2个） |
+| `act/` | `learn/` | A.learn | 学习进化（3个） |
+| `act/` | `persist/` | A.persist | 落盘细则（1个） |
 
-> check/ 仅 2 个文件，不再建子文件夹；act/ 下 learn/ 按 A.learn 子标签建。
+> act/ 下 learn/ 按 A.learn 子标签建，persist/ 按 A.persist 子标签建。
 
 ---
 
@@ -94,17 +100,18 @@ references/
 
 ---
 
-## 四、文件归属速查表（36 个文件 × 所属子文件夹 × 引用范围）
+## 四、文件归属速查表（41 个模块 × 所属子文件夹 × 引用范围）
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
-### common/（14个）
+### common/（16个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
 | trigger_hooks.md | common/pa/ | P.route A.handoff | main + bootstrap |
 | working_memory_rules.md | common/pa/ | P.bootstrap A.persist | main + bootstrap |
 | summary_view.md | common/pa/ | P.bootstrap A.persist | main + bootstrap + sync |
+| memory_governance.md | common/pa/ | P.bootstrap A.persist | main + bootstrap |
 | acceptance_criteria.md | common/pc/ | P.design C.verify | main + spec_design |
 | adversarial_review.md | common/pc/ | P.design C.adversarial | main + spec_design + learn_opt |
 | minimal_code_principles.md | common/pd/ | P.design D.code | main + bootstrap |
@@ -116,8 +123,9 @@ references/
 | hand-drawn-report.md | common/da/ | D.comm A.handoff | main + doc_proc + sync |
 | git_backup_cleanup.md | common/da/ | A.tidy D.danger | main + code_eng |
 | sync-matrix.md | common/da/ | D.code A.tidy | main + sync |
+| writing_style.md | common/style/ | P.design D.comm | main + spec_design + doc_proc |
 
-### plan/（10个）
+### plan/（11个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -131,8 +139,9 @@ references/
 | loop_triage.md | plan/route/ | P.route | main + loop |
 | design_patterns.md | plan/design/ | P.design | main + bootstrap |
 | project_structure.md | plan/design/ | P.design | main + bootstrap |
+| goal_brief.md | plan/design/ | P.design | main + spec_design + code_eng |
 
-### do/（7个）
+### do/（8个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -143,6 +152,7 @@ references/
 | office_processing.md | do/code/ | D.code | main + doc_proc |
 | security.md | do/danger/ | D.danger | main + code_eng |
 | loop_constraints.md | do/danger/ | D.danger | main + loop |
+| insert_new_task.md | do/comm/ | D.comm | main |
 
 ### check/（2个）
 
@@ -151,13 +161,14 @@ references/
 | red_flags.md | check/ | C.reflexion | main + code_eng |
 | loop_verifier.md | check/ | C.verify | main + loop |
 
-### act/（3个）
+### act/（4个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
 | learn_cycle.md | act/learn/ | A.learn | main + learn_opt |
 | prompt_optimization.md | act/learn/ | A.learn | main + learn_opt |
 | skill_graph.md | act/learn/ | A.learn | main + learn_opt |
+| act_procedure.md | act/persist/ | A.persist A.tidy | main |
 
 ---
 
@@ -187,11 +198,11 @@ references/
 
 | agent | 知识库(reference 数) | 引用的 reference |
 |------|----------------------|------------------|
-| bootstrap_agent | 10 | plan/bootstrap/{bootstrap, compaction_recovery, multi_project}.md · common/pa/{summary_view, working_memory_rules, trigger_hooks}.md · plan/route/usage_examples.md · plan/design/{project_structure, design_patterns}.md · common/pd/minimal_code_principles.md |
+| bootstrap_agent | 11 | plan/bootstrap/{bootstrap, compaction_recovery, multi_project}.md · common/pa/{summary_view, working_memory_rules, memory_governance, trigger_hooks}.md · plan/route/usage_examples.md · plan/design/{project_structure, design_patterns}.md · common/pd/minimal_code_principles.md |
 | skill_mgmt_agent | 3 | plan/route/{skill_management, skill_security, agent_find}.md |
-| spec_design_agent | 3 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md |
-| code_eng_agent | 7 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md |
-| doc_proc_agent | 4 | do/code/{office_processing, file_to_markdown}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md |
+| spec_design_agent | 5 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md · common/style/writing_style.md · plan/design/goal_brief.md |
+| code_eng_agent | 8 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md · plan/design/goal_brief.md |
+| doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md · common/style/writing_style.md |
 | loop_agent | 3 | plan/route/loop_triage.md · do/danger/loop_constraints.md · check/loop_verifier.md |
 | learn_opt_agent | 4 | act/learn/{learn_cycle, prompt_optimization, skill_graph}.md · common/pc/adversarial_review.md |
 | sync_agent | 3 | common/da/{sync-matrix, hand-drawn-report}.md · common/pa/summary_view.md |
@@ -211,9 +222,11 @@ references/
 | loop_triage.md | plan/route/ | main + loop |
 | design_patterns.md | plan/design/ | main + bootstrap |
 | project_structure.md | plan/design/ | main + bootstrap |
+| goal_brief.md ⭐ | plan/design/ | main + spec_design + code_eng |
 | trigger_hooks.md | common/pa/ | main + bootstrap |
 | working_memory_rules.md | common/pa/ | main + bootstrap |
 | summary_view.md ⭐ | common/pa/ | main + bootstrap + sync |
+| memory_governance.md | common/pa/ | main + bootstrap |
 | acceptance_criteria.md | common/pc/ | main + spec_design |
 | adversarial_review.md ⭐ | common/pc/ | main + spec_design + learn_opt |
 | minimal_code_principles.md | common/pd/ | main + bootstrap |
@@ -225,6 +238,7 @@ references/
 | hand-drawn-report.md ⭐ | common/da/ | main + doc_proc + sync |
 | git_backup_cleanup.md | common/da/ | main + code_eng |
 | sync-matrix.md | common/da/ | main + sync |
+| writing_style.md ⭐ | common/style/ | main + spec_design + doc_proc |
 | browser_automation.md | do/code/ | main + browser |
 | code_rules.md | do/code/ | main + code_eng |
 | file_to_markdown.md | do/code/ | main + doc_proc |
@@ -232,20 +246,22 @@ references/
 | office_processing.md | do/code/ | main + doc_proc |
 | security.md | do/danger/ | main + code_eng |
 | loop_constraints.md | do/danger/ | main + loop |
+| insert_new_task.md | do/comm/ | main |
 | red_flags.md | check/ | main + code_eng |
 | loop_verifier.md | check/ | main + loop |
 | learn_cycle.md | act/learn/ | main + learn_opt |
 | prompt_optimization.md | act/learn/ | main + learn_opt |
 | skill_graph.md | act/learn/ | main + learn_opt |
+| act_procedure.md | act/persist/ | main |
 
 ### 6.3 统计摘要
 
 | 指标 | 值 |
 |------|-----|
-| reference 总数 | 36 |
-| 仅 main 读的 reference | 1（subagents_rj.md 元数据） |
-| 被 2+ 副 agent 共读的 reference | 3（summary_view、adversarial_review、hand-drawn-report） |
-| 知识库最大的副 agent | bootstrap_agent(10 个 reference) |
+| reference 总数 | 41 |
+| 仅 main 读的 reference | 3（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md） |
+| 被 2+ 副 agent 共读的 reference | 5（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐、writing_style⭐、goal_brief⭐） |
+| 知识库最大的副 agent | bootstrap_agent(11 个 reference) |
 | 知识库最小的副 agent | browser_agent(1 个 reference) |
 | 副 agent 总数 | 9 |
 
@@ -256,3 +272,4 @@ references/
 | 版本 | 时间 | 变更说明 |
 |------|------|----------|
 | v1.0.0 | 2026-07-25 | 初版：从扁平 36 文件重构为 PDCA 四环节 + common 融合区子文件夹结构 |
+| v1.1.0 | 2026-08-01 | SKILL.md 瘦身同步：登记 5 个模块（memory_governance/writing_style/goal_brief 补登记 + insert_new_task/act_procedure 新增）；目录/计数/agent 引用更新 |

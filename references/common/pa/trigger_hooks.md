@@ -7,7 +7,7 @@
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 外迁时间：2026-07-15 12:00 | 更新：2026-07-17 05:50（新增 master_graph 行）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.0 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-01（新增 insert_new_task 行 / act_procedure 并入 /act 行）| PDCA 标签：P.route A.handoff
 > 本文件是 riji-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -59,11 +59,12 @@
 | /plan 阶段输出 triage / 定方向后自动循环 | references/plan/route/loop_triage.md | **/plan 阶段自动加载，输出 High Priority / Watch / Noise 三段式** |
 | L2 /do 执行前 / 自动循环进入执行 | references/do/danger/loop_constraints.md + references/do/danger/security.md | **/do 阶段自动加载，确保路径/合并/改动/预算/失败约束生效** |
 | /check 验证阶段 | references/check/loop_verifier.md + references/check/red_flags.md | **/check 阶段自动加载，verifier 默认 REJECT until proven otherwise** |
-| /act 归档阶段 / 生成任务状态 | references/common/pda/document_specs.md + references/common/pa/summary_view.md | **/act 阶段自动加载，生成 TASK_STATE.md 并更新 memory** |
+| /act 归档阶段 / 生成任务状态 | references/common/pda/document_specs.md + references/common/pa/summary_view.md + references/act/persist/act_procedure.md | **/act 阶段自动加载，生成 TASK_STATE.md 并更新 memory** |
 | /loop（"自动循环""跑循环""开始循环""loop模式""自动模式"） | references/do/danger/loop_constraints.md + references/check/loop_verifier.md | **检查前置条件（/plan 已确认 + loop_admission level≥L2 + git 仓库）→ 询问模式（auto/semi）→ 启动 /do→/check 循环** |
 | master_graph/技能图谱/能力画像/skill graph/我看我有什么技能/我未掌握什么/差距分析/技能雷达/我还有什么没学/推荐我学什么 | references/act/learn/skill_graph.md（三阶段流水线+双轨提取+三格式渲染） | **自动调用 `python scripts/skill_graph_build.py --source all`；输出 memory/skill_graph.md + docs_master_graph/skill_graph.csv + .svg + manifest.json；已掌握点亮(绿)/未掌握灰色/额外掌握橙色** |
 | 市场调研/market research/竞品调研/竞品对比/feature 对比/4 维度调研 | assets/market_research_template.md（9段+6项质检对齐 某开源项目 market-research.md） | **/plan 步骤4a.5 自动加载，覆盖 feature/UX/complaints/technical 4 维度** |
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
+| 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
 
 > ❌ 禁止以"我记得规则"为借口跳过读文件。RAM（上下文）是易失的，细节必须从硬盘重读。触发信号出现不读对应reference = Red Flag偏离。
 

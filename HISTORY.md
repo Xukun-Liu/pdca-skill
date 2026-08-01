@@ -1,7 +1,7 @@
 ---
 title: riji-skill 版本历史
 version: v1.0.0
-last_updated: 2026-08-01 14:00
+last_updated: 2026-08-01 23:50
 author: huihui
 ---
 
@@ -279,6 +279,13 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 > 维护者:riji-skill 框架自动维护 + 人工审核
 > License: Apache-2.0
 
+### 2026-08-01：SKILL.md 结构瘦身（-306 行）
+
+- 去重：记忆双写 3 节合并、导图/判定流程块删除、§1.6/§0.56 压缩
+- 下沉 5 模块：/act 细则→act_procedure.md，插入新任务→insert_new_task.md，/loop 完整规则→loop_constraints.md，条目增强格式→working_memory_rules.md §2.2，文件变动声明示例→communication_rules.md
+- 索引同步：index.md 补登记 3 遗漏+2 新增→41 模块；trigger_hooks/SKILL.md PDCA 表/资源导图/README 计数 36→41 全链路对齐
+- 1391→1085 行（-22%），零规则丢失
+
 ---
 
-**版本**:v1.0.0 | **最后更新**:2026-07-30 17:00 | **作者**:huihui
+**版本**:v1.0.0 | **最后更新**:2026-08-01 23:50 | **作者**:huihui

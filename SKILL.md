@@ -111,9 +111,9 @@ category: workflow
 | PDCA 母标签 | 子标签槽位（可扩展） | 参考模块 |
 |------|------|------|
 | P (Plan) | P.bootstrap · P.route · P.design · P.gate | bootstrap · compaction_recovery · multi_project · summary_view · working_memory_rules · skill_management · skill_security · agent_find · usage_examples · trigger_hooks · acceptance_criteria · adversarial_review · design_patterns · document_specs · excel_analysis · project_structure · minimal_code_principles · loop_triage |
-| D (Do) | D.code · D.comm · D.danger | browser_automation · code_rules · communication_rules · debugging · document_specs · excel_analysis · file_to_markdown · git_workflow · hand-drawn-report · office_processing · security · sync-matrix · minimal_code_principles · loop_constraints |
+| D (Do) | D.code · D.comm · D.danger | browser_automation · code_rules · communication_rules · debugging · document_specs · excel_analysis · file_to_markdown · git_workflow · hand-drawn-report · office_processing · security · sync-matrix · minimal_code_principles · loop_constraints · insert_new_task |
 | C (Check) | C.verify · C.adversarial · C.reflexion | acceptance_criteria · adversarial_review · communication_rules · debugging · red_flags · loop_verifier |
-| A (Act) | A.persist · A.tidy · A.handoff · A.learn | document_specs · summary_view · sync-matrix · working_memory_rules · hand-drawn-report · trigger_hooks · learn_cycle · prompt_optimization · skill_graph |
+| A (Act) | A.persist · A.tidy · A.handoff · A.learn | document_specs · summary_view · sync-matrix · working_memory_rules · hand-drawn-report · trigger_hooks · learn_cycle · prompt_optimization · skill_graph · act_procedure |
 
 > loop 相关参考模块：[references/do/danger/loop_constraints.md](references/do/danger/loop_constraints.md)（D.danger 运行时约束）、[references/plan/route/loop_triage.md](references/plan/route/loop_triage.md)（P.route triage 三段式）、[references/check/loop_verifier.md](references/check/loop_verifier.md)（C.verify verifier 立场）。
 
@@ -669,7 +669,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 资源索引（触发→文件）
 │
 ├─ 🗂️ 导航
-│   └─ 查找 references/ 结构 → [references/index.md](references/index.md)（36 个文件 × PDCA 子文件夹归属速查表）
+│   └─ 查找 references/ 结构 → [references/index.md](references/index.md)（41 个模块 × PDCA 子文件夹归属速查表）
 │
 ├─ 📝 模板（复制用）
 │   ├─ 写项目总spec → assets/spec_main_template.md（项目级 source of truth 模板·实例 docs_rj/spec_main_{项目名}.md）
@@ -701,10 +701,12 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 │   ├─ 版本同步矩阵/规则一致性核对 → references/common/da/sync-matrix.md（升级后核对版本号/死引用/规则一致性）
 │   ├─ git 备份清理 5 阶段 → references/common/da/git_backup_cleanup.md（手动备份/自动备份/历史清理/回收/校验）
 │   ├─ git 工作流规范 → references/do/code/git_workflow.md（commit 规范/分支策略/标签管理/冲突处理）
+│   ├─ 执行中插入新任务/打断处置 → references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case）
 │   ├─ 校验 commit message 格式 → scripts/commit_lint.py（纯 Python，零依赖，9 条规则）
 │   ├─ 安装 commit-msg hook → scripts/commit_lint_install.py（install/uninstall/status）
 │   ├─ goal_brief/任务书/防作弊/反向验证/暗卷/多agent → references/plan/design/goal_brief.md（参考项目 机制详述：六节结构/防五种死法/法与情报/明暗卷/探索型改四处）
 │   ├─ 戏文/训话/写作风格/大白话 → references/common/style/writing_style.md（参考项目 写作风格：大白话规范/戏文三铁律/训话6句/标题表15个/语气句5条/画饼4条）
+│   ├─ /act 步骤细则（spec_main刷新/ADR/learn门控）→ references/act/persist/act_procedure.md（/act 阶段必读）
 │   └─ 涉及专业领域能力 → 见 references/plan/route/skill_management.md 先搜专用 Skill
 │
 └─ 🧪 测试验证：evals/evals.json（典型场景+预期响应+断言）

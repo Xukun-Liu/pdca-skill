@@ -60,7 +60,7 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | **技能编排器**：需要时去外部找/调专业技能 | 自带具体业务能力的"万能工具箱"（如画图、Excel） |
 | 纯本地 Markdown，零云依赖，内网可直接拷贝部署 | 依赖外部 API/账号才能跑的在线服务 |
 
-> 数量澄清：包内**内嵌 36 个参考模块**（`references/`），但**0 个独立子技能**（没有 `skills/` 子目录）。需要浏览器操控、Office、金融等专业能力时，它通过 `skill_management` / `agent_find` 两个钩子去**外部**搜索并调度对应技能——那些技能不在包里。
+> 数量澄清：包内**内嵌 41 个参考模块**（`references/`），但**0 个独立子技能**（没有 `skills/` 子目录）。需要浏览器操控、Office、金融等专业能力时，它通过 `skill_management` / `agent_find` 两个钩子去**外部**搜索并调度对应技能——那些技能不在包里。
 
 ## 核心能力
 
@@ -82,7 +82,7 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | **Red Flags 16 条** | 偏离信号自检：连续输出未确认、没过 HARD-GATE 就动手、凭记忆回答不读文件等，出现信号立即重读铁律 |
 | **手绘呈现（hand-drawn-report）** | 验收/审核/汇报时内容→手绘 SVG 速记/信息图，单文件自包含；md 顶部内联同款 SVG |
 
-## 参考手册（references/）—— 36 个按需读取模块
+## 参考手册（references/）—— 41 个按需读取模块
 
 不全部加载到上下文，触发钩子按"你正在做什么"自动指引读取。按使用场景分 7 类：
 
@@ -678,7 +678,7 @@ riji-skill/
 │   ├── market_research_template.md
 │   ├── skill_graph_template.md
 │   └── index_template.md
-├── references/                 # 36 个参考手册（按需读取，见上表）
+├── references/                 # 41 个参考手册（按需读取，见上表）
 ├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 33 个）
 │   ├── archive_tidy.py
 │   ├── browser_inspect_docs.py      # 文档浏览器检视辅助
