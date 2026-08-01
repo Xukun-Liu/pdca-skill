@@ -6,7 +6,7 @@
 # 工作记忆规则（Working Memory Rules）
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 更新：2026-07-24
+> 版本：v1.1.0 | 更新：2026-08-01（新增 §2.2 记忆条目增强格式，自 SKILL.md 下沉为唯一维护源）
 
 > 📦 **用户数据外置说明（v1.0.0 新增）**：全局聚合记忆 `memory/memory_main.md` 与项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 均位于外置目录 `~/.riji-skill/data/` 下（非 skill 包内）。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落外置项目记忆 + 幂等 upsert 外置全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
 
@@ -103,6 +103,77 @@ AI 必须理解：
 - 项目记忆落盘（`docs_rj/memory_rj/{task}_memory_*.md`）写入**必须成功**，失败抛错**阻断**对话（数据不丢）。
 - 全局 upsert（`memory/memory_main.md`）写入失败**捕获后仅告警、不阻断**对话，并隔离故障（B5），不互相覆盖独有内容。
 - 两者均**追加**写入，不整文件覆写。
+
+---
+
+## 2.2 记忆条目增强格式（从 SKILL.md 下沉，唯一维护源）
+
+> SKILL.md Memory First 节仅留指针；本节为条目格式/判定规则的唯一权威，写记忆时按需读本节。
+
+**新格式定义**：
+
+```markdown
+### 记忆条目 · {task_name}（{timestamp}）
+**意图**：{intent_summary}
+**上下文**：{context_excerpt}
+**工具**：{tool1}, {tool2}, ...
+**反馈**：positive | negative | mixed | none
+**结果**：success | fail | mixed | unknown
+**标签**：{tag1}, {tag2}, ...
+
+{content_body}
+```
+
+**字段说明**：
+
+| 字段 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| task_name | string | 是 | 任务名 |
+| timestamp | string | 是 | 时间戳（YYYY-MM-DD HH:MM） |
+| intent | string | 是 | 用户意图摘要（800字以内） |
+| context | string | 是 | 上下文摘要（600字以内） |
+| tools_used | list | 否 | 使用的工具列表 |
+| feedback_signals | list | 否 | 反馈信号（positive/negative/mixed） |
+| outcome | string | 是 | 结果标签（success/fail/mixed/unknown） |
+| tags | list | 否 | 自定义标签（如 priority:high, type:bugfix） |
+| importance_level | string | 否 | 重要性（high/medium/low），agent 自评，默认 medium |
+| is_lesson | bool | 否 | 是否可复用经验，默认 false |
+| experience_tags | list | 否 | 经验标签（如 bugfix, architecture） |
+| status | string | 否 | 治理状态（active/archived/demoted），默认 active。archived=已归档软隐藏；demoted=已降级 |
+| archive_reason | string | 否 | 归档/降级原因（status 非 active 时填写） |
+| reflection | string | 否 | 反思备注（memory_rethink 工具填写） |
+
+> 治理 flag（active/archived/demoted）与容量阈值：见本文件 §2「治理 flag」节（唯一维护源，此处不重复）。
+
+**outcome 判定规则**【硬性】：
+
+| 判定条件 | outcome 值 | feedback_signals | 示例场景 |
+|----------|------------|------------------|----------|
+| 用户明确表示满意（好的/OK/完美/谢谢） | success | positive | 用户说没问题，就这样 |
+| 用户确认修改已生效 | success | positive | agent 执行修改后用户确认 |
+| 任务完成且无报错 | success | none | 常规完成，无明确反馈 |
+| 用户明确表示不满意（不对/不行/有问题） | fail | negative | 用户说这个修改有问题 |
+| 执行过程中报错且未解决 | fail | negative | 代码报错，agent 无法修复 |
+| 用户要求重试或修改方案 | fail | negative | 用户说重新弄一下 |
+| 任务部分完成（部分成功部分失败） | mixed | mixed | 修改了3个文件，其中1个有问题 |
+| 用户反馈矛盾（既说好的又说再改改） | mixed | mixed | 用户先确认又要求微调 |
+| 无法判断结果（任务中断/超时） | unknown | none | 对话中断，不知道结果 |
+
+**agent 写入 memory 时的检查清单**【硬性】：
+- 回顾对话末尾 3-5 轮，寻找用户反馈信号
+- 如果找到 positive 信号且无 negative 信号 -> outcome=success
+- 如果找到 negative 信号 -> outcome=fail
+- 如果同时找到 positive 和 negative -> outcome=mixed
+- 如果找不到明确反馈 -> 检查任务是否完成 -> 完成=success，未完成=unknown
+
+**write_project 调用时机**【硬性】：
+
+| 时机 | 触发条件 | 采集内容 |
+|------|----------|----------|
+| 任务开始 | 用户输入新任务时 | intent（用户指令摘要）、context（项目上下文） |
+| 工具调用 | agent 使用工具时 | tools_used（追加到列表） |
+| 任务完成 | agent 报告任务完成时 | outcome（根据用户反馈判定）、feedback_signals |
+| 任务中断 | 对话结束或超时 | outcome=unknown |
 
 ---
 
