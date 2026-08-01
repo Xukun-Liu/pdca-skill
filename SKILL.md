@@ -452,7 +452,7 @@ category: workflow
 
 memory 是协作的唯一持久化载体。以下两条不可跳过，优先级高于所有其他规则：
 
-> 🔴 **写入通道（治本硬规则）**：本框架所有写项目记忆的操作，**一律经 `scripts/memory_shadow_write.py` 的 `write_project(task, content)`**，自动 ①落 `{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md` ②幂等 upsert 全局 `memory/memory_main.md`（按 `## {项目名}` 分段，主次跟进）。**禁止手工单文件写全局 memory_main**——那会绕过自动跟进、产生漂移。与下方「记忆双写与全局跟进」节同源，此处再强调一遍冲突点。
+> 🔴 **写入通道（治本硬规则）**：本框架所有写项目记忆的操作，**一律经 `scripts/memory_shadow_write.py` 的 `write_project(task, content)`**，自动 ①落 `{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md` ②幂等 upsert 全局 `memory/memory_main.md`（按 `## {项目名}` 分段，主次跟进）。**禁止手工单文件写全局 memory_main**——那会绕过自动跟进、产生漂移。机制细则见下方「记忆双写与全局跟进」节。
 
 1. **启动必读**【硬性】：每次新对话第一件事，读全局 `memory/memory_main.md`（按 `## {项目名}` 分段，取本项目段）建立全局认知并获取跨项目长期经验；如有进行中任务 → 读 `{项目根}/docs_rj/memory_rj/{task}_memory_*.md` 获取本项目最新状态。两者都不可跳。即使只是闲聊也要读。文件缺失时走 §1 Bootstrap 初始化。
 2. **每对话必写**【硬性】：对话过程中每完成一段实质工作，经 `write_project(task, content)` 写项目记忆（自动落 `docs_rj/memory_rj/{task}_memory_*.md` + upsert 全局 `memory/memory_main.md`）。**写入即落盘 + 自动全局跟进，无独立归档步骤**——无需手工剪切/归档。即使无产出也要写一条 `{task}_memory` 记录再结束。
@@ -463,24 +463,14 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 
 6. **PDCA 闭环写入**【硬性】：/act 阶段经 `write_project` 写项目记忆 + upsert 全局 `memory_main` + 刷新 SUMMARY + 跑 `handoff_tidy`。这些产出是下一轮 /plan 步骤1（P.bootstrap 读状态）的输入。**闭环不可断**：/act 不写 = 下一轮 /plan 读不到 = 状态丢失。
 
-### 记忆双写与全局跟进（write_project 主次跟进）【硬性】
+### 记忆双写与全局跟进（write_project 主次跟进，无独立归档步骤）【硬性】
 
-对话中写项目记忆一律走 `scripts/memory_shadow_write.write_project(task, content)` 做**主次跟进双写**：
-- **项目记忆（落盘）**：`{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md`（按任务阶段的记忆，任务名进文件名）。
-- **全局聚合（自动 upsert）**：`memory/memory_main.md`（skill 包内，按 `## {项目名}` 分段幂等插入）——写入失败捕获后仅告警、不阻断对话（B5 隔离）。
+对话中每完成一段实质工作即经 `scripts/memory_shadow_write.write_project(task, content)` 落盘，**写入即归档**——无需手工剪切/移动：
+1. **项目记忆（落盘，必须成功）**：`{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md`（append-only，分钟级时间戳天然按时间排序；跨午夜的两条记忆各落当日文件，无需分流）
+2. **全局聚合（自动 upsert，失败仅告警不阻断——B5 隔离）**：`memory/memory_main.md` 按 `## {项目名}` 分段幂等插入。**禁止手工单文件写 memory_main**（会破坏主次跟进一致性、产生漂移）
+3. **刷新 `{主docs}/SUMMARY_RJ.md`**（见 [summary_view.md](references/common/pa/summary_view.md) §三触发2）
 
-全局记忆只经 `write_project` 自动产生，**禁止手工单文件写 memory_main**（会破坏主次跟进一致性）。分类路由（R5）与失败策略详见 [references/common/pa/working_memory_rules.md](references/common/pa/working_memory_rules.md) §2 / §2.1。
-
-### 记忆落盘与全局跟进（治本，无独立归档步骤）【硬性】
-
-对话中每完成一段实质工作即经 `write_project` 落盘，**写入即归档**——无需手工剪切/移动：
-1. 落 `{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md`（append-only，带分钟级时间戳，天然按时间排序）
-2. 幂等 upsert `memory/memory_main.md` 的 `## {项目名}` 分段（全局自动跟进）
-3. 刷新 `{主docs}/SUMMARY_RJ.md`（见 [summary_view.md](references/common/pa/summary_view.md) §三触发2）
-
-**长期经验（关键决策/约定）**：直接以 `write_project` 写入全局 `memory/memory_main.md` 的对应项目分段，始终保留、不参与"当日归档"。
-
-**跨天场景**：文件名自带 `YYYYMMDD` 时间戳，跨午夜的两条记忆分别落在各自日期的文件中，无需特别分流。
+**长期经验（关键决策/约定）**：经 `write_project` 写入全局对应项目分段，始终保留、不参与"当日归档"。分类路由（R5）与失败策略详见 [working_memory_rules.md](references/common/pa/working_memory_rules.md) §2 / §2.1。
 
 其他步骤可根据任务级别跳过；memory 读 + 写（经 write_project）不可跳过。
 
@@ -582,28 +572,6 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 | 任务完成 | agent 报告任务完成时 | outcome（根据用户反馈判定）、feedback_signals |
 | 任务中断 | 对话结束或超时 | outcome=unknown |
 
-### 💾 三层记忆导图
-
-```
-记忆体系（RAM/Disk模型：上下文=RAM易失，文件=Disk持久）
-│
-├─ 🔴 热记忆【硬性，自动加载】
-│   ├─ 文件：SKILL.md + references/
-│   ├─ 内容：协作框架规则
-│   └─ 操作：每次对话自动在上下文，无需手动读取
-│
-├─ 🟢 全局聚合记忆【弹性，启动必读，仅供参考】
-│   ├─ 文件：memory/memory_main.md（skill 包内）
-│   ├─ 内容：跨项目长期经验，按 ## {项目名} 分段聚合
-│   ├─ ⚠️ 顶部标注："仅供参考，以你当前指令为准"
-│   └─ 操作：每次新对话启动读；经 write_project 自动 upsert
-│
-└─ 🟡 项目记忆【弹性，任务级】
-    ├─ 文件：{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md
-    ├─ 内容：本项目按任务阶段的记忆
-    └─ 操作：任务进行中经 write_project 落盘；自动同步全局
-```
-
 ---
 
 ## §0.5 Skill 管理决策树（何时调用其他 Skill）
@@ -638,19 +606,6 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 3. **调用专用 skill 时必记 memory**：在 memory 中记录"调用了 XX skill 处理 YY 任务"（经 `write_project` 落盘），留痕便于后续追溯——这也是 §1.6 每轮声明 skill 使用的数据源
 4. **专用 skill 不可用时才回退通用能力**：专用 skill 未安装 / 不匹配 / 能力不足时，才回退到通用能力，**且需明确告知用户**"专用 skill XX 不可用，使用通用能力顶上，可能效果不如专用 skill"
 
-**判定流程**：
-
-```
-接到任务
-│
-├─ 扫 §0 触发钩子表 + 翻 skill_management.md
-│   ├─ 命中专用 skill → 调用该 skill + memory 留痕"调用 XX skill 处理 YY"
-│   │
-│   └─ 未命中 / 专用 skill 不可用 → 回退通用能力 + 明确告知用户"专用 skill 不可用，用通用能力顶上"
-│
-└─ 进入 §0 流程决策树后续分支
-```
-
 **与 §0.5 的关系**：§0.5 定义"何时调用其他 Skill"的决策树（静态能力清单），§0.55 定义"接到任务必须先查"的执行时点（动态触发规则）。两者互补，不冲突——§0.5 是"知道有这些 skill"，§0.55 是"每次接任务都要查一遍"。
 
 > 类比：医生接诊第一动作是翻诊断手册 + 查专科医生目录，不是凭经验直接开药。专科医生在（专用 skill）→ 转诊；不在 → 自己看（通用能力）+ 告知患者"这科没专科医生，我全科顶上"。
@@ -678,24 +633,11 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 | 需要并行处理的独立任务 | ✅ 并行召唤多个副 agent |
 | 跨领域综合任务 | ✅ 召唤多个不同领域副 agent |
 
-**召唤流程**：
-
-```
-主 agent 接到任务 → 跑 launch_subagent_rj.py suggest --task "..." 获取建议
-→ 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task + 角色配置）
-→ 副 agent 读对应 references 做只读调研 → 返回结论
-→ 主 agent 守 HARD-GATE → 呈现用户确认 → 写操作
-```
+**召唤流程**：主 agent 跑 `launch_subagent_rj.py suggest --task "..."` 获取建议 → 按建议用 Task 工具启动副 agent → 副 agent 读对应 references 只读调研返回结论 → 主 agent 守 HARD-GATE 呈现确认 → 写操作。
 
 **详细规则**：角色配置 / 知识库 / 触发词 / 输出格式 / 权限白名单 / 错误处理，详见 [references/common/pda/subagents_rj.md](references/common/pda/subagents_rj.md)
 
-**多 agent 地界机制**（融合·C8 部分放弃）：
-- **全局段**（适配吸收）：副 agent 调研时传递全局上下文（整体干什么/调研哪块/结论回哪里）——不是 参考项目 原始的"谁管哪段/接缝在哪"（副 agent 只读不"管"段）
-- **共享写入点归属**（显式放弃）：副 agent 只读不写，无共享写入点冲突（§0.56 权限白名单已明确"所有写操作由主 agent 守 HARD-GATE 后执行"）
-- **A 证据过 B 战场**（显式放弃）：副 agent 只读调研无"战场"，不适用
-- **建设与删除不给同一 agent**（显式放弃）：副 agent 只读不建设不删除，不适用
-- **合并排队提示**（显式放弃）：副 agent 不合并不 CI，不适用
-- 详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "多 agent 地界"节
+**多 agent 地界机制**（融合·C8 部分放弃）：副 agent 调研时传递全局上下文（整体干什么/调研哪块/结论回哪里）；共享写入点归属 / A 证据过 B 战场 / 建设删除分离 / 合并排队 4 项因副 agent 只读不写而**显式放弃，不适用**。详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "多 agent 地界"节
 
 **与 §1.6 的关系**：召唤副 agent 后，§1.6 声明格式扩展为 `[skill: riji-skill + subagent: xxx_agent_riji]`
 
@@ -797,24 +739,9 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 3. **跳过声明视为偏离**：违反 Memory First（轨迹不可追溯）+ 违反 §0.55 先查 skill 原则（无法判断是否查过 skill），触发 SKILL.md §7 Red Flags
 4. **声明的目的**：给用户 / 未来审查者一个清晰的"本轮用了哪些能力"轨迹，便于 ①事后复盘"为什么这么做" ②审计"是否走了专用 skill 路径" ③调试"问题出在哪个 skill 调用上"
 
-**声明示例**：
+**声明示例**：`[skill: riji-skill only]` —— 本轮处理"读 SUMMARY + memory 建立上下文"任务，只调用了 riji-skill（读状态 / 写记忆），未涉及其他专用 skill。
 
-```
-[skill: riji-skill + web-dev]
-本轮处理"建一个落地页"任务，先查 §0 触发钩子表命中 web-dev skill，调用 web-dev 处理页面生成，riji-skill 提供 HARD-GATE / Memory First 协作框架。
-
-[skill: riji-skill only]
-本轮处理"读 SUMMARY + memory 建立上下文"任务，只调用了 riji-skill（读状态 / 写记忆），未涉及其他专用 skill。
-
-[skill: none, 通用能力]
-本轮处理"回答 JWT 是什么"纯概念问答，未调用任何 skill，直接用通用能力回答（读完 memory 后）。
-```
-
-**与 §0.55 的关系**：§0.55 是"动作侧"——接任务必须查 skill；§1.6 是"留痕侧"——查到用了什么每轮声明。两者配合形成"查 + 声明"的完整闭环，任何一环缺失都视为偏离。
-
-**与 Memory First 的关系**：声明写入响应首行 = 给未来 /plan 步骤1（读状态）提供"上轮用了什么 skill"的轨迹，是 Memory First 在"能力调用维度"的补强——memory 记"做了什么"，声明记"用了什么能力"。
-
-> 类比：医生每写一条医嘱都要标注"用了哪本指南 + 哪个科室会诊"——不标 = 无法事后追溯诊疗依据。agent 每轮响应也要标注"用了哪个 skill"，不标 = 无法事后复盘决策依据。
+**与 §0.55 / Memory First 的关系**：§0.55 是"动作侧"（接任务必须查 skill），本节是"留痕侧"（用了什么每轮声明），两环缺一即偏离；声明轨迹同时是下一轮 /plan 步骤1 读状态的数据源——memory 记"做了什么"，声明记"用了什么能力"。
 
 ---
 
