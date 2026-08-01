@@ -1,7 +1,7 @@
 ---
 title: {任务名} - 任务笔记
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 ---
@@ -12,7 +12,7 @@ last_updated: YYYY-MM-DD HH:MM
 
 # memory：{任务名}
 
-> 版本：v1.1.0 | 更新：YYYY-MM-DD HH:MM
+> 版本：v1.0.0 | 更新：YYYY-MM-DD HH:MM
 
 ## 任务一句话
 

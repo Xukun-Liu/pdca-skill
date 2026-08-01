@@ -7,7 +7,7 @@
 
 > 阶段标签：A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 新增：2026-07-17 | PDCA 标签：A.learn
+> 版本：v1.0.0 | 新增：2026-07-17 | PDCA 标签：A.learn
 > 对应脚本：[scripts/skill_graph_build.py](../scripts/skill_graph_build.py)
 > 参考来源：GitHub 调研（19 次查询 0 完全匹配，填补赛道空白）
 

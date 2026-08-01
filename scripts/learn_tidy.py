@@ -108,7 +108,7 @@ def _backup_file(src_path, backup_dir):
 
 
 def cmd_count(args):
-    """轻量统计 memory_main.md 条目数，与阈值比较输出 JSON（learn_into_act v1.2.1 新增）
+    """轻量统计 memory_main.md 条目数，与阈值比较输出 JSON（learn_into_act v1.0.0 新增）
 
     Args:
         args: argparse Namespace，含 threshold(int)/memory_path(str)
@@ -2378,7 +2378,7 @@ def main():
     write_manifest_parser.add_argument('--state', default='pending',
                                        help='LearnState 初始状态 JSON 字符串（默认 "pending"）')
 
-    # count 子命令注册（learn_into_act v1.2.1 新增）
+    # count 子命令注册（learn_into_act v1.0.0 新增）
     sub_count = subparsers.add_parser('count', help='统计 memory 条目数与阈值比较')
     sub_count.add_argument('--threshold', type=int, default=20,
                            help='触发 learn 的条目数阈值（默认 20，负数自动用默认值）')

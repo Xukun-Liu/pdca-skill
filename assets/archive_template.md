@@ -1,11 +1,11 @@
 ---
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 ---
 
 # 归档任务袋 · {task}_{ts}
 
-> 版本：v1.1.0 | 更新：{date}
+> 版本：v1.0.0 | 更新：{date}
 > 结构：`archive_rj/{task}_{YYYYMMDD_HHMM}/`（任务启动时间戳从原文件名提取）
 
 ## 任务袋结构

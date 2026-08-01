@@ -11,7 +11,7 @@ pdca: C.verify
 keywords: [verify, check, reject, test]
 ---
 
-> 版本：v1.1.0
+> 版本：v1.0.0
 > 阶段标签：C.verify
 
 # Loop Verifier

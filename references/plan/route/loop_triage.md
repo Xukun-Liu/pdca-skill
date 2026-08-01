@@ -11,7 +11,7 @@ pdca: P.route
 keywords: [triage, priority, plan]
 ---
 
-> 版本：v1.1.0
+> 版本：v1.0.0
 > 阶段标签：P.route
 
 # Loop Triage

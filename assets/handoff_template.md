@@ -1,7 +1,7 @@
 ---
 title: {任务名} - 交接文档
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 handoff_from: [交接人]
@@ -11,7 +11,7 @@ status: [进行中/暂停/完成]
 
 # handoff：{任务名}
 
-> 版本：v1.1.0 | 更新：YYYY-MM-DD HH:MM
+> 版本：v1.0.0 | 更新：YYYY-MM-DD HH:MM
 
 ## 1. 当前状态
 

@@ -194,12 +194,12 @@ section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
 /* Badges */
 .badge-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
 .mini-badge { font-size: 11px; padding: 3px 10px; border-radius: 100px; font-weight: 600; }
-.mb-blue { background: rgba(108,140,255,.12); color: var(--accent); }
-.mb-green { background: rgba(52,211,153,.12); color: var(--accent3); }
-.mb-yellow { background: rgba(245,158,11,.12); color: var(--accent4); }
-.mb-red { background: rgba(248,113,113,.12); color: var(--accent5); }
-.mb-cyan { background: rgba(56,189,248,.12); color: var(--accent6); }
-.mb-purple { background: rgba(167,139,250,.12); color: var(--accent2); }
+.mblue { background: rgba(108,140,255,.12); color: var(--accent); }
+.mgreen { background: rgba(52,211,153,.12); color: var(--accent3); }
+.myellow { background: rgba(245,158,11,.12); color: var(--accent4); }
+.mred { background: rgba(248,113,113,.12); color: var(--accent5); }
+.mcyan { background: rgba(56,189,248,.12); color: var(--accent6); }
+.mpurple { background: rgba(167,139,250,.12); color: var(--accent2); }
 
 /* Footer */
 footer { text-align: center; padding: 48px 24px; border-top: 1px solid var(--border); color: var(--text3); font-size: 13px; }
@@ -253,6 +253,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
 <nav>
   <div class="logo">riji-skill <span>v1.0.0</span></div>
   <div class="nav-links">
+    <a href="#core">核心定位</a>
     <a href="#pdca">PDCA 戴明环</a>
     <a href="#pain">痛点</a>
     <a href="#what">是什么</a>
@@ -269,7 +270,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
   <h1>把管理学的<br><span class="gradient-text">PDCA 戴明环，变成 AI 的协作宪法</span></h1>
   <p class="subtitle">riji-skill 是一套给 AI 编程助手用的协作框架。核心理念：将质量管理中验证了70年的 PDCA（计划-执行-检查-处理）循环，嫁接到 AI 协作中，让 AI 助手从"凭感觉干活"变成"有章法协作"。</p>
   <div class="cta-row">
-    <a href="#pdca" class="btn btn-primary">了解 PDCA 思想</a>
+    <a href="#core" class="btn btn-primary">了解核心定位</a>
   </div>
   <div class="stats-row" style="max-width:800px;margin-top:60px;">
     <div class="stat-item"><div class="stat-num">7</div><div class="stat-label">条铁律</div></div>
@@ -277,6 +278,32 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
     <div class="stat-item"><div class="stat-num">32</div><div class="stat-label">个自动化脚本</div></div>
     <div class="stat-item"><div class="stat-num">3</div><div class="stat-label">层记忆系统</div></div>
     <div class="stat-item"><div class="stat-num">0</div><div class="stat-label">外部依赖</div></div>
+  </div>
+</section>
+
+<!-- ===== 三定位 Overview ===== -->
+<section id="core" class="fade-in" style="padding:60px 24px 40px;">
+  <div style="max-width:900px;margin:0 auto;">
+    <div class="section-label">核心定位</div>
+    <h2 class="section-title">三个定位，一个闭环</h2>
+    <p class="section-desc">riji-skill 不是平级三件套，而是层级 + 闭环——三个定位互锁，形成核心架构：</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:32px;">
+      <div class="memory-layer hot" style="border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
+        <span class="layer-badge">① 记忆 · 基础</span>
+        <h4 style="margin-top:12px;">个人资产积累</h4>
+        <p style="font-size:14px;color:var(--text2);">跟随你本人（不跟项目、不跟工具）——经验沉淀（做过什么、学到什么）+ 状态记忆（做到哪、卡在哪）两个分量持续积累，越用越厚。AI 是流水的兵，记忆是铁打的营盘。</p>
+      </div>
+      <div class="memory-layer warm" style="border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
+        <span class="layer-badge">② PDCA · 主干</span>
+        <h4 style="margin-top:12px;">思维方法论 + 统一调度中枢</h4>
+        <p style="font-size:14px;color:var(--text2);">所有能力归到 /plan /do /check /act 四指令——记忆系统、副 agent 调度、文档三件套、/loop 循环、learn 自进化、handoff_tidy、触发钩子、第一性原理拆解、对抗性审查、用户数据外置、Bootstrap 初始化、Git 回溯保障、SUMMARY 根索引、Red Flags、安全处理、手绘呈现、agent-find。用户只需记 4 个词。</p>
+      </div>
+      <div class="memory-layer cold" style="border:1px solid var(--border);border-radius:var(--radius);padding:28px;">
+        <span class="layer-badge">③ docs · 产出</span>
+        <h4 style="margin-top:12px;">可追溯/可交接/可复用</h4>
+        <p style="font-size:14px;color:var(--text2);">把 AI 协作从"聊完就散"升级为工程化方法。spec（方案）+ task（执行清单）+ handoff（交接记录）+ memory（结构化记忆）——每次协作成果都变成文件留下来。riji-skill 自身就是这套方法搭出来的活样本。</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -293,7 +320,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
     <p>PDCA（Plan-Do-Check-Act）循环，又称<strong>戴明环</strong>，由质量管理大师 W·爱德华兹·戴明在1950年代提出。它最初用于日本制造业的质量改进（丰田生产方式的核心），后来被 ISO 9001 国际标准采纳，成为全球公认的<strong>持续改进方法论</strong>。</p>
     <div class="pdca-history">
       <p><strong>核心思想</strong>：任何工作都可以拆成四步循环——先计划（Plan）、再执行（Do）、然后检查（Check）、最后处理改进（Act）。完成一轮后，把经验教训带入下一轮，形成<strong>螺旋上升的持续改进</strong>。</p>
-      <p style="margin-top:12px;"><strong>为什么适用于 AI 协作？</strong> AI 助手最大的问题不是"不聪明"，而是"没章法"——没计划就动手、做完了不检查、做错了不复盘。PDCA 正好解决了这4个问题。riji-skill 把 PDCA 变成 AI 助手的<strong>四步工作习惯</strong>：</p>
+      <p style="margin-top:12px;"><strong>为什么适用于 AI 协作？</strong> AI 助手最大的问题不是"不聪明"，而是"没章法"——没计划就动手、做完了不检查、做错了不复盘。PDCA 正好解决了这4个问题。riji-skill 把 PDCA 做成<strong>统一调度中枢</strong>：你只需记 /plan /do /check /act 四个词，所有能力——记忆系统、副 agent 调度、文档三件套、/loop 循环、learn 自进化、handoff_tidy、触发钩子、第一性原理拆解、对抗性审查、用户数据外置、Bootstrap 初始化、Git 回溯保障、SUMMARY 根索引、Red Flags、安全处理、手绘呈现、agent-find——都在这四步里自动归位。</p>
     </div>
   </div>
 
@@ -340,7 +367,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
         <li>方案探索：至少2种方案对比，HARD-GATE确认</li>
         <li>实施计划：生成 spec/task 文档，含对抗性审查</li>
       </ul>
-      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-red">只读纪律</span><span class="mini-badge mb-green">HARD-GATE</span></div>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mred">只读纪律</span><span class="mini-badge mgreen">HARD-GATE</span></div>
     </div>
     <div class="phase-card">
       <h4>🔨 /do（执行）</h4>
@@ -351,7 +378,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
         <li>No Placeholders：给完整代码，不给 TBD/伪代码</li>
         <li>遇到报错先询问用户意图，不自动瞎试</li>
       </ul>
-      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-blue">code_rules</span><span class="mini-badge mb-cyan">逐项打勾</span></div>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mblue">code_rules</span><span class="mini-badge mcyan">逐项打勾</span></div>
     </div>
     <div class="phase-card">
       <h4>✅ /check（检查）</h4>
@@ -362,7 +389,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
         <li>Reflexion 结构化反思三问</li>
         <li>不通过→回 /do 修补，通过→进入 /act</li>
       </ul>
-      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-red">对抗审查</span><span class="mini-badge mb-yellow">逐条核对</span></div>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mred">对抗审查</span><span class="mini-badge myellow">逐条核对</span></div>
     </div>
     <div class="phase-card">
       <h4>📦 /act（处理 · 闭环）</h4>
@@ -371,9 +398,9 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
         <li>刷新文档索引 SUMMARY_RJ.md</li>
         <li>跑 handoff_tidy.py 整理归档</li>
         <li>生成 TASK_STATE.md 作为下一轮 /plan 输入</li>
-        <li>询问是否跑 learn_cycle 自进化</li>
+        <li>询问是否跑 learn cycle 自进化</li>
       </ul>
-      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mb-purple">记忆落盘</span><span class="mini-badge mb-green">闭环迭代</span></div>
+      <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mpurple">记忆落盘</span><span class="mini-badge mgreen">闭环迭代</span></div>
     </div>
   </div>
 
@@ -381,7 +408,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
     <h3>🏭 制造业的智慧，用在 AI 协作上</h3>
     <p>丰田用 PDCA 把汽车缺陷率降到百万分之一，ISO 用 PDCA 管理全球数百万企业的质量体系。</p>
     <p>riji-skill 做的事很简单：<strong>把 PDCA 从"管理学课本"搬进"AI 助手的日常习惯"</strong>。你说 /plan，AI 就进入"计划模式"——先想清楚再动手；你说 /do，它才动手干；你说 /check，它对照标准逐条验收；你说 /act，它把经验教训存进记忆，下次用得上。</p>
-    <p class="big-text">PDCA 不是新东西，但把它固化到 AI 的协作流程中——这是 riji-skill 的核心创新。</p>
+    <p class="big-text">PDCA 不是新东西，但 riji-skill 做了两个核心创新：①把 PDCA 固化到 AI 协作流程；②把所有能力归到 /plan /do /check /act 四个指令下——用户只需记四个词，就能驱动整个框架。</p>
   </div>
 </section>
 
@@ -409,7 +436,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
       <div class="pain-icon">🤔</div>
       <h3>聊着聊着它"忘了"之前定好的事</h3>
       <p>上下文窗口是有限的，对话一长 AI 就"失忆"——上次确认过的方案、踩过的坑，全忘了，又要重新说一遍。</p>
-      <div class="solution">Memory First 铁律——重要信息自动写入文件（"存硬盘"），每次启动自动读取。就像开会有会议纪要。</div>
+      <div class="solution">Memory First 铁律——重要信息自动写入文件（"存硬盘"），每次启动自动读取。就像个人笔记本，越记越厚，下次直接用——不只是"不失忆"，更是"积累复利"。</div>
     </div>
     <div class="pain-card">
       <div class="pain-icon">😤</div>
@@ -633,7 +660,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
     <p class="big-text">任何重要信息必须写入文件。只在上下文里记着 = 没存。</p>
     <p>riji-skill 的 Memory First 原则就是：<strong>启动先读硬盘（恢复记忆），结束必写硬盘（保存记忆），中间关键节点存盘（防止丢失）。</strong></p>
     <p style="margin-top:16px;padding:12px 16px;background:rgba(52,211,153,.08);border-radius:8px;border-left:3px solid var(--accent3);">
-      <strong>📦 用户数据外置（方案B）：</strong>记忆、文档、输出等用户数据放在 <code style="color:var(--accent3);">~/.riji-skill/data/</code>，与框架文件物理分离。<strong>升级时解压覆盖框架文件，用户数据 0 丢失</strong>——再也不用担心升级覆盖丢数据。三级优先级路径解析（环境变量 > 配置文件 > 默认值），老用户首次启动自动迁移。
+      <strong>📦 用户数据外置：</strong>记忆、文档、输出等用户数据放在 <code style="color:var(--accent3);">~/.riji-skill/data/</code>，与框架文件物理分离。<strong>升级时解压覆盖框架文件，用户数据 0 丢失</strong>——再也不用担心升级覆盖丢数据。三级优先级路径解析（环境变量 > 配置文件 > 默认值），老用户首次启动自动迁移。
     </p>
   </div>
 </section>
@@ -659,7 +686,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
     </div>
     <div class="feature-card">
       <h4>📄 文档三件套</h4>
-      <p>spec（方案）+ task（执行步骤）+ handoff（交接）自动生成。统一命名规范，generate_docs.py 一键创建目录结构。</p>
+      <p>spec（方案）+ task（执行步骤）+ handoff（交接）自动生成。统一命名规范，generate_docs.py 一键创建目录结构。每次协作成果都变成文件留下来。</p>
       <ul><li>spec = PRD + 技术规格</li><li>task = 怎么做 + 验证 + 边界条件</li><li>handoff = 变更历史 + 接手须知</li></ul>
     </div>
     <div class="feature-card">
@@ -687,24 +714,6 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
       <p>说一句"master_graph"，自动扫描所有 AI 工具的记忆，对比多源技能全集，生成"已掌握/未掌握"三段式技能图谱，三格式同步输出（md/csv/svg）。</p>
       <ul><li>8白名单 + 关键词发现</li><li>多源融合（roadmap.sh等）</li><li>问答式可视化</li></ul>
     </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ===== server_lite 说明 ===== -->
-<section id="server-lite" class="fade-in">
-  <div class="section-label">可选组件</div>
-  <h2 class="section-title">server_lite —— 已实现但不主动引导使用的可选组件</h2>
-  <p class="section-desc">server_lite（日积面板）是一套完整的本地 Web 管理台（Flask + 原生 JS），含仪表盘、项目管理、技能管理、知识管理、数据管理 5 大模块。</p>
-
-  <div class="analogy-box">
-    <h3>🔧 为什么当前不主动引导使用？</h3>
-    <p>server_lite 的功能与 riji-skill 的核心定位（AI 对话协作框架）存在重叠——查看文档、管理记忆、配置数据路径等操作，AI 对话都能完成。当前版本不再主动引导用户启动 server_lite，以减少用户认知负担。</p>
-    <p class="big-text">代码完整保留，用户可主动启用</p>
-    <p><strong>已实现的能力</strong>：完整的 Flask 应用（v2.0.0）+ 4 个 API blueprint + 前端界面 + 测试套件 + 7 轮对抗审查过的数据管理 API（路径遍历防护、系统目录黑名单、localhost 限制）。</p>
-    <p><strong>如需启用</strong>：运行 <code style="color:var(--accent3);">python run_server.py</code>，启动后访问 <code style="color:var(--accent3);">http://127.0.0.1:5210</code>。</p>
-    <p><strong>恢复引导的 checklist</strong>：见 <code style="color:var(--accent3);">docs_rj/spec_rj/server_lite_retention_spec_*.md</code>。</p>
   </div>
 </section>
 

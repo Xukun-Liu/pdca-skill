@@ -3,7 +3,7 @@ name: riji-skill
 description: 协作框架 + 技能编排器。自身不实现具体能力，只负责跨任务硬规则（7条铁律/HARD-GATE/Memory First/触发钩子路由）与按需加载 references/ 下的专业模块；每次对话自动加载，全局生效。
 agent_created: true
 license: Apache-2.0
-version: "v1.1.0"
+version: "v1.0.0"
 author: riji-skill contributors
 keywords:
   - 协作框架
@@ -14,7 +14,7 @@ keywords:
 category: workflow
 ---
 
-<!-- Skill 版本：v1.1.0 | 更新：2026-07-29 | 历史变更详见 HISTORY.md -->
+<!-- Skill 版本：v1.0.0 | 更新：2026-07-29 | 历史变更详见 HISTORY.md -->
 
 # riji skill
 
@@ -53,8 +53,22 @@ category: workflow
 
 ---
 
-## 🧬 脊柱模型（PDCA 4 环循环）：/plan → /do → /check → /act
+## 🧬 三定位 + PDCA 四环：/plan → /do → /check → /act
 
+> **riji-skill 三个核心定位（三位一体闭环）**：
+> ```
+> ① 记忆（基础·个人资产·跟人不跟工具）
+>    ↓ 撑起（记忆是 PDCA 的输入/输出物质）
+> ② PDCA（主干·思维方法论 + 统一调度中枢）
+>    ↓ 产出（/plan 产 spec/task、/act 产 memory/handoff）
+> ③ docs（产出·物质载体·工程化管理方法）
+>    ↓ 反哺（docs 持久化记忆，喂下一轮 /plan）
+> ① 记忆（/act 写 memory = 下一轮 /plan 输入）→ 闭环
+> ```
+> - **记忆**：跟随你本人（不跟项目、不跟工具）的个人资产——经验沉淀（做过什么、学到什么）+ 状态记忆（做到哪、卡在哪）两个分量持续积累，越用越厚。AI 是流水的兵，记忆是铁打的营盘
+> - **PDCA**：既是解决问题的思维方法论，又是统一调度中枢——所有能力归一到 /plan /do /check /act 四指令
+> - **docs**：把 AI 协作从"聊完就散"升级为可追溯/可交接/可复用的工程化方法——spec（方案）+ task（执行清单）+ handoff（交接记录）+ memory（结构化记忆），每次协作成果都变成文件留下来。riji-skill 自身就是这套方法搭出来的活样本
+>
 > 本框架所有动作归到 PDCA 4 环。SKILL.md 正文按主题组织（方便翻阅），此模型用于"理解全貌 + 路由到对应 reference"。每个 reference 文件头部贴 PDCA 标签（母标签 P/D/C/A + 子标签 X.xxx），按标签即可定位。
 >
 > ### 4 环说明
@@ -675,8 +689,8 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 
 **详细规则**：角色配置 / 知识库 / 触发词 / 输出格式 / 权限白名单 / 错误处理，详见 [references/common/pda/subagents_rj.md](references/common/pda/subagents_rj.md)
 
-**leader 多 agent 地界机制**（leader 融合·C8 部分放弃）：
-- **全局段**（适配吸收）：副 agent 调研时传递全局上下文（整体干什么/调研哪块/结论回哪里）——不是 leader 原始的"谁管哪段/接缝在哪"（副 agent 只读不"管"段）
+**多 agent 地界机制**（融合·C8 部分放弃）：
+- **全局段**（适配吸收）：副 agent 调研时传递全局上下文（整体干什么/调研哪块/结论回哪里）——不是 参考项目 原始的"谁管哪段/接缝在哪"（副 agent 只读不"管"段）
 - **共享写入点归属**（显式放弃）：副 agent 只读不写，无共享写入点冲突（§0.56 权限白名单已明确"所有写操作由主 agent 守 HARD-GATE 后执行"）
 - **A 证据过 B 战场**（显式放弃）：副 agent 只读调研无"战场"，不适用
 - **建设与删除不给同一 agent**（显式放弃）：副 agent 只读不建设不删除，不适用
@@ -925,8 +939,8 @@ riji-skill/
 │   ├─ git 工作流规范 → references/do/code/git_workflow.md（commit 规范/分支策略/标签管理/冲突处理）
 │   ├─ 校验 commit message 格式 → scripts/commit_lint.py（纯 Python，零依赖，9 条规则）
 │   ├─ 安装 commit-msg hook → scripts/commit_lint_install.py（install/uninstall/status）
-│   ├─ goal_brief/任务书/防作弊/反向验证/暗卷/多agent → references/plan/design/goal_brief.md（leader 机制详述：六节结构/防五种死法/法与情报/明暗卷/探索型改四处）
-│   ├─ 戏文/训话/写作风格/大白话 → references/common/style/writing_style.md（leader 写作风格：大白话规范/戏文三铁律/训话6句/标题表15个/语气句5条/画饼4条）
+│   ├─ goal_brief/任务书/防作弊/反向验证/暗卷/多agent → references/plan/design/goal_brief.md（参考项目 机制详述：六节结构/防五种死法/法与情报/明暗卷/探索型改四处）
+│   ├─ 戏文/训话/写作风格/大白话 → references/common/style/writing_style.md（参考项目 写作风格：大白话规范/戏文三铁律/训话6句/标题表15个/语气句5条/画饼4条）
 │   └─ 涉及专业领域能力 → 见 references/plan/route/skill_management.md 先搜专用 Skill
 │
 └─ 🧪 测试验证：evals/evals.json（典型场景+预期响应+断言）
@@ -1070,7 +1084,7 @@ docs_rj/
   5. **干系人**（→§1.4）：发起人/使用者/验收人
 - **脱敏提示【硬性】**：BRD 5 问回答仅用于内部 spec（§1.0-§1.4），**市场调研关键词必须脱敏**（用通用技术名词替代项目名/客户名，如"用户认证系统"而非"XX银行用户认证系统"）
 - **每答即写回**：每个 BRD 回答立即 integrate 到 spec §1.0-§1.4 + §10 Clarifications 节，并重跑 Self-Review（每答即写+重跑 checklist 机制）
-- **三分领导的话**（leader 澄清指引）【硬性·复杂任务】：需求澄清时把用户的话分三层处理：
+- **三分领导的话**（参考项目 澄清指引）【硬性·复杂任务】：需求澄清时把用户的话分三层处理：
   1. **目标升华成数字**：用户说"加个登录功能"→追问"登录成功率目标多少？<1s 还是 <3s？"——把模糊目标变成可验收数字
   2. **手段当假设检验**：用户说"加 Redis"→实际要的是"变快"，Redis 是假设不是结论；与事实不符时目标进正文、手段写进 spec §0.1 方案对比
   3. **约束放大成有名有姓的禁区**：用户说"要安全"→追问"禁止什么？SQL 注入？权限越界？数据泄露？"——把模糊约束变成具体禁区
@@ -1081,19 +1095,19 @@ docs_rj/
 - 不可压缩的约束有哪些？（物理/逻辑/资源的硬约束，不是惯例）
 - 从约束出发，最优解是什么？（不是"别人怎么做"，而是"约束允许的最优是什么"）
 - 详见 [references/common/pc/adversarial_review.md](references/common/pc/adversarial_review.md) 第二章。简单任务可跳过此步。
-- **实测命令真实性**（leader 防幻觉）【硬性·有代码库时】：第一性原理拆解时，有代码库必须实测：
+- **实测命令真实性**（参考项目 防幻觉）【硬性·有代码库时】：第一性原理拆解时，有代码库必须实测：
   - 命令真的存在吗？（README 写的命令跑不跑得通）
   - 基线数字多少？（测试数/覆盖率/性能指标）
   - 文档与实际差多少？（API 文档与实现是否一致）
   - 摸不到环境就把自测写成 task 0 让用户实测
   - 详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "实测命令真实性"节
-- **假绿灯检查**（leader 防假绿）【硬性·有代码库时】：实测时检查三种假绿灯：
+- **假绿灯检查**（参考项目 防假绿）【硬性·有代码库时】：实测时检查三种假绿灯：
   - lint 是 `echo` 占位的（没真正检查）
   - 没 import 的文件从覆盖率报告里消失（假装没漏）
   - README 命令不存在（文档撒谎）
   - 假绿灯=坑，写进 spec §1.0 痛点
   - 详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "假绿灯检查"节
-- **富规格优先**（leader 防散文复述）【硬性·有代码库时】：仓库已有的规格性文件直接写路径当规格：
+- **富规格优先**（参考项目 防散文复述）【硬性·有代码库时】：仓库已有的规格性文件直接写路径当规格：
   - 测试套件（测试名本身就是业务要求）
   - schema（数据结构就是规格）
   - 验收脚本（脚本就是验收标准）
@@ -1127,7 +1141,7 @@ docs_rj/
   - **通过**（确认词：可以/行/好/确认/继续/OK/对/没问题）→ 进步骤6
   - **重试**（用户说"重新出方案/再想想/换个思路"）→ 重跑当前 /plan 步骤（如重新做第一性原理拆解或方案对比）
   - **标记待补**（用户说"先不弄这步/回头再补/先跳过这步"）→ TASK_STATE.md 留痕"步骤X 待补"，进下一步；后续 /check 必须核对"待补"项是否已补
-- **执行型 vs 探索型分型**（leader 分型）【硬性·复杂任务】：方案探索时先分型：
+- **执行型 vs 探索型分型**（参考项目 分型）【硬性·复杂任务】：方案探索时先分型：
   - **执行型**：能写出验收命令的（如"测试全绿""lint 通过"）→ 全套照走，硬指标验收
   - **探索型**：要答案本身的（调研/选型/"该不该做 X"）→ 硬指标只会收到凑数答案，改 4 处：
     1. 完成条件换成学习目标（结论条数设上限，每条附来源+日期）
@@ -1141,7 +1155,7 @@ docs_rj/
 - 调用 writing-plans skill 生成实施计划；**实施计划 md 顶部按 [references/common/da/hand-drawn-report.md](references/common/da/hand-drawn-report.md) 内联手绘计划图（默认带图、单文件自包含）**
 - **HARD-GATE**：实施计划呈现给你，得到明确确认词才执行
 - **Self-Review**：写完 spec/task 后，自己先过检查：简单任务过 4 项（占位符/一致性/范围/歧义），复杂任务过 9 项（占位符/一致性/范围/歧义/方案对比/验收标准/No Placeholders/错误处理/BRD 业务价值对齐）。改完再交。9 维度清单唯一维护源见 [spec_template.md](assets/spec_template.md) Self-Review 节。
-- **leader 发出前自检 6 条（协作版）**【硬性·复杂任务】：Self-Review 时额外核对 6 条：
+- **参考项目 发出前自检 6 条（协作版）**【硬性·复杂任务】：Self-Review 时额外核对 6 条：
   1. **分型对吗？**：执行型/探索型分型是否正确？验收标准形态是否匹配？
   2. **命令实测过？**：spec 里每条命令是否亲手跑过？摸不到的写进 task 0 了吗？
   3. **没问的写默认值？**：没问出口的决定是否写进 spec §0.1 "我替领导拍的板"（问题→默认值｜猜错的代价）？
@@ -1189,7 +1203,7 @@ docs_rj/
 7. 遇到报错→按报错询问机制询问用户意图（系统调试/继续原任务/其他，见 [trigger_hooks.md](references/common/pa/trigger_hooks.md) "报错询问机制"节），用户选系统调试才走 debugging.md 四步调试法+3-Strike协议，不要瞎试
 8. **/do 完成**：停下问"进入 /check 吗？"
 
-**leader 防死法机制**（leader 融合）【硬性·复杂任务】：
+**防死法机制**（融合）【硬性·复杂任务】：
 - **任务0 前提核验**：第一个 task 前跑指定命令核对基线数字，对不上就停，证据写阻塞项
 - **开工回执 ≤10 行**：任务0 过后写理解的目标/顺序/最大风险再动工（协作场景：回执呈现给用户核对，用户确认后才动工）
 - **顺手活管控**：一行能修的 bug/顺手重构/顺手装工具写进阻塞项待裁决；收不回操作（删数据/改权限）停下写阻塞项做别的
@@ -1254,7 +1268,7 @@ docs_rj/
    - **修补后独立 fresh agent 重验**【硬性·复杂任务】：Convergence 修补完成后，**必须由独立 fresh subagent 重新验证**（不让原 fixer 自证，反 sunk-cost bias）。重验 subagent 重新 dispatch，按 6 维度审查修补后的 spec/task，确认原 gap 已修复且未引入新问题。重验不通过→继续修补+再重验（max 3 cycles），达 3 cycles 仍不通过→升级用户决策。简单任务可由主 agent 自验，复杂任务必须独立 fresh subagent。
 8. **/check 完成**：通过则问"进入 /act 吗？"；不通过则问"回 /do 修补还是回 /plan 重设计？"——回 /do 修补完成后，重新进入 /check 验证修补结果
 
-**leader 验收机制**（leader 融合）【硬性·复杂任务】：
+**验收机制**（融合）【硬性·复杂任务】：
 - **暗卷抽查**：2-3 条 spec 里没写的抽查项，管理者自留，验收时复跑（明卷=spec 公开验收命令已有；暗卷=额外抽查防偷工）
 - **反向验证**：凡是"坏了没人会知道"的检查都要——故意制造一次失败证明会响，贴红→还原贴绿
 - **验收官降级**：摸不到执行环境时退化为"用户亲验清单"（协作场景无外部 agent 可转贴，让用户按清单亲验）
@@ -1302,7 +1316,7 @@ docs_rj/
    - **§7.2/§7.4 自动刷新**：handoff_tidy 自动追加 §7.2 Sync Impact 行（检测 version 变更）+ §7.4 跨任务依赖行（扫 task_rj depends_on/blocks），无需 agent 干预
    - 不重写 §3§4§5§6（手工维护，改时才动）；刷新后更新 spec_main_rj.md frontmatter 的 `last_updated`
    - **handoff_tidy 失败降级**：若步骤3 handoff_tidy 失败**且未手动补写 TASK_STATE.md**（最终无任何 TASK_STATE 产出），跳过本步骤，告警用户"spec_main_rj.md §1§2§7 指针未刷新，下次 /act 补刷"；若步骤3 已手动补写 TASK_STATE，则本步骤正常执行（基于手动 TASK_STATE 刷新 §1§2§7）
-3.6. **learn 累积量门控【自动触发·v1.2.1 新增】**：
+3.6. **learn 累积量门控【自动触发·v1.0.0 新增】**：
    - 跑 `python scripts/learn_tidy.py count --threshold 20`
    - should_run=false → 跳过 learn，记录到 memory"learn 跳过（累积量 N < 阈值 20）"，进步骤4
    - should_run=true → 自动跑 `python scripts/learn_tidy.py scan --dry-run`（不询问）

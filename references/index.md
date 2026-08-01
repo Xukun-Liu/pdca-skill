@@ -4,7 +4,7 @@
 
 # references/ 目录索引
 
-> 版本：v1.1.0 | 创建：2026-07-25 | riji-skill 参考模块导航
+> 版本：v1.0.0 | 创建：2026-07-25 | riji-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
 > 本索引是 references/ 目录的导航地图。36 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。

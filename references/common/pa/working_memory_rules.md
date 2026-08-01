@@ -6,7 +6,7 @@
 # 工作记忆规则（Working Memory Rules）
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 更新：2026-07-24
+> 版本：v1.0.0 | 更新：2026-07-24
 
 > 📦 **用户数据外置说明（v1.0.0 新增）**：全局聚合记忆 `memory/memory_main.md` 与项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 均位于外置目录 `~/.riji-skill/data/` 下（非 skill 包内）。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落外置项目记忆 + 幂等 upsert 外置全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
 

@@ -7,7 +7,7 @@
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 外迁时间：2026-07-15 12:00 | 更新：2026-07-17 05:50（新增 master_graph 行）| PDCA 标签：P.route A.handoff
+> 版本：v1.0.0 | 外迁时间：2026-07-15 12:00 | 更新：2026-07-17 05:50（新增 master_graph 行）| PDCA 标签：P.route A.handoff
 > 本文件是 riji-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -45,7 +45,7 @@
 | 分析数据/Excel数据分析/数据清洗/透视表/统计分析/图表可视化/同比环比/做看板/从表里找规律/数据分析方法论 | references/common/pd/excel_analysis.md（清洗·透视·统计·图表·预测 方法论，纯本地，内网可用） | **兜底用：agent-find 搜不到合适外部 skill 时，用本模块本地方法论；动手前先读第一节"想清楚3问"；与 office_processing.md 分工：它管"读写Excel文件"，本模块管"怎么分析出结论"** |
 | 安装skill/装skill/下载skill/找一个skill/有没有skill/skill推荐/技能/插件/扩展 | references/plan/route/skill_security.md | **自动执行 SkillAudit 安全扫描** |
 | 同步一下/整理文档/整理一下/更新记忆/梳理一下/收尾/这个阶段做完了/新人能直接上手/检查规范/审计规则/规范体检/交接/里程碑/sync/neat/tidy/版本号一致/一致性检查/清理/打扫/对一下 | references/common/da/sync-matrix.md（按矩阵逐项核对版本号+引用+文件一致性） | **自动执行全局版本号一致性检查** |
-| 规整文档/升级文档到 v1.1.0/migrate docs/按新版本规整/按新标准整理/regularize | [MIGRATION.md](../../MIGRATION.md)（按步骤整理项目 docs_rj/ 文档内容） | **扫描 docs_rj/ → 预览老文档 → HARD-GATE 确认 → 备份到 docs_rj/migration_backup_{时间戳}_{序号}/ → 按 §3 整理 → 验证 → 汇报 → 写 memory**<br>　仲裁规则：用户裸说"整理一下/整理文档"→ 上一行（sync-matrix 只核对版本号）；用户说"规整/升级/migrate/按新版本整理"→ 本行（MIGRATION.md 改内容）<br>　识别信号优先级：①无 frontmatter ②无 skill_version ③skill_version < v1.1.0 ④version 注释不一致 ⑤内容特征（无 §0 设计层等）<br>　整理范围：仅 docs_rj/{spec,task,handoff,memory}/*.md + SUMMARY_RJ.md；禁止触碰 skill 包自带 assets/ |
+| 规整文档/升级文档到 v1.0.0/migrate docs/按新版本规整/按新标准整理/regularize | [MIGRATION.md](../../MIGRATION.md)（按步骤整理项目 docs_rj/ 文档内容） | **扫描 docs_rj/ → 预览老文档 → HARD-GATE 确认 → 备份到 docs_rj/migration_backup_{时间戳}_{序号}/ → 按 §3 整理 → 验证 → 汇报 → 写 memory**<br>　仲裁规则：用户裸说"整理一下/整理文档"→ 上一行（sync-matrix 只核对版本号）；用户说"规整/升级/migrate/按新版本整理"→ 本行（MIGRATION.md 改内容）<br>　识别信号优先级：①无 frontmatter ②无 skill_version ③skill_version < v1.0.0 ④version 注释不一致 ⑤内容特征（无 §0 设计层等）<br>　整理范围：仅 docs_rj/{spec,task,handoff,memory}/*.md + SUMMARY_RJ.md；禁止触碰 skill 包自带 assets/ |
 | 验收/验收一下/审核/看一下做得对不对/看一下进度报告/交接/给你接手/handoff/存档/总结/总结一下/汇报/进度/汇总/梳理一下做了什么/产出报告/报告/让我看看总结/确认一下做得对不对/计划/方案/规划一下/出方案/做规划/盘点/能力清单 | references/common/da/hand-drawn-report.md（按内容关系类型生成手绘 SVG） | **报告/计划/盘点类输出默认在对话内附手绘 SVG 速览图，若生成 md 则 md 顶部同时内联同款 SVG（带图、单文件自包含）；交接时额外刷新 {主docs}/SUMMARY_RJ.md（见 summary_view.md）** |
 | 交接/收尾/给你接手/handoff/存档/交接工作 | references/common/da/sync-matrix.md → **自动调用 `python scripts/handoff_tidy.py --task {任务名}`** | **硬性：交接时必跑 handoff_tidy**<br>　管线：守卫+归档+刷新+漂移+外部记忆清理+平台记忆融入技能记忆+强制#3→#4同步+五问预跑+sync-matrix核对<br>　效果：自动整理文档+对齐记忆+强制走技能记忆（禁止用平台记忆替代）+融入平台记忆并删除原件 |
 | 定验收标准/写验收/写验收条件/DoD/验收严格点/怎么算做完/acceptance/给定当那么/GivenWhenThen | references/common/pc/acceptance_criteria.md（DoD+Given/When/Then+4道质量闘门） | **定义"做完了"的硬标准——写 spec 验收小节前先读；与 adversarial_review.md(找茬执行)+red_flags.md(偏离报警) 配合成严格验收闭环** |

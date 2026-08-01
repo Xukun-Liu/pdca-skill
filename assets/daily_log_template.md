@@ -1,14 +1,14 @@
 ---
 title: YYYY-MM-DD - 归档日志
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 ---
 
 # YYYY-MM-DD（归档）
 
-> 版本：v1.1.0 | 更新：YYYY-MM-DD HH:MM
+> 版本：v1.0.0 | 更新：YYYY-MM-DD HH:MM
 > 本文件为历史命名的归档日志模板（保留历史命名）。新模型中项目记忆写入即落盘到 `{项目根}/docs_rj/memory_rj/{任务名}_memory_YYYYMMDD_HHMM.md` 并经 `write_project` 自动 upsert 全局 `memory/memory_main.md`，无独立归档步骤、无 SESSION_END 收尾标记。
 
 ## 工作记录

@@ -1,7 +1,7 @@
 ---
 title: 项目级长期记忆
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 ---

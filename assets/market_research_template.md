@@ -1,8 +1,8 @@
 <!--
 模板名: market_research_template.md
 用途: 市场调研报告模板，对齐 某开源项目 market-research.md 9 段结构 + SKILL.md §6 /plan 步骤4a.5 6 项质检
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 配套规则: SKILL.md §6 /plan 步骤4a.5 市场调研质量检查 + spec_template.md §0.A BRD 视角对比表
 PDCA标签: P.design（市场调研属方案设计前置）
 -->

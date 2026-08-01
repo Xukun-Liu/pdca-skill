@@ -5,7 +5,7 @@
 
 # 副 agent 角色配置总表（riji-skill 多 agent 架构）
 
-> 版本：v1.1.0 | 创建：2026-07-21 | 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
+> 版本：v1.0.0 | 创建：2026-07-21 | 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
 >
 > 本文件定义 riji-skill 的 9 个副 agent 角色配置。主 agent 按触发钩子表的关键词，用 TRAE Task 工具临时召唤对应副 agent 做只读调研，结果回传给主 agent，主 agent 守 HARD-GATE 后写操作。
 >

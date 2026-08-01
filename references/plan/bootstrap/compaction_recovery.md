@@ -6,7 +6,7 @@
 # 上下文压缩恢复协议（Compaction Recovery Protocol）【硬性】
 > 阶段标签：P（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 最近更新：2026-07-21 | PDCA 标签：P.bootstrap
+> 版本：v1.0.0 | 最近更新：2026-07-21 | PDCA 标签：P.bootstrap
 > 对应 SKILL.md 章节：§1.5 上下文压缩恢复协议
 
 > 规则在 SKILL.md 前端（不易被压缩），记忆在文件系统（必须主动读取）。

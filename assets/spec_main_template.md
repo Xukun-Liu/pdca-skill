@@ -1,7 +1,7 @@
 ---
 title: {项目名} 项目总 spec（source of truth）
-version: v1.1.0
-skill_version: v1.1.0
+version: v1.0.0
+skill_version: v1.0.0
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 owner: {负责人}
@@ -12,7 +12,7 @@ based_on: null  # 本文件是顶层模板，不派生自其他（实例才填 b
 
 # spec_main_{项目名}.md · {项目名} 项目总 spec
 
-> 版本：v1.1.0 | 更新：YYYY-MM-DD HH:MM
+> 版本：v1.0.0 | 更新：YYYY-MM-DD HH:MM
 > ⚠️ No Placeholders 铁律：禁止 TBD/TODO/"适当处理"/"类似XX"；给具体内容、明确路径、可验证标准
 > 📋【模板说明·复制后删除本行】本文件是模板，复制到 `{项目根}/docs_rj/spec_main_{项目名}.md` 后：① 将所有 `{xxx}` 占位符替换为实际内容；② 删除所有标有【模板说明】的行；③ 保留"使用说明"块（可按需简化）
 

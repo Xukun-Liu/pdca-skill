@@ -6,7 +6,7 @@
 # 汇总视图规范（Summary View）
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 更新：2026-07-29
+> 版本：v1.0.0 | 更新：2026-07-29
 
 > 📖 **什么时候读这个文件**：
 > - 不确定 SUMMARY_RJ.md 该写什么/怎么写时
@@ -59,7 +59,7 @@
 
 ## 四、SUMMARY_RJ.md 模板结构
 
-见 `assets/summary_template.md`。支持两种实现模式（v1.1.0 新增模式 B）：
+见 `assets/summary_template.md`。支持两种实现模式（v1.0.0 新增模式 B）：
 
 ### 模式 A：逐文件列出（原 v1.0.0 模式）
 
@@ -71,7 +71,7 @@
 6. **🤝 Handoff 文档** section：列出所有 {主docs}/handoff_rj/{任务名}_handoff_*.md
 7. **🔗 漂移检查清单** section：grep 命令模板
 
-### 模式 B：INDEX 二级索引（v1.1.0 新增，推荐大项目用）
+### 模式 B：INDEX 二级索引（v1.0.0 新增，推荐大项目用）
 
 当项目文件数超过 20 时，逐文件列出会导致 SUMMARY 膨胀难维护。此时可用 INDEX 二级索引模式：
 

@@ -7,7 +7,7 @@
 
 > 阶段标签：A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 新增：2026-07-15 | 最近更新：2026-07-29（learn_into_act 任务：§1 触发时机 + §7 调度行同步） | PDCA 标签：A.learn
+> 版本：v1.0.0 | 新增：2026-07-15 | 最近更新：2026-07-29（learn_into_act 任务：§1 触发时机 + §7 调度行同步） | PDCA 标签：A.learn
 > 对应脚本：[scripts/learn_tidy.py](../scripts/learn_tidy.py)
 > 对应 spec：[docs_rj/spec_rj/learn_cycle_spec_20260715_1437.md](../docs_rj/spec_rj/learn_cycle_spec_20260715_1437.md)
 

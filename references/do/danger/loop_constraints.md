@@ -12,7 +12,7 @@ pdca: D.danger
 keywords: [constraints, safety, denylist, auto-merge]
 ---
 
-> 版本：v1.1.0
+> 版本：v1.0.0
 > 阶段标签：D.danger
 
 # Loop Constraints
