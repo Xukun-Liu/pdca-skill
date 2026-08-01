@@ -1047,19 +1047,8 @@ docs_rj/
 - **报告格式**：结构化报告（过没过/干成了什么/遗留问题/下一步），不限于5行
 - 详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "验收机制"节
 9. **/loop 模式下的 /check 三态输出**（仅 /loop 启动后生效）：
-   - **前置**：加载 [references/check/loop_verifier.md](references/check/loop_verifier.md)（默认 REJECT 立场）
-   - **执行 7 项检查清单**（直接复用 loop_verifier.md L21-27 原文，不改写）：
-     1. 是否按 spec 执行
-     2. 是否引入新的死引用或 broken link
-     3. 是否触碰 denylist 路径
-     4. 改动文件数是否超过约定
-     5. 测试/校验是否可以复现通过
-     6. 是否有未解释的 magic number、hardcode
-     7. 是否符合 code_rules.md 和 communication_rules.md
-   - **输出三态之一**：
-     - **APPROVE**：7 项全过 → 回写 ledger success → 继续下个 task
-     - **REJECT**：有项未过 → 回写 ledger failure + error_signature → 回 /do 修补
-     - **ESCALATE**：连续 REJECT ≥3 次 → 停下问用户
+   - **前置**：加载 [references/check/loop_verifier.md](references/check/loop_verifier.md)（默认 REJECT 立场），按其 7 项检查清单原文执行（不改写，清单唯一维护源在该文件）
+   - **输出三态之一**：**APPROVE**（7 项全过 → 回写 ledger success → 继续下个 task）；**REJECT**（有项未过 → 回写 failure + error_signature → 回 /do 修补）；**ESCALATE**（连续 REJECT ≥3 次 → 停下问用户）
    - **回写 ledger**：`python scripts/loop_guard.py check --task-id {task_id} --status {success|failure} --error {error_sig}`
 
 ### /act（处理动作）
@@ -1072,45 +1061,13 @@ docs_rj/
 1. **写项目记忆**：经 `write_project(task, content)` 落 `docs_rj/memory_rj/{task}_memory_*.md` + 自动 upsert 全局 `memory/memory_main.md`
 2. **刷新 `{主docs}/SUMMARY_RJ.md`**（见 references/common/pa/summary_view.md §三触发2）
 3. **跑 `python scripts/handoff_tidy.py --task {任务名}`** 整理归档（含临时文件清理/死引用清理/漂移检查/平台记忆融入/五问预跑/loop_guard ledger 归档/**生成 `docs_rj/memory_rj/TASK_STATE_{task_id}.md`**）；**若 handoff_tidy 失败**（脚本异常/Python 缺失），至少手动 `write_project` 写 memory + 刷 SUMMARY + 手写 TASK_STATE.md，告警用户"handoff_tidy 失败，已手动落盘核心产出，下次 /act 补跑"
-3.5. **刷新 `spec_main_rj.md` §1§2§7 指针目标**（GAP2 修复，handoff_tidy 产出的 TASK_STATE.md 是数据源）：
-   - **取最新硬性步骤【硬性】**：用 Glob 取最新文件，按文件名时间戳 `YYYYMMDD_HHMM` 降序取第一个（不用 mtime，避免 touch/checkout 漂移）；TASK_STATE 文件无时间戳，按"当前活跃任务名"匹配 `TASK_STATE_{task_id}.md`
-   - §1⑦当前状态总览：更新"最新项目记忆"链接（Glob `memory_rj/*_memory_*.md` 取最新）+ "最新任务状态"链接（取 `TASK_STATE_{当前活跃任务}.md`）+ "最近交接文档"链接（Glob `handoff_rj/*_handoff_*.md` 取最新）；**占位文字恢复为链接【硬性·LOW-2 上轮遗留·M8 修复】**：实例中残留的模板格式占位文字（如 `{task}_memory_{YYYYMMDD_HHMM}.md`）必须替换为 Glob 取到的最新文件实际 markdown 链接（格式 `[文件名](./相对路径)`，如 `[spec_main_template_memory_20260718_1300.md](./memory_rj/spec_main_template_memory_20260718_1300.md)`），不保留占位文字；**触发条件**：每次 /act 步骤 3.5 执行时，检测实例 §1/§2 链接是否为 `{xxx}` 格式占位文字，若是则替换；**降级方案**：若 Glob 取不到最新文件（如 memory_rj/ 为空或 Glob 失败），保留原占位文字，告警用户"§1/§2 链接未刷新，下次 /act 补刷"，不阻断 /act 流程
-   - §2⑤任务大纲：更新"当前活跃任务"表格（最新任务排第一行，状态从 TASK_STATE 确认）
-   - §7⑥ADR：若本次任务产生新关键决策（详见 spec_main_rj.md §7 ADR 写入条件），加一行 ADR-X（最新置顶，倒序）；**TOP 5 归档触发**：若加 ADR 后表格超过 5 行，按 [spec_main_template.md §7.1 归档规则](assets/spec_main_template.md) 移除时间最老的指针行（memory_main.md 仍保留全量记录，无需手工写入）
-   - **3.5a. §7.1 ADR 候选确认【硬性·REQ-009】**：handoff_tidy 报告 `adr_candidates` 字段含脚本扫描 memory_rj 提取的 ADR 候选清单（≤5 条），agent 必须判定每条候选是否写入 §7.1 表格
-     - 是 → 写入 §7.1 表格第一行（最新置顶）+ 触发 TOP 5 归档（>5 行移除最老）
-     - 否 → 明确说"本次无新 ADR"（留痕，不说=偏离）
-     - 报告 `adr_pending_agent=true` 时未做判定 = 偏离
-   - **3.5b. §7.3 风险候选确认【硬性·REQ-009】**：handoff_tidy 报告 `risk_candidates` 字段含脚本扫描 task_rj 提取的风险候选清单（≤5 条），agent 必须判定每条候选是否写入 §7.3 表格
-     - 是 → 写入 §7.3 表格第一行（最新置顶）
-     - 否 → 明确说"本次无新风险"（留痕，不说=偏离）
-   - **§7.2/§7.4 自动刷新**：handoff_tidy 自动追加 §7.2 Sync Impact 行（检测 version 变更）+ §7.4 跨任务依赖行（扫 task_rj depends_on/blocks），无需 agent 干预
-   - 不重写 §3§4§5§6（手工维护，改时才动）；刷新后更新 spec_main_rj.md frontmatter 的 `last_updated`
-   - **handoff_tidy 失败降级**：若步骤3 handoff_tidy 失败**且未手动补写 TASK_STATE.md**（最终无任何 TASK_STATE 产出），跳过本步骤，告警用户"spec_main_rj.md §1§2§7 指针未刷新，下次 /act 补刷"；若步骤3 已手动补写 TASK_STATE，则本步骤正常执行（基于手动 TASK_STATE 刷新 §1§2§7）
-3.6. **learn 累积量门控【自动触发·v1.0.0 新增】**：
-   - 跑 `python scripts/learn_tidy.py count --threshold 20`
-   - should_run=false → 跳过 learn，记录到 memory"learn 跳过（累积量 N < 阈值 20）"，进步骤4
-   - should_run=true → 自动跑 `python scripts/learn_tidy.py scan --dry-run`（不询问）
-   - agent 读 scan_report.json + [references/act/learn/learn_cycle.md](references/act/learn/learn_cycle.md) + [references/common/pc/adversarial_review.md](references/common/pc/adversarial_review.md) 做 reflect，产 proposals.md
-   - **reflect 阶段仅产 proposals.md，禁止应用任何 proposals（应用必须等步骤4 adopt HARD-GATE）**
-   - **reflect 阶段限时 5 分钟（agent 自检计时：reflect 前 record 开始时间，reflect 后 record 结束时间，差值>5 分钟则告警+跳过 adopt+记录 memory"learn reflect 超时"）**
-   - proposals.md 写入 `docs_rj/learn_rj/{timestamp}/`
-   - learn 产出路径经 `write_project` 写入 memory（回流下一轮 /plan，对应 A.learn 闭环）
-   - scan 无发现（scan_report.json 各字段为空）→ 跳过 adopt，记录"learn 无发现"
-   - scan 失败（退出码 2）→ 告警用户+跳过 learn+记录 memory"learn scan 失败"
-   - scan+reflect 期间用户喊"停" → 跳过 adopt，记录"learn 用户中断"到 memory
-3.8. **前端面板同步（server_lite，可选）**：server_lite 当前不主动引导使用，本步骤默认跳过。若用户主动启用了 server_lite 管理台（`python run_server.py`，默认 http://127.0.0.1:5210），可提醒用户点右上角「🔄 同步数据」按钮刷新前端缓存。未启用则跳过，不阻断 /act 流程。
-4. **adopt HARD-GATE**（若步骤3.6 有 proposals）：
-   - 呈现 proposals.md 给用户（HARD-GATE）
-   - 用户确认"adopt" → 执行 adopt 流程（备份原文件到 `docs_rj/learn_rj/{timestamp}/backup/` + 应用编辑 + 经 `write_project` 写 memory）
-   - 用户说"跳过/不用" → 跳过 adopt，记录到 memory
-   - 用户说"调整" → 重新 reflect
-   - 步骤3.6 跳过 learn 或无 proposals → 步骤4 直接跳过，进步骤4.1 distill
-4.1. **distill 询问（经验采纳）**【v1.0.0 新增】：/act 阶段 learn adopt 后（步骤4）或 learn 跳过后，跑 `python scripts/memory_distill.py distill --project {项目名} --output-dir docs_rj/learn_rj`
-   - distill 产出≥1条经验 → 用 AskUserQuestion 展示 TOP3 经验问用户"是否采纳为长期经验？"（选项：采纳/拒绝/稍后）
-   - 用户采纳 → 经 `write_project` 写入 memory_main.md 对应"## {项目名}"分段（importance_level=high, is_lesson=true, experience_tags 含 "adopted_lesson"），不新建"## 经验库"段（与约束2分段规范一致）
-   - 用户拒绝/稍后 → 跳过，经验保留在 lessons.json 待后续采纳
-   - distill 产出0条 → 跳过询问，继续 /act
+3.5. **刷新 `spec_main_rj.md` §1§2§7 指针目标**【硬性】（数据源=TASK_STATE.md）：§1⑦状态总览链接（Glob 按文件名时间戳取最新，残留 `{xxx}` 占位文字必须替换为实际链接，取不到则保留+告警）、§2⑤任务大纲（最新任务置顶）、§7⑥ADR（新决策加行+TOP5 归档）；不重写 §3§4§5§6，刷新后更新 frontmatter `last_updated`。完整操作细则（Glob 规则/TOP5/降级分支）见 [references/act/persist/act_procedure.md](references/act/persist/act_procedure.md)
+3.5a. **§7.1 ADR 候选确认【硬性·REQ-009】**：handoff_tidy 报告 `adr_candidates` 逐条判定写入 §7.1（最新置顶+TOP5 归档）或明说"本次无新 ADR"（不说=偏离）；`adr_pending_agent=true` 未判定 = 偏离（细则见 act_procedure.md）
+3.5b. **§7.3 风险候选确认【硬性·REQ-009】**：同上判定 `risk_candidates` 写入 §7.3 或明说"本次无新风险"；§7.2/§7.4 由 handoff_tidy 自动刷新，无需 agent 干预（细则见 act_procedure.md）
+3.6. **learn 累积量门控【自动触发】**：跑 `python scripts/learn_tidy.py count --threshold 20` → should_run=false 记录"learn 跳过"进步骤4；true 自动 `scan --dry-run` → reflect **仅产 proposals.md（禁应用，限 5 分钟）** → 等步骤4 adopt HARD-GATE；scan 无发现/失败（退码2）/用户喊停分别记录跳过（完整分支见 act_procedure.md）
+3.8. **前端面板同步（server_lite，可选）**：默认跳过；用户主动启用 server_lite 时提醒点「🔄 同步数据」刷新前端缓存
+4. **adopt HARD-GATE**（若步骤3.6 有 proposals）：呈现 proposals.md → 确认"adopt" → 备份原文件+应用编辑+write_project 写 memory；"跳过"记录跳过；"调整"重新 reflect；无 proposals 直接进步骤4.1
+4.1. **distill 询问（经验采纳）**：跑 `python scripts/memory_distill.py distill --project {项目名} --output-dir docs_rj/learn_rj` → ≥1 条经验则 AskUserQuestion 展示 TOP3 问"是否采纳"（采纳/拒绝/稍后）；采纳经 write_project 写全局 `## {项目名}` 分段（importance_level=high, is_lesson=true, experience_tags 含 "adopted_lesson"）；0 条跳过（细则见 act_procedure.md）
 5. **任务收尾 commit**【硬性·v1.0.0 新增】：/act 阶段最后，确保工作区干净（任务产出已 commit），避免交接/启动时看到未提交改动。
    - **触发条件**：/act 步骤1-4.1 全部完成后执行
    - **非 git 仓库降级**：若项目未用 git 管理（无 .git 目录），跳过本步，告警"非 git 仓库，建议初始化"
