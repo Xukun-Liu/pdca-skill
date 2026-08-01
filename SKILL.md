@@ -200,7 +200,7 @@ category: workflow
 - 铁律3（流程优先）：作用于**接到任务时**
 - 铁律4（No Placeholders）：作用于**给产出时**
 - 铁律5（触发钩子）：作用于**遇到触发信号时**
-- 铁律6（回溯保障）：作用于**动手改代码前**
+- 铁律6（回溯保障）：作用于**动手改代码前**（任务启动先做 Git 管理确认：复杂任务 2问+3默认值，简单任务轻量 git status 检查，见 §6 /plan 步骤3）
 - 铁律7（逐项核对）：作用于**执行阶段和验收阶段**
 
 > 铁律1和铁律3的"先"分别作用于不同阶段（启动 vs 接任务），无冲突。
@@ -387,10 +387,10 @@ category: workflow
 │   │   └─ 🔴立即读 hand-drawn-report.md → 生成的 md 顶部按内容关系类型内联手绘 SVG 速览图（默认带图、单文件自包含），同时对话内附同款手绘 SVG 速览图
 │   │
 │   ├─ 能一句话说清（改个参数/查个东西/问个具体问题）
-│   │   └─ 一句话方案HARD-GATE确认 → 要改代码？先读code_rules.md → 做 → 当场验证 → 写memory
+│   │   └─ 轻量git确认（git status检查，工作区干净直接过，脏则问commit/stash/放弃，见§6 /plan 步骤3）→ 一句话方案HARD-GATE确认 → 要改代码？先读code_rules.md → 做 → 当场验证 → 写memory
 │   │
 │   └─ 一句话说不清（做功能/搭系统/重构/复杂改动）
-│       └─ 第一性原理拆解（见 adversarial_review.md 第二章）→ 步骤4a外部资源搜索（从用户描述中提取关键词，无业务敏感词）→ brainstorming → 2-3方案对比（含拆解推导的方案+引用复用清单）→ HARD-GATE → 🔴写spec前先读document_specs.md → 写spec/task → 执行（写代码前读code_rules.md）→ 验收
+│       └─ 🔴Git管理确认（复杂任务必问 2问+3默认值，见§6 /plan 步骤3）→ 第一性原理拆解（见 adversarial_review.md 第二章）→ 步骤4a外部资源搜索（从用户描述中提取关键词，无业务敏感词）→ brainstorming → 2-3方案对比（含拆解推导的方案+引用复用清单）→ HARD-GATE → 🔴写spec前先读document_specs.md → 写spec/task → 执行（写代码前读code_rules.md）→ 验收
 │
 └─ 任何分支走完 → 对话末尾必做（无例外）
     └─ 写memory（Memory First硬规则）
@@ -1089,6 +1089,13 @@ docs_rj/
   2. **手段当假设检验**：用户说"加 Redis"→实际要的是"变快"，Redis 是假设不是结论；与事实不符时目标进正文、手段写进 spec §0.1 方案对比
   3. **约束放大成有名有姓的禁区**：用户说"要安全"→追问"禁止什么？SQL 注入？权限越界？数据泄露？"——把模糊约束变成具体禁区
   - 详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "三分领导的话"节
+- **Git 管理确认（2问+3默认值）**【硬性·复杂任务】：与 BRD 5 问并行。复杂任务（走 /plan）必问；简单任务只做轻量 git status 检查（工作区干净直接过，脏则问一句 commit/stash/放弃）。回答写入 spec §0.G，/do 期间按约定执行不再重复问：
+  - **Q1 工作区状态**：`git status` 检查，有未提交改动 → 问"commit / stash / 放弃"（commit=本次任务改动先存档；stash=其他任务或不确定来源先挪开；放弃=明确不要了，见 [git_workflow.md §6.1](references/do/code/git_workflow.md)）
+  - **Q2 分支策略**：当前分支直接改 / 新建 feature 分支（个人项目可当前分支直接改；协作/发布项目建议 feature 分支）
+  - **D1 git init（非 git 仓库时）**：自动问一句"要初始化 git 吗"——否 → 文件备份降级（§6.1 非 Git 项目降级）+ /loop 不可用
+  - **D2 WIP commit（默认允许）**：每完成一个 task 子项存一次档（WIP 格式见 git_workflow §2.7），方便随时退回
+  - **D3 任务 tag（默认打）**：任务开始打 `task/{任务名}/start` + 验收通过打 `task/{任务名}/verified`（格式见 git_workflow §6.2）
+  - **收尾 commit 不变**：/act 步骤5 收尾 commit 仍走 HARD-GATE 确认（§6.4，不受默认值影响）
 
 **步骤4（P.design）：第一性原理拆解**【硬性·复杂任务】：
 - 本质目标是什么？（不是"用户让我做什么"，而是"用户想要什么结果"）

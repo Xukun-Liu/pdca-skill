@@ -755,6 +755,28 @@ git reset --hard HEAD@{N}  # N 是 reflog 里的序号
 - ❌ 跳过 commit_lint 校验直接 commit（消息可能不合规）
 - ❌ 不经用户确认直接 commit（违反 HARD-GATE）
 
+### 6.5 任务启动 Git 管理询问（场景A）【硬性·复杂任务】
+
+> 新增。目标：复杂任务启动时先问清 git 管理偏好（在哪干活、脏工作区怎么处理），避免 agent 猜分支/commit 节奏；简单任务只做轻量检查不啰嗦。与 6.1（改前 commit）、6.2（任务级 tag）、6.4（收尾 commit）配合，形成"启动问清 → 改前检查 → 节点标记 → 收尾归档"完整闭环。
+
+**触发时机**【硬性】：/plan 步骤3 需求澄清阶段（与 BRD 5 问并行）。复杂任务必问 2 问 + 确认 3 默认值；简单任务只做轻量 git status 检查（工作区干净直接过，脏则问一句 commit/stash/放弃）。回答写入 spec §0.G，/do 期间按约定执行不再重复问。
+
+**2 问 + 3 默认值**：
+
+| 项 | 内容 | 处理流程 |
+|----|------|----------|
+| **Q1** 工作区状态 | `git status` 有未提交改动 | 问"commit / stash / 放弃"：commit=本次任务改动先存档（哪怕 WIP）；stash=其他任务或不确定来源先挪开；放弃=明确不要了。回答后按 §6.1 执行 |
+| **Q2** 分支策略 | 当前分支直接改 or 新建 feature 分支 | 个人项目可当前分支直接改；协作/发布项目建议 feature 分支。回答后按 §3 分支策略执行 |
+| **D1** git init | 非 git 仓库时 | 自动问一句"要初始化 git 吗"。否 → 文件备份降级（§6.1 非 Git 项目降级）+ /loop 不可用 |
+| **D2** WIP commit | 默认允许 | 每完成一个 task 子项存一次档（格式见 §2.7），方便随时退回 |
+| **D3** 任务 tag | 默认打 | 任务开始 `task/{任务名}/start` + 验收通过 `task/{任务名}/verified`（见 §6.2） |
+
+**收尾 commit 不变**：/act 步骤5 收尾 commit（§6.4）仍走 HARD-GATE 确认，不受默认值影响。
+
+**禁止**【硬性】：
+- ❌ 复杂任务跳过 2 问直接动手（违反 HARD-GATE + 铁律6 精神）
+- ❌ 简单任务把 2 问全问一遍（啰嗦，违反轻量原则）
+
 ---
 
 ## 版本历史
@@ -764,3 +786,4 @@ git reset --hard HEAD@{N}  # N 是 reflog 里的序号
 | v1.0 | 2026-07-08 | 初版，收录分支策略（Git Flow/Trunk Based）、Commit规范（Conventional Commits）、代码审查清单、代码审查流程、Git最佳实践 |
 | v1.1 | 2026-07-24 | 新增 §2.4-§2.9：原子提交原则、commit 关联任务名（Refs footer）、框架文件单独 commit、WIP commit 格式、/do 阶段 commit 时机、自动校验（commit_lint.py）|
 | v1.2 | 2026-07-29 | §6 新增 6.4 任务收尾 commit（场景E），与 6.1 改前 commit 互补，形成"改前+改后"双重回溯保障；对齐 SKILL.md /act 步骤5 |
+| v1.3 | 2026-08-01 | §6 新增 6.5 任务启动 Git 管理询问（场景A）：复杂任务必问 2 问（工作区状态/分支策略）+ 3 默认值（git init/WIP commit/任务 tag），简单任务轻量 git status 检查；对齐 SKILL.md §6 /plan 步骤3 与 spec_template §0.G |

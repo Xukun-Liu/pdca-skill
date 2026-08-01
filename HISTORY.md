@@ -1,7 +1,7 @@
 ---
 title: riji-skill 版本历史
 version: v1.0.0
-last_updated: 2026-07-30 17:00
+last_updated: 2026-08-01 14:00
 author: huihui
 ---
 
@@ -77,10 +77,14 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
 2026-07-21  v1.0.0     🚀 riji-skill-public v1.0.0 公开发布版(当前版本)
                        PDCA 4 环脊柱模型 + 10 副 agent + 8 要素启动检查
 2026-07-31  v1.0.0     吸收 i-have-adhd（MIT, Ayoub Ghriss）输出节奏规则
-                       ── 评审 https://github.com/ayghri/i-have-adhd 后融合
-                       ── 新增 SKILL.md §2.1：首行动作/尾行下一步/时间估计具体化/发送前自检
-                       ── 按 PDCA 阶段差异化适用（/plan 不适用，/do/check/act/问答适用）
-                       ── 不采用 #9 列表上限 5（与 riji-skill 长表格载体冲突）
+                        ── 评审 https://github.com/ayghri/i-have-adhd 后融合
+                        ── 新增 SKILL.md §2.1：首行动作/尾行下一步/时间估计具体化/发送前自检
+                        ── 按 PDCA 阶段差异化适用（/plan 不适用，/do/check/act/问答适用）
+                        ── 不采用 #9 列表上限 5（与 riji-skill 长表格载体冲突）
+2026-08-01  v1.0.0     新增「任务启动 Git 管理询问」（用户反馈融合）
+                        ── 复杂任务开工前问 2 问（工作区状态/分支策略）+ 3 默认值（git init/WIP commit/任务 tag 默认打）
+                        ── 简单任务轻量 git status 检查，脏才问，不啰嗦
+                        ── 落点：SKILL.md §6 /plan 步骤3 + git_workflow §6.5 + spec_template §0.G
                        ── 6 条规则 riji-skill 已覆盖不重复（#2/#4/#5/#7/#8/#10）
 ```
 

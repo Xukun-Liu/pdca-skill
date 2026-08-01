@@ -76,7 +76,7 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | **用户数据外置（方案B）** | 用户数据（memory/docs_rj/outputs_rj/server_lite_data）外置到 `~/.riji-skill/data/`，与框架文件物理分离。**升级时解压覆盖框架文件，用户数据 0 丢失**。三级优先级路径解析（环境变量 `RIJI_DATA_DIR` > 配置文件 `~/.riji-skill/config.json` > 默认值），老用户首次启动自动迁移。`server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，见下文说明） |
 | **命名空间隔离** | 所有运行时产物加 `_rj` 后缀（`docs_rj/`、`memory_rj/`、`_rj` 类型文件夹），避免与其他 agent 平台通用命名撞车 |
 | **Bootstrap 初始化** | 首次使用检测缺失文件，逐个确认创建，引导填写主 docs 路径等配置 |
-| **Git 回溯保障** | 代码改动前检查点、任务级回溯检查点、紧急回滚 SOP，确保改崩了能回到稳定状态 |
+| **Git 回溯保障** | 代码改动前检查点、任务级回溯检查点、紧急回滚 SOP，确保改崩了能回到稳定状态；复杂任务启动先问 Git 管理（2 问 + 3 默认值，见 git_workflow §6.5），简单任务轻量检查 |
 | **agent-find 动态搜索** | 需要第三方 agent/能力时优先用 Exa REST API 直连全网搜索（绕开 MCP/OAuth；MCP 作可选上层，都不可用才降级 WebFetch/WebSearch），零系统依赖跨平台可用，安装前安全扫描 |
 | **SUMMARY_RJ.md 根索引** | 文档汇总视图一眼看全项目结构，自动更新+漂移检查，替代 CLI 工具零依赖 |
 | **Red Flags 16 条** | 偏离信号自检：连续输出未确认、没过 HARD-GATE 就动手、凭记忆回答不读文件等，出现信号立即重读铁律 |

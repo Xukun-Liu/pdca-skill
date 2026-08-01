@@ -121,6 +121,21 @@ HARD-GATE前必须提出至少2种方案，对比后明确推荐：
 
 ---
 
+### 0.G Git 管理约定（Git 管理确认 2问+3默认值）【硬性·复杂任务】
+
+> /plan 步骤3 Git 管理确认的回答落盘处（对齐 [SKILL.md §6 /plan 步骤3](../../SKILL.md) 与 [git_workflow.md §6.5](../references/do/code/git_workflow.md)）。
+> /do 期间按本表约定执行，不再重复问；中途改主意 → 更新本表后继续。
+
+| 项 | 回答 | 执行约定 |
+|----|------|----------|
+| Q1 工作区状态 | {commit / stash / 放弃} | 按回答处理（git_workflow §6.1） |
+| Q2 分支策略 | {当前分支直接改 / 新建 feature 分支} | 按回答执行（git_workflow §3） |
+| D1 git init | {已 init / 新 init / 拒绝} | 拒绝 → 文件备份降级 + /loop 不可用 |
+| D2 WIP commit | 允许（默认） | 每 task 子项存一次档（§2.7 WIP 格式） |
+| D3 任务 tag | 打（默认） | start + verified 两个 tag（§6.2 格式） |
+
+---
+
 ## 1. PRD 层：业务背景与目标（含 BRD 要素）
 
 > 借鉴 某开源项目（specify 命令 BRD+PRD 合体）+ 某开源项目（market-research）。
