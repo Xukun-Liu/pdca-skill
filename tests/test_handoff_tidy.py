@@ -137,3 +137,26 @@ class TestWriteSignoff:
         content = open(p, encoding="utf-8").read()
         assert "- 强制完成: forced: true" in content
         assert "status: completed" in content
+
+
+class TestCwdGuard:
+    """cwd 防呆：非仓库根目录运行直接 exit 2。"""
+
+    def test_cwd_guard(self, tmp_path):
+        import subprocess
+
+        script = os.path.join(SKILL_ROOT, "scripts", "handoff_tidy.py")
+        # 临时目录无 .primary_docs_rj / docs_rj → 退出码 2
+        r = subprocess.run(
+            [sys.executable, script, "--dry-run"],
+            cwd=str(tmp_path),
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        assert r.returncode == 2
+        assert "仓库根" in r.stderr
+        # 逃生舱参数透传不崩
+        HandoffTidy(dry_run=True, allow_any_dir=True)
+
