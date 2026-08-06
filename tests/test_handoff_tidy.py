@@ -81,6 +81,19 @@ class TestVerifyGateEvidenceFile:
         assert not ok4
         assert "不含 0 HIGH" in reason4
 
+    def test_ten_high_rejected(self, tmp_path):
+        """对抗审查 CRITICAL 修复：'10 HIGH'/'20 HIGH' 不得被误判为通过。"""
+        h = HandoffTidy(dry_run=True)
+        for name, content in (
+            ("t_10.md", "结论: 10 HIGH, 2 MEDIUM"),
+            ("t_20.md", "结论: 20 HIGH"),
+        ):
+            rep = os.path.join(str(tmp_path), name)
+            with open(rep, "w", encoding="utf-8") as f:
+                f.write(content)
+            ok, _ = h._verify_gate_evidence_file(rep)
+            assert not ok, "%s 不应通过" % name
+
 
 class TestCheckTaskCompletion:
     """_check_task_completion：4 闸门判定。"""
@@ -115,6 +128,34 @@ class TestCheckTaskCompletion:
         h = HandoffTidy(dry_run=True)
         status = h._check_task_completion(str(tmp_path), "t4", "L2")
         assert status == "completed"
+
+    def test_forged_ready_to_close_rejected(self, tmp_path):
+        """对抗审查修复：伪造 status=ready_to_close（无任何 Gate Evidence）必须回落 pending 并拒签。"""
+        s = "---\ntask: t7\nstatus: ready_to_close\n---\n\n## Verification\n- total: 2\n- passed: 2\n"
+        p = _write_state(tmp_path, "t7", s)
+        h = HandoffTidy(dry_run=True)
+        status = h._check_task_completion(str(tmp_path), "t7", "L2")
+        assert status == "pending", "伪造 ready_to_close 不得免检"
+        assert len(h._last_blocked_gates) >= 3
+        r = h._write_signoff(str(tmp_path), "t7", "L2")
+        assert r.get("signoff_blocked") is True
+        content = open(p, encoding="utf-8").read()
+        assert "## Sign-off" not in content
+
+    def test_loop_auto_allows_ready_to_close(self, tmp_path):
+        """/loop 无人值守：gate4=loop_auto 时 4 闸门全过 → ready_to_close（等用户确认，不假完成）。"""
+        rep = _make_ok_report(tmp_path, "t8_adversarial.md")
+        s = BASE_STATE + """
+## Gate Evidence
+- gate1_spec_verification: pass (2/2)
+- gate2_adversarial: pass (0 HIGH) | 证据: {report}#L12
+- gate3_consistency: pass (0 HIGH) | 证据: {report}#L8
+- gate4_user_confirm: loop_auto | 说明: /loop 无人值守，待用户确认
+""".format(report=rep)
+        _write_state(tmp_path, "t8", s)
+        h = HandoffTidy(dry_run=True)
+        status = h._check_task_completion(str(tmp_path), "t8", "L2")
+        assert status == "ready_to_close", h._last_blocked_gates
 
 
 class TestWriteSignoff:

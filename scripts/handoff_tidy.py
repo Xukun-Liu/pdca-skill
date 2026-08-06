@@ -745,7 +745,8 @@ class HandoffTidy:
     def _verify_gate_evidence_file(self, path):
         """校验审查报告证据文件（handoff_gate_fix 新增）。
 
-        证据有效条件：文件存在 + 内容含 '0 HIGH' 字样（正则 0\\s*HIGH）。
+        证据有效条件：文件存在 + 内容含 '0 HIGH' 字样（正则 (?<!\\d)0\\s*HIGH）。
+        负向后视 (?<!\\d) 防止 '10 HIGH'/'20 HIGH' 被误匹配（对抗审查 CRITICAL 修复）。
         纯 touch 空文件会被拒，防止"无实际审查的假证据"。
 
         Args:
@@ -764,7 +765,7 @@ class HandoffTidy:
                 content = f.read()
         except OSError as exc:
             return (False, '证据文件读取失败: %s' % exc)
-        if re.search(r'0\s*HIGH', content):
+        if re.search(r'(?<!\d)0\s*HIGH', content):
             return (True, '证据有效: %s' % clean)
         return (False, '证据文件内容不含 0 HIGH: %s' % clean)
 
@@ -853,12 +854,18 @@ class HandoffTidy:
         existing_status = self._read_existing_status(memory_dir, task_name)
         # 已完成/已归档/已挂起不再降级
         # paused 保留：挂起状态不可被 _check_task_completion 降级为 pending
-        if existing_status in ('completed', 'archived', 'ready_to_close', 'paused'):
+        # 对抗审查修复：ready_to_close 不再直接返回——它是中间态而非终态，
+        # 若直接信任，手动伪造 status=ready_to_close 即可绕过 4 闸门拿到 Sign-off。
+        # 正确语义：ready_to_close 每次判定都回到 4 闸门验证（证据齐自然保持 ready_to_close）。
+        if existing_status in ('completed', 'archived', 'paused'):
             return existing_status
 
         blocked = []
 
-        # 闸门1：spec AC 全 pass（verification 聚合）
+        # Gate Evidence 段一次读取，闸门1/2/3/4 共用
+        evidence = self._read_gate_evidence(memory_dir, task_name)
+
+        # 闸门1：spec AC 全 pass（verification 聚合 + Gate Evidence 段 gate1 行一致性）
         verification = self._read_existing_verification(memory_dir, task_name)
         if not verification:
             blocked.append('gate1_spec_verification（Verification 段缺失）')
@@ -867,12 +874,18 @@ class HandoffTidy:
             total = agg.get('total', 0)
             passed = agg.get('passed', 0)
             if total > 0 and passed == total:
-                pass
+                # 对抗审查修复：gate1 行不是死格式——段存在时校验与 Verification 段一致
+                if evidence and evidence.get('gate1_status') == 'pass' and evidence.get('gate1_ratio'):
+                    r = evidence['gate1_ratio']
+                    if r != (passed, total):
+                        blocked.append('gate1_spec_verification（gate1 行与 Verification 不一致: %d/%d vs %d/%d）'
+                                       % (r[0], r[1], passed, total))
+                elif evidence and evidence.get('gate1_status') == 'missing':
+                    blocked.append('gate1_spec_verification（Gate Evidence 段缺 gate1 行）')
             else:
                 blocked.append('gate1_spec_verification（verification %d/%d）' % (passed, total))
 
-        # 闸门2/3/4：Gate Evidence 段
-        evidence = self._read_gate_evidence(memory_dir, task_name)
+        # 闸门2/3/4：Gate Evidence 段（evidence 已在上方读取）
         if not evidence:
             blocked.append('gate2_adversarial（Gate Evidence 段缺失）')
             blocked.append('gate3_consistency（Gate Evidence 段缺失）')
@@ -1035,13 +1048,11 @@ class HandoffTidy:
 
         # 读取现有 status（续传保留，M3 修复：避免每次 handoff_tidy 重置为 pending）
         existing_status = self._read_existing_status(memory_dir, self.task_name)
-        # 若已有 completed/archived/ready_to_close/paused 则保留；否则走状态机判定
+        # 若已有 completed/archived/paused 则保留；否则走状态机判定
         # paused 保留：/do 阶段"执行中插入新任务处置"规则写入的挂起状态不可被覆盖
-        if existing_status in ('completed', 'archived'):
-            task_status = existing_status
-        elif existing_status == 'ready_to_close':
-            task_status = existing_status
-        elif existing_status == 'paused':
+        # 对抗审查修复：ready_to_close 不再无条件保留——回落 _check_task_completion 走 4 闸门
+        # 验证（证据齐自然保持 ready_to_close，证据缺回落 pending），防伪造状态绕过
+        if existing_status in ('completed', 'archived', 'paused'):
             task_status = existing_status
         else:
             # 走 ready_to_close 状态机（GAP4 修复）
