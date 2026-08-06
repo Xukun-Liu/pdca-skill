@@ -31,7 +31,7 @@ ROUTE_TARGETS = {
     },
     'act': {
         'triggers': ['/act', '收尾', '归档', '交接', '落盘', '写 memory', '刷 summary'],
-        'output': 'memory + SUMMARY + handoff + learn 询问',
+        'output': 'memory + SUMMARY + handoff + learn 门控自动触发 + distill 询问',
         'readonly': False
     }
 }

@@ -398,7 +398,7 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
         <li>刷新文档索引 SUMMARY_RJ.md</li>
         <li>跑 handoff_tidy.py 整理归档</li>
         <li>生成 TASK_STATE.md 作为下一轮 /plan 输入</li>
-        <li>询问是否跑 learn cycle 自进化</li>
+        <li>learn 累积量门控自动触发（达标才扫描），adopt 人工确认</li>
       </ul>
       <div class="badge-row" style="margin-top:10px;"><span class="mini-badge mpurple">记忆落盘</span><span class="mini-badge mgreen">闭环迭代</span></div>
     </div>
@@ -701,8 +701,8 @@ footer .footer-links { display: flex; gap: 20px; justify-content: center; margin
     </div>
     <div class="feature-card">
       <h4>🌱 自进化（Learn Cycle）</h4>
-      <p>/act 后询问是否跑 learn——扫描整个 skill 找可优化点（重复规则/冲突/过时内容），生成建议清单，经确认后自动应用。框架越用越聪明。</p>
-      <ul><li>三阶段循环</li><li>scan→reflect→adopt</li><li>人工确认门控</li></ul>
+      <p>/act 阶段按记忆累积量自动触发 learn——达到阈值自动扫描 skill 规则与记忆库（重复规则/冲突/过时内容/死引用），生成建议清单 proposals.md（仅建议、不自动应用），经 HARD-GATE 人工确认后才应用。框架越用越聪明。</p>
+      <ul><li>阈值门控自动触发</li><li>scan→reflect→proposals→adopt</li><li>adopt 人工确认门控</li></ul>
     </div>
     <div class="feature-card">
       <h4>🎨 手绘呈现</h4>
