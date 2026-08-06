@@ -201,7 +201,7 @@ class HandoffTidy:
         '**/_verify_*',
     ]
 
-    def __init__(self, dry_run=False, task_name=None, project_name=None, task_status=None):
+    def __init__(self, dry_run=False, task_name=None, project_name=None, task_status=None, allow_any_dir=False):
         self.dry_run = bool(dry_run)
         self.task_name = task_name  # 让 None 透传，refresh_spec_main 收到 None 时只刷 §1（REQ-009）
         self.task_status = task_status  # §2 状态列数据源（REQ-009 对抗审查P0修复）
@@ -209,10 +209,20 @@ class HandoffTidy:
         self.report = HandoffReport()
         # handoff_gate_fix：4 闸门判定缺项清单（_check_task_completion 写入，_write_signoff 读取）
         self._last_blocked_gates = []
+        # handoff_gate_fix：cwd 防呆逃生舱（True 时跳过主 docs 目录校验，供特殊场景显式使用）
+        self.allow_any_dir = bool(allow_any_dir)
 
     def run(self):
         """执行完整交接管线"""
         logger.info("=== 交接整理管线（handoff_tidy）===")
+        # handoff_gate_fix：cwd 防呆——必须从含主 docs 目录的仓库根运行，
+        # 防止在错误目录（如 ~ 或桌面）误跑导致清理/生成到错误位置。
+        # 逃生舱：--allow-any-dir（明确知情时使用）
+        has_primary = os.path.isfile('.primary_docs_rj') or os.path.isdir('docs_rj')
+        if not has_primary and not self.allow_any_dir:
+            logger.error("当前目录不是 riji-skill 仓库根（缺 .primary_docs_rj / docs_rj），已中止。")
+            logger.error("如确需在任意目录运行，请显式加 --allow-any-dir")
+            sys.exit(2)
         # === 共享动作 ===
         self.report.missing_dirs = tidy_common.ensure_project_structure()
         primary = tidy_common.resolve_primary_docs()
@@ -1718,9 +1728,12 @@ def main():
                         help='标记任务为 completed 并追加 Sign-off 段（决策 I.2=D）')
     parser.add_argument('--force', action='store_true',
                         help='强制完成：跳过 4 闸门证据校验（含 H3），Sign-off 标 forced: true（handoff_gate_fix 新增）')
+    parser.add_argument('--allow-any-dir', action='store_true',
+                        help='允许在非仓库根目录运行（cwd 防呆逃生舱，handoff_gate_fix 新增）')
     args = parser.parse_args()
 
-    tidy = HandoffTidy(dry_run=args.dry_run, task_name=args.task, project_name=args.project)
+    tidy = HandoffTidy(dry_run=args.dry_run, task_name=args.task, project_name=args.project,
+                       allow_any_dir=args.allow_any_dir)
     report = tidy.run()
 
     # --mark-completed：追加 Sign-off 段 + 更新 status 为 completed（决策 I.2=D）
