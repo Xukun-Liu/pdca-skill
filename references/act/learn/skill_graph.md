@@ -7,7 +7,7 @@
 
 > 阶段标签：A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.2 | 新增：2026-07-17 | PDCA 标签：A.learn
+> 版本：v1.0.1 | 新增：2026-07-17 | PDCA 标签：A.learn
 > 对应脚本：[scripts/skill_graph_build.py](../scripts/skill_graph_build.py)
 > 参考来源：GitHub 调研（19 次查询 0 完全匹配，填补赛道空白）
 
@@ -43,7 +43,7 @@
 
 ## §3 触发时机
 
-### 自动触发（每轮 /act · v1.0.2）
+### 自动触发（每轮 /act · v1.0.1）
 
 - 每轮 /act 步骤 3.6a 自动跑 `python scripts/skill_graph_build.py --auto`（无需用户点名）
 - `--auto` 语义：仅左轨 riji（记忆已积累，安全 L0 级，不触发 L2 扫描确认）；记忆哈希未变 → 缓存命中直接跳过（零成本）；哈希变化 → 自动重算三阶段并更新 `~/.riji-skill/data/docs_rj/skill_graph/` 四件套（实际路径由 `user_data_path.get_docs_rj_path()` 动态解析：RIJI_DATA_DIR > config.json > 默认）
@@ -111,7 +111,7 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 跳过右轨全集拉取�
 
 ## §5 三格式输出
 
-| 格式 | 路径（v1.0.2 起外置用户数据目录） | 受众 | 说明 |
+| 格式 | 路径（v1.0.1 起外置用户数据目录） | 受众 | 说明 |
 |------|------|------|------|
 | Markdown + SVG | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.md` | 人看（Trae 预览器） | 单文件自包含，零依赖 |
 | CSV | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.csv` | Excel/程序 | UTF-8 BOM，13 列 |
@@ -140,8 +140,10 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 跳过右轨全集拉取�
 ## §6 缓存机制
 
 - 对每个输入记忆文件算 SHA256
-- 文件未变 → 跳过全部阶段
-- `--no-cache` 强制重算
+- **缓存仅对自动模式（--auto）生效**：输入未变 → 缓存命中跳过全部阶段（零成本）；变化 → 重算
+- **全量模式（用户点名/手动）不用缓存**：始终完整重算三阶段（要最新数据），跑完更新缓存供后续 --auto 用
+- `--no-cache` 强制重算（auto 模式用）
+- 仅完整三阶段跑完才更新缓存；`--force-stage` 部分跑不写缓存（防误命中）
 - 缓存 manifest：`~/.riji-skill/data/docs_rj/memory_rj/.skill_graph_cache/cache_manifest.json`
 
 ---
@@ -199,6 +201,5 @@ A: 每轮 /act 自动刷新一次（--auto：记忆没变则秒过，变了才�
 
 | 版本 | 日期 | 变更 |
 |------|------|------|
-| v1.0.2 | 2026-08-06 | 自动化改造：/act 每轮 3.6a 自动刷新（--auto 仅左轨 L0 安全级，哈希未变缓存命中零成本）；缓存/输出外置 `~/.riji-skill/data/`；断链修复（read_riji_memory 单入口）；结构化经验字段置信度加权；CSV 公式注入防护；右轨补真 URL（roadmap/engineer_competency/GitHub Topics） |
-| v1.0.1 | 2026-08-06 | 扫描确认门控配套：触发前确认说明、白名单目录豁免声明（用户确认）、非交互模式不读未确认目录（只记路径）、敏感行摘录过滤、扫描根清单修正（去父链、去虚构 `~/.appdata`）、discovered_tools 路径声明 |
+| v1.0.1 | 2026-08-06 | 自动化改造：/act 每轮 3.6a 自动刷新（--auto 仅左轨 L0 安全级，哈希未变缓存命中零成本）；缓存/输出外置 `~/.riji-skill/data/`；断链修复（read_riji_memory 单入口）；结构化经验字段置信度加权；CSV 公式注入防护；右轨补真 URL + 适配 roadmap 新仓库结构；扫描确认门控配套（触发前确认、白名单豁免声明、非交互不读未确认目录、敏感行摘录过滤、扫描根去父链） |
 | v1.0 | 2026-07-17 | 初版：三阶段流水线 + 双轨提取 + 三格式渲染 |

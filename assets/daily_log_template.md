@@ -1,7 +1,7 @@
 ---
 title: YYYY-MM-DD - 归档日志
 version: v1.0.0
-skill_version: v1.0.0
+skill_version: v1.0.1
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 ---

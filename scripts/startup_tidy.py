@@ -632,7 +632,7 @@ class StartupTidy:
             'archive_rj': '归档沉淀——按任务子文件夹聚合（{task}_{ts}/），保留决策轨迹。',
         }
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
-        parts = ['---', 'title: riji-skill', 'version: v1.0.0',
+        parts = ['---', 'title: riji-skill', 'version: v1.0.1',
                  'last_updated: %s' % now, 'total_docs: 0',
                  'require-rule-mention: true', '---', '',
                  '# 📚 文档汇总视图（SUMMARY）', '',

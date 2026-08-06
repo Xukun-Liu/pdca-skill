@@ -5,8 +5,8 @@ T012: 打包 skill 包为 zip，排除用户数据目录（memory/ docs_rj/ outp
 确保发布包只含框架文件，用户解压覆盖升级时数据 0 丢失。
 
 用法：
-    python scripts/package_skill.py --version v1.0.0
-    python scripts/package_skill.py --version v1.0.0 --output ./dist/
+    python scripts/package_skill.py --version v1.0.1
+    python scripts/package_skill.py --version v1.0.1 --output ./dist/
 
 输出文件名：riji-skill-v{版本号}-{YYYYMMDD-HHMM}.zip
 """
@@ -101,7 +101,7 @@ def package_skill(version: str, output_dir: str, skill_root: str = None) -> str:
     """打包 skill 包为 zip。
 
     Args:
-        version: 版本号（如 v1.0.0）
+        version: 版本号（如 v1.0.1）
         output_dir: 输出目录
         skill_root: skill 包根目录（默认当前目录的上级，即脚本所在目录的上级）
 
@@ -188,7 +188,7 @@ def _verify_package(zip_path: str) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="riji-skill 发布打包脚本")
-    parser.add_argument("--version", required=True, help="版本号（如 v1.0.0）")
+    parser.add_argument("--version", required=True, help="版本号（如 v1.0.1）")
     parser.add_argument("--output", default="./dist/", help="输出目录（默认 ./dist/）")
     parser.add_argument("--skill-root", default=None, help="skill 包根目录（默认自动检测）")
     parser.add_argument("--no-verify", action="store_true", help="跳过打包后验证")

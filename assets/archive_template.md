@@ -1,6 +1,6 @@
 ---
 version: v1.0.0
-skill_version: v1.0.0
+skill_version: v1.0.1
 ---
 
 # 归档任务袋 · {task}_{ts}

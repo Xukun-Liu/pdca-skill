@@ -1,6 +1,6 @@
 ---
 version: v1.0.0
-skill_version: v1.0.0
+skill_version: v1.0.1
 ---
 
 <!-- PDCA标签：A.tidy -->

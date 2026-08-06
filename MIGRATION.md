@@ -1,6 +1,6 @@
 ---
 title: riji-skill 文档规整指南
-skill_version: v1.0.0
+skill_version: v1.0.1
 last_updated: 2026-07-30 10:00
 ---
 

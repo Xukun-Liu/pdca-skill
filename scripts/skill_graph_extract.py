@@ -30,6 +30,7 @@ import hashlib
 import argparse
 import logging
 import subprocess
+import shutil
 import urllib.request
 import urllib.error
 from datetime import datetime
@@ -649,11 +650,18 @@ def extract_skills_rulebased(memories: List[RawMemory]) -> List[RawSkill]:
 # 右轨：多源全集拉取
 # ===========================================================================
 
-def _git_clone(repo_url: str, target_dir: str, timeout: int = 600) -> bool:
-    """git clone --depth 1 仓库到目标目录。超时默认 600s（roadmap.sh 仓库较大）。"""
+def _git_clone(repo_url: str, target_dir: str, timeout: int = 600, force: bool = False) -> bool:
+    """git clone --depth 1 仓库到目标目录。超时默认 600s（roadmap.sh 仓库较大）。
+
+    force=True 时删除旧目录重新 clone（--no-cache 语义：右轨数据要最新）。
+    """
     if os.path.isdir(target_dir) and os.listdir(target_dir):
-        logger.info('已存在，跳过 clone: %s', target_dir)
-        return True
+        if force:
+            logger.info('--no-cache 强制刷新，删除旧仓库: %s', target_dir)
+            shutil.rmtree(target_dir, ignore_errors=True)
+        else:
+            logger.info('已存在，跳过 clone: %s', target_dir)
+            return True
     os.makedirs(os.path.dirname(target_dir), exist_ok=True)
     env = dict(os.environ)
     env['PYTHONIOENCODING'] = 'utf-8'
@@ -675,7 +683,8 @@ def _git_clone(repo_url: str, target_dir: str, timeout: int = 600) -> bool:
         logger.error('git clone 超时(%ds): %s', timeout, repo_url)
         return False
 
-def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]:
+def _pull_roadmap_sh(target_dir: str, is_local: bool = False,
+                     force: bool = False) -> List[SkillNode]:
     """拉取 roadmap.sh 角色技能树。
 
     上游仓库（kamranahmedse/developer-roadmap）当前结构：
@@ -684,6 +693,7 @@ def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]
     Args:
         target_dir: 缓存目录（is_local=False）或本地仓库根路径（is_local=True）
         is_local: True 表示 target_dir 已是本地仓库路径，跳过 git clone
+        force: True 时删除旧 clone 重新拉取（--no-cache 语义）
     """
     if is_local:
         repo_dir = target_dir
@@ -693,6 +703,7 @@ def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]
         success = _git_clone(
             'https://github.com/kamranahmedse/developer-roadmap.git',
             repo_dir,
+            force=force,
         )
         if not success:
             logger.warning('roadmap.sh 拉取失败，使用降级列表')
@@ -719,12 +730,13 @@ def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]
             md_content = _safe_read_text(md_path, max_bytes=256 * 1024)
             if not md_content:
                 continue
-            description, learning_link = _parse_roadmap_md_content(md_content)
-            if len(name) < 2:
+            title, description, learning_link = _parse_roadmap_md_content(md_content)
+            skill_name = title or name
+            if len(skill_name) < 2:
                 continue
             nodes.append(SkillNode(
                 id='roadmap.sh:%s:%s' % (role_name, name),
-                name=name,
+                name=skill_name,
                 category=role_name,
                 source='roadmap.sh',
                 tags=[role_name],
@@ -747,27 +759,38 @@ def _parse_roadmap_md_filename(md_file: str):
     return (name, parts[1])
 
 def _parse_roadmap_md_content(md_content: str):
-    """从 roadmap 内容 .md 提取 (description, learning_link)。"""
+    """从 roadmap 内容 .md 提取 (title, description, learning_link)。
+
+    title 取第一行 '# 标题'（上游手写，质量高于 slug 转换）；
+    description 取标题后第一段正文（跳过 '>' blockquote 链接行）。
+    """
+    title = ''
     description = ''
     learning_link = ''
     lines = md_content.splitlines()
-    for line in lines[1:]:  # 跳过标题行
+    if lines and lines[0].startswith('# '):
+        title = lines[0][2:].strip()
+    for line in lines[1:]:
         stripped = line.strip()
-        if not stripped or stripped.startswith('Visit') or stripped.startswith('-'):
+        if not stripped:
+            continue
+        # 跳过 blockquote 链接行（'> [Visit page](...)'）与 '-' 列表行
+        if stripped.startswith('>') or stripped.startswith('Visit') or stripped.startswith('-'):
             continue
         description = stripped[:300]
         break
     link_match = re.search(r'\[[^\]]*\]\((https?://[^\)]+)\)', md_content)
     if link_match:
         learning_link = link_match.group(1)
-    return (description, learning_link)
+    return (title, description, learning_link)
 
-def _pull_engineer_competency(target_dir: str) -> List[SkillNode]:
+def _pull_engineer_competency(target_dir: str, force: bool = False) -> List[SkillNode]:
     """拉取 engineer_competency_framework 工程能力矩阵。"""
     repo_dir = os.path.join(target_dir, 'competency')
     success = _git_clone(
         'https://github.com/spring2go/engineer_competency_framework.git',
         repo_dir,
+        force=force,
     )
     if not success:
         logger.warning('engineer_competency 拉取失败，使用降级列表')
@@ -861,12 +884,14 @@ def _build_fallback_nodes(source: str) -> List[SkillNode]:
         ))
     return nodes
 
-def pull_taxonomy_sources(target_dir: str, roadmap_local: str = None) -> List[SkillNode]:
+def pull_taxonomy_sources(target_dir: str, roadmap_local: str = None,
+                          force: bool = False) -> List[SkillNode]:
     """并行拉取 4 源（实际是顺序执行，但各自失败不阻断）。
 
     Args:
         target_dir: 缓存目录
         roadmap_local: 本地已克隆的 developer-roadmap 仓库路径（跳过 git clone）
+        force: True 时删除旧 clone 重新拉取（--no-cache 语义，右轨要最新）
     """
     os.makedirs(target_dir, exist_ok=True)
 
@@ -878,7 +903,7 @@ def pull_taxonomy_sources(target_dir: str, roadmap_local: str = None) -> List[Sk
         if roadmap_local and os.path.isdir(roadmap_local):
             nodes = _pull_roadmap_sh(roadmap_local, is_local=True)
         else:
-            nodes = _pull_roadmap_sh(target_dir)
+            nodes = _pull_roadmap_sh(target_dir, force=force)
         if nodes:
             all_nodes.extend(nodes)
             sources_hit.append('roadmap.sh')
@@ -887,7 +912,7 @@ def pull_taxonomy_sources(target_dir: str, roadmap_local: str = None) -> List[Sk
 
     # 源2: engineer_competency
     try:
-        nodes = _pull_engineer_competency(target_dir)
+        nodes = _pull_engineer_competency(target_dir, force=force)
         if nodes:
             all_nodes.extend(nodes)
             sources_hit.append('engineer_competency')
@@ -1119,7 +1144,8 @@ def main():
     taxonomy_nodes = []
     if not args.skip_taxonomy:
         logger.info('=== 右轨：多源全集拉取 ===')
-        taxonomy_nodes = pull_taxonomy_sources(_TAXONOMY_DATA_DIR, args.roadmap_local)
+        taxonomy_nodes = pull_taxonomy_sources(_TAXONOMY_DATA_DIR, args.roadmap_local,
+                                               force=args.no_cache)
 
         # 归一化 + 去重
         taxonomy_nodes = normalize_taxonomy(taxonomy_nodes)

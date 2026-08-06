@@ -1,7 +1,7 @@
 ---
 title: {任务名} - 任务清单
 version: v1.0.0
-skill_version: v1.0.0
+skill_version: v1.0.1
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 spec_ref: spec_rj/{任务名}_spec_{日期}_{时间}.md

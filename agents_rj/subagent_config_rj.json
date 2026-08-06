@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.0",
+  "version": "v1.0.1",
   "last_updated": "2026-07-24",
   "defaults": {
     "subagent_type": "general_purpose_task",

@@ -1,7 +1,7 @@
 ---
 title: 文档汇总视图
 version: v1.0.0
-skill_version: v1.0.0
+skill_version: v1.0.1
 last_updated: YYYY-MM-DD HH:MM
 total_docs: 0
 require-rule-mention: true
