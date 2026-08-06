@@ -26,6 +26,7 @@ skill_graph_render.py — 阶段3：三格式渲染
 
 import os
 import sys
+import re
 import json
 import csv
 import hashlib
@@ -45,7 +46,12 @@ logger = logging.getLogger(__name__)
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _SKILL_DIR = os.path.dirname(_SCRIPT_DIR)
-_CACHE_DIR = os.path.join(_SKILL_DIR, 'docs_rj', 'memory_rj', '.skill_graph_cache')
+
+sys.path.insert(0, _SCRIPT_DIR)
+import user_data_path  # noqa: E402  用户数据外置：提供 get_docs_rj_path()
+
+_CACHE_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'memory_rj', '.skill_graph_cache')
+_OUTPUT_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'skill_graph')
 
 
 # ===========================================================================
@@ -549,6 +555,18 @@ def render_csv(skills: List[dict]) -> str:
     ]
     writer.writerow(headers)
 
+    def _csv_safe(value) -> str:
+        """CSV 注入防护：以 = + - @ 及 \t \r 开头的单元格加单引号前缀。
+
+        覆盖 Excel/表格软件公式注入向量（含全角变体 ＝＋－＠）。
+        """
+        text = str(value)
+        if not text:
+            return text
+        if re.match(r'^[\t\r=+\-@＝＋－＠]', text):
+            return "'" + text
+        return text
+
     for s in skills:
         # 多值字段用分号分隔
         source_tools = ';'.join(s.get('source_tools', []))
@@ -556,19 +574,19 @@ def render_csv(skills: List[dict]) -> str:
         ev_refs = ';'.join(s.get('evidence_refs', []))
 
         writer.writerow([
-            s.get('name', ''),
-            s.get('category', ''),
-            s.get('status', ''),
+            _csv_safe(s.get('name', '')),
+            _csv_safe(s.get('category', '')),
+            _csv_safe(s.get('status', '')),
             f"{s.get('confidence', 0):.2f}",
             s.get('evidence_count', 0),
-            source_tools,
-            ev_refs,
-            s.get('first_seen', ''),
-            s.get('last_seen', ''),
-            s.get('reason', ''),
-            s.get('roadmap_ref', ''),
-            s.get('priority', ''),
-            s.get('learning_link', ''),
+            _csv_safe(source_tools),
+            _csv_safe(ev_refs),
+            _csv_safe(s.get('first_seen', '')),
+            _csv_safe(s.get('last_seen', '')),
+            _csv_safe(s.get('reason', '')),
+            _csv_safe(s.get('roadmap_ref', '')),
+            _csv_safe(s.get('priority', '')),
+            _csv_safe(s.get('learning_link', '')),
         ])
 
     # UTF-8 BOM
@@ -625,17 +643,17 @@ def main():
         help='skills_clustered.json 路径',
     )
     parser.add_argument(
-        '--md-output', default=os.path.join(_SKILL_DIR, 'memory', 'skill_graph.md'),
+        '--md-output', default=os.path.join(_OUTPUT_DIR, 'skill_graph.md'),
         help='markdown 输出路径',
     )
     parser.add_argument(
         '--csv-output',
-        default=os.path.join(_SKILL_DIR, 'docs_master_graph', 'skill_graph.csv'),
+        default=os.path.join(_OUTPUT_DIR, 'skill_graph.csv'),
         help='CSV 输出路径',
     )
     parser.add_argument(
         '--svg-output',
-        default=os.path.join(_SKILL_DIR, 'docs_master_graph', 'skill_graph.svg'),
+        default=os.path.join(_OUTPUT_DIR, 'skill_graph.svg'),
         help='SVG 输出路径',
     )
     parser.add_argument(

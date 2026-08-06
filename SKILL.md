@@ -3,7 +3,7 @@ name: riji-skill
 description: 协作框架 + 技能编排器。自身不实现具体能力，只负责跨任务硬规则（7条铁律/HARD-GATE/Memory First/触发钩子路由）与按需加载 references/ 下的专业模块；每次对话自动加载，全局生效。
 agent_created: true
 license: Apache-2.0
-version: "v1.0.0"
+version: "v1.0.2"
 author: riji-skill contributors
 keywords:
   - 协作框架
@@ -14,7 +14,7 @@ keywords:
 category: workflow
 ---
 
-<!-- Skill 版本：v1.0.0 | 更新：2026-07-29 | 历史变更详见 HISTORY.md -->
+<!-- Skill 版本：v1.0.2 | 更新：2026-08-06 | 历史变更详见 HISTORY.md -->
 
 # riji skill
 
@@ -1040,6 +1040,7 @@ docs_rj/
 3.5a. **§7.1 ADR 候选确认【硬性·REQ-009】**：handoff_tidy 报告 `adr_candidates` 逐条判定写入 §7.1（最新置顶+TOP5 归档）或明说"本次无新 ADR"（不说=偏离）；`adr_pending_agent=true` 未判定 = 偏离（细则见 act_procedure.md）
 3.5b. **§7.3 风险候选确认【硬性·REQ-009】**：同上判定 `risk_candidates` 写入 §7.3 或明说"本次无新风险"；§7.2/§7.4 由 handoff_tidy 自动刷新，无需 agent 干预（细则见 act_procedure.md）
 3.6. **learn 累积量门控【自动触发】**：跑 `python scripts/learn_tidy.py count --threshold 20` → should_run=false 记录"learn 跳过"进步骤4；true 自动 `scan --dry-run` → reflect **仅产 proposals.md（禁应用，限 5 分钟）** → 等步骤4 adopt HARD-GATE；scan 无发现/失败（退码2）/用户喊停分别记录跳过（完整分支见 act_procedure.md）
+3.6a. **技能图谱自动刷新【自动触发·v1.0.2】**：跑 `python scripts/skill_graph_build.py --auto`（仅左轨 riji，L0 安全级；记忆哈希未变缓存命中零成本跳过；taxonomy 缺失 [SKIP] exit 0；阶段失败 exit 2 不阻断 /act 仅记录 memory；细则见 act_procedure.md）
 3.8. **前端面板同步（server_lite，可选）**：默认跳过；用户主动启用 server_lite 时提醒点「🔄 同步数据」刷新前端缓存
 4. **adopt HARD-GATE**（若步骤3.6 有 proposals）：呈现 proposals.md → 确认"adopt" → 备份原文件+应用编辑+write_project 写 memory；"跳过"记录跳过；"调整"重新 reflect；无 proposals 直接进步骤4.1
 4.1. **distill 询问（经验采纳）**：跑 `python scripts/memory_distill.py distill --project {项目名} --output-dir docs_rj/learn_rj` → ≥1 条经验则 AskUserQuestion 展示 TOP3 问"是否采纳"（采纳/拒绝/稍后）；采纳经 write_project 写全局 `## {项目名}` 分段（importance_level=high, is_lesson=true, experience_tags 含 "adopted_lesson"）；0 条跳过（细则见 act_procedure.md）

@@ -48,9 +48,12 @@ logger = logging.getLogger(__name__)
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _SKILL_DIR = os.path.dirname(_SCRIPT_DIR)
 
-# 缓存目录
-_CACHE_DIR = os.path.join(_SKILL_DIR, 'docs_rj', 'memory_rj', '.skill_graph_cache')
-_TAXONOMY_DATA_DIR = os.path.join(_SKILL_DIR, 'skill_data', 'taxonomy_sources')
+sys.path.insert(0, _SCRIPT_DIR)
+import user_data_path  # noqa: E402  用户数据外置：提供 get_memory_main_path_with_fallback / get_memory_rj_path
+
+# 缓存目录（外置用户数据目录，避免升级覆盖丢失）
+_CACHE_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'memory_rj', '.skill_graph_cache')
+_TAXONOMY_DATA_DIR = os.path.join(user_data_path.get_user_data_dir(), 'skill_data', 'taxonomy_sources')
 
 # ===========================================================================
 # 配置区
@@ -105,15 +108,9 @@ def _get_scan_roots() -> List[str]:
     mac_lib = os.path.join(home, 'Library', 'Application Support')
     if os.path.isdir(mac_lib):
         roots.append(mac_lib)
-    # 项目当前工作目录 + 父目录链（向上2层）
+    # 项目当前工作目录（v1.0.1 门控对齐：父目录链不算任务范围，不纳入扫描根）
     cwd = os.getcwd()
     roots.append(cwd)
-    parent = os.path.dirname(cwd)
-    if parent and parent != cwd:
-        roots.append(parent)
-        grandparent = os.path.dirname(parent)
-        if grandparent and grandparent != parent:
-            roots.append(grandparent)
     return roots
 
 # 8 关键词
@@ -128,6 +125,18 @@ BLACKLIST_DIRS = {
     'site-packages', 'dist', 'build', '.cache', 'tmp', 'Temp',
     '.npm', '.cache', 'cache', '__pypackages__',
 }
+
+# 敏感内容模式（v1.0.1 门控配套）：命中模式的摘录不持久化原文
+# 词边界防误伤（tokenizer/secretary），空格变体覆盖（api key / session id / pwd =）
+SENSITIVE_PATTERNS = [
+    r'\bpassword\b', r'\bpasswd\b', r'\bpwd\s*[:=]',
+    r'\btoken\b', r'\bsecret\b', r'\bapi[ _-]?key\b',
+    r'\baccess[ _-]?key\b', r'\bprivate[ _-]?key\b',
+    r'\bauth[ _-]?key\b', r'\blogin[ _-]?key\b',
+    r'\bsession[ _-]?id\b', r'\bauthorization\b', r'\bbearer\b',
+    r'\bcookie\b', r'\bcredential\b', r'\bsk-[A-Za-z0-9_-]{8,}',
+    '密码', '密钥', '口令', '登录凭证', '验证码', '凭据', '授权码',
+]
 
 # 规则提取用：技术栈关键词表（分类 → 关键词列表）
 TECH_KEYWORDS: Dict[str, List[str]] = {
@@ -301,11 +310,11 @@ def _is_tty() -> bool:
 # ===========================================================================
 
 def read_riji_memory(skill_dir: str) -> List[RawMemory]:
-    """读取 riji-skill 自身的记忆文件。"""
+    """读取 riji-skill 自身的记忆文件（优先外置用户数据，退回包内兜底）。"""
     memories = []
 
-    # 1. memory/memory_main.md
-    memory_main = os.path.join(skill_dir, 'memory', 'memory_main.md')
+    # 1. memory/memory_main.md（外置 ~/.riji-skill/data/memory/ 优先，包内退回）
+    memory_main = user_data_path.get_memory_main_path_with_fallback(skill_dir)
     if os.path.isfile(memory_main):
         content = _safe_read_text(memory_main)
         memories.append(RawMemory(
@@ -319,8 +328,10 @@ def read_riji_memory(skill_dir: str) -> List[RawMemory]:
     else:
         logger.warning('riji memory_main.md 不存在: %s', memory_main)
 
-    # 2. docs_rj/memory_rj/*.md
-    memory_rj_dir = os.path.join(skill_dir, 'docs_rj', 'memory_rj')
+    # 2. docs_rj/memory_rj/*.md（外置优先，包内退回）
+    memory_rj_dir = str(user_data_path.get_memory_rj_path())
+    if not os.path.isdir(memory_rj_dir):
+        memory_rj_dir = os.path.join(skill_dir, 'docs_rj', 'memory_rj')
     if os.path.isdir(memory_rj_dir):
         for fname in sorted(os.listdir(memory_rj_dir)):
             if not fname.endswith('.md'):
@@ -517,14 +528,50 @@ def read_ai_tools_memory() -> Tuple[List[RawMemory], Dict]:
 
     return all_memories, {'hit_tools': hit_tools, 'discovered_tools': discovered_tools}
 
-def read_riji_memory() -> List[RawMemory]:
-    """读取 riji.db（可选，当前返回空列表）。"""
-    # 后期实现：读 riji.db L0 对话表
-    return []
-
 # ===========================================================================
 # 左轨：规则提取技能线索
 # ===========================================================================
+
+def _extract_lesson_skill_names(memories: List[RawMemory]) -> Set[str]:
+    """从记忆的结构化条目（是否经验/经验标签）中提取经验型技能名。
+
+    复用 memory_distill.parse_memory_entries 解析器（第三解析器禁令），
+    仅对 memory_main.md 解析；is_lesson=true 或 experience_tags 非空的
+    条目视为经验条目，其内容命中的技能在置信度计算时获得加权。
+    """
+    try:
+        import memory_distill
+    except ImportError:
+        logger.warning('memory_distill 导入失败，经验加权跳过')
+        return set()
+
+    lesson_skills: Set[str] = set()
+    for mem in memories:
+        if 'memory_main' not in os.path.basename(mem.file):
+            continue
+        try:
+            entries = memory_distill.parse_memory_entries(mem.content) or []
+        except Exception as e:  # 记忆内容自由度高，解析器异常不阻断提取
+            logger.warning('经验条目解析异常，跳过该记忆: %s', e)
+            continue
+        for entry in entries:
+            if not (entry.get('is_lesson') or entry.get('experience_tags')):
+                continue
+            content = entry.get('content', '')
+            if not content:
+                continue
+            content_lower = content.lower()
+            for keywords in TECH_KEYWORDS.values():
+                for kw in keywords:
+                    kw_lower = kw.lower()
+                    # 词边界匹配，防子串误伤（'go' 误中 'google'）
+                    if re.search(r'(?<![a-z0-9])' + re.escape(kw_lower) + r'(?![a-z0-9])', content_lower):
+                        lesson_skills.add(kw)
+    if lesson_skills:
+        logger.info('经验加权: %d 个技能来自经验条目（是否经验/经验标签）',
+                    len(lesson_skills))
+    return lesson_skills
+
 
 def extract_skills_rulebased(memories: List[RawMemory]) -> List[RawSkill]:
     """从归一化记忆中用规则提取技能线索。
@@ -559,14 +606,21 @@ def extract_skills_rulebased(memories: List[RawMemory]) -> List[RawSkill]:
                     # 避免同一文件同一行重复记录
                     ev_key = f'{mem.file}:{line_num}:{kw_original}'
                     if not any(e.get('key') == ev_key for e in skill_evidence[kw_original]):
+                        # 敏感内容过滤（v1.0.1）：命中敏感模式的行，摘录替换为占位，不持久化原文
+                        excerpt = line.strip()[:200]
+                        if any(re.search(p, excerpt, re.IGNORECASE) for p in SENSITIVE_PATTERNS):
+                            excerpt = '[sensitive line omitted]'
                         skill_evidence[kw_original].append({
                             'source_tool': mem.source_tool,
                             'file': mem.file,
                             'line': line_num,
                             'timestamp': mem.timestamp,
-                            'excerpt': line.strip()[:200],
+                            'excerpt': excerpt,
                             'key': ev_key,
                         })
+
+    # 经验条目加权：结构字段（是否经验/经验标签）标记的技能置信度 +0.1
+    lesson_skills = _extract_lesson_skill_names(memories)
 
     # 构建 RawSkill 列表
     raw_skills: List[RawSkill] = []
@@ -574,6 +628,8 @@ def extract_skills_rulebased(memories: List[RawMemory]) -> List[RawSkill]:
         # 置信度：基于证据数和来源工具数
         source_count = len({e['source_tool'] for e in evidence_list})
         confidence = min(0.5 + 0.1 * len(evidence_list) + 0.15 * source_count, 0.95)
+        if name in lesson_skills:
+            confidence = min(confidence + 0.1, 0.95)
 
         raw_skills.append(RawSkill(
             name=name,
@@ -599,10 +655,13 @@ def _git_clone(repo_url: str, target_dir: str, timeout: int = 600) -> bool:
         logger.info('已存在，跳过 clone: %s', target_dir)
         return True
     os.makedirs(os.path.dirname(target_dir), exist_ok=True)
+    env = dict(os.environ)
+    env['PYTHONIOENCODING'] = 'utf-8'
     try:
         result = subprocess.run(
             ['git', 'clone', '--depth', '1', repo_url, target_dir],
             capture_output=True, text=True, timeout=timeout,
+            encoding='utf-8', errors='replace', env=env,
         )
         if result.returncode != 0:
             logger.error('git clone 失败 %s: %s', repo_url, result.stderr[:200])
@@ -617,7 +676,10 @@ def _git_clone(repo_url: str, target_dir: str, timeout: int = 600) -> bool:
         return False
 
 def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]:
-    """拉取 roadmap.sh 角色技能树 JSON。
+    """拉取 roadmap.sh 角色技能树。
+
+    上游仓库（kamranahmedse/developer-roadmap）当前结构：
+    roadmaps/<slug>/content/{slug}@{nodeId}.md（旧 src/data/roadmaps JSON 已移除）。
 
     Args:
         target_dir: 缓存目录（is_local=False）或本地仓库根路径（is_local=True）
@@ -629,7 +691,7 @@ def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]
     else:
         repo_dir = os.path.join(target_dir, 'roadmap')
         success = _git_clone(
-            'https://某开源仓库.git',
+            'https://github.com/kamranahmedse/developer-roadmap.git',
             repo_dir,
         )
         if not success:
@@ -637,80 +699,74 @@ def _pull_roadmap_sh(target_dir: str, is_local: bool = False) -> List[SkillNode]
             return _build_fallback_nodes('roadmap.sh')
 
     nodes: List[SkillNode] = []
-    roadmaps_dir = os.path.join(repo_dir, 'src', 'data', 'roadmaps')
+    roadmaps_dir = os.path.join(repo_dir, 'roadmaps')
     if not os.path.isdir(roadmaps_dir):
         logger.warning('roadmaps 目录不存在: %s', roadmaps_dir)
         return _build_fallback_nodes('roadmap.sh')
 
-    # 遍历每个角色目录
+    # 遍历每个角色 slug 目录，解析 content/{slug}@{nodeId}.md
     for role_name in os.listdir(roadmaps_dir):
-        role_dir = os.path.join(roadmaps_dir, role_name)
-        if not os.path.isdir(role_dir):
+        content_dir = os.path.join(roadmaps_dir, role_name, 'content')
+        if not os.path.isdir(content_dir):
             continue
-        # 找 {role}.json 或 {role}-beginner.json
-        for json_name in [f'{role_name}.json', f'{role_name}-beginner.json']:
-            json_path = os.path.join(role_dir, json_name)
-            if not os.path.isfile(json_path):
+        for md_file in os.listdir(content_dir):
+            if not md_file.endswith('.md'):
                 continue
-            content = _safe_read_text(json_path, max_bytes=1024 * 1024)
-            if not content:
+            name, node_id = _parse_roadmap_md_filename(md_file)
+            if not name or not node_id:
                 continue
-            try:
-                data = json.loads(content)
-            except json.JSONDecodeError:
+            md_path = os.path.join(content_dir, md_file)
+            md_content = _safe_read_text(md_path, max_bytes=256 * 1024)
+            if not md_content:
                 continue
-
-            # 提取 topic 和 subtopic 类型节点
-            for node in data.get('nodes', []):
-                node_type = node.get('type', '')
-                if node_type not in ('topic', 'subtopic'):
-                    continue
-                label = node.get('data', {}).get('label', '').strip()
-                if not label or len(label) < 2:
-                    continue
-                node_id = node.get('id', '')
-
-                # 查找对应的 content .md 文件（描述+链接）
-                content_dir = os.path.join(role_dir, 'content')
-                description = ''
-                learning_link = ''
-                if os.path.isdir(content_dir):
-                    # 文件名格式：{slug}@{nodeId}.md
-                    for md_file in os.listdir(content_dir):
-                        if md_file.endswith(f'@{node_id}.md'):
-                            md_path = os.path.join(content_dir, md_file)
-                            md_content = _safe_read_text(md_path)
-                            # 第一段是描述
-                            lines = md_content.splitlines()
-                            for line in lines[1:]:  # 跳过标题行
-                                if line.strip() and not line.startswith('Visit') and not line.startswith('-'):
-                                    description = line.strip()[:300]
-                                    break
-                            # 找第一个链接
-                            link_match = re.search(r'\[.*?\]\((https?://[^\)]+)\)', md_content)
-                            if link_match:
-                                learning_link = link_match.group(1)
-                            break
-
-                nodes.append(SkillNode(
-                    id=f'roadmap.sh:{label.lower()}',
-                    name=label,
-                    category=node_type,
-                    source='roadmap.sh',
-                    tags=[role_name],
-                    description=description,
-                    learning_link=learning_link,
-                ))
-            break  # 只取第一个 JSON 文件（主版本）
+            description, learning_link = _parse_roadmap_md_content(md_content)
+            if len(name) < 2:
+                continue
+            nodes.append(SkillNode(
+                id='roadmap.sh:%s:%s' % (role_name, name),
+                name=name,
+                category=role_name,
+                source='roadmap.sh',
+                tags=[role_name],
+                description=description,
+                learning_link=learning_link,
+            ))
 
     logger.info('roadmap.sh: 提取 %d 个技能节点', len(nodes))
     return nodes
+
+def _parse_roadmap_md_filename(md_file: str):
+    """解析 roadmap 新结构文件名 '{slug}@{nodeId}.md'，返回 (slug, nodeId)。"""
+    base = md_file[:-3]
+    if '@' not in base:
+        return (None, None)
+    parts = base.split('@', 1)
+    if len(parts) != 2:
+        return (None, None)
+    name = parts[0].replace('-', ' ').replace('_', ' ').strip().title()
+    return (name, parts[1])
+
+def _parse_roadmap_md_content(md_content: str):
+    """从 roadmap 内容 .md 提取 (description, learning_link)。"""
+    description = ''
+    learning_link = ''
+    lines = md_content.splitlines()
+    for line in lines[1:]:  # 跳过标题行
+        stripped = line.strip()
+        if not stripped or stripped.startswith('Visit') or stripped.startswith('-'):
+            continue
+        description = stripped[:300]
+        break
+    link_match = re.search(r'\[[^\]]*\]\((https?://[^\)]+)\)', md_content)
+    if link_match:
+        learning_link = link_match.group(1)
+    return (description, learning_link)
 
 def _pull_engineer_competency(target_dir: str) -> List[SkillNode]:
     """拉取 engineer_competency_framework 工程能力矩阵。"""
     repo_dir = os.path.join(target_dir, 'competency')
     success = _git_clone(
-        'https://某开源仓库.git',
+        'https://github.com/spring2go/engineer_competency_framework.git',
         repo_dir,
     )
     if not success:
@@ -750,7 +806,7 @@ def _pull_github_topics(target_dir: str) -> List[SkillNode]:
     nodes: List[SkillNode] = []
 
     # 尝试 GitHub API（未认证限流 60次/小时）
-    topics_url = 'https://api.某开源仓库?q=stars:>10000&sort=stars&per_page=30'
+    topics_url = 'https://api.github.com/search/repositories?q=stars:>10000&sort=stars&per_page=30'
     try:
         req = urllib.request.Request(topics_url, headers={
             'Accept': 'application/vnd.github.v3+json',
@@ -987,7 +1043,7 @@ def main():
         description='阶段1：双轨提取（左轨记忆挖掘 + 右轨多源全集）',
     )
     parser.add_argument(
-        '--source', choices=['riji', 'ai_tools', 'riji', 'all'],
+        '--source', choices=['riji', 'ai_tools', 'all'],
         default='all', help='数据源（默认 all）',
     )
     parser.add_argument(
@@ -1001,10 +1057,6 @@ def main():
     parser.add_argument(
         '--no-cache', action='store_true',
         help='忽略缓存，强制重新拉取',
-    )
-    parser.add_argument(
-        '--interactive', action='store_true', default=None,
-        help='交互模式（TTY 自动检测，强制开启）',
     )
     parser.add_argument(
         '--max-depth', type=int, default=3,
@@ -1048,9 +1100,6 @@ def main():
         ai_mems, ai_tools_info = read_ai_tools_memory()
         memories.extend(ai_mems)
         tools_info = ai_tools_info
-
-    if args.source in ('riji', 'all'):
-        memories.extend(read_riji_memory())
 
     # 仅发现模式
     if args.discover_only:

@@ -277,11 +277,18 @@ def run_subprocess(python, script, cwd, extra_args, timeout=DEFAULT_TIMEOUT):
     """运行子进程并返回 (returncode, stdout, stderr)。
 
     启动失败 / 超时返回 (None, None, error_msg)。
+    Windows 兼容（v1.0.2）：text=True 默认按 cp936 解码，子进程 UTF-8 输出
+    （含中文/emoji）会导致 reader 线程 UnicodeDecodeError 静默吞掉 stdout，
+    表现为"输出非合法 JSON"。修复：显式 utf-8 + errors='replace' 解码，
+    并向子进程注入 PYTHONIOENCODING=utf-8（防 GBK 控制台 print emoji 崩溃）。
     """
+    env = dict(os.environ)
+    env['PYTHONIOENCODING'] = 'utf-8'
     command = [python, script] + list(extra_args)
     try:
         proc = subprocess.run(
             command, cwd=cwd, capture_output=True, text=True, timeout=timeout,
+            encoding='utf-8', errors='replace', env=env,
         )
     except subprocess.TimeoutExpired:
         return None, None, 'subprocess 超时（%ss）' % timeout

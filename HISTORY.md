@@ -1,7 +1,7 @@
 ---
 title: riji-skill 版本历史
-version: v1.0.0
-last_updated: 2026-08-01 23:50
+version: v1.0.2
+last_updated: 2026-08-06
 author: huihui
 ---
 
@@ -85,7 +85,9 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                         ── 复杂任务开工前问 2 问（工作区状态/分支策略）+ 3 默认值（git init/WIP commit/任务 tag 默认打）
                         ── 简单任务轻量 git status 检查，脏才问，不啰嗦
                         ── 落点：SKILL.md §6 /plan 步骤3 + git_workflow §6.5 + spec_template §0.G
-                       ── 6 条规则 riji-skill 已覆盖不重复（#2/#4/#5/#7/#8/#10）
+                        ── 6 条规则 riji-skill 已覆盖不重复（#2/#4/#5/#7/#8/#10）
+2026-08-06  v1.0.1     文件扫描确认门控（security.md L2：任务外扫描先确认范围+目的+关键词）
+2026-08-06  v1.0.2     技能图谱自动化（--auto 每轮 /act 3.6a 自动刷新）+ 数据外置 ~/.riji-skill/data/
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
@@ -295,7 +297,17 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - README.md：安全表格补门控描述 + 隐私声明
 - skill_graph_extract.py：修复非交互模式 bug——未确认目录只记录路径不读取（原为"未确认也读"）
 - 决策记录：脚本修复 ✅ / evidence 豁免 ✅ / 硬性规则（非安全不变量）✅ / 只改 public 版 ✅
+- 对抗性审查 2 轮：第 1 轮 5 HIGH+9 MEDIUM（白名单绕过门控/excerpt 持久化/main 同名函数必崩/扫描根父链/版本号不同步）；第 2 轮修复验证 11/12 生效，无新 HIGH。修复：白名单豁免声明（用户确认）+ SENSITIVE_PATTERNS 敏感行摘录过滤（词边界+空格变体+sk- 裸值）、删同名占位函数与 main 重复调用、删 cwd 父链扫描根、删 --interactive 死参数、security.md 跳过边界句、skill_graph.md 扫描根清单按代码重写、README 测试数字实测对齐；新增测试 12 项全过（含 main 冒烟/excerpt 过滤/扫描根父链）
+
+### 2026-08-06：技能图谱自动化 + 数据外置（v1.0.2）
+
+- 触发升级：/act 每轮 3.6a 自动刷新 `--auto`（仅左轨 L0 安全级，哈希未变缓存命中零成本；taxonomy 缺失 [SKIP] exit 0；阶段失败 exit 2 不阻断 /act）；用户点名仍走全量双轨 + L2 确认
+- 数据外置：缓存/输出/图谱四件套迁至 `~/.riji-skill/data/docs_rj/skill_graph/`（升级不丢图谱）；断链修复（read_riji_memory 单入口，H1 清零）；右轨补真 URL（roadmap/engineer_competency/GitHub Topics，去重 316 节点）
+- 提取升级：结构化经验字段置信度加权（复用 memory_distill 解析器，第三解析器禁令）；CSV 公式注入防护（=+-@ 前缀加引号）
+- 质量：新增 tests/test_skill_graph_fix.py 8 测试全过；全量 pytest 182 过（5 失败为 learn_tidy_count Windows GBK 编码既有问题，基线确认非本次引入）
+- 决策记录：砍增量层（80% 复杂度解决 0 成本问题）✅ / --auto 仅左轨遵守自身 L2 门控 ✅ / 保留右轨全景 ✅ / 经验标签只做加权不做采纳（distill 管采纳）✅
+- 配套文档：skill_graph.md §3 双触发、act_procedure.md 3.6a 细则、SKILL.md 3.6a 行、trigger_hooks.md 双语义、HISTORY v1.0.2
 
 ---
 
-**版本**:v1.0.0 | **最后更新**:2026-08-01 23:50 | **作者**:huihui
+**版本**:v1.0.2 | **最后更新**:2026-08-06 | **作者**:huihui

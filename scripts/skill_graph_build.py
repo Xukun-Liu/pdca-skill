@@ -1,13 +1,14 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 skill_graph_build.py — 总入口：串联三阶段 + 缓存
 
 用法：
-  python scripts/skill_graph_build.py                    # 默认全量
+  python scripts/skill_graph_build.py                    # 默认全量（双轨）
   python scripts/skill_graph_build.py --source all       # 指定数据源
+  python scripts/skill_graph_build.py --auto             # 自动模式：仅左轨 riji（/act 3.6a 用）
   python scripts/skill_graph_build.py --no-cache         # 强制重算
-  python scripts/skill_graph_build.py --skip-taxonomy    # 仅左轨（调试）
+  python scripts/skill_graph_build.py --skip-taxonomy    # 跳过右轨全集拉取（调试；仍会扫 AI 工具记忆）
   python scripts/skill_graph_build.py --user-name 你的名字   # 自定义用户名
 
 阶段：
@@ -40,8 +41,14 @@ logger = logging.getLogger(__name__)
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _SKILL_DIR = os.path.dirname(_SCRIPT_DIR)
-_CACHE_DIR = os.path.join(_SKILL_DIR, 'docs_rj', 'memory_rj', '.skill_graph_cache')
+
+sys.path.insert(0, _SCRIPT_DIR)
+import user_data_path  # noqa: E402  用户数据外置：提供 get_memory_main_path_with_fallback / get_memory_rj_path
+
+# 缓存目录与输出目录（外置用户数据目录，避免升级覆盖丢失 / 假缓存命中）
+_CACHE_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'memory_rj', '.skill_graph_cache')
 _MANIFEST_PATH = os.path.join(_CACHE_DIR, 'cache_manifest.json')
+_OUTPUT_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'skill_graph')
 
 
 # ===========================================================================
@@ -60,14 +67,16 @@ def _compute_hash(filepath: str) -> str:
 
 
 def _collect_input_files(skill_dir: str) -> list:
-    """收集所有左轨输入记忆文件路径。"""
+    """收集所有左轨输入记忆文件路径（外置优先，退回包内兜底）。"""
     files = []
     # riji memory_main.md
-    p = os.path.join(skill_dir, 'memory', 'memory_main.md')
+    p = user_data_path.get_memory_main_path_with_fallback(skill_dir)
     if os.path.isfile(p):
         files.append(p)
     # memory_rj/*.md
-    memory_rj = os.path.join(skill_dir, 'docs_rj', 'memory_rj')
+    memory_rj = str(user_data_path.get_memory_rj_path())
+    if not os.path.isdir(memory_rj):
+        memory_rj = os.path.join(skill_dir, 'docs_rj', 'memory_rj')
     if os.path.isdir(memory_rj):
         for f in os.listdir(memory_rj):
             if f.endswith('.md') and not f.startswith('.'):
@@ -139,9 +148,12 @@ def _run_script(script_name: str, args: list) -> bool:
     script_path = os.path.join(_SCRIPT_DIR, script_name)
     cmd = [sys.executable, script_path] + args
     logger.info('执行: %s', ' '.join(cmd))
+    env = dict(os.environ)
+    env['PYTHONIOENCODING'] = 'utf-8'
     try:
         result = subprocess.run(
-            cmd, cwd=_SKILL_DIR, capture_output=True, text=True, encoding='utf-8',
+            cmd, cwd=_SKILL_DIR, capture_output=True, text=True,
+            encoding='utf-8', errors='replace', env=env,
         )
         # 输出 stderr 日志（PowerShell 的 NativeCommandError 不影响）
         if result.stderr:
@@ -186,9 +198,9 @@ def run_stage3(args) -> bool:
     """阶段3：三格式渲染。"""
     render_args = [
         '--input', os.path.join(_CACHE_DIR, 'skills_clustered.json'),
-        '--md-output', os.path.join(_SKILL_DIR, 'memory', 'skill_graph.md'),
-        '--csv-output', os.path.join(_SKILL_DIR, 'docs_master_graph', 'skill_graph.csv'),
-        '--svg-output', os.path.join(_SKILL_DIR, 'docs_master_graph', 'skill_graph.svg'),
+        '--md-output', os.path.join(_OUTPUT_DIR, 'skill_graph.md'),
+        '--csv-output', os.path.join(_OUTPUT_DIR, 'skill_graph.csv'),
+        '--svg-output', os.path.join(_OUTPUT_DIR, 'skill_graph.svg'),
         '--user-name', args.user_name,
     ]
     return _run_script('skill_graph_render.py', render_args)
@@ -203,8 +215,13 @@ def main():
         description='技能图谱生成器（总入口：串联三阶段 + 缓存）',
     )
     parser.add_argument(
-        '--source', choices=['riji', 'ai_tools', 'riji', 'all'],
+        '--source', choices=['riji', 'ai_tools', 'all'],
         default='all', help='数据源（默认 all）',
+    )
+    parser.add_argument(
+        '--auto', action='store_true',
+        help='自动模式（/act 3.6a 用）：只走左轨 riji 记忆（L0 安全级），'
+             '不拉右轨全集（用上次缓存）；输入哈希变化才重算',
     )
     parser.add_argument(
         '--no-cache', action='store_true',
@@ -225,23 +242,36 @@ def main():
 
     args = parser.parse_args()
 
+    # 自动模式约束：只走左轨 riji（L0 安全级，不扫 ~/APPDATA 等外目录），不拉右轨
+    if args.auto:
+        args.source = 'riji'
+        args.skip_taxonomy = True
+
     start_time = datetime.now()
     print(f'\n{"=" * 60}')
-    print(f'技能图谱生成器')
+    print(f'技能图谱生成器（{"自动模式" if args.auto else "全量模式"}）')
     print(f'开始时间: {start_time.strftime("%Y-%m-%d %H:%M:%S")}')
     print(f'{"=" * 60}')
 
-    # 检查缓存
+    # 检查缓存（仅自动模式用缓存：全量模式=用户点名要最新，始终重算；
+    # auto 模式输入仅左轨 riji 记忆，ai_tools 扫描结果不在 hash 集内，无陈旧风险）
     input_files = _collect_input_files(_SKILL_DIR)
     cached_manifest = _load_cache_manifest()
-    cache_hit = (not args.no_cache) and _check_cache(input_files, cached_manifest)
+    cache_hit = (not args.no_cache) and args.auto and _check_cache(input_files, cached_manifest)
 
     if cache_hit and args.force_stage == 'all':
-        print('\n✅ 缓存命中：所有输入文件未变化，跳过全部阶段')
+        print('\n缓存命中：所有输入文件未变化，跳过全部阶段')
         print(f'  上次生成: {cached_manifest.get("updated_at", "未知")}')
         print(f'  输出文件:')
         for name, path in cached_manifest.get('outputs', {}).items():
             print(f'    {name}: {path}')
+        return
+
+    # 自动模式前置检查：右轨全集缓存必须存在（cluster 阶段依赖），否则提示手动全量
+    taxonomy_cached = os.path.isfile(os.path.join(_CACHE_DIR, 'master_taxonomy.json'))
+    if args.auto and not taxonomy_cached:
+        print('\n[SKIP] 从未生成过右轨全集（master_taxonomy.json 缺失），自动模式跳过。')
+        print('   请先手动跑一次全量: python scripts/skill_graph_build.py')
         return
 
     # 执行阶段
@@ -252,39 +282,48 @@ def main():
         print(f'\n--- 阶段1: 双轨提取 ---')
         if not run_stage1(args):
             logger.error('阶段1失败，终止')
-            sys.exit(1)
+            sys.exit(2 if args.auto else 1)
 
     # 阶段2
     if args.force_stage in ('2', 'all'):
         print(f'\n--- 阶段2: 归纳分类 + 差距分析 ---')
         if not run_stage2(args):
             logger.error('阶段2失败，终止')
-            sys.exit(1)
+            sys.exit(2 if args.auto else 1)
 
     # 阶段3
     if args.force_stage in ('3', 'all'):
         print(f'\n--- 阶段3: 三格式渲染 ---')
         if not run_stage3(args):
             logger.error('阶段3失败，终止')
-            sys.exit(1)
+            sys.exit(2 if args.auto else 1)
 
-    # 更新缓存
-    outputs = {
-        'markdown': os.path.join(_SKILL_DIR, 'memory', 'skill_graph.md'),
-        'csv': os.path.join(_SKILL_DIR, 'docs_master_graph', 'skill_graph.csv'),
-        'svg': os.path.join(_SKILL_DIR, 'docs_master_graph', 'skill_graph.svg'),
-        'manifest': os.path.join(_SKILL_DIR, 'docs_master_graph', 'manifest.json'),
-        'skills_raw': os.path.join(_CACHE_DIR, 'skills_raw.json'),
-        'master_taxonomy': os.path.join(_CACHE_DIR, 'master_taxonomy.json'),
-        'skills_clustered': os.path.join(_CACHE_DIR, 'skills_clustered.json'),
-    }
-    _update_cache(input_files, outputs)
+    # 更新缓存（仅完整三阶段跑完才更新；force-stage 部分跑不写缓存，
+    # 防止 manifest 声称全部输出最新导致后续 auto 缓存误命中）
+    if args.force_stage == 'all':
+        outputs = {
+            'markdown': os.path.join(_OUTPUT_DIR, 'skill_graph.md'),
+            'csv': os.path.join(_OUTPUT_DIR, 'skill_graph.csv'),
+            'svg': os.path.join(_OUTPUT_DIR, 'skill_graph.svg'),
+            'manifest': os.path.join(_OUTPUT_DIR, 'manifest.json'),
+            'skills_raw': os.path.join(_CACHE_DIR, 'skills_raw.json'),
+            'master_taxonomy': os.path.join(_CACHE_DIR, 'master_taxonomy.json'),
+            'skills_clustered': os.path.join(_CACHE_DIR, 'skills_clustered.json'),
+        }
+        _update_cache(input_files, outputs)
+    else:
+        outputs = {
+            'markdown': os.path.join(_OUTPUT_DIR, 'skill_graph.md'),
+            'csv': os.path.join(_OUTPUT_DIR, 'skill_graph.csv'),
+            'svg': os.path.join(_OUTPUT_DIR, 'skill_graph.svg'),
+            'manifest': os.path.join(_OUTPUT_DIR, 'manifest.json'),
+        }
 
     # 汇总
     end_time = datetime.now()
     duration = (end_time - start_time).total_seconds()
     print(f'\n{"=" * 60}')
-    print(f'✅ 技能图谱生成完成')
+    print(f'技能图谱生成完成')
     print(f'耗时: {duration:.1f}s')
     print(f'{"=" * 60}')
     print(f'\n输出文件:')

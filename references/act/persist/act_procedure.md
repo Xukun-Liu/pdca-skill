@@ -5,10 +5,10 @@
 
 # /act 步骤细则（自 SKILL.md §6 下沉，唯一维护源）
 
-> 版本：v1.0.0 | 创建：2026-08-01
+> 版本：v1.0.2 | 创建：2026-08-01
 > 阶段标签：A.persist A.tidy
 
-> 📖 **什么时候读这个文件**：进入 /act 阶段，执行步骤 3.5 / 3.5a / 3.5b / 3.6 / 3.8 / 4.1 时必读。
+> 📖 **什么时候读这个文件**：进入 /act 阶段，执行步骤 3.5 / 3.5a / 3.5b / 3.6 / 3.6a / 3.8 / 4.1 时必读。
 > 🔴 **不要在这时候读**：/plan /do /check 阶段（SKILL.md §6 /act 节已含各步核心规则）。
 
 ---
@@ -62,6 +62,19 @@ handoff_tidy 报告 `risk_candidates` 字段含脚本扫描 task_rj 提取的风
 - scan 无发现（scan_report.json 各字段为空）→ 跳过 adopt，记录"learn 无发现"
 - scan 失败（退出码 2）→ 告警用户+跳过 learn+记录 memory"learn scan 失败"
 - scan+reflect 期间用户喊"停" → 跳过 adopt，记录"learn 用户中断"到 memory
+
+---
+
+## 步骤 3.6a：技能图谱自动刷新【自动触发·v1.0.2】
+
+跑 `python scripts/skill_graph_build.py --auto`：
+
+- **--auto 约束**：强制 source=riji（仅左轨，L0 安全级，不触发 security.md L2 扫描确认）+ skip_taxonomy（用上次 taxonomy 缓存）
+- **记忆未变**（SHA256 缓存命中）→ 跳过全部阶段，零成本，直接继续
+- **记忆已变** → 自动重算三阶段，更新 `~/.riji-skill/data/docs_rj/skill_graph/` 四件套（md/csv/svg/manifest.json）
+- **taxonomy 缓存缺失** → `[SKIP]` 提示 + exit 0，记录 memory"skill_graph SKIP（taxonomy 缺失）"，继续（由用户点名/手动全量补）
+- **阶段失败** → auto 模式 exit 2，**不阻断** /act：记录 memory"skill_graph 自动刷新失败"后继续；手动全量模式 exit 1 阻断
+- 输出路径已外置用户数据目录（`user_data_path.get_docs_rj_path()/skill_graph/`），升级 skill 不丢图谱
 
 ---
 

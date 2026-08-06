@@ -7,7 +7,7 @@
 
 > 阶段标签：A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 新增：2026-07-17 | PDCA 标签：A.learn
+> 版本：v1.0.2 | 新增：2026-07-17 | PDCA 标签：A.learn
 > 对应脚本：[scripts/skill_graph_build.py](../scripts/skill_graph_build.py)
 > 参考来源：GitHub 调研（19 次查询 0 完全匹配，填补赛道空白）
 
@@ -20,7 +20,7 @@
 **不做什么**：
 - ❌ 不做 AI agent 自身的技能画像（仅做用户画像）
 - ❌ 不做已加载 skill 清单的依赖图谱（仅从记忆挖掘）
-- ❌ 不做实时更新（手动触发刷新）
+- ❌ 不做实时更新（/act 每轮自动刷新 + 手动触发；非实时 watch）
 
 **核心价值**：
 - 用户和 AI 都能一眼看到能力地图
@@ -43,7 +43,15 @@
 
 ## §3 触发时机
 
-### 自动触发关键词
+### 自动触发（每轮 /act · v1.0.2）
+
+- 每轮 /act 步骤 3.6a 自动跑 `python scripts/skill_graph_build.py --auto`（无需用户点名）
+- `--auto` 语义：仅左轨 riji（记忆已积累，安全 L0 级，不触发 L2 扫描确认）；记忆哈希未变 → 缓存命中直接跳过（零成本）；哈希变化 → 自动重算三阶段并更新 `~/.riji-skill/data/docs_rj/skill_graph/` 四件套（实际路径由 `user_data_path.get_docs_rj_path()` 动态解析：RIJI_DATA_DIR > config.json > 默认）
+- taxonomy 缓存缺失时 `[SKIP]` 提示 + exit 0，记录 memory"skill_graph SKIP（taxonomy 缺失）"，由手动全量补
+- 退出码：0=成功/跳过；2=阶段失败（auto 模式下告警并记录 memory"skill_graph 自动刷新失败"，**不阻断** /act，继续后续步骤）
+- 失败语义：手动全量 exit 1 阻断；auto 失败降级不阻断（详见 act_procedure.md 步骤 3.6a）
+
+### 用户点名触发
 
 用户说以下话时触发：
 - "技能图谱" / "能力画像" / "skill graph"
@@ -51,13 +59,16 @@
 - "我未掌握什么" / "差距分析" / "技能雷达"
 - "我还有什么没学" / "推荐我学什么"
 
+用户点名 = 全量双轨（含右轨），触发前仍须 L2 确认范围+目的（见 §4）。
+
 ### 手动触发
 
 ```
-python scripts/skill_graph_build.py
+python scripts/skill_graph_build.py  # 全量（双轨）
 python scripts/skill_graph_build.py --source all --user-name "你的名字"
+python scripts/skill_graph_build.py --auto   # 仅左轨自动刷新（/act 3.6a 用）
 python scripts/skill_graph_build.py --no-cache  # 强制重算
-python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
+python scripts/skill_graph_build.py --skip-taxonomy  # 跳过右轨全集拉取（调试用；注意：默认 source=all 仍会扫描 AI 工具记忆，仅 --auto 是真正仅左轨）
 ```
 
 ---
@@ -65,6 +76,8 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 ## §4 双轨数据源
 
 > 🔴 **触发前确认【硬性·v1.0.1】**：本功能扫描 `~`/`%APPDATA%`/`%LOCALAPPDATA%`/Library Application Support 等**任务外目录**（属 security.md「文件扫描确认门控」L2 级）。触发前必须先向用户确认范围+目的，确认后才运行。非交互模式（无 TTY）下不读取新发现工具的记忆文件（只记录路径，见 skill_graph_extract.py）。
+>
+> **白名单目录豁免声明【v1.0.1·用户确认】**：下方「白名单 8 AI 工具」固定目录是本功能「读 AI 工具记忆生成技能图谱」的核心功能路径——用户**启用技能图谱功能即视为授权**读取这些目录（与 evidence_files 豁免同思路），不重复走 L2 确认。豁免范围仅限这 8 个固定目录；其余任务外扫描仍须确认。配套约束（v1.0.1 落地）：①敏感行摘录不入库——excerpt 命中密码/token/密钥等敏感模式时替换为 `[sensitive line omitted]`；②读取范围为工具目录内记忆类文件（`.md/.json/.jsonl/.txt`，深 3 层，黑名单目录剪枝）——不主动越界读取用户其他目录。
 
 ### 左轨（记忆挖掘 · 已掌握）
 
@@ -78,8 +91,8 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 - Continue: `~/.continue/`
 - GitHub Copilot: `~/.github-copilot/`
 
-**关键词发现**（6 扫描根 + 8 关键词）：
-- 扫描根：`~` `~/.config/` `~/.local/share/` `~/.appdata/` 或 `~/Library/Application Support/` `%APPDATA%`/`%LOCALAPPDATA%` 项目目录链
+**关键词发现**（扫描根 + 8 关键词）：
+- 扫描根（最多 7 个，按代码 `_get_scan_roots()` 实测）：`~` `~/.config/` `~/.local/share/` `%APPDATA%` `%LOCALAPPDATA%`（Windows）`~/Library/Application Support`（macOS 存在时）`cwd`（当前工作目录；v1.0.1 起**不含**父目录链，与 L0「父目录链不算任务范围」对齐）
 - 关键词：`memory` `agent` `skill` `remember` `assistant` `ai` `conversation` `session`
 - 新工具发现后交互式询问用户是否纳入
 
@@ -98,12 +111,12 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 
 ## §5 三格式输出
 
-| 格式 | 路径 | 受众 | 说明 |
+| 格式 | 路径（v1.0.2 起外置用户数据目录） | 受众 | 说明 |
 |------|------|------|------|
-| Markdown + SVG | `memory/skill_graph.md` | 人看（Trae 预览器） | 单文件自包含，零依赖 |
-| CSV | `docs_master_graph/skill_graph.csv` | Excel/程序 | UTF-8 BOM，13 列 |
-| SVG | `docs_master_graph/skill_graph.svg` | 浏览器/分享 | 1200×800，支持缩放 |
-| Manifest | `docs_master_graph/manifest.json` | 同步校验 | 三文件 SHA256 |
+| Markdown + SVG | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.md` | 人看（Trae 预览器） | 单文件自包含，零依赖 |
+| CSV | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.csv` | Excel/程序 | UTF-8 BOM，13 列 |
+| SVG | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.svg` | 浏览器/分享 | 1200×800，支持缩放 |
+| Manifest | `~/.riji-skill/data/docs_rj/skill_graph/manifest.json` | 同步校验 | 三文件 SHA256 |
 
 ### SVG 颜色方案（色盲友好）
 
@@ -119,6 +132,8 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 `skill_name, category, status, confidence, evidence_count, source_tools, evidence_files, first_seen, last_seen, reason, roadmap_ref, priority, learning_link`
 
 > **evidence_files 豁免声明【v1.0.1】**：`evidence_files` 字段含具体文件路径（file/line/timestamp），是本功能「证据可追溯」验收标准（AC8）的核心，属功能设计豁免——不受 security.md 门控「不记录路径」约束。用户已确认豁免（2026-08-06）。
+>
+> **discovered_tools 路径声明【v1.0.1】**：关键词发现的工具路径会进入缓存 JSON（skills_raw.json）并在 `--discover-only` 时输出到 stdout，同样属功能设计（AC9 要求 discovered_tools 字段存在）。此声明针对**脚本文件输出**；AI 对话中向用户汇报时仍遵守 security.md「汇报不报具体文件名」规则。
 
 ---
 
@@ -127,7 +142,7 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 - 对每个输入记忆文件算 SHA256
 - 文件未变 → 跳过全部阶段
 - `--no-cache` 强制重算
-- 缓存 manifest：`docs_rj/memory_rj/.skill_graph_cache/cache_manifest.json`
+- 缓存 manifest：`~/.riji-skill/data/docs_rj/memory_rj/.skill_graph_cache/cache_manifest.json`
 
 ---
 
@@ -170,13 +185,13 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 A: 自动降级到硬编码列表，不阻断。网络好时重跑 `--no-cache` 补全。
 
 **Q: 发现新 AI 工具怎么纳入？**
-A: 关键词发现机制会自动扫到，交互模式停下问用户。非交互模式记录到 `discovered_tools` 字段。
+A: 关键词发现机制会自动扫到，交互模式停下问用户，确认纳入后才读取其记忆内容。**非交互模式（无 TTY）降级语义【v1.0.1】：只把路径记录到 `discovered_tools` 字段，不读取内容、不纳入本次提取**（防止未确认读取任务外敏感文件）；如需纳入，重跑时在交互终端确认。
 
 **Q: LLM 调用怎么接入？**
 A: 阶段2 的 `cluster_with_llm()` 函数签名已留，填入 LLM 服务调用即可。当前用规则降级。
 
 **Q: 技能图谱多久刷新一次？**
-A: 手动触发，无自动刷新。建议学习新技能后跑一次。
+A: 每轮 /act 自动刷新一次（--auto：记忆没变则秒过，变了才重算）+ 用户点名/手动随时全量刷新（--source all）。不需要手工记着跑。
 
 ---
 
@@ -184,4 +199,6 @@ A: 手动触发，无自动刷新。建议学习新技能后跑一次。
 
 | 版本 | 日期 | 变更 |
 |------|------|------|
+| v1.0.2 | 2026-08-06 | 自动化改造：/act 每轮 3.6a 自动刷新（--auto 仅左轨 L0 安全级，哈希未变缓存命中零成本）；缓存/输出外置 `~/.riji-skill/data/`；断链修复（read_riji_memory 单入口）；结构化经验字段置信度加权；CSV 公式注入防护；右轨补真 URL（roadmap/engineer_competency/GitHub Topics） |
+| v1.0.1 | 2026-08-06 | 扫描确认门控配套：触发前确认说明、白名单目录豁免声明（用户确认）、非交互模式不读未确认目录（只记路径）、敏感行摘录过滤、扫描根清单修正（去父链、去虚构 `~/.appdata`）、discovered_tools 路径声明 |
 | v1.0 | 2026-07-17 | 初版：三阶段流水线 + 双轨提取 + 三格式渲染 |

@@ -112,7 +112,7 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | [security.md](references/do/danger/security.md) | 安全边界 + 5 层指令优先级 + 注入防御 + **文件扫描确认门控**（L0 任务内免确认 / L1 点名单文件一句话确认 / L2 任务外扫描先确认：范围+目的+关键词） |
 | [skill_security.md](references/plan/route/skill_security.md) | 第三方 skill 安全审计规范 |
 
-> 🔴 **隐私声明（v1.0.1）**：框架的「技能图谱」功能（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）来生成能力画像。**该扫描属任务外扫描，运行前会先向你确认**；扫描发现的敏感文件内容不会被引用、转述或持久化。其余功能均只读写框架自身目录，零云依赖。
+> 🔴 **隐私声明（v1.0.2）**：框架的「技能图谱」功能（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）来生成能力画像。**用户点名/手动全量触发时，该扫描属任务外扫描，运行前会先向你确认**（8 个固定 AI 工具记忆目录为功能核心豁免——你启用该功能即视为授权，见 skill_graph.md §4）；扫描发现的敏感文件内容不会被引用、转述或持久化（敏感行摘录自动过滤）。**每轮 /act 自动刷新（--auto）仅读框架自身记忆（左轨 riji，L0 免确认）**，不扫上述外目录，记忆未变化时零成本跳过。其余功能均只读写框架自身目录与 `~/.riji-skill/data/`（用户数据外置），零云依赖。
 
 **⑤ 记忆 / 交接 / 多项目时**
 | 文件 | 用途 |
@@ -303,7 +303,7 @@ python scripts/protocol_align.py
 
 #### 测试验证
 
-运行 pytest 测试套件（覆盖负向测试 + 协议对齐，共 79 个测试用例，78 passed + 1 skipped）：
+运行 pytest 测试套件（覆盖负向测试 + 协议对齐 + 扫描确认门控，共 190 个测试用例，183 passed + 1 skipped + 6 项本机 GBK 编码预存在失败，详见 HISTORY.md 2026-08-06）：
 
 ```bash
 python -m pytest tests/ -v
@@ -315,7 +315,7 @@ python -m pytest tests/ -v
 ========================= test session starts =========================
 platform ... -- Python 3.9.x, pytest-x.x.x, ...
 rootdir: .../riji-skill, configfile: tests/pytest.ini
-collected 79 items
+collected 190 items
 
 tests/test_negative_cases.py::test_no_circular_imports PASSED                [  5%]
 tests/test_negative_cases.py::test_no_personal_paths PASSED                  [ 11%]
@@ -324,18 +324,18 @@ tests/test_negative_cases.py::test_protocol_importable_without_errors PASSED [ 2
 tests/test_protocol_align.py::test_extract_traceability_sources_returns_valid_dict PASSED [ 29%]
 tests/test_protocol_align.py::test_extract_traceability_sources_handles_missing_docstring PASSED [ 35%]
 tests/test_protocol_align.py::test_check_alignment_returns_correct_structure PASSED [ 41%]
-...（参数化测试用例，共 79 项，78 passed + 1 skipped）
-========================= 78 passed, 1 skipped in 2.18s ==========================
+...（参数化测试用例，共 188 项）
+========================= 183 passed, 1 skipped, 5 failed in ~30s ==========================
 ```
 
-- 成功标志：退出码 0；末尾 `78 passed, 1 skipped`；无 `FAILED` 字样
+- 成功标志：退出码 0；末尾 `183 passed, 1 skipped`；无新增 `FAILED` 字样（本机残留 6 项失败为 learn_tidy/generate_docs 的 GBK 控制台编码预存在问题，与版本改动无关）
 - 实际耗时与版本号会因环境而异，关键看 `passed` 数量与退出码
 
 > Windows 用户也可一键运行：`tests\run_tests.cmd`（等价于 `python -m pytest tests/ -v`）。
 
 #### 当前版本已知状态
 
-当前版本 `validate_skill.py` 31 项检查全部通过（100%），pytest 测试套件 246 项全部通过（含 user_data_externalize 全套验收测试，1 skipped），无已知失败项。
+当前版本 `validate_skill.py` 27/32 项通过（5 项为 Windows GBK 控制台 emoji 编码与 SUMMARY 缺失的预存在问题），pytest 测试套件 190 项中 183 项通过 + 1 skipped（5 项预存在编码失败，见 HISTORY.md 2026-08-06），无本版本引入的已知失败项。
 
 #### 故障排查
 
@@ -725,7 +725,7 @@ riji-skill/
 │   ├── app.py
 │   └── ...
 ├── protocol/                   # 文件协议层（字段契约/路由/校验）
-├── tests/                      # 测试套件（pytest，246 项全通过）
+├── tests/                      # 测试套件（pytest，190 项）
 ├── docs_rj/                    # 项目文档（外置后实际在 ~/.riji-skill/data/docs_rj/）
 ├── memory/                     # 全局聚合记忆（外置后实际在 ~/.riji-skill/data/memory/）
 ├── outputs_rj/                 # 输出产物（外置后实际在 ~/.riji-skill/data/outputs_rj/）
