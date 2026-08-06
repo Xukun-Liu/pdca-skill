@@ -95,6 +95,7 @@ category: workflow
 > **与默认"停下问"的关系**：/loop 是显式开关，覆盖 4 环默认"停下问"；不喊 /loop 按默认走。
 > **Week-one L1**：新任务类型/新 pattern/新工具接入第一周必须 L1，稳定 ≥1 周并通过 /check 才可升 L2。
 > **批次间轻量 Self-Review【硬性】**：L2 分批执行（≥2 批）时每批后做 4 项检查（占位符扫描/内部一致性/文档同步/测试覆盖），不等最后才对抗审查。
+> **闸门 4 loop_auto【handoff_gate_fix】**：/loop auto 无人值守完成任务时，/check 步骤 6.5 的 Gate Evidence 段 gate4 写作 `loop_auto`（无人类确认）——handoff_tidy 判定为 ready_to_close 停住等用户，**不自动 completed、不卡死不假完成**；用户回来后确认通过，补写 gate4=confirm 再收尾。
 >
 > 完整规则（启动流程/模式选择/停检测命令/无人值守细则/Self-Review 4 项细节）：[references/do/danger/loop_constraints.md](references/do/danger/loop_constraints.md)「/loop 触发词完整规则」节（唯一维护源）。
 >
@@ -1010,6 +1011,12 @@ docs_rj/
    - 如果是规则缺口，具体场景是什么？（记录到 memory 时一并说明）
 5. **对照 spec 逐项核对**【硬性】：按 spec.md 验收标准逐条核对，不遗漏任何一项
 6. **跨产物一致性 analyze**【复杂任务必做】：在铁律7逐项核对**之后**执行（先做铁律7不可替代，再做跨产物 analyze 补充）。6 维度检测（Coverage Gaps/Duplication/Ambiguity/Constitution Alignment/Inconsistency/Underspecification）+ 4 级严重度（CRITICAL/HIGH/MEDIUM/LOW）。详见 [references/common/pc/adversarial_review.md](references/common/pc/adversarial_review.md) 第六章。
+6.5. **Gate Evidence 落盘【硬性·handoff_gate_fix】**：跨产物 analyze（步骤 6）完成后、Convergence（步骤 7）之前，当场把 4 闸门证据写入 `docs_rj/memory_rj/TASK_STATE_{task_id}.md` 的 `## Gate Evidence` 段，并将审查报告落盘 `docs_rj/check_rj/{task}_adversarial_{时间戳}.md` / `{task}_consistency_{时间戳}.md`（报告结论必须含 `0 HIGH`，否则闸门 2/3 判缺证据）。段格式：
+   - `- gate1_spec_verification: pass (N/N)`（N=spec AC 总数，来自步骤 5）
+   - `- gate2_adversarial: pass (0 HIGH) | 证据: {相对 docs_rj 的路径}#L行号`
+   - `- gate3_consistency: pass (0 HIGH) | 证据: {路径}#L行号`
+   - `- gate4_user_confirm: confirm | 时间戳: {时间} | 用户原话: "{原话}"`；/loop 无人值守时写 `loop_auto | 说明: /loop 无人值守，待用户确认`
+   - **原理**：证据产生时落盘、验证时只读不写——handoff_tidy 的 4 闸门判定只读校验上述段与报告文件，不靠 agent 自觉声明
 7. **append-only Convergence**：若跨产物 analyze 发现 gap，**追加**到 task.md 末尾 `## Phase N: Convergence` 段（不删现有 task，不改 spec.md）。**Convergence 是修补记录+追加，不替代修补**——回 /do 修补（修改 task.md 子项打勾）同时追加 Convergence 记录修补内容。CRITICAL/HIGH 优先，constitution 违反最先。累积超过 5 个 Phase 时归档到 `archive_rj/`。详见 [references/common/pc/adversarial_review.md](references/common/pc/adversarial_review.md) §6.3。
    - **修补后独立 fresh agent 重验**【硬性·复杂任务】：Convergence 修补完成后，**必须由独立 fresh subagent 重新验证**（不让原 fixer 自证，反 sunk-cost bias）。重验 subagent 重新 dispatch，按 6 维度审查修补后的 spec/task，确认原 gap 已修复且未引入新问题。重验不通过→继续修补+再重验（max 3 cycles），达 3 cycles 仍不通过→升级用户决策。简单任务可由主 agent 自验，复杂任务必须独立 fresh subagent。
 8. **/check 完成**：通过则问"进入 /act 吗？"；不通过则问"回 /do 修补还是回 /plan 重设计？"——回 /do 修补完成后，重新进入 /check 验证修补结果
@@ -1041,6 +1048,7 @@ docs_rj/
 3.5b. **§7.3 风险候选确认【硬性·REQ-009】**：同上判定 `risk_candidates` 写入 §7.3 或明说"本次无新风险"；§7.2/§7.4 由 handoff_tidy 自动刷新，无需 agent 干预（细则见 act_procedure.md）
 3.6. **learn 累积量门控【自动触发】**：跑 `python scripts/learn_tidy.py count --threshold 20` → should_run=false 记录"learn 跳过"进步骤4；true 自动 `scan --dry-run` → reflect **仅产 proposals.md（禁应用，限 5 分钟）** → 等步骤4 adopt HARD-GATE；scan 无发现/失败（退码2）/用户喊停分别记录跳过（完整分支见 act_procedure.md）
 3.6a. **技能图谱自动刷新【自动触发·v1.0.2】**：跑 `python scripts/skill_graph_build.py --auto`（仅左轨 riji，L0 安全级；记忆哈希未变缓存命中零成本跳过；taxonomy 缺失 [SKIP] exit 0；阶段失败 exit 2 不阻断 /act 仅记录 memory；细则见 act_procedure.md）
+3.7. **读 Gate Evidence 确认闸门【硬性·handoff_gate_fix】**：不再靠 agent 自觉声明——读 TASK_STATE 的 Gate Evidence 段核对 4 闸门；证据不全时 `--mark-completed` 会被拒签（signoff_blocked，报告 blocked_gates 列出缺项）；用户强制完成需显式 `--force`，且 Sign-off 记 `forced: true` 审计标记
 3.8. **前端面板同步（server_lite，可选）**：默认跳过；用户主动启用 server_lite 时提醒点「🔄 同步数据」刷新前端缓存
 4. **adopt HARD-GATE**（若步骤3.6 有 proposals）：呈现 proposals.md → 确认"adopt" → 备份原文件+应用编辑+write_project 写 memory；"跳过"记录跳过；"调整"重新 reflect；无 proposals 直接进步骤4.1
 4.1. **distill 询问（经验采纳）**：跑 `python scripts/memory_distill.py distill --project {项目名} --output-dir docs_rj/learn_rj` → ≥1 条经验则 AskUserQuestion 展示 TOP3 问"是否采纳"（采纳/拒绝/稍后）；采纳经 write_project 写全局 `## {项目名}` 分段（importance_level=high, is_lesson=true, experience_tags 含 "adopted_lesson"）；0 条跳过（细则见 act_procedure.md）

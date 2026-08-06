@@ -49,6 +49,14 @@ handoff_tidy 报告 `risk_candidates` 字段含脚本扫描 task_rj 提取的风
 
 ---
 
+## 步骤 3.5c：Gate Evidence 核对【硬性·handoff_gate_fix】
+
+handoff_tidy 报告 `blocked_gates` 非空时，任务停在 pending，agent 必须**如实告知用户缺哪几扇闸门**（不口头声明完成）：
+- 补证据 → 回 /check 步骤 6.5 补写 Gate Evidence 段 + 落盘 `docs_rj/check_rj/` 报告，重跑 handoff_tidy
+- 用户强制完成 → 显式加 `--force`，Sign-off 记 `forced: true` 审计标记（可追溯）
+
+---
+
 ## 步骤 3.6：learn 累积量门控【自动触发】
 
 - 跑 `python scripts/learn_tidy.py count --threshold 20`
