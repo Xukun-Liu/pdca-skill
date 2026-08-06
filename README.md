@@ -109,8 +109,10 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 **④ 安全 / 合规时**
 | 文件 | 用途 |
 |------|------|
-| [security.md](references/do/danger/security.md) | 安全边界 + 5 层指令优先级 + 注入防御 |
+| [security.md](references/do/danger/security.md) | 安全边界 + 5 层指令优先级 + 注入防御 + **文件扫描确认门控**（L0 任务内免确认 / L1 点名单文件一句话确认 / L2 任务外扫描先确认：范围+目的+关键词） |
 | [skill_security.md](references/plan/route/skill_security.md) | 第三方 skill 安全审计规范 |
+
+> 🔴 **隐私声明（v1.0.1）**：框架的「技能图谱」功能（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）来生成能力画像。**该扫描属任务外扫描，运行前会先向你确认**；扫描发现的敏感文件内容不会被引用、转述或持久化。其余功能均只读写框架自身目录，零云依赖。
 
 **⑤ 记忆 / 交接 / 多项目时**
 | 文件 | 用途 |

@@ -64,6 +64,8 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 
 ## §4 双轨数据源
 
+> 🔴 **触发前确认【硬性·v1.0.1】**：本功能扫描 `~`/`%APPDATA%`/`%LOCALAPPDATA%`/Library Application Support 等**任务外目录**（属 security.md「文件扫描确认门控」L2 级）。触发前必须先向用户确认范围+目的，确认后才运行。非交互模式（无 TTY）下不读取新发现工具的记忆文件（只记录路径，见 skill_graph_extract.py）。
+
 ### 左轨（记忆挖掘 · 已掌握）
 
 **白名单 8 AI 工具**（固定路径扫描）：
@@ -115,6 +117,8 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 仅左轨（调试）
 ### CSV 字段（13 列）
 
 `skill_name, category, status, confidence, evidence_count, source_tools, evidence_files, first_seen, last_seen, reason, roadmap_ref, priority, learning_link`
+
+> **evidence_files 豁免声明【v1.0.1】**：`evidence_files` 字段含具体文件路径（file/line/timestamp），是本功能「证据可追溯」验收标准（AC8）的核心，属功能设计豁免——不受 security.md 门控「不记录路径」约束。用户已确认豁免（2026-08-06）。
 
 ---
 

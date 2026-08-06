@@ -7,7 +7,7 @@
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-01（新增 insert_new_task 行 / act_procedure 并入 /act 行）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.1 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-06（安全行加扫描关键词 / skill_graph 行加 L2 确认前置）| PDCA 标签：P.route A.handoff
 > 本文件是 riji-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -34,7 +34,7 @@
 | memory/记忆/存盘/检查点/5问/reboot/忘了/想不起来/上次聊了什么/进度在哪/接上/上次说到哪 | references/common/pa/working_memory_rules.md | - |
 | 记忆归档/记忆降级/记忆升格/记忆删除/记忆重评/记忆治理/容量超限/记忆隔离/记忆回滚 | references/common/pa/memory_governance.md | 方案 3-R 治理工具专用触发词，避开"archive"裸词（与任务归档区分） |
 | 怎么沟通/怎么问/怎么汇报/怎么确认/要不要确认/该不该问/怎么说/怎么跟你说 | references/common/dc/communication_rules.md | - |
-| 安全/删文件/删除/装依赖/install/pip/npm/碰个人目录/敏感信息/密钥/密码/token/环境变量 | references/do/danger/security.md | - |
+| 安全/删文件/删除/装依赖/install/pip/npm/碰个人目录/敏感信息/密钥/密码/token/环境变量/扫描文件/搜索文件/找文件/遍历目录/共享盘/涉密/内网 | references/do/danger/security.md（安全边界 + 文件扫描确认门控 L0/L1/L2） | - |
 | 测试/写测试/跑测试/测试用例/单测/单元测试/集成测试/test/tdd/mock | references/do/code/code_rules.md（第五章测试策略） | - |
 | 部署/发布/上线/CI/CD/持续集成/pipeline/docker/k8s | references/plan/route/skill_management.md | **自动执行 agent-find 搜索部署相关 skill（Exa REST → Exa MCP → WebFetch → WebSearch 四层降级）** |
 | 性能优化/性能/瓶颈/慢/卡顿/profiling/内存泄漏/延迟 | references/common/dc/debugging.md（四步调试法定位瓶颈） | - |
@@ -61,7 +61,7 @@
 | /check 验证阶段 | references/check/loop_verifier.md + references/check/red_flags.md | **/check 阶段自动加载，verifier 默认 REJECT until proven otherwise** |
 | /act 归档阶段 / 生成任务状态 | references/common/pda/document_specs.md + references/common/pa/summary_view.md + references/act/persist/act_procedure.md | **/act 阶段自动加载，生成 TASK_STATE.md 并更新 memory** |
 | /loop（"自动循环""跑循环""开始循环""loop模式""自动模式"） | references/do/danger/loop_constraints.md + references/check/loop_verifier.md | **检查前置条件（/plan 已确认 + loop_admission level≥L2 + git 仓库）→ 询问模式（auto/semi）→ 启动 /do→/check 循环** |
-| master_graph/技能图谱/能力画像/skill graph/我看我有什么技能/我未掌握什么/差距分析/技能雷达/我还有什么没学/推荐我学什么 | references/act/learn/skill_graph.md（三阶段流水线+双轨提取+三格式渲染） | **自动调用 `python scripts/skill_graph_build.py --source all`；输出 memory/skill_graph.md + docs_master_graph/skill_graph.csv + .svg + manifest.json；已掌握点亮(绿)/未掌握灰色/额外掌握橙色** |
+| master_graph/技能图谱/能力画像/skill graph/我看我有什么技能/我未掌握什么/差距分析/技能雷达/我还有什么没学/推荐我学什么 | references/act/learn/skill_graph.md（三阶段流水线+双轨提取+三格式渲染） | **先确认后触发：本功能扫描 `~`/APPDATA 等任务外目录（属 security.md L2 门控），必须先向用户确认范围+目的，确认后才自动调用 `python scripts/skill_graph_build.py --source all`；输出 memory/skill_graph.md + docs_master_graph/skill_graph.csv + .svg + manifest.json** |
 | 市场调研/market research/竞品调研/竞品对比/feature 对比/4 维度调研 | assets/market_research_template.md（9段+6项质检对齐 某开源项目 market-research.md） | **/plan 步骤4a.5 自动加载，覆盖 feature/UX/complaints/technical 4 维度** |
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
 | 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
@@ -123,3 +123,4 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | 版本 | 时间 | 变更说明 |
 |------|------|----------|
 | v1.0.0 | 2026-07-21 | 初版：从 SKILL.md §0 外迁；新增报错询问机制+PDCA 关系节 |
+| v1.1.1 | 2026-08-06 | 安全行加扫描类关键词（扫描文件/搜索文件/找文件/遍历目录/共享盘/涉密/内网）；skill_graph 行加 L2 确认前置（扫 home 属任务外，须先确认） |

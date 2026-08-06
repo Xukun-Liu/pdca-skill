@@ -484,13 +484,16 @@ def _keyword_discover_scan(
             discovered = [discovered[i] for i in sorted(selected)]
 
     # 读取已确认的新工具记忆
-    for d in discovered:
-        tool_mems = _read_tool_memory(d['tool_name'], d['path'])
-        memories.extend(tool_mems)
-        d['file_count'] = len(tool_mems)
+    # 🔴 v1.0.1 安全修复：仅交互模式（用户已确认纳入）才读取内容；
+    # 非交互模式下"未确认"的目录只记录路径、不读取内容（原实现未确认也读，可能静默读入敏感文件）
+    if _is_tty():
+        for d in discovered:
+            tool_mems = _read_tool_memory(d['tool_name'], d['path'])
+            memories.extend(tool_mems)
+            d['file_count'] = len(tool_mems)
 
     if discovered and not _is_tty():
-        logger.warning('非交互模式：发现 %d 个新工具，已记录到 discovered_tools（未确认）',
+        logger.warning('非交互模式：发现 %d 个新工具，已记录路径（未确认，未读取内容）',
                        len(discovered))
 
     return memories, discovered
