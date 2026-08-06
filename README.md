@@ -60,7 +60,7 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | **技能编排器**：需要时去外部找/调专业技能 | 自带具体业务能力的"万能工具箱"（如画图、Excel） |
 | 纯本地 Markdown，零云依赖，内网可直接拷贝部署 | 依赖外部 API/账号才能跑的在线服务 |
 
-> 数量澄清：包内**内嵌 41 个参考模块**（`references/`），但**0 个独立子技能**（没有 `skills/` 子目录）。需要浏览器操控、Office、金融等专业能力时，它通过 `skill_management` / `agent_find` 两个钩子去**外部**搜索并调度对应技能——那些技能不在包里。
+> 数量澄清：包内**内嵌 47 个参考模块**（`references/`），但**0 个独立子技能**（没有 `skills/` 子目录）。需要浏览器操控、Office、金融等专业能力时，它通过 `skill_management` / `agent_find` 两个钩子去**外部**搜索并调度对应技能——那些技能不在包里。
 
 ## 核心能力
 
@@ -71,7 +71,7 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | **第一性原理拆解** | 复杂任务方案探索前必做三问：本质目标是什么？不可压缩的约束有哪些？从约束出发的最优解是什么？避免照搬已有方案 |
 | **对抗性审查** | Self-Review 后用独立 subagent 做 6 维度批判性审查（内部一致性/逻辑完整性/可执行性/边界 case/安全性/可维护性），产出 HIGH/MEDIUM/LOW 分级报告，修复后迭代直到清零，3 轮上限防无限循环 |
 | **安全 HIGH 特殊处理** | 安全漏洞（SQL 注入/权限越界/数据泄露等）触发独立处理流程：判定权三级（用户>主 agent>subagent）、优先修复+延后非安全、X/Y 双计数器（正常轮次 X≤3、安全轮次 Y≤4）、回归验证轮、链式新安全 HIGH 递增规则、Y=4 升级用户决策 |
-| **文档三件套** | spec（方案）、task（执行清单）、handoff（交接记录）自动生成。把 AI 协作从"聊完就散"升级为**可追溯/可交接/可复用**的工程化方法——`generate_docs.py` 一键创建目录结构。**riji-skill 自身**（SKILL.md + 36 references + 12 模板 + 32 脚本 + SUMMARY）就是用这套方法搭出来的活样本 |
+| **文档三件套** | spec（方案）、task（执行清单）、handoff（交接记录）自动生成。把 AI 协作从"聊完就散"升级为**可追溯/可交接/可复用**的工程化方法——`generate_docs.py` 一键创建目录结构。**riji-skill 自身**（SKILL.md + 47 references + 12 模板 + 34 脚本 + SUMMARY）就是用这套方法搭出来的活样本 |
 | **三层记忆系统** | 热记忆（SKILL.md+references，硬性，每次自动加载）、全局聚合记忆（`memory/memory_main.md`，skill 包内，按项目分段）、项目记忆（`{项目根}/docs_rj/memory_rj/`）；写入即落盘并自动 upsert 全局 |
 | **用户数据外置（方案B）** | 用户数据（memory/docs_rj/outputs_rj/server_lite_data）外置到 `~/.riji-skill/data/`，与框架文件物理分离。**升级时解压覆盖框架文件，用户数据 0 丢失**。三级优先级路径解析（环境变量 `RIJI_DATA_DIR` > 配置文件 `~/.riji-skill/config.json` > 默认值），老用户首次启动自动迁移。`server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，见下文说明） |
 | **命名空间隔离** | 所有运行时产物加 `_rj` 后缀（`docs_rj/`、`memory_rj/`、`_rj` 类型文件夹），避免与其他 agent 平台通用命名撞车 |
@@ -82,9 +82,9 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | **Red Flags 16 条** | 偏离信号自检：连续输出未确认、没过 HARD-GATE 就动手、凭记忆回答不读文件等，出现信号立即重读铁律 |
 | **手绘呈现（hand-drawn-report）** | 验收/审核/汇报时内容→手绘 SVG 速记/信息图，单文件自包含；md 顶部内联同款 SVG |
 
-## 参考手册（references/）—— 41 个按需读取模块
+## 参考手册（references/）—— 47 个按需读取模块
 
-不全部加载到上下文，触发钩子按"你正在做什么"自动指引读取。按使用场景分 7 类：
+不全部加载到上下文，触发钩子按"你正在做什么"自动指引读取。按使用场景分 8 类：
 
 **① 写代码 / 改代码时**
 | 文件 | 用途 |
@@ -137,6 +137,11 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | [adversarial_review.md](references/common/pc/adversarial_review.md) | 第一性原理拆解 + 对抗性审查完整规则 |
 | [communication_rules.md](references/common/dc/communication_rules.md) | 沟通四原则 + 文件变动声明 |
 | [usage_examples.md](references/plan/route/usage_examples.md) | 3 段真实对话演示完整流程 |
+
+**⑧ 写文章 / 长文时**
+| 文件 | 用途 |
+|------|------|
+| [article-writing.md](references/common/style/article-writing.md) | 活人感写作入口：知乎/公众号/博客/小说/人物稿/口播稿等（按任务链式加载 `article-writing/` 下 5 子模块；写作任务不生成 spec/task，直接出稿；材料澄清最多三问） |
 
 ## 模板文件（assets/）—— 12 个开箱即用
 
@@ -680,10 +685,11 @@ riji-skill/
 │   ├── market_research_template.md
 │   ├── skill_graph_template.md
 │   └── index_template.md
-├── references/                 # 41 个参考手册（按需读取，见上表）
-├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 33 个）
+├── references/                 # 47 个参考手册（按需读取，见上表）
+├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 34 个）
 │   ├── archive_tidy.py
 │   ├── browser_inspect_docs.py      # 文档浏览器检视辅助
+│   ├── check_prose.py               # 文章成稿检查（硬禁词/冒号/破折号/翻案句，见 article-writing）
 │   ├── check_skill_updates.py
 │   ├── commit_lint.py               # Git commit 信息校验
 │   ├── commit_lint_install.py       # commit_lint 安装脚本

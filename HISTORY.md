@@ -309,6 +309,14 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 决策记录：砍增量层（80% 复杂度解决 0 成本问题）✅ / --auto 仅左轨遵守自身 L2 门控 ✅ / 保留右轨全景 ✅ / 经验标签只做加权不做采纳（distill 管采纳）✅ / 版本号与门控合并统一 v1.0.1（用户决策）✅
 - 配套文档：skill_graph.md §3 双触发、act_procedure.md 3.6a 细则、SKILL.md 3.6a 行、trigger_hooks.md 双语义
 
+### 2026-08-06：融合文章写作模块（v1.0.1）
+
+- 新增：references/common/style/article-writing.md 入口（活人感写作，改造自外部写作技能，不留来源痕迹）+ article-writing/ 5 子模块（forum-prose/reality/fiction/formats/revision）+ scripts/check_prose.py 成稿检查脚本
+- 入口带流程覆盖声明（写作任务不走 spec/task、材料澄清 ≤3 问、正文只交作品）与禁令适用范围声明（成稿禁令只约束对外文章，不约束框架文档）
+- 路由：trigger_hooks.md 新增文章写作触发行（写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文）
+- 全链路对齐：references 41→47、common 16→21、style 1→6（index.md v1.2.0 嵌套例外条款）；README/SKILL.md/网页说明.html 计数同步；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源）+ 3 文件头部引用范围标注对齐
+- 决策记录：融合方案 A 整体嵌入 ✅ / 版本 v1.0.1 不 bump ✅ / 双副本 A+B 同步 ✅ / A 顺手 git init ✅ / 不留来源痕迹 ✅（memory 私有留档）
+
 ---
 
 **版本**:v1.0.1 | **最后更新**:2026-08-06 | **作者**:huihui

@@ -522,6 +522,6 @@ python scripts/launch_subagent_rj.py dispatch --task "初始化项目" --json
 > **维护规则**:
 > - 修改副 agent 知识库(本文件第二节)→ 同步更新 [index.md 第六节](../../index.md)的反向索引表
 > - 新增/删除副 agent → 同步更新 index.md 第六节 6.1(agent 分组) + 6.2(reference 分组) + 6.3(统计摘要)
-> - 36 个 reference 文件头部的 `<!-- 引用范围 -->` 标注也需同步更新
+> - 47 个 reference 文件头部的 `<!-- 引用范围 -->` 标注也需同步更新
 >
 > **原因**:历史执行中曾出现同一份数据在两处维护导致漂移(详见用户偏好"先合并再删除")。反向索引集中在 index.md,本文件只放正向配置,避免双源漂移。

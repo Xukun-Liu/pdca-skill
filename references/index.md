@@ -7,7 +7,7 @@
 > 版本：v1.0.0 | 创建：2026-07-25 | riji-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
-> 本索引是 references/ 目录的导航地图。41 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
+> 本索引是 references/ 目录的导航地图。47 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
 
 ---
 
@@ -16,14 +16,14 @@
 ```
 references/
 ├── index.md                  ← 你在这里（导航索引）
-├── common/                   ← 跨 PDCA 阶段融合（16个）
+├── common/                   ← 跨 PDCA 阶段融合（21个）
 │   ├── pa/   (4个) P+A 启动规划+归档闭环
 │   ├── pc/   (2个) P+C 方案设计+验证审查
 │   ├── pd/   (2个) P+D 方案设计+编码执行
 │   ├── pda/  (2个) P+D+A 贯穿全流程
 │   ├── dc/   (2个) D+C 执行+调试验证
 │   ├── da/   (3个) D+A 执行+归档整理
-│   └── style/ (1个) P+D 写作风格（特例）
+│   └── style/ (6个) P+D 写作风格（特例，含 article-writing 入口 + 5 子模块）
 ├── plan/                     ← P 环节：想清楚（11个）
 │   ├── bootstrap/  (3个) P.bootstrap 启动恢复
 │   ├── route/      (5个) P.route 路由判断
@@ -57,6 +57,8 @@ references/
 | `dc/` | D+C | 执行 + 调试验证 | 2 |
 | `da/` | D+A | 执行 + 归档整理 | 3 |
 | `style/` | P+D | 写作风格（子文件夹命名特例，按主题命名） | 1 |
+
+> **嵌套例外条款（2026-08-06 新增）**：`style/` 下允许主题子目录（如 `style/article-writing/`），子模块文件不单独挂 PDCA 标签、不计入分类规则表，由入口文件（`style/article-writing.md`）链式加载。嵌套例外仅适用于 `style/` 主题化组织，其余子文件夹不得再嵌套。
 
 ### 2.2 PDCA 单阶段归属规则
 
@@ -100,11 +102,11 @@ references/
 
 ---
 
-## 四、文件归属速查表（41 个模块 × 所属子文件夹 × 引用范围）
+## 四、文件归属速查表（47 个模块 × 所属子文件夹 × 引用范围）
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
-### common/（16个）
+### common/（21个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -123,7 +125,13 @@ references/
 | hand-drawn-report.md | common/da/ | D.comm A.handoff | main + doc_proc + sync |
 | git_backup_cleanup.md | common/da/ | A.tidy D.danger | main + code_eng |
 | sync-matrix.md | common/da/ | D.code A.tidy | main + sync |
-| writing_style.md | common/style/ | P.design D.comm | main + spec_design + doc_proc |
+| writing_style.md | common/style/ | P.design D.comm | main |
+| article-writing.md | common/style/ | P.design D.comm C.verify | main |
+| forum-prose.md | common/style/article-writing/ | 链式加载（入口） | main |
+| reality.md | common/style/article-writing/ | 链式加载（入口） | main |
+| fiction.md | common/style/article-writing/ | 链式加载（入口） | main |
+| formats.md | common/style/article-writing/ | 链式加载（入口） | main |
+| revision.md | common/style/article-writing/ | 链式加载（入口） | main |
 
 ### plan/（11个）
 
@@ -198,11 +206,11 @@ references/
 
 | agent | 知识库(reference 数) | 引用的 reference |
 |------|----------------------|------------------|
-| bootstrap_agent | 11 | plan/bootstrap/{bootstrap, compaction_recovery, multi_project}.md · common/pa/{summary_view, working_memory_rules, memory_governance, trigger_hooks}.md · plan/route/usage_examples.md · plan/design/{project_structure, design_patterns}.md · common/pd/minimal_code_principles.md |
+| bootstrap_agent | 10 | plan/bootstrap/{bootstrap, compaction_recovery, multi_project}.md · common/pa/{summary_view, working_memory_rules, trigger_hooks}.md · plan/route/usage_examples.md · plan/design/{project_structure, design_patterns}.md · common/pd/minimal_code_principles.md |
 | skill_mgmt_agent | 3 | plan/route/{skill_management, skill_security, agent_find}.md |
-| spec_design_agent | 5 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md · common/style/writing_style.md · plan/design/goal_brief.md |
-| code_eng_agent | 8 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md · plan/design/goal_brief.md |
-| doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md · common/style/writing_style.md |
+| spec_design_agent | 3 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md |
+| code_eng_agent | 7 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md |
+| doc_proc_agent | 4 | do/code/{office_processing, file_to_markdown}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md |
 | loop_agent | 3 | plan/route/loop_triage.md · do/danger/loop_constraints.md · check/loop_verifier.md |
 | learn_opt_agent | 4 | act/learn/{learn_cycle, prompt_optimization, skill_graph}.md · common/pc/adversarial_review.md |
 | sync_agent | 3 | common/da/{sync-matrix, hand-drawn-report}.md · common/pa/summary_view.md |
@@ -222,11 +230,11 @@ references/
 | loop_triage.md | plan/route/ | main + loop |
 | design_patterns.md | plan/design/ | main + bootstrap |
 | project_structure.md | plan/design/ | main + bootstrap |
-| goal_brief.md ⭐ | plan/design/ | main + spec_design + code_eng |
+| goal_brief.md | plan/design/ | main |
 | trigger_hooks.md | common/pa/ | main + bootstrap |
 | working_memory_rules.md | common/pa/ | main + bootstrap |
 | summary_view.md ⭐ | common/pa/ | main + bootstrap + sync |
-| memory_governance.md | common/pa/ | main + bootstrap |
+| memory_governance.md | common/pa/ | main |
 | acceptance_criteria.md | common/pc/ | main + spec_design |
 | adversarial_review.md ⭐ | common/pc/ | main + spec_design + learn_opt |
 | minimal_code_principles.md | common/pd/ | main + bootstrap |
@@ -238,7 +246,13 @@ references/
 | hand-drawn-report.md ⭐ | common/da/ | main + doc_proc + sync |
 | git_backup_cleanup.md | common/da/ | main + code_eng |
 | sync-matrix.md | common/da/ | main + sync |
-| writing_style.md ⭐ | common/style/ | main + spec_design + doc_proc |
+| writing_style.md | common/style/ | main |
+| article-writing.md | common/style/ | main |
+| forum-prose.md | common/style/article-writing/ | main |
+| reality.md | common/style/article-writing/ | main |
+| fiction.md | common/style/article-writing/ | main |
+| formats.md | common/style/article-writing/ | main |
+| revision.md | common/style/article-writing/ | main |
 | browser_automation.md | do/code/ | main + browser |
 | code_rules.md | do/code/ | main + code_eng |
 | file_to_markdown.md | do/code/ | main + doc_proc |
@@ -258,10 +272,10 @@ references/
 
 | 指标 | 值 |
 |------|-----|
-| reference 总数 | 41 |
-| 仅 main 读的 reference | 3（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md） |
-| 被 2+ 副 agent 共读的 reference | 5（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐、writing_style⭐、goal_brief⭐） |
-| 知识库最大的副 agent | bootstrap_agent(11 个 reference) |
+| reference 总数 | 47 |
+| 仅 main 读的 reference | 12（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md + memory_governance.md + writing_style.md + goal_brief.md + article-writing 入口 + 5 子模块） |
+| 被 2+ 副 agent 共读的 reference | 3（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐） |
+| 知识库最大的副 agent | bootstrap_agent(10 个 reference) |
 | 知识库最小的副 agent | browser_agent(1 个 reference) |
 | 副 agent 总数 | 9 |
 
@@ -273,3 +287,4 @@ references/
 |------|------|----------|
 | v1.0.0 | 2026-07-25 | 初版：从扁平 36 文件重构为 PDCA 四环节 + common 融合区子文件夹结构 |
 | v1.1.0 | 2026-08-01 | SKILL.md 瘦身同步：登记 5 个模块（memory_governance/writing_style/goal_brief 补登记 + insert_new_task/act_procedure 新增）；目录/计数/agent 引用更新 |
+| v1.2.0 | 2026-08-06 | 融合文章写作模块：41→47、common 16→21、style 1→6（article-writing 入口 + 5 子模块）；2.1 补嵌套例外条款；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源） |
