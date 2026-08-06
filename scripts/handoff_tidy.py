@@ -207,6 +207,8 @@ class HandoffTidy:
         self.task_status = task_status  # §2 状态列数据源（REQ-009 对抗审查P0修复）
         self.project_name = project_name or os.path.basename(os.getcwd())
         self.report = HandoffReport()
+        # handoff_gate_fix：4 闸门判定缺项清单（_check_task_completion 写入，_write_signoff 读取）
+        self._last_blocked_gates = []
 
     def run(self):
         """执行完整交接管线"""
@@ -730,21 +732,104 @@ class HandoffTidy:
 
         return {'aggregate': aggregate, 'items': items}
 
+    def _verify_gate_evidence_file(self, path):
+        """校验审查报告证据文件（handoff_gate_fix 新增）。
+
+        证据有效条件：文件存在 + 内容含 '0 HIGH' 字样（正则 0\\s*HIGH）。
+        纯 touch 空文件会被拒，防止"无实际审查的假证据"。
+
+        Args:
+            path: 报告文件路径（允许带 #L 行号后缀，校验前剥离）
+
+        Returns:
+            tuple[bool, str]: (是否有效, 原因说明)
+        """
+        if not path:
+            return (False, '证据路径为空')
+        clean = re.sub(r'#L?\d+$', '', path.strip())
+        if not os.path.isfile(clean):
+            return (False, '证据文件不存在: %s' % clean)
+        try:
+            with open(clean, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except OSError as exc:
+            return (False, '证据文件读取失败: %s' % exc)
+        if re.search(r'0\s*HIGH', content):
+            return (True, '证据有效: %s' % clean)
+        return (False, '证据文件内容不含 0 HIGH: %s' % clean)
+
+    def _read_gate_evidence(self, memory_dir, task_name):
+        """读取 TASK_STATE 的 '## Gate Evidence' 段（handoff_gate_fix 新增）。
+
+        段格式（写入方：/check 步骤 6.5，见 SKILL.md）：
+        ```
+        ## Gate Evidence
+        - gate1_spec_verification: pass (10/10)
+        - gate2_adversarial: pass (0 HIGH) | 证据: docs_rj/check_rj/{task}_adversarial_20260806_1200.md#L12
+        - gate3_consistency: pass (0 HIGH) | 证据: docs_rj/check_rj/{task}_consistency_20260806_1200.md#L8
+        - gate4_user_confirm: confirm | 时间戳: 2026-08-06 12:00 | 用户原话: "可以，通过了"
+        ```
+
+        Args:
+            memory_dir: memory_rj 目录路径
+            task_name: 任务名
+
+        Returns:
+            dict 或 None：
+            - gate1_status / gate1_ratio
+            - gate2_status / gate2_evidence（证据文件路径，剥离 #L 行号）
+            - gate3_status / gate3_evidence
+            - gate4_status（confirm / loop_auto / 其他）
+            - raw：Gate Evidence 段原始文本（供 _write_task_state 回读保留）
+            段缺失或无法定位 → None
+        """
+        path = os.path.join(memory_dir, 'TASK_STATE_%s.md' % task_name)
+        if not os.path.isfile(path):
+            return None
+        try:
+            with open(path, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except OSError:
+            return None
+
+        m = re.search(r'^## Gate Evidence\s*\n(.*?)(?=\n## |\Z)', content, re.MULTILINE | re.DOTALL)
+        if not m:
+            return None
+        section = m.group(1)
+
+        result = {'raw': section.rstrip('\n')}
+
+        g1 = re.search(r'gate1_spec_verification:\s*(pass|fail)\s*\((\d+)/(\d+)\)', section)
+        if g1:
+            result['gate1_status'] = g1.group(1)
+            result['gate1_ratio'] = (int(g1.group(2)), int(g1.group(3)))
+        else:
+            result['gate1_status'] = 'missing'
+
+        for key, short in (('gate2_adversarial', 'gate2'), ('gate3_consistency', 'gate3')):
+            m2 = re.search(r'%s:\s*(pass|fail)[^\n]*?\|\s*证据:\s*([^\s|]+)' % key, section)
+            if m2:
+                result[short + '_status'] = m2.group(1)
+                result[short + '_evidence'] = re.sub(r'#L?\d+$', '', m2.group(2).strip())
+            else:
+                result[short + '_status'] = 'missing'
+
+        m4 = re.search(r'gate4_user_confirm:\s*(\S+)', section)
+        result['gate4_status'] = m4.group(1).strip() if m4 else 'missing'
+
+        return result
+
     def _check_task_completion(self, memory_dir, task_name, level):
-        """判定任务是否可进入 ready_to_close 状态（GAP4 修复：ready_to_close 状态机）。
+        """判定任务是否可进入 ready_to_close 状态（GAP4 修复 + handoff_gate_fix 4 闸门证据驱动）。
 
-        判定逻辑（决策 I.3=D）：
-        - task.md 全打勾 + 4 闸门全过 → 返回 ready_to_close
-        - 否则 → 返回 pending
-
-        4 闸门定义（SKILL.md /check 现有）：
-        1. /check 步骤5 spec AC 全 pass（verification aggregate passed==total）
-        2. /check 步骤6 对抗审查无 HIGH
-        3. /check 步骤7 跨产物一致性 analyze 无 HIGH
-        4. /check 步骤8 人类决策（用户确认通过）
-
-        当前实现：仅检查闸门1（verification 聚合），闸门2-4 需 agent 在 /act 步骤3.7
-        显式确认后由 --mark-completed 写入 Sign-off 段。
+        判定逻辑（决策 I.3=D + 本任务决策 D-001 证据驱动）：
+        - 4 闸门全过 → 返回 ready_to_close
+          - 闸门1：/check 步骤5 spec AC 全 pass（verification aggregate passed==total）
+          - 闸门2：Gate Evidence 段 gate2_adversarial=pass 且报告文件含 0 HIGH
+          - 闸门3：Gate Evidence 段 gate3_consistency=pass 且报告文件含 0 HIGH
+          - 闸门4：Gate Evidence 段 gate4_user_confirm=confirm 或 loop_auto
+        - 任一闸门不过 → 返回 pending，缺项清单写入 self._last_blocked_gates
+        - task.md 全打勾不再单独判定（以 4 闸门证据为准）
 
         Args:
             memory_dir: memory_rj 目录路径
@@ -752,25 +837,67 @@ class HandoffTidy:
             level: 任务等级（L1/L2）
 
         Returns:
-            str: 'ready_to_close' 或 'pending'
+            str: 'ready_to_close' 或 'pending'；blocked_gates 明细经 self._last_blocked_gates 暴露
         """
+        self._last_blocked_gates = []
         existing_status = self._read_existing_status(memory_dir, task_name)
         # 已完成/已归档/已挂起不再降级
         # paused 保留：挂起状态不可被 _check_task_completion 降级为 pending
         if existing_status in ('completed', 'archived', 'ready_to_close', 'paused'):
             return existing_status
 
+        blocked = []
+
+        # 闸门1：spec AC 全 pass（verification 聚合）
         verification = self._read_existing_verification(memory_dir, task_name)
         if not verification:
-            return 'pending'
+            blocked.append('gate1_spec_verification（Verification 段缺失）')
+        else:
+            agg = verification.get('aggregate', {})
+            total = agg.get('total', 0)
+            passed = agg.get('passed', 0)
+            if total > 0 and passed == total:
+                pass
+            else:
+                blocked.append('gate1_spec_verification（verification %d/%d）' % (passed, total))
 
-        agg = verification.get('aggregate', {})
-        if agg.get('total', 0) > 0 and agg.get('passed', 0) == agg.get('total', 0):
+        # 闸门2/3/4：Gate Evidence 段
+        evidence = self._read_gate_evidence(memory_dir, task_name)
+        if not evidence:
+            blocked.append('gate2_adversarial（Gate Evidence 段缺失）')
+            blocked.append('gate3_consistency（Gate Evidence 段缺失）')
+            blocked.append('gate4_user_confirm（Gate Evidence 段缺失）')
+        else:
+            # 闸门2：对抗审查报告
+            if evidence.get('gate2_status') == 'pass' and evidence.get('gate2_evidence'):
+                ok, reason = self._verify_gate_evidence_file(evidence['gate2_evidence'])
+                if not ok:
+                    blocked.append('gate2_adversarial（%s）' % reason)
+            else:
+                blocked.append('gate2_adversarial（gate2 行缺失或非 pass）')
+            # 闸门3：跨产物一致性报告
+            if evidence.get('gate3_status') == 'pass' and evidence.get('gate3_evidence'):
+                ok, reason = self._verify_gate_evidence_file(evidence['gate3_evidence'])
+                if not ok:
+                    blocked.append('gate3_consistency（%s）' % reason)
+            else:
+                blocked.append('gate3_consistency（gate3 行缺失或非 pass）')
+            # 闸门4：人类确认或无人值守标记
+            if evidence.get('gate4_status') not in ('confirm', 'loop_auto'):
+                blocked.append('gate4_user_confirm（gate4 行缺失或非 confirm/loop_auto）')
+
+        self._last_blocked_gates = blocked
+        if not blocked:
             return 'ready_to_close'
         return 'pending'
 
-    def _write_signoff(self, memory_dir, task_name, level):
+    def _write_signoff(self, memory_dir, task_name, level, force=False):
         """追加 Sign-off 段到 TASK_STATE.md（决策 I.2=D：--mark-completed 触发）。
+
+        handoff_gate_fix：新增 4 闸门证据校验。
+        - 证据不全且非 force → 拒签：返回 {'signoff_blocked': True, 'blocked_gates': [...], 'verification': agg}
+        - force=True → 豁免全部闸门校验（含 H3），Sign-off 声明段追加
+          '- 强制完成: forced: true（用户明确要求）' 作为审计标记
 
         Sign-off 段格式：
         ```
@@ -790,6 +917,7 @@ class HandoffTidy:
             memory_dir: memory_rj 目录路径
             task_name: 任务名
             level: 任务等级
+            force: 是否强制完成（跳过 4 闸门证据校验，审计标记 forced: true）
 
         Returns:
             dict: sign-off 信息
@@ -818,13 +946,27 @@ class HandoffTidy:
         # H3 防御：Verification total=0 时禁止生成 Sign-off（违反铁律7"看到预期结果才能打勾"）
         # 原逻辑：无论 Verification 是否有实际验证结果，都允许写 Sign-off
         # 新逻辑：total=0 说明未实际跑验证，拒绝写 Sign-off，避免"0/0 但 completed"的虚假完成
-        if agg.get('total', 0) == 0:
+        # force=True 时豁免（用户明确要求强制完成）
+        if agg.get('total', 0) == 0 and not force:
             logger.warning("Verification total=0，拒绝写入 Sign-off（违反铁律7 Verification-before-Completion）")
             return {
                 'error': 'Verification total=0, cannot mark completed (rule: Verification-before-Completion)',
                 'path': path,
                 'verification': agg,
             }
+
+        # handoff_gate_fix：4 闸门证据校验（挡"假完成"：未验收任务被标 completed）
+        # 复用 _check_task_completion 判定；缺项明细经 self._last_blocked_gates 暴露
+        if not force:
+            current_status = self._check_task_completion(memory_dir, task_name, level)
+            if current_status != 'ready_to_close':
+                logger.warning("4 闸门证据不全，拒签 Sign-off: %s", self._last_blocked_gates)
+                return {
+                    'signoff_blocked': True,
+                    'blocked_gates': self._last_blocked_gates,
+                    'verification': agg,
+                    'path': path,
+                }
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
         signoff_lines = [
@@ -843,6 +985,8 @@ class HandoffTidy:
                 agg.get('failed', 0), agg.get('blocked', 0)),
             '- 声明: spec 验收通过，任务进入 completed 状态',
         ]
+        if force:
+            signoff_lines.append('- 强制完成: forced: true（用户明确要求，绕过 4 闸门证据校验）')
 
         # 更新 status 为 completed
         content = re.sub(r'^status:\s*.+$', 'status: completed', content, flags=re.MULTILINE)
@@ -982,6 +1126,17 @@ class HandoffTidy:
                 '',
                 '### 逐条结果',
                 '（/check 步骤5 完成后由 agent 批量写入）',
+            ])
+
+        # handoff_gate_fix：回读保留 Gate Evidence 段（防全覆盖生成丢失 4 闸门证据）
+        # 为什么：/check 步骤6.5 写入的 Gate Evidence 段是 4 闸门判定的唯一证据，
+        # 若被全覆盖生成覆盖，已过闸门会因证据丢失回落 pending
+        existing_evidence = self._read_gate_evidence(memory_dir, self.task_name)
+        if existing_evidence and existing_evidence.get('raw'):
+            lines.extend([
+                '',
+                '## Gate Evidence',
+                existing_evidence['raw'],
             ])
 
         # 读取现有 loop 字段（续传保留，修 LC-01）
@@ -1561,6 +1716,8 @@ def main():
     parser.add_argument('--project', default=None, help='项目名（默认取当前目录基名）')
     parser.add_argument('--mark-completed', action='store_true',
                         help='标记任务为 completed 并追加 Sign-off 段（决策 I.2=D）')
+    parser.add_argument('--force', action='store_true',
+                        help='强制完成：跳过 4 闸门证据校验（含 H3），Sign-off 标 forced: true（handoff_gate_fix 新增）')
     args = parser.parse_args()
 
     tidy = HandoffTidy(dry_run=args.dry_run, task_name=args.task, project_name=args.project)
@@ -1573,7 +1730,7 @@ def main():
         level = 'L2'
         if 'report-only' in args.task.lower() or '分析' in args.task:
             level = 'L1'
-        signoff_result = tidy._write_signoff(memory_dir, args.task, level)
+        signoff_result = tidy._write_signoff(memory_dir, args.task, level, force=args.force)
         report.signoff = signoff_result
 
     print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
