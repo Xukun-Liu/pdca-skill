@@ -94,6 +94,17 @@ class TestVerifyGateEvidenceFile:
             ok, _ = h._verify_gate_evidence_file(rep)
             assert not ok, "%s 不应通过" % name
 
+    def test_relative_to_primary_docs(self, tmp_path):
+        """对抗审查 C4 修复：相对 docs_rj 写法（check_rj/x.md）也能解析到。"""
+        h = HandoffTidy(dry_run=True)
+        h.report.primary_docs = str(tmp_path)
+        os.makedirs(os.path.join(str(tmp_path), "check_rj"), exist_ok=True)
+        rep = os.path.join(str(tmp_path), "check_rj", "t_rel.md")
+        with open(rep, "w", encoding="utf-8") as f:
+            f.write("结论: 0 HIGH")
+        ok, reason = h._verify_gate_evidence_file("check_rj/t_rel.md#L12")
+        assert ok, reason
+
 
 class TestCheckTaskCompletion:
     """_check_task_completion：4 闸门判定。"""

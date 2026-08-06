@@ -749,6 +749,10 @@ class HandoffTidy:
         负向后视 (?<!\\d) 防止 '10 HIGH'/'20 HIGH' 被误匹配（对抗审查 CRITICAL 修复）。
         纯 touch 空文件会被拒，防止"无实际审查的假证据"。
 
+        路径解析（对抗审查 C4 修复）：相对路径先按 cwd 解析（仓库根写法
+        'docs_rj/check_rj/x.md'），再按主 docs 目录解析（SKILL.md 6.5 文档口径
+        'check_rj/x.md'），两种写法均兼容。
+
         Args:
             path: 报告文件路径（允许带 #L 行号后缀，校验前剥离）
 
@@ -758,16 +762,23 @@ class HandoffTidy:
         if not path:
             return (False, '证据路径为空')
         clean = re.sub(r'#L?\d+$', '', path.strip())
-        if not os.path.isfile(clean):
-            return (False, '证据文件不存在: %s' % clean)
-        try:
-            with open(clean, 'r', encoding='utf-8') as f:
-                content = f.read()
-        except OSError as exc:
-            return (False, '证据文件读取失败: %s' % exc)
-        if re.search(r'(?<!\d)0\s*HIGH', content):
-            return (True, '证据有效: %s' % clean)
-        return (False, '证据文件内容不含 0 HIGH: %s' % clean)
+        candidates = [clean]
+        if not os.path.isabs(clean):
+            primary = self.report.primary_docs or tidy_common.resolve_primary_docs()
+            if primary:
+                candidates.append(os.path.join(primary, clean))
+        for cand in candidates:
+            if not os.path.isfile(cand):
+                continue
+            try:
+                with open(cand, 'r', encoding='utf-8') as f:
+                    content = f.read()
+            except OSError as exc:
+                return (False, '证据文件读取失败: %s' % exc)
+            if re.search(r'(?<!\d)0\s*HIGH', content):
+                return (True, '证据有效: %s' % cand)
+            return (False, '证据文件内容不含 0 HIGH: %s' % cand)
+        return (False, '证据文件不存在: %s' % clean)
 
     def _read_gate_evidence(self, memory_dir, task_name):
         """读取 TASK_STATE 的 '## Gate Evidence' 段（handoff_gate_fix 新增）。
