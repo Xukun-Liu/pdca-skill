@@ -4,7 +4,7 @@
 
 # references/ 目录索引
 
-> 版本：v1.0.0 | 创建：2026-07-25 | riji-skill 参考模块导航
+> 版本：v1.2.1 | 创建：2026-07-25 | riji-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
 > 本索引是 references/ 目录的导航地图。47 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
@@ -16,14 +16,14 @@
 ```
 references/
 ├── index.md                  ← 你在这里（导航索引）
-├── common/                   ← 跨 PDCA 阶段融合（21个）
+├── common/                   ← 跨 PDCA 阶段融合（22个）
 │   ├── pa/   (4个) P+A 启动规划+归档闭环
 │   ├── pc/   (2个) P+C 方案设计+验证审查
 │   ├── pd/   (2个) P+D 方案设计+编码执行
 │   ├── pda/  (2个) P+D+A 贯穿全流程
 │   ├── dc/   (2个) D+C 执行+调试验证
 │   ├── da/   (3个) D+A 执行+归档整理
-│   └── style/ (6个) P+D 写作风格（特例，含 article-writing 入口 + 5 子模块）
+│   └── style/ (7个) P+D 写作风格（特例，含 writing_style + article-writing 入口 + 5 子模块）
 ├── plan/                     ← P 环节：想清楚（11个）
 │   ├── bootstrap/  (3个) P.bootstrap 启动恢复
 │   ├── route/      (5个) P.route 路由判断
@@ -56,7 +56,7 @@ references/
 | `pda/` | P+D+A | 贯穿全流程 | 2 |
 | `dc/` | D+C | 执行 + 调试验证 | 2 |
 | `da/` | D+A | 执行 + 归档整理 | 3 |
-| `style/` | P+D | 写作风格（子文件夹命名特例，按主题命名） | 1 |
+| `style/` | P+D | 写作风格（子文件夹命名特例，按主题命名） | 7 |
 
 > **嵌套例外条款（2026-08-06 新增）**：`style/` 下允许主题子目录（如 `style/article-writing/`），子模块文件不单独挂 PDCA 标签、不计入分类规则表，由入口文件（`style/article-writing.md`）链式加载。嵌套例外仅适用于 `style/` 主题化组织，其余子文件夹不得再嵌套。
 
@@ -106,14 +106,14 @@ references/
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
-### common/（21个）
+### common/（22个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
 | trigger_hooks.md | common/pa/ | P.route A.handoff | main + bootstrap |
 | working_memory_rules.md | common/pa/ | P.bootstrap A.persist | main + bootstrap |
 | summary_view.md | common/pa/ | P.bootstrap A.persist | main + bootstrap + sync |
-| memory_governance.md | common/pa/ | P.bootstrap A.persist | main + bootstrap |
+| memory_governance.md | common/pa/ | P.bootstrap A.persist | main |
 | acceptance_criteria.md | common/pc/ | P.design C.verify | main + spec_design |
 | adversarial_review.md | common/pc/ | P.design C.adversarial | main + spec_design + learn_opt |
 | minimal_code_principles.md | common/pd/ | P.design D.code | main + bootstrap |
@@ -147,7 +147,7 @@ references/
 | loop_triage.md | plan/route/ | P.route | main + loop |
 | design_patterns.md | plan/design/ | P.design | main + bootstrap |
 | project_structure.md | plan/design/ | P.design | main + bootstrap |
-| goal_brief.md | plan/design/ | P.design | main + spec_design + code_eng |
+| goal_brief.md | plan/design/ | P.design | main |
 
 ### do/（8个）
 
@@ -287,4 +287,5 @@ references/
 |------|------|----------|
 | v1.0.0 | 2026-07-25 | 初版：从扁平 36 文件重构为 PDCA 四环节 + common 融合区子文件夹结构 |
 | v1.1.0 | 2026-08-01 | SKILL.md 瘦身同步：登记 5 个模块（memory_governance/writing_style/goal_brief 补登记 + insert_new_task/act_procedure 新增）；目录/计数/agent 引用更新 |
-| v1.2.0 | 2026-08-06 | 融合文章写作模块：41→47、common 16→21、style 1→6（article-writing 入口 + 5 子模块）；2.1 补嵌套例外条款；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源） |
+| v1.2.0 | 2026-08-06 | 融合文章写作模块：41→47、common 16→22、style 1→7（article-writing 入口 + 5 子模块）；2.1 补嵌套例外条款；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源） |
+| v1.2.1 | 2026-08-06 | 对抗审查第 1 轮修复：common 21→22、style 6→7、分类规则表 style 行 1→7（补入口文件计数）；速查表 memory_governance/goal_brief 引用范围列对齐 main；头部版本同步 v1.2.1 |

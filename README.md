@@ -1,92 +1,205 @@
+<div align="center">
+
+[![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-v1.0.1-green.svg)](HISTORY.md)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
+![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
 # riji-skill
 
-> AI 协作框架——每次对话自动加载，所有场景生效。从一句话问答到完整项目开发，涉及任务管理、文档规范、代码协作、需求澄清、验收标准时自动触发。
+**把管理学的 PDCA，装进每一次 AI 协作**
 
-## 先说痛点：你请的 AI 助手，为什么需要"规矩"？
+AI 是流水的兵，记忆是铁打的营盘  
+先问清再动手 · 改崩了能回退 · 聊完记得住
 
-你让 AI 干活，最怕三件事：**没问清就动手**（做偏了返工）、**改着改着改崩了**（还找不回上一版）、**聊着聊着它"忘了"之前定好的事**（上下文一压缩就失忆）。这些问题通常不是你没说清，而是 AI 默认"凭记忆裸奔"的毛病。
+[30 秒上手](#30-秒上手) · [产品页](网页说明.html) · [两大核心](#两大核心定位) · [安装详解](#安装详解) · [更新日志](HISTORY.md)
 
-riji-skill 就是给 AI 套上的**一套协作规矩 + 一本随查手册**：把反复踩过的坑固化成硬规则，让 AI 每次动手前先确认、出错时有章法可调、记忆有地方存。
+</div>
 
-但记忆不只是防失忆——你在 AI 协作上踩过的坑、验证过的方法、做过的关键决策，是越用越厚的**个人资产**，跨项目跨工具都跟你走。riji-skill 的三层记忆系统，本质是你的"AI 协作方法论笔记本"，**经验沉淀**（验证过的方法论、踩过的坑、关键决策）+ **状态记忆**（任务进度、上下文、卡点）两个分量都有——AI 是流水的兵，记忆是铁打的营盘。
+---
 
-## 三个定位：记忆 → PDCA → docs（三位一体闭环）
+## 两大核心定位
 
-riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位互锁，形成核心架构：
+riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命的两件事：
 
-```
-① 记忆（基础·个人资产·跟人不跟工具）
-   ↓ 撑起（记忆是 PDCA 的输入/输出物质）
-② PDCA（主干·思维方法论 + 统一调度中枢）
-   ↓ 产出（/plan 产 spec/task、/act 产 memory/handoff）
-③ docs（产出·物质载体·工程化管理方法）
-   ↓ 反哺（docs 持久化记忆，喂下一轮 /plan）
-① 记忆（/act 写 memory = 下一轮 /plan 输入）→ 闭环
-```
+### 1. 自己的记忆 —— 跟你走，不跟工具走
 
-- **记忆**：跟随你本人（不跟项目、不跟工具）的个人资产——经验沉淀（做过什么、学到什么）+ 状态记忆（做到哪、卡在哪）两个分量持续积累，越用越厚。AI 是流水的兵，记忆是铁打的营盘
-- **PDCA**：既是解决问题的思维方法论，又是统一调度中枢——所有能力归一到 /plan /do /check /act 四指令
-- **docs**：把 AI 协作从"聊完就散"升级为可追溯/可交接/可复用的工程化方法——spec（方案）+ task（执行清单）+ handoff（交接记录）+ memory（结构化记忆），每次协作成果都变成文件留下来。riji-skill 自身就是这套方法搭出来的活样本
+| 痛点 | 有 riji-skill 之后 |
+|------|-------------------|
+| 换模型、换客户端，上次约定全没了 | **三层记忆**：热记忆（框架）+ 全局聚合记忆 + 项目记忆 |
+| 升级 skill 包把数据覆盖没了 | **用户数据外置**到 `~/.riji-skill/data/`，升级框架 **0 丢失** |
+| AI 聊着聊着「失忆」 | 每段实质工作 **写入即落盘**，跨对话可恢复 |
+| 经验散落在聊天记录里 | 踩过的坑、定过的规矩，沉淀成**跟你本人的个人资产** |
 
-## 这个技能是干嘛的（大白话版）
+> 一句话：**AI 是流水的兵，记忆是铁打的营盘。**
 
-把 riji-skill 想成 AI 助手的**「协作宪法 + 交通指挥中心」**：
+### 2. 文档规整 —— 聊完就散 → 可追溯、可交接
 
-- **宪法**——规定 AI 干活时必须遵守的硬规则（先读记忆再动手、动手前必须跟你确认方案、不给半成品伪代码、报错就读调试手册……），防止"AI 凭印象乱改 → 改崩 → 上下文丢了 → 来回返工"。
-- **指挥中心**——它自己**不实现**具体业务能力（不会去画界面、做表格、跑爬虫），而是内置一张"触发钩子表"：你一说什么，它就知道该去读哪份参考手册、或该去外部调度哪个专业技能。
+| 痛点 | 有 riji-skill 之后 |
+|------|-------------------|
+| 做完一地聊天记录，新人接不上 | 自动落 **spec（方案）/ task（清单）/ handoff（交接）** |
+| 项目文件乱、版本对不齐 | **SUMMARY 根索引** + **sync-matrix 一致性核对** |
+| 不知道做到哪了 | task 逐项打勾；交接时 **4 闸门证据** 才能说「完成」 |
+| 文档格式各写各的 | **12 个模板** + `generate_docs.py` 一键生成规范结构 |
 
-一句话：**riji-skill 管"怎么协作得靠谱"，具体活儿交给它调来的专业模块/外部技能干。**
+> 一句话：**把 AI 协作从「聊完就散」升级成工程化交付。**
 
-## 你需要知道的前提（2 条）
+这两大核心由 **PDCA 四环**串起来：`/plan` 想清楚 → `/do` 动手做 → `/check` 验结果 → `/act` 写记忆 + 交文档。`/act` 的产出就是下一轮 `/plan` 的输入——**闭环**。
 
-1. **它得跑在一个能调用大模型的 AI 助手上**（如 WorkBuddy）。框架是"规矩"，模型是"脑子"——脑子在内网要有内网版模型才能完全离线跑。
-2. **框架本身零云依赖、纯本地文件**：不联网、不调外部 API。内网部署 = 把整个目录拷贝过去即可，比那些依赖云端的技能省心。
-   > 补充：画图 / Excel / 爬虫等"具体活"要靠外部专业技能，那些技能各自可能有云依赖——这是技能自己的事，不传染框架。
+---
 
-## 一天里它怎么帮你（一个真实例子）
+## 没有它 / 有它
 
-你说："帮我写个用户登录功能。"
+| 没有 riji-skill | 有 riji-skill |
+|----------------|---------------|
+| 没问清就写代码，做偏了返工 | **HARD-GATE**：方案确认后才动手 |
+| 改崩了找不到上一版 | **回溯保障**：改前检查点，能回退 |
+| 聊着聊着忘了约定 | **自己的记忆**跨对话接着干 |
+| 做完一地文件，没法交接 | **文档规整**：spec / task / handoff 自动落盘 |
+| 每个 AI 各干各的，经验不沉淀 | 经验进记忆，**跟人不跟工具** |
 
-- **没有框架**：AI 可能直接噼里啪啦写代码，写成啥样你不清楚，改崩了难回退。
-- **有 riji-skill**，AI 会：① **先澄清**（账号密码还是手机验证码？要记住登录状态吗？）——动手前先对齐；② **读规矩**（自动读 `code_rules.md` 按统一风格写、`security.md` 防 SQL 注入）；③ **留后路**（改之前先提交检查点，真改崩了一键回退）；④ **写文档**（顺手生成 spec 方案 + task 步骤 + handoff 交接）；⑤ **记下来**（约定写进记忆，下次接着聊不"失忆"）。
+---
 
-你感受到的差别：它**先问清楚再干、干得有规矩、出问题能回退、事后有文档**，而不是甩给你一堆代码。
+## 长什么样
 
-## 它是什么 / 它不是什么
+<p align="center">
+  <img src="assets/readme/hero-loop.svg" alt="记忆 → PDCA → docs 闭环" width="720">
+</p>
+
+（手绘 SVG，`assets/readme/hero-loop.svg`）
+
+---
+
+## 四个产品卖点
+
+| # | 卖点 | 你得到什么 |
+|---|------|-----------|
+| 1 | **自己的记忆** | 三层记忆 + 数据外置；换工具、升级包，资产还在 |
+| 2 | **文档规整** | 方案/清单/交接自动生成；一致性核对；可交接可复盘 |
+| 3 | **四指令调度一切** | 记住 `/plan` `/do` `/check` `/act` 即可调度全部能力；`/loop` 可自动循环执行 |
+| 4 | **7 条铁律** | Memory First、HARD-GATE、不给半成品、改前可回退……AI 不能凭印象乱来 |
+
+进阶能力（对抗审查、副 agent、技能图谱、活人感写作/去AI味、文件扫描门控等）见下方 [完整能力地图](#完整能力地图)。
+
+---
+
+## 30 秒上手
+
+1. **安装**：把 `riji-skill/` 整个目录复制到 AI 编程助手的 skills 目录  
+2. **开聊**：新对话自动加载；首次会引导 Bootstrap（并创建 `~/.riji-skill/data/`）  
+3. **正常说话**：简单事直接做；复杂事说 **`/plan`** 走四环；收尾说 **整理一下 / 交接** 走文档规整  
+
+更细的验证命令、数据路径、可选 API Key → [安装详解](#安装详解)。
+
+---
+
+## 目录
+
+- [两大核心定位](#两大核心定位)
+- [没有它 / 有它](#没有它--有它)
+- [四个产品卖点](#四个产品卖点)
+- [30 秒上手](#30-秒上手)
+- [它是什么 / 不是什么](#它是什么--不是什么)
+- [一天里的真实例子](#一天里的真实例子)
+- [工作原理](#工作原理)
+- [完整能力地图](#完整能力地图)
+- [参考手册（47 模块）](#参考手册references-47-个按需读取模块)
+- [模板文件（12 个）](#模板文件assets-12-个开箱即用)
+- [安装详解](#安装详解)
+- [可选配置](#可选配置项)
+- [目录结构](#目录结构)
+- [迭代与质量](#迭代与质量)
+- [许可证](#许可证)
+
+---
+
+## 它是什么 / 不是什么
 
 | ✅ 它是 | ❌ 它不是 |
 |--------|----------|
-| 一套**跨任务硬规则** + 按需加载的**参考手册** | 一个把几十个技能"打包塞进自己体内"的大杂烩 |
-| **技能编排器**：需要时去外部找/调专业技能 | 自带具体业务能力的"万能工具箱"（如画图、Excel） |
-| 纯本地 Markdown，零云依赖，内网可直接拷贝部署 | 依赖外部 API/账号才能跑的在线服务 |
+| **自己的记忆系统** + **文档规整方法** + 跨任务硬规则 | 把几十个技能塞进体内的大杂烩 |
+| **技能编排器**：按触发词读手册 / 调度外部专业 skill | 自带画图、Excel、爬虫的万能工具箱 |
+| 纯本地 Markdown + Python 标准库脚本，零云依赖 | 必须联网/开账号才能跑的在线服务 |
 
-> 数量澄清：包内**内嵌 47 个参考模块**（`references/`），但**0 个独立子技能**（没有 `skills/` 子目录）。需要浏览器操控、Office、金融等专业能力时，它通过 `skill_management` / `agent_find` 两个钩子去**外部**搜索并调度对应技能——那些技能不在包里。
+> 包内：**47** 个参考模块 · **12** 个模板 · **34** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
 
-## 核心能力
+**装前 2 个前提**：
+
+1. **它得跑在能调用大模型的 AI 助手上**（如 WorkBuddy）。框架是「规矩」，模型是「脑子」——内网完全离线跑需要内网版模型。
+2. **框架本身零云依赖、纯本地文件**：不联网、不调外部 API。内网部署 = 把整个目录拷贝过去即可。（画图/爬虫等具体活靠外部专业技能，那些技能各自可能有云依赖，不传染框架。）
+
+---
+
+## 一天里的真实例子
+
+你说：「帮我写个用户登录功能。」
+
+| 没有框架 | 有 riji-skill |
+|---------|---------------|
+| 直接噼里啪啦写代码 | **先澄清**（密码还是验证码？要记住登录吗？） |
+| 风格随缘、安全随缘 | **读规矩**（`code_rules` / `security`） |
+| 改崩了难回退 | **改前检查点**，能回退 |
+| 聊完只剩聊天记录 | **落文档**：spec + task + handoff |
+| 下次重开又失忆 | **写记忆**，约定还在 |
+
+你感受到的差别：先问清再干、干得有规矩、出事能回退、事后有文档和记忆。
+
+---
+
+## 工作原理
+
+```text
+/plan  想清楚（读记忆 + 澄清 + 方案 + HARD-GATE）
+  ↓
+/do    动手做（按 task 逐项；写代码前读 code_rules）
+  ↓
+/check 验结果（对照 spec + 对抗审查 + 证据闸门）
+  ↓
+/act   处理动作（写记忆 + 刷 SUMMARY + 交接整理）
+  ↓
+下一轮 /plan 再读记忆与文档 → 闭环
+```
+
+- **记忆**：每次 `/act` 写入 = 下次 `/plan` 输入  
+- **文档**：spec/task/handoff 是物质载体，让协作可追溯、可交接  
+- **PDCA**：统一调度中枢；`/loop` 是 `/do`+`/check` 的自动循环开关  
+
+更完整的产品叙事见 [网页说明.html](网页说明.html)。
+
+---
+
+## 完整能力地图
 
 | 能力 | 说明 |
 |------|------|
-| **PDCA 四环统一调度中枢** | 所有能力归一到 /plan（想清楚）/ /do（动手做）/ /check（验结果）/ /act（处理动作：交接+记忆+learn 门控自进化）四个入口指令。/loop 是 /do+/check 自动循环模式开关。/act 产出 = 下一轮 /plan 输入，形成闭环。记忆系统、副 agent 调度、文档三件套、/loop 循环、learn 自进化、handoff_tidy、触发钩子、第一性原理拆解、对抗性审查、用户数据外置、Bootstrap 初始化、Git 回溯保障、SUMMARY 根索引、Red Flags、安全处理、手绘呈现、agent-find 都通过 PDCA 触发，**用户只需记 4 个词就能调度框架全部能力** |
-| **7条铁律** | Memory First（先读记忆再动手）、HARD-GATE（方案确认后才动手）、流程优先（先判断走什么流程）、No Placeholders（不给伪代码/TBD）、触发钩子（报错按报错询问机制确认用户意图再决定是否读 debugging、写代码读 code_rules）、回溯保障（改前确保工作区干净可回退）、逐项核对（执行阶段按 task.md 逐项完成验证打勾，验收阶段对照 spec.md 逐条核对） |
-| **第一性原理拆解** | 复杂任务方案探索前必做三问：本质目标是什么？不可压缩的约束有哪些？从约束出发的最优解是什么？避免照搬已有方案 |
-| **对抗性审查** | Self-Review 后用独立 subagent 做 6 维度批判性审查（内部一致性/逻辑完整性/可执行性/边界 case/安全性/可维护性），产出 HIGH/MEDIUM/LOW 分级报告，修复后迭代直到清零，3 轮上限防无限循环 |
-| **安全 HIGH 特殊处理** | 安全漏洞（SQL 注入/权限越界/数据泄露等）触发独立处理流程：判定权三级（用户>主 agent>subagent）、优先修复+延后非安全、X/Y 双计数器（正常轮次 X≤3、安全轮次 Y≤4）、回归验证轮、链式新安全 HIGH 递增规则、Y=4 升级用户决策 |
-| **文档三件套** | spec（方案）、task（执行清单）、handoff（交接记录）自动生成。把 AI 协作从"聊完就散"升级为**可追溯/可交接/可复用**的工程化方法——`generate_docs.py` 一键创建目录结构。**riji-skill 自身**（SKILL.md + 47 references + 12 模板 + 34 脚本 + SUMMARY）就是用这套方法搭出来的活样本 |
-| **三层记忆系统** | 热记忆（SKILL.md+references，硬性，每次自动加载）、全局聚合记忆（`memory/memory_main.md`，skill 包内，按项目分段）、项目记忆（`{项目根}/docs_rj/memory_rj/`）；写入即落盘并自动 upsert 全局 |
-| **用户数据外置（方案B）** | 用户数据（memory/docs_rj/outputs_rj/server_lite_data）外置到 `~/.riji-skill/data/`，与框架文件物理分离。**升级时解压覆盖框架文件，用户数据 0 丢失**。三级优先级路径解析（环境变量 `RIJI_DATA_DIR` > 配置文件 `~/.riji-skill/config.json` > 默认值），老用户首次启动自动迁移。`server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，见下文说明） |
-| **命名空间隔离** | 所有运行时产物加 `_rj` 后缀（`docs_rj/`、`memory_rj/`、`_rj` 类型文件夹），避免与其他 agent 平台通用命名撞车 |
-| **Bootstrap 初始化** | 首次使用检测缺失文件，逐个确认创建，引导填写主 docs 路径等配置 |
-| **Git 回溯保障** | 代码改动前检查点、任务级回溯检查点、紧急回滚 SOP，确保改崩了能回到稳定状态；复杂任务启动先问 Git 管理（2 问 + 3 默认值，见 git_workflow §6.5），简单任务轻量检查 |
-| **agent-find 动态搜索** | 需要第三方 agent/能力时优先用 Exa REST API 直连全网搜索（绕开 MCP/OAuth；MCP 作可选上层，都不可用才降级 WebFetch/WebSearch），零系统依赖跨平台可用，安装前安全扫描 |
-| **SUMMARY_RJ.md 根索引** | 文档汇总视图一眼看全项目结构，自动更新+漂移检查，替代 CLI 工具零依赖 |
-| **Red Flags 16 条** | 偏离信号自检：连续输出未确认、没过 HARD-GATE 就动手、凭记忆回答不读文件等，出现信号立即重读铁律 |
-| **手绘呈现（hand-drawn-report）** | 验收/审核/汇报时内容→手绘 SVG 速记/信息图，单文件自包含；md 顶部内联同款 SVG |
+| **自己的记忆（三层）** | 热记忆（SKILL+references）· 全局 `memory_main.md` · 项目 `docs_rj/memory_rj/`；`write_project` 写入即落盘并 upsert 全局 |
+| **文档规整** | spec/task/handoff 三件套 · SUMMARY 根索引 · sync-matrix 版本与引用核对 · `generate_docs` / `handoff_tidy` / `startup_tidy` · 交接 4 闸门证据 |
+| **用户数据外置** | 数据在 `~/.riji-skill/data/`，升级框架不丢记忆与文档 |
+| **PDCA 四环** | `/plan` `/do` `/check` `/act`；`/loop` 自动循环；用户只需记 4 个词 |
+| **7 条铁律** | Memory First · HARD-GATE · 流程优先 · No Placeholders · 触发钩子 · 回溯保障 · 逐项核对 |
+| **第一性原理拆解** | 复杂方案前三问：本质目标 / 不可压缩约束 / 从约束推最优解 |
+| **对抗性审查** | 独立 subagent 6 维度审查，HIGH/MEDIUM/LOW，最多 3 轮 |
+| **安全 HIGH 特殊处理** | 注入/越权等独立流程，X/Y 双计数器 |
+| **命名空间隔离** | `_rj` 后缀，避免与其他 agent 平台撞名 |
+| **Bootstrap** | 首次使用检测缺失并引导创建 |
+| **Git 回溯保障** | 改前检查点、任务级回溯、紧急回滚 SOP |
+| **agent-find** | 外部能力搜索（Exa → WebFetch → WebSearch 降级链） |
+| **Red Flags** | 19 条偏离信号自检 |
+| **手绘呈现** | 验收/汇报 → 手绘 SVG 速记 |
+| **活人感写作** | 写文章/知乎/去AI味等 13 触发词 → 直接出稿 + `check_prose.py` |
+| **文件扫描门控** | L0 任务内 / L1 点名文件 / L2 任务外须确认（防误扫敏感目录） |
+| **技能图谱** | 能力画像；点名全量先确认；`/act` 自动刷新仅读框架自身记忆 |
+
+> 🔴 **隐私声明（v1.0.1）**：技能图谱（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）生成能力画像。**用户点名/手动全量触发时，运行前会先向你确认**；其中 8 个固定 AI 工具记忆目录属功能核心，**启用该功能即视为授权**、不重复确认（见 skill_graph.md §4）。扫描发现的敏感文件内容**不会被引用、转述或持久化**（敏感行摘录自动过滤）。**每轮 /act 自动刷新（--auto）仅读框架自身记忆**（L0 免确认），不扫外目录，记忆未变化时零成本跳过。其余功能均只读写框架自身目录与 `~/.riji-skill/data/`，零云依赖。
+
+---
 
 ## 参考手册（references/）—— 47 个按需读取模块
 
-不全部加载到上下文，触发钩子按"你正在做什么"自动指引读取。按使用场景分 8 类：
+不全部加载到上下文，触发钩子按「你正在做什么」自动指引读取。按使用场景分 8 类：
 
 **① 写代码 / 改代码时**
+
 | 文件 | 用途 |
 |------|------|
 | [code_rules.md](references/do/code/code_rules.md) | 代码风格/结构/错误处理/测试/API/数据库/安全规范 |
@@ -95,59 +208,68 @@ riji-skill 不是平级三件套，而是**层级 + 闭环**——三个定位�
 | [git_workflow.md](references/do/code/git_workflow.md) | Git 分支策略/Commit 规范/回溯保障/回滚 SOP |
 
 **② 出错 / 调试时**
+
 | 文件 | 用途 |
 |------|------|
 | [debugging.md](references/common/dc/debugging.md) | 报错时的四步调试法 |
-| [red_flags.md](references/check/red_flags.md) | 16 条偏离信号 + 理性化反驳（自检"是不是偏了"） |
+| [red_flags.md](references/check/red_flags.md) | 19 条偏离信号 + 理性化反驳 |
 
 **③ 写文档 / 出报告时**
+
 | 文件 | 用途 |
 |------|------|
 | [document_specs.md](references/common/pda/document_specs.md) | 文档命名/格式/多 docs 目录处理规范 |
 | [hand-drawn-report.md](references/common/da/hand-drawn-report.md) | 手绘呈现（内容→手绘 SVG 速记/信息图） |
 
 **④ 安全 / 合规时**
+
 | 文件 | 用途 |
 |------|------|
-| [security.md](references/do/danger/security.md) | 安全边界 + 5 层指令优先级 + 注入防御 + **文件扫描确认门控**（L0 任务内免确认 / L1 点名单文件一句话确认 / L2 任务外扫描先确认：范围+目的+关键词） |
+| [security.md](references/do/danger/security.md) | 安全边界 + 指令优先级 + 注入防御 + **文件扫描确认门控**（L0/L1/L2） |
 | [skill_security.md](references/plan/route/skill_security.md) | 第三方 skill 安全审计规范 |
 
-> 🔴 **隐私声明（v1.0.1）**：框架的「技能图谱」功能（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）来生成能力画像。**用户点名/手动全量触发时，该扫描属任务外扫描，运行前会先向你确认**（8 个固定 AI 工具记忆目录为功能核心豁免——你启用该功能即视为授权，见 skill_graph.md §4）；扫描发现的敏感文件内容不会被引用、转述或持久化（敏感行摘录自动过滤）。**每轮 /act 自动刷新（--auto）仅读框架自身记忆（左轨 riji，L0 免确认）**，不扫上述外目录，记忆未变化时零成本跳过。其余功能均只读写框架自身目录与 `~/.riji-skill/data/`（用户数据外置），零云依赖。
+**⑤ 记忆 / 交接 / 多项目时**（对应两大核心）
 
-**⑤ 记忆 / 交接 / 多项目时**
 | 文件 | 用途 |
 |------|------|
-| [working_memory_rules.md](references/common/pa/working_memory_rules.md) | 记忆读写/归档/跨对话恢复规则 |
-| [summary_view.md](references/common/pa/summary_view.md) | SUMMARY_RJ.md 根索引规范 + 漂移检查 |
-| [sync-matrix.md](references/common/da/sync-matrix.md) | 变更影响矩阵 + 版本号一致性检查 |
-| [multi_project.md](references/plan/bootstrap/multi_project.md) | 多项目切换/隔离规范 |
-| [compaction_recovery.md](references/plan/bootstrap/compaction_recovery.md) | 上下文压缩恢复协议（7 步恢复流程） |
+| [working_memory_rules.md](references/common/pa/working_memory_rules.md) | 记忆读写/归档/跨对话恢复 |
+| [summary_view.md](references/common/pa/summary_view.md) | SUMMARY_RJ.md 根索引 + 漂移检查 |
+| [sync-matrix.md](references/common/da/sync-matrix.md) | 变更影响矩阵 + 版本号一致性（文档规整入口） |
+| [multi_project.md](references/plan/bootstrap/multi_project.md) | 多项目切换/隔离 |
+| [compaction_recovery.md](references/plan/bootstrap/compaction_recovery.md) | 上下文压缩恢复协议 |
 
-**⑥ 要找外部专业能力时（浏览器 / 搜索 / 装技能）**
+**⑥ 要找外部专业能力时**
+
 | 文件 | 用途 |
 |------|------|
-| [browser_automation.md](references/do/code/browser_automation.md) | 浏览器操控/自动化（选型对比 + 落地步骤） |
-| [agent_find.md](references/plan/route/agent_find.md) | 第三方 agent/能力 搜索/安装/验证流程 |
-| [skill_management.md](references/plan/route/skill_management.md) | Skill 搜索→安装→验证→安全扫描全流程 |
+| [browser_automation.md](references/do/code/browser_automation.md) | 浏览器操控/自动化 |
+| [agent_find.md](references/plan/route/agent_find.md) | 第三方 agent/能力 搜索安装验证 |
+| [skill_management.md](references/plan/route/skill_management.md) | Skill 搜索→安装→验证→安全扫描 |
 
 **⑦ 初始化 / 审查 / 示范时**
+
 | 文件 | 用途 |
 |------|------|
-| [bootstrap.md](references/plan/bootstrap/bootstrap.md) | 引导式初始化流程（首次使用） |
-| [adversarial_review.md](references/common/pc/adversarial_review.md) | 第一性原理拆解 + 对抗性审查完整规则 |
-| [communication_rules.md](references/common/dc/communication_rules.md) | 沟通四原则 + 文件变动声明 |
-| [usage_examples.md](references/plan/route/usage_examples.md) | 3 段真实对话演示完整流程 |
+| [bootstrap.md](references/plan/bootstrap/bootstrap.md) | 引导式初始化 |
+| [adversarial_review.md](references/common/pc/adversarial_review.md) | 第一性原理 + 对抗性审查 |
+| [communication_rules.md](references/common/dc/communication_rules.md) | 沟通原则 + 文件变动声明 |
+| [usage_examples.md](references/plan/route/usage_examples.md) | 3 段真实对话演示 |
 
 **⑧ 写文章 / 长文时**
+
 | 文件 | 用途 |
 |------|------|
-| [article-writing.md](references/common/style/article-writing.md) | 活人感写作入口：知乎/公众号/博客/小说/人物稿/口播稿等（按任务链式加载 `article-writing/` 下 5 子模块；写作任务不生成 spec/task，直接出稿；材料澄清最多三问） |
+| [article-writing.md](references/common/style/article-writing.md) | 活人感写作入口（知乎/公众号/去AI味等；直接出稿；材料澄清最多三问） |
+
+> 上表按场景收录 23 个高频模块；全量 47 个模块索引见 [references/index.md](references/index.md)。
 
 ## 模板文件（assets/）—— 12 个开箱即用
 
-spec / task / handoff / memory / memory_bootstrap / daily_log / summary / archive / market_research / spec_main / skill_graph / index 十二类模板，配合 `generate_docs.py` 自动生成。
+spec / task / handoff / memory / memory_bootstrap / daily_log / summary / archive / market_research / spec_main / skill_graph / index 十二类模板，配合 `generate_docs.py` 自动生成——**文档规整的物质基础**。
 
-## 安装
+---
+
+## 安装详解
 
 ### 方式一：复制到 skills 目录
 
@@ -359,7 +481,7 @@ tests/test_protocol_align.py::test_check_alignment_returns_correct_structure PAS
 | pytest 报 `No module named 'protocol'` | protocol/ 包未正确复制 | 确认 `protocol/__init__.py` 存在；重新复制 `protocol/` 目录 |
 | 中文输出乱码 | Windows 控制台编码问题 | `chcp 65001` 切换 UTF-8，或改用 PowerShell；重定向到文件时用 `Out-File -Encoding utf8` |
 
-通过以上全部验证（或仅核心命令通过 + pytest 201 项全过）后，即可确认 riji-skill 安装完整、可正常使用。下一步可参考下方"快速上手"开始第一次对话。
+通过以上全部验证（或仅核心命令通过 + pytest 201 项全过）后，即可确认 riji-skill 安装完整、可正常使用。下一步可回到上方 [30 秒上手](#30-秒上手) 开始第一次对话。
 
 ## 可选配置项
 
@@ -642,7 +764,7 @@ max_iterations: 15  # 复杂任务调高（默认 10）
   - 默认：10
   - 复杂任务：15-20（给足空间，但仍有限制防无限循环）
 
-> 不写这个字段 = 用默认值 10。详见 [references/loop_constraints.md](references/loop_constraints.md)。
+> 不写这个字段 = 用默认值 10。详见 [references/loop_constraints.md](references/do/danger/loop_constraints.md)。
 
 ---
 
@@ -668,8 +790,9 @@ riji-skill/
 ├── SKILL.md                    # 主入口文件，每次对话自动加载（含 7 铁律 / HARD-GATE / 触发钩子表）
 ├── README.md                   # 本文件
 ├── HISTORY.md                  # 版本历史
-├── index.html                  # 项目落地页（介绍页）
+├── 网页说明.html               # 项目落地页（介绍页，README 顶部"产品页"链接指向此文件）
 ├── run_server.py               # server_lite 启动脚本（可选组件，当前不主动引导使用）
+├── exa.env.json.example        # Exa API Key 配置模板（复制为 exa.env.json 后填 key）
 ├── .gitignore
 ├── .primary_docs_rj            # 主 docs 目录标记
 ├── assets/                     # 12 个模板文件
@@ -684,7 +807,8 @@ riji-skill/
 │   ├── archive_template.md
 │   ├── market_research_template.md
 │   ├── skill_graph_template.md
-│   └── index_template.md
+│   ├── index_template.md
+│   └── readme/                     # README 配图（hero-loop.svg 手绘闭环图）
 ├── references/                 # 47 个参考手册（按需读取，见上表）
 ├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 34 个）
 │   ├── archive_tidy.py
@@ -742,37 +866,20 @@ riji-skill/
 
 > **注意**：`docs_rj/`、`memory/`、`outputs_rj/` 在打包发布时会自动排除（由 `package_skill.py` 处理），用户安装后这些目录实际位于 `~/.riji-skill/data/` 下。本地开发环境保留这些目录作为骨架和示例。
 
-## 迭代历程
+## 迭代与质量
 
-本框架历经多轮迭代打磨，主要里程碑：
+本框架历经多轮迭代。关键保障：
 
-| 阶段 | 核心突破 |
-|------|---------|
-| 基础框架 | 从 agent.md 转换→自进化引擎→references 多域拆分→思维导图导航→渐进式披露→5 条铁律→evals 测试集 |
-| 架构重构 | 移除自进化引擎简化架构→agent-find 内嵌→文档体系三件套→动态搜索→代码规则扩写 9 章→sync-matrix→触发钩子全行扩写→HTML 报告→/plan 硬指令 |
-| 硬规则加固 | 文件变动声明→Bootstrap 引导初始化→版本历史外置→Git 回溯保障（第 6 条铁律）→WebFetch 零依赖搜索→SUMMARY_RJ.md 根索引→Phase2 grill-me 审查修复 17H+32M→指令优先级 5 层统一→Memory First 全面修复 |
-| 分发适配 | 主 docs 目录概念→散落文档归档→第二轮 grill-me 修复 11H+M→全局去个人化→命名空间隔离（_rj/_RJ 后缀+双读兼容+迁移脚本） |
-| 方法论增强 | 第一性原理拆解三问 + 对抗性审查 6 维度迭代流程 + 安全 HIGH 特殊处理 + X/Y 双计数器 + 3 轮上限防无限循环 |
-| 对抗审查打磨 | 21 轮独立 subagent 对抗性审查迭代，从 5H+14M 逐轮修复至 HIGH 连续 4 轮清零，最终砍掉追加轮机制（N 计数器），彻底解决"修一个引一个"的循环问题 |
+- **21 轮**独立 subagent 对抗性审查；HIGH 曾连续 4 轮清零
+- **pytest** 202 项（201 passed + 1 skipped）；`validate_skill.py` **32/32** MUST FIX=0
+- 交接 **4 闸门证据驱动**；文件扫描确认门控；技能图谱数据外置
 
-### 关键质量保障
-
-- **21 轮对抗性审查**：每轮由独立 subagent 按 6 维度审查，修复所有 HIGH 和 MEDIUM 级别问题
-- **3 个典型场景用例集（evals.json）**：覆盖 handoff_tidy 触发、memory 新路径、changelog 废弃等核心机制
-- **HIGH 连续 4 轮清零**：最后 4 轮审查（R18-R21）均无 HIGH 级别问题
-- **砍断无限循环根因**：删除追加轮机制（N 计数器），X=3 强制停止，提供"记录到后续版本/重新拆解重审/停止"三选项，从规则层面杜绝无限审查
-- **安全 HIGH 处理完备**：5 条客观清单判定、X/Y 双计数器（X≤3 正常轮、Y≤4 安全轮）、混合回滚方案、Y=4 升级路径闭环
-- **边界 case 全覆盖**：上下文压缩恢复、跨对话续做、文件读取失败降级（瞬时/永久/部分失败/空文件）、LOW 写入失败降级（临时文件+合并机制）、计数器半成品修复判断
-
-## 快速上手
-
-1. **安装**：将 `riji-skill/` 目录放到你的 AI 编程助手 skills 目录
-2. **开始对话**：框架自动加载，首次使用会引导 Bootstrap 初始化
-3. **接任务**：框架自动判断任务复杂度，简单任务直接做，复杂任务走 **PDCA 四环**——/plan（想清楚）→ /do（动手做）→ /check（验结果）→ /act（处理动作：交接+记忆+learn 门控自进化）。/act 产出是下一轮 /plan 的输入，**形成闭环**。用户喊 /loop 可启动 /do+/check 自动循环模式
-4. **方案确定前**：复杂任务自动做第一性原理拆解三问
-5. **Self-Review 后**：大改/复杂任务自动触发对抗性审查
-6. **出错时**：框架通过触发钩子表自动指引读对应 reference 文件
+详细里程碑与变更见 [HISTORY.md](HISTORY.md)。
 
 ## 许可证
 
-Apache-2.0
+[非商业源码可得许可证 v1.0](LICENSE)
+
+- **个人学习、研究等非商业用途**：免费使用、修改、分享，须保留本许可证与版权声明
+- **任何商业用途**（出售、作为收费产品/服务的实质组成部分等）：须事先获得作者书面授权
+- 商业授权请联系作者 **huihui**

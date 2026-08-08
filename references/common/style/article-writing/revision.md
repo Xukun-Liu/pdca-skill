@@ -182,7 +182,7 @@
 
 ## 使用检查脚本
 
-长稿保存为文本或 Markdown 后运行下面的命令。
+长稿保存为文本或 Markdown 后运行下面的命令（在 skill 根目录，即含 SKILL.md 的目录下执行）。
 
 ```text
 python scripts/check_prose.py 稿件.md

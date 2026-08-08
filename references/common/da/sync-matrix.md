@@ -6,7 +6,7 @@
 # 变更影响矩阵（Sync Matrix）
 > 阶段标签：D · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 更新：2026-07-16
+> 版本：v1.0.1 | 更新：2026-08-06（移除 MIGRATION.md 引用行）
 
 遇到不确定"这次改动要同步哪些文件"时查这张表。**两个方向都要查**：正向（加了什么） + 反向（该从哪些文件删）。
 
@@ -24,7 +24,6 @@
 | 版本号在多个文件出现 | 全局 grep `v\d+\.\d+` 确认版本号一致（重点检查旧版本残留） | 对齐版本号 |
 | spec_main_rj.md 版本升级 | docs_rj/spec_main_rj.md frontmatter version | 与 SUMMARY_RJ.md frontmatter + assets/spec_template.md derived_from 字段一致 |
 | spec_main_template.md 版本升级 | assets/spec_main_template.md frontmatter version | 实例 spec_main_rj.md based_on 字段一致；如模板结构变更（章节增删），实例需同步 |
-| 版本号升级（新增） | **MIGRATION.md**（文档规整指南，根目录） | 更新 frontmatter `skill_version`（与 SKILL.md 头部 HTML 注释一致）+ 按 [MIGRATION.md §5](../../MIGRATION.md) 6 步维护清单更新 §1/§2/§3 内容（详细步骤归 MIGRATION.md §5 唯一来源，此处只列引用不重复） |
 | assets/*_template.md frontmatter 新增 skill_version 字段 | 12 个模板（spec/task/handoff/memory/spec_main/summary/...） | frontmatter 加 `skill_version: v1.0.0`（新文档生成时自动带戳，老文档规整后补戳） |
 
 ---

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&amp;family=ZCOOL+XiaoWei&amp;display=swap');
+      .hand { font-family: 'Ma Shan Zheng','ZCOOL XiaoWei','Segoe Print',cursive; }
+    </style>
+  </defs>
+
+  <!-- 底色 -->
+  <rect x="0" y="0" width="800" height="450" fill="#fafaf7"/>
+
+  <!-- 标题（手写大标题）+ 抖动黄下划线 -->
+  <text x="400" y="60" text-anchor="middle" font-size="34" fill="#1a1a1a" class="hand" font-weight="bold">记忆 · PDCA · 文档 —— 一次协作的完整闭环</text>
+  <path d="M190,74 C270,72 350,76 440,73 C520,71 580,75 625,72" stroke="#f5c842" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- ===== 上节点：自己的记忆 ===== -->
+  <path d="M288,98 C310,94 478,96 502,98 C512,100 514,104 512,108 C510,112 508,124 506,128 C470,134 320,134 292,128 C284,124 282,104 288,98Z"
+    stroke="#1a1a1a" stroke-width="2" fill="#fef9e7" stroke-linejoin="round"/>
+  <text x="400" y="116" text-anchor="middle" font-size="22" fill="#1a1a1a" class="hand">自己的记忆</text>
+  <text x="400" y="134" text-anchor="middle" font-size="13" fill="#4a90d9" class="hand">跟你走 · 升级不丢 · 越用越厚</text>
+
+  <!-- 记忆 → PDCA 箭头（输入） -->
+  <path d="M400,140 C400,152 400,160 400,172" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M394,168 L400,182 L406,168Z" fill="#1a1a1a"/>
+  <text x="416" y="166" text-anchor="start" font-size="13" fill="#1a1a1a" class="hand">输入</text>
+
+  <!-- ===== 中节点：PDCA ===== -->
+  <path d="M288,186 C310,182 478,184 502,186 C512,188 514,192 512,196 C510,200 508,212 506,216 C470,222 320,222 292,216 C284,212 282,192 288,186Z"
+    stroke="#1a1a1a" stroke-width="2" fill="#fef9e7" stroke-linejoin="round"/>
+  <text x="400" y="204" text-anchor="middle" font-size="22" fill="#1a1a1a" class="hand">PDCA</text>
+  <text x="400" y="222" text-anchor="middle" font-size="13" fill="#4a90d9" class="hand">/plan → /do → /check → /act</text>
+
+  <!-- PDCA → 文档 箭头（落盘） -->
+  <path d="M400,228 C400,240 400,248 400,260" stroke="#1a1a1a" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M394,256 L400,270 L406,256Z" fill="#1a1a1a"/>
+  <text x="416" y="254" text-anchor="start" font-size="13" fill="#1a1a1a" class="hand">落盘</text>
+
+  <!-- ===== 下节点：文档规整 ===== -->
+  <path d="M288,274 C310,270 478,272 502,274 C512,276 514,280 512,284 C510,288 508,300 506,304 C470,310 320,310 292,304 C284,300 282,280 288,274Z"
+    stroke="#1a1a1a" stroke-width="2" fill="#fef9e7" stroke-linejoin="round"/>
+  <text x="400" y="292" text-anchor="middle" font-size="22" fill="#1a1a1a" class="hand">文档规整</text>
+  <text x="400" y="310" text-anchor="middle" font-size="13" fill="#4a90d9" class="hand">spec · task · handoff · SUMMARY</text>
+
+  <!-- ===== 右侧闭环箭头：文档 → 记忆（反哺 · 闭环） ===== -->
+  <path d="M512,290 C580,292 640,272 640,220 C640,170 610,146 560,140 C540,137 530,134 524,130"
+    stroke="#e05a4e" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="7,5"/>
+  <path d="M532,136 L522,124 L516,138Z" fill="#e05a4e"/>
+  <text x="656" y="225" text-anchor="middle" font-size="14" fill="#e05a4e" class="hand">反哺 · 闭环</text>
+
+  <!-- ===== 底部标语 ===== -->
+  <text x="400" y="412" text-anchor="middle" font-size="17" fill="#e05a4e" class="hand">AI 是流水的兵，记忆是铁打的营盘</text>
+  <path d="M230,424 C310,422 420,426 570,423" stroke="#f5c842" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>

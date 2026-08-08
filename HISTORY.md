@@ -1,7 +1,7 @@
 ---
 title: riji-skill 版本历史
 version: v1.0.1
-last_updated: 2026-08-06
+last_updated: 2026-08-07
 author: huihui
 ---
 
@@ -279,7 +279,7 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 
 > 每次版本升级在此追加一行,并同步更新 SKILL.md 头部版本号。
 > 维护者:riji-skill 框架自动维护 + 人工审核
-> License: Apache-2.0
+> License: riji-skill 非商业源码可得许可证 v1.0（非商业免费，商用须书面授权）
 
 ### 2026-08-01：SKILL.md 结构瘦身（-306 行）
 
@@ -314,9 +314,54 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 新增：references/common/style/article-writing.md 入口（活人感写作，改造自外部写作技能，不留来源痕迹）+ article-writing/ 5 子模块（forum-prose/reality/fiction/formats/revision）+ scripts/check_prose.py 成稿检查脚本
 - 入口带流程覆盖声明（写作任务不走 spec/task、材料澄清 ≤3 问、正文只交作品）与禁令适用范围声明（成稿禁令只约束对外文章，不约束框架文档）
 - 路由：trigger_hooks.md 新增文章写作触发行（写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文）
-- 全链路对齐：references 41→47、common 16→21、style 1→6（index.md v1.2.0 嵌套例外条款）；README/SKILL.md/网页说明.html 计数同步；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源）+ 3 文件头部引用范围标注对齐
+- 全链路对齐：references 41→47、common 16→22、style 1→7（index.md v1.2.0 嵌套例外条款）；README/SKILL.md/网页说明.html 计数同步；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源）+ 3 文件头部引用范围标注对齐
 - 决策记录：融合方案 A 整体嵌入 ✅ / 版本 v1.0.1 不 bump ✅ / 双副本 A+B 同步 ✅ / A 顺手 git init ✅ / 不留来源痕迹 ✅（memory 私有留档）
+
+### 2026-08-06：融合收尾对抗审查修复（v1.0.1）
+
+- 对抗性审查第 1 轮（独立 subagent，6 维度）：1 HIGH + 6 MEDIUM + 7 LOW
+- HIGH 修复：index.md 计数口径修正（common 21→22、style 6→7、分类规则表 style 行 1→7，入口文件计入；总数 47 口径=除 index.md 外模块数，正确保留）
+- MEDIUM 修复：速查表 memory_governance/goal_brief 引用范围列对齐 main（4 处漂移全清）；check_prose.py 抒情词表补"锋利/坚硬/柔软"3 词与 revision.md 对齐；入口流程覆盖声明补"启动前置检查（8 要素）与 memory 收尾按框架常态执行"；revision.md 脚本命令补工作目录说明
+- LOW 处置：子模块阶段标签加注、触发词双命中仲裁、exit 2 双语义区分、task 计划文档描述偏差（导航行/4处→5处/33→34 脚本/3→9→12）→ 全部记录在案（本 HISTORY + task 测试结果区），留待后续版本统一处理
+- 文档留痕：task/spec 补记 3 文件头部改动登记（执行期顺手修）；grep 验证命令精确化为 `human-writing|khazix`（v1.1.0 为框架版本号不计入）
+
+### 2026-08-06：文章写作触发词补充"去AI味"（v1.0.1）
+
+- 用户要求：去AI味（文章改写润色场景）也要触发文章写作技能
+- trigger_hooks.md v1.1.2→v1.1.3：文章写作触发行关键词补"去AI味"（13 触发词），头部关键词注释同步；article-writing.md 入口关键词注释同步
+
+### 2026-08-06：移除 MIGRATION.md（v1.0.1）
+
+- 用户确认删除（方案 A）：MIGRATION.md 为 v1.0.0 时代遗留（老文档规整指南），已被 generate_docs.py 模板化自动生成替代，docs_rj 文档已全部打戳无老文档残留，memory 零使用记录，且自身版本已漂移（仍 v1.0.0）
+- 连带清理：trigger_hooks.md v1.1.3→v1.1.4 删 MIGRATION.md 触发行 + 头部关键词清理；sync-matrix.md v1.0.0→v1.0.1 删引用行；A/B 双副本同步删除
+
+### 2026-08-06：README 产品化重度改版（v1.0.1）
+
+- 门面：居中海报 + shields 徽章（Non-Commercial / v1.0.1 / 跨平台 / PRs welcome）+ slogan 前半与网页说明呼应（把管理学的 PDCA，装进每一次 AI 协作）
+- **两大核心定位前置**：①自己的记忆（跟人不跟工具、数据外置）②文档规整（spec/task/handoff + SUMMARY + sync-matrix）
+- 结构：前后对比 → 4 卖点 → 30 秒上手 → 能力地图 → 参考手册 → 安装详解（原技术段后移保留）
+- 预留 `assets/readme/` 配图位（K3 后补 hero-loop.svg 等）；A/B 双副本同步
+- **配图落地（2026-08-07）**：K3 无法配图，改走 hand-drawn-report.md 手绘 SVG 路径——`assets/readme/hero-loop.svg`（记忆→PDCA→文档闭环，白板技术图 16:9，手写体+抖动路径+2 强调色）；README「长什么样」取消注释替换 ASCII 块；XML 已校验 well-formed，浏览器实测 11 处文字无溢出
+- **许可证变更（用户操作，改版记录补登）**：Apache-2.0 → riji-skill 非商业源码可得许可证 v1.0（LICENSE 全文替换 + README 徽章同步）
+- 对抗审查第 1 轮（独立 subagent）：6 HIGH + 6 MEDIUM + 6 LOW；HIGH/MEDIUM 全修——TOC 2 锚点断链（em dash slugger 规则）、悬空引用「快速上手」、Red Flags 16→19 条（2 处）、loop_constraints 死链、补发 exa.env.json.example、ASCII 图对齐、目录结构登记网页说明.html/exa.env.json.example/assets-readme、补回装前 2 前提、PRs 徽章去假链接、隐私声明补回"不引用/转述/持久化"承诺与豁免表述、参考手册表末加 index.md 全量入口；LOW 记录在案
+
+### 2026-08-07：README 手绘闭环图落地（v1.0.1）
+
+- K3 无法配图 → 走 hand-drawn-report.md SVG 路径
+- 新增 `assets/readme/hero-loop.svg`：记忆→PDCA→文档 闭环手绘（白板技术图 16:9，手写体 Ma Shan Zheng + 抖动路径 + 黄/砖红 2 强调色）
+- README「长什么样」取消 K3 占位注释、删除 ASCII 块，改引 SVG（width 720）；目录结构注释同步
+- 验证：SVG XML well-formed；浏览器实测 11 处文字 bbox 均不溢出方框（标题 634px / 方框 224px）
+- 测试排查：pytest 7 failed 全为 Windows GBK 预存在问题（learn_tidy_count×6 + handoff_tidy×1），git stash 对照 HEAD 同败，与本次无关；附带发现 `PYTHONIOENCODING=utf-8` 会让 dispatch/find_similar 子进程测试误败（正常环境全过），建议后续版本统一修子进程解码（errors='replace' + 编码注入）
+- A/B 双副本同步（README + SVG hash 一致）
+
+### 2026-08-07：许可证正式切换（Apache-2.0 → 非商业源码可得许可证 v1.0）
+
+- 诉求：个人学习 / 研究等非商业用途免费；任何商业用途（出售、作为收费产品 / 服务实质组成部分等）须事先获得作者书面授权
+- LICENSE 全文替换为「riji-skill 非商业源码可得许可证 v1.0」（署名 huihui），含非商用免费 + 商用须书面授权 + 免责 + 违约即终止授权
+- 同步 5 处引用：SKILL.md frontmatter `license` 字段、README 徽章 + 许可证章节、网页说明.html hero 徽章 + footer、tests/conftest.py fixture
+- A/B 双副本一致：公开仓库与本地技能副本均切换；validate_skill A/B 均 32/32 MUST FIX=0
+- 范围与效力：新许可证只约束此后发布版本（已发 Apache 旧副本不追溯）；执行靠作者本人（平台版权投诉为主要手段）
 
 ---
 
-**版本**:v1.0.1 | **最后更新**:2026-08-06 | **作者**:huihui
+**版本**:v1.0.1 | **最后更新**:2026-08-07 | **作者**:huihui

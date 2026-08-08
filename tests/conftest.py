@@ -44,7 +44,7 @@ def tmp_skill_dir(tmp_path):
         "name: riji-skill-test\n"
         "description: test\n"
         "agent_created: true\n"
-        "license: Apache-2.0\n"
+        "license: Non-Commercial Source-Available License v1.0\n"
         "version: \"1.0.0\"\n"
         "keywords: [test]\n"
         "category: workflow\n"

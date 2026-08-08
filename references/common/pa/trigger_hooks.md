@@ -1,13 +1,13 @@
 <!-- PDCA标签：P.route A.handoff -->
 <!-- 子标签场景：路由判断、关键词触发、reference 索引 -->
-<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/规整文档/升级文档/migrate docs/regularize/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文 -->
+<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味 -->
 <!-- 引用范围：main + bootstrap_agent -->
 
 # 触发钩子表（从 SKILL.md §0 外迁）
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.2 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-06（安全行加扫描关键词 / skill_graph 行加 L2 确认前置 / 文章写作触发行新增）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.4 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-06（安全行加扫描关键词 / skill_graph 行加 L2 确认前置 / 文章写作触发行新增 / 触发词补"去AI味" / 移除 MIGRATION.md 触发行）| PDCA 标签：P.route A.handoff
 > 本文件是 riji-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -45,7 +45,6 @@
 | 分析数据/Excel数据分析/数据清洗/透视表/统计分析/图表可视化/同比环比/做看板/从表里找规律/数据分析方法论 | references/common/pd/excel_analysis.md（清洗·透视·统计·图表·预测 方法论，纯本地，内网可用） | **兜底用：agent-find 搜不到合适外部 skill 时，用本模块本地方法论；动手前先读第一节"想清楚3问"；与 office_processing.md 分工：它管"读写Excel文件"，本模块管"怎么分析出结论"** |
 | 安装skill/装skill/下载skill/找一个skill/有没有skill/skill推荐/技能/插件/扩展 | references/plan/route/skill_security.md | **自动执行 SkillAudit 安全扫描** |
 | 同步一下/整理文档/整理一下/更新记忆/梳理一下/收尾/这个阶段做完了/新人能直接上手/检查规范/审计规则/规范体检/交接/里程碑/sync/neat/tidy/版本号一致/一致性检查/清理/打扫/对一下 | references/common/da/sync-matrix.md（按矩阵逐项核对版本号+引用+文件一致性） | **自动执行全局版本号一致性检查** |
-| 规整文档/升级文档到 v1.0.0/migrate docs/按新版本规整/按新标准整理/regularize | [MIGRATION.md](../../MIGRATION.md)（按步骤整理项目 docs_rj/ 文档内容） | **扫描 docs_rj/ → 预览老文档 → HARD-GATE 确认 → 备份到 docs_rj/migration_backup_{时间戳}_{序号}/ → 按 §3 整理 → 验证 → 汇报 → 写 memory**<br>　仲裁规则：用户裸说"整理一下/整理文档"→ 上一行（sync-matrix 只核对版本号）；用户说"规整/升级/migrate/按新版本整理"→ 本行（MIGRATION.md 改内容）<br>　识别信号优先级：①无 frontmatter ②无 skill_version ③skill_version < v1.0.0 ④version 注释不一致 ⑤内容特征（无 §0 设计层等）<br>　整理范围：仅 docs_rj/{spec,task,handoff,memory}/*.md + SUMMARY_RJ.md；禁止触碰 skill 包自带 assets/ |
 | 验收/验收一下/审核/看一下做得对不对/看一下进度报告/交接/给你接手/handoff/存档/总结/总结一下/汇报/进度/汇总/梳理一下做了什么/产出报告/报告/让我看看总结/确认一下做得对不对/计划/方案/规划一下/出方案/做规划/盘点/能力清单 | references/common/da/hand-drawn-report.md（按内容关系类型生成手绘 SVG） | **报告/计划/盘点类输出默认在对话内附手绘 SVG 速览图，若生成 md 则 md 顶部同时内联同款 SVG（带图、单文件自包含）；交接时额外刷新 {主docs}/SUMMARY_RJ.md（见 summary_view.md）** |
 | 交接/收尾/给你接手/handoff/存档/交接工作 | references/common/da/sync-matrix.md → **自动调用 `python scripts/handoff_tidy.py --task {任务名}`** | **硬性：交接时必跑 handoff_tidy**<br>　管线：守卫+归档+刷新+漂移+外部记忆清理+平台记忆融入技能记忆+强制#3→#4同步+五问预跑+sync-matrix核对<br>　效果：自动整理文档+对齐记忆+强制走技能记忆（禁止用平台记忆替代）+融入平台记忆并删除原件 |
 | 定验收标准/写验收/写验收条件/DoD/验收严格点/怎么算做完/acceptance/给定当那么/GivenWhenThen | references/common/pc/acceptance_criteria.md（DoD+Given/When/Then+4道质量闘门） | **定义"做完了"的硬标准——写 spec 验收小节前先读；与 adversarial_review.md(找茬执行)+red_flags.md(偏离报警) 配合成严格验收闭环** |
@@ -65,7 +64,7 @@
 | 市场调研/market research/竞品调研/竞品对比/feature 对比/4 维度调研 | assets/market_research_template.md（9段+6项质检对齐 某开源项目 market-research.md） | **/plan 步骤4a.5 自动加载，覆盖 feature/UX/complaints/technical 4 维度** |
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
 | 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
-| 写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文 | references/common/style/article-writing.md（活人感写作入口：按任务链式读 article-writing/ 下子模块） | **写作任务不生成 spec/task，直接出稿；材料澄清最多三问；正文只交作品（详见入口"流程覆盖声明"）** |
+| 写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味 | references/common/style/article-writing.md（活人感写作入口：按任务链式读 article-writing/ 下子模块） | **写作任务不生成 spec/task，直接出稿；材料澄清最多三问；正文只交作品（详见入口"流程覆盖声明"）** |
 
 > ❌ 禁止以"我记得规则"为借口跳过读文件。RAM（上下文）是易失的，细节必须从硬盘重读。触发信号出现不读对应reference = Red Flag偏离。
 
@@ -126,3 +125,5 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | v1.0.0 | 2026-07-21 | 初版：从 SKILL.md §0 外迁；新增报错询问机制+PDCA 关系节 |
 | v1.1.1 | 2026-08-06 | 安全行加扫描类关键词（扫描文件/搜索文件/找文件/遍历目录/共享盘/涉密/内网）；skill_graph 行加 L2 确认前置（扫 home 属任务外，须先确认）+ v1.0.2 --auto 3.6a 自动刷新双语义（仅左轨 L0 免确认 / 点名全量 L2 确认，输出路径外置 ~/.riji-skill/data/） |
 | v1.1.2 | 2026-08-06 | 新增文章写作触发行（写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文 → article-writing.md），自动触发列注明"写作任务不生成 spec/task"；头部关键词注释同步 |
+| v1.1.3 | 2026-08-06 | 文章写作触发词补"去AI味"（用户要求：去AI味=文章改写润色场景）；头部关键词注释同步 |
+| v1.1.4 | 2026-08-06 | 移除 MIGRATION.md 触发行（文档规整流程随 MIGRATION.md 删除）；头部关键词注释同步清理 |
