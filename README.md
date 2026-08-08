@@ -63,10 +63,10 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 ## 长什么样
 
 <p align="center">
-  <img src="assets/readme/hero-loop.svg" alt="记忆 → PDCA → docs 闭环" width="720">
+  <img src="assets/readme/hero-loop.png" alt="记忆 → PDCA → docs 闭环" width="720">
 </p>
 
-（手绘 SVG，`assets/readme/hero-loop.svg`）
+（手绘闭环图；源 SVG 为 `assets/readme/hero-loop.svg`，PNG 为浏览器渲染版——Gitee 对 .svg 的 MIME 适配有误，README 统一引用 PNG 保证两端平台显示一致）
 
 ---
 
