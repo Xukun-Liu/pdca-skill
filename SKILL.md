@@ -689,7 +689,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 │   ├─ 定验收标准/写 DoD/验收严格点 → references/common/pc/acceptance_criteria.md（DoD+Given/When/Then+4道质量闸门）
 │   ├─ 处理 Office 文档（PDF/Word/PPT/Excel 读写改转合并提取）→ references/do/code/office_processing.md（纯本地工具，内网可用）
 │   ├─ 把文件转成 Markdown（PDF/Word/PPT/Excel/HTML→MD）→ references/do/code/file_to_markdown.md（纯Python离线可用，一键转MD）
-│   ├─ 做 Excel 数据分析（清洗/透视/统计/图表/预测/看板）→ references/common/pd/excel_analysis.md（纯本地，内网可用）
+│   ├─ 做 Excel 数据分析（清洗/透视/统计/图表/预测/看板/数据质量/趋势分析/结构拆解/异常识别/报告合成/数据合并）→ references/common/pd/excel_analysis.md（纯本地，内网可用）
 │   ├─ memory怎么读写 → references/common/pa/working_memory_rules.md（RAM/Disk+存盘检查点+5问）
 │   ├─ 记忆治理/容量超限/记忆归档降级 → references/common/pa/memory_governance.md（治理工具+容量阈值+隔离+回滚）
 │   ├─ 文件放哪/目录结构 → references/plan/design/project_structure.md

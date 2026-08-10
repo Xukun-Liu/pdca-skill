@@ -4,7 +4,7 @@
 
 # references/ 目录索引
 
-> 版本：v1.2.1 | 创建：2026-07-25 | riji-skill 参考模块导航
+> 版本：v1.2.2 | 创建：2026-07-25 | riji-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
 > 本索引是 references/ 目录的导航地图。47 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
@@ -289,3 +289,4 @@ references/
 | v1.1.0 | 2026-08-01 | SKILL.md 瘦身同步：登记 5 个模块（memory_governance/writing_style/goal_brief 补登记 + insert_new_task/act_procedure 新增）；目录/计数/agent 引用更新 |
 | v1.2.0 | 2026-08-06 | 融合文章写作模块：41→47、common 16→22、style 1→7（article-writing 入口 + 5 子模块）；2.1 补嵌套例外条款；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源） |
 | v1.2.1 | 2026-08-06 | 对抗审查第 1 轮修复：common 21→22、style 6→7、分类规则表 style 行 1→7（补入口文件计数）；速查表 memory_governance/goal_brief 引用范围列对齐 main；头部版本同步 v1.2.1 |
+| v1.2.2 | 2026-08-10 | excel_analysis.md v1.0.0→v1.1.0 内容变更触发索引版本刷新（新增7章方法论：数据质量评估/趋势分析/结构拆解/异常识别/可视化升级/报告合成/数据合并；描述列/PDCA标签/引用范围均不变；SKILL.md §3 资源索引描述同步更新）|
