@@ -131,6 +131,8 @@ class TestS4RollbackExcludePreRestore:
         with open(os.path.join(restore_dir, "memory_main.md.bak"), "w", encoding="utf-8") as f:
             f.write("# 回滚前状态（不应被选中）\n")
         import memory_shadow_write
+        monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", str(tmp_path / "memory" / "memory_main.md"))
+        monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_DIR", str(tmp_path / "memory"))
         monkeypatch.setattr(memory_shadow_write, "_backup_before_operation", lambda *a, **kw: None)
         result = memory_shadow_write.memory_rollback("20260730")
         # 应选 memory_delete 目录，不是 rollback_pre_restore
