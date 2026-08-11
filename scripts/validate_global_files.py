@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-validate_global_files.py — riji-skill 全局文件验证器
+validate_global_files.py — pdca-skill 全局文件验证器
 
 作用
 ----
@@ -364,7 +364,7 @@ def validate_global_files(skill_root):
             })
             continue
 
-        # 用户数据外置后 docs_rj/ 不在包内（实际在 ~/.riji-skill/data/docs_rj/），
+        # 用户数据外置后 docs_rj/ 不在包内（实际在 ~/.pdca-skill/data/docs_rj/），
         # 本地开发环境的 docs_rj/ 是项目级文件，不归"全局文件验证"管，跳过避免误报。
         if path_pattern.startswith('docs_rj/'):
             skipped_roles.append({
@@ -429,7 +429,7 @@ def validate_global_files(skill_root):
 # ===========================================================================
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill 全局文件验证器（stdlib-only）')
+        description='pdca-skill 全局文件验证器（stdlib-only）')
     parser.add_argument('--skill-dir', default=None,
                         help='skill 包根目录（默认：scripts/ 的上级目录）')
     parser.add_argument('--json', action='store_true',

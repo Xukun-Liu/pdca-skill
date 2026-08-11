@@ -8,7 +8,7 @@
 - 边界条件（无权限降级 / JSON 错误降级 / MAX_PATH / UNC / 符号链接指向用户目录外）
 
 设计原则：
-- 每个测试用 tmp_path fixture 隔离，不污染真实 ~/.riji-skill/
+- 每个测试用 tmp_path fixture 隔离，不污染真实 ~/.pdca-skill/
 - monkeypatch.setenv/delenv 控制环境变量
 - monkeypatch.setattr 改 CONFIG_FILE/DEFAULT_DATA_DIR/Path.home 到 tmp_path
 - capsys 捕获 stderr 验证告警
@@ -30,14 +30,14 @@ import user_data_path  # noqa: E402
 
 @pytest.fixture
 def isolate_paths(tmp_path, monkeypatch):
-    """隔离路径常量到 tmp_path，避免污染真实 ~/.riji-skill/。
+    """隔离路径常量到 tmp_path，避免污染真实 ~/.pdca-skill/。
 
-    - 清理环境变量 RIJI_DATA_DIR
+    - 清理环境变量 PDCA_DATA_DIR
     - mock Path.home 返回 tmp_path（让 _check_path_safety 的 home 检查通过）
     - mock DEFAULT_DATA_DIR 到 tmp_path / "data"
     - mock CONFIG_FILE 到 tmp_path / "config.json"
     """
-    monkeypatch.delenv("RIJI_DATA_DIR", raising=False)
+    monkeypatch.delenv("PDCA_DATA_DIR", raising=False)
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.setattr(user_data_path, "DEFAULT_DATA_DIR", tmp_path / "data")
     monkeypatch.setattr(user_data_path, "CONFIG_FILE", tmp_path / "config.json")
@@ -62,10 +62,10 @@ def test_default_dir(isolate_paths):
 # ---------------------------------------------------------------------------
 
 def test_env_var_priority(isolate_paths, monkeypatch):
-    """环境变量优先于配置文件：设置 RIJI_DATA_DIR + 配置文件 → 返回环境变量路径。"""
+    """环境变量优先于配置文件：设置 PDCA_DATA_DIR + 配置文件 → 返回环境变量路径。"""
     env_dir = isolate_paths / "env_data"
     config_dir = isolate_paths / "config_data"
-    monkeypatch.setenv("RIJI_DATA_DIR", str(env_dir))
+    monkeypatch.setenv("PDCA_DATA_DIR", str(env_dir))
     # 创建配置文件（应被环境变量覆盖）
     isolate_paths.joinpath("config.json").write_text(
         json.dumps({"data_dir": str(config_dir)}), encoding="utf-8"
@@ -95,7 +95,7 @@ def test_config_file_priority(isolate_paths, monkeypatch):
 def test_permission_error_fallback(isolate_paths, monkeypatch, capsys):
     """环境变量指向无权限目录 → _ensure_dir 返回 False → 降级到默认值 + 告警。"""
     no_perm_dir = isolate_paths / "no_perm"
-    monkeypatch.setenv("RIJI_DATA_DIR", str(no_perm_dir))
+    monkeypatch.setenv("PDCA_DATA_DIR", str(no_perm_dir))
     # mock _ensure_dir：对 no_perm 路径返回 False，其他正常
     real_ensure_dir = user_data_path._ensure_dir
 
@@ -200,7 +200,7 @@ def test_symlink_to_outside_home_reject(tmp_path, monkeypatch, capsys):
     场景：
     - mock Path.home 返回 tmp_path / "fake_home"
     - 在 fake_home 下创建符号链接 link_to_outside 指向 tmp_path / "outside_home"（用户目录外）
-    - 设置 RIJI_DATA_DIR = link_to_outside
+    - 设置 PDCA_DATA_DIR = link_to_outside
     - _check_path_safety resolve 后 real = outside_home，不在 fake_home 子树内 → raise OSError
     - get_user_data_dir 捕获后降级到默认值
     """
@@ -219,7 +219,7 @@ def test_symlink_to_outside_home_reject(tmp_path, monkeypatch, capsys):
     # mock CONFIG_FILE 到不存在的路径（跳过配置文件级）
     monkeypatch.setattr(user_data_path, "CONFIG_FILE", fake_home / "nonexistent_config.json")
     # 设置环境变量指向符号链接
-    monkeypatch.setenv("RIJI_DATA_DIR", str(link_path))
+    monkeypatch.setenv("PDCA_DATA_DIR", str(link_path))
 
     result = user_data_path.get_user_data_dir()
     # 验证返回默认值（降级了，不返回符号链接路径）

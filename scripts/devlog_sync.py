@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-devlog_sync.py — riji-skill 开发日志同步工具
+devlog_sync.py — pdca-skill 开发日志同步工具
 
 作用
 ----
@@ -213,7 +213,7 @@ def _build_entry_from_args(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill 开发日志同步工具（stdlib-only）')
+        description='pdca-skill 开发日志同步工具（stdlib-only）')
     parser.add_argument('--title', required=True,
                         help='日志标题（必填）')
     parser.add_argument('--goal', default=None,

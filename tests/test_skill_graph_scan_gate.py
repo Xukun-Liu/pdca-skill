@@ -13,7 +13,7 @@
 - test_excerpt_sensitive_line_omitted: 敏感行摘录替换为占位，不持久化原文
 - test_excerpt_normal_line_kept: 正常行摘录保留原文
 - test_scan_roots_exclude_parent_chain: 扫描根含 cwd 但不含父目录链
-- test_main_riji_source_smoke: main() 冒烟（--source riji 不崩溃，修复同名函数重定义）
+- test_main_pdca_source_smoke: main() 冒烟（--source pdca 不崩溃，修复同名函数重定义）
 """
 
 import os
@@ -212,7 +212,7 @@ class TestScanRootsParentChain:
 class TestMainSmoke:
     """main() 冒烟：修复 v1.0.1 审查发现的同名函数重定义崩溃。"""
 
-    def test_main_riji_source_smoke(self, tmp_path):
+    def test_main_pdca_source_smoke(self, tmp_path):
         skill_dir = tmp_path / "skill"
         (skill_dir / "memory").mkdir(parents=True)
         (skill_dir / "memory" / "memory_main.md").write_text(
@@ -223,11 +223,11 @@ class TestMainSmoke:
         data_dir = tmp_path / "data"
         proc = subprocess.run(
             [sys.executable, os.path.join(SKILL_ROOT, "scripts", "skill_graph_extract.py"),
-             "--source", "riji", "--skill-dir", str(skill_dir),
+             "--source", "pdca", "--skill-dir", str(skill_dir),
              "--skip-taxonomy", "--no-cache", "--output", str(out)],
             capture_output=True, text=True, timeout=120,
             env={**os.environ, "PYTHONIOENCODING": "utf-8",
-                 "RIJI_DATA_DIR": str(data_dir)},
+                 "PDCA_DATA_DIR": str(data_dir)},
         )
         assert proc.returncode == 0, f"main 崩溃: {proc.stderr[-500:]}"
         assert out.exists()

@@ -7,7 +7,7 @@
 2. 分类文件夹结构（扁平）：docs_rj 下直接常驻 5 类文件夹（spec_rj/task_rj/handoff_rj/memory_rj/archive_rj），不再按任务名分子目录（archive_rj 例外：归档时按 `{task}_YYYYMMDD_HHMM/` 子文件夹聚合，内放 spec.md/task.md/handoff.md/memory.md）
 3. 精确时间戳：文件名和内容都精确到分钟
 4. 命名体系：{task}_{type}_YYYYMMDD_HHMM.md（任务名进文件名，无编号前缀）
-5. 散落归档：检测散落在非主 docs 的 riji-skill 文档，归档到主 docs
+5. 散落归档：检测散落在非主 docs 的 pdca-skill 文档，归档到主 docs
 6. 命名空间隔离：所有运行时产物加_rj后缀，避免与各大agent平台通用命名撞车
 7. 项目记忆：docs_rj/memory_rj/ 下按 {task}_memory_YYYYMMDD_HHMM.md 命名
 """
@@ -27,7 +27,7 @@ from datetime import datetime
 # ensure_global_structure 尚未定义的问题。
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import tidy_common  # noqa: E402
-import user_data_path  # noqa: E402  用户数据外置：提供 get_docs_rj_path() 返回 ~/.riji-skill/data/docs_rj
+import user_data_path  # noqa: E402  用户数据外置：提供 get_docs_rj_path() 返回 ~/.pdca-skill/data/docs_rj
 
 # ---- 日志配置 ----
 logging.basicConfig(
@@ -53,11 +53,11 @@ PRIORITY_PATHS = [
     './src/docs',
 ]
 
-# riji-skill 文档特征（扁平结构）：docs_rj 下直接 5 类 _rj 文件夹；
+# pdca-skill 文档特征（扁平结构）：docs_rj 下直接 5 类 _rj 文件夹；
 # 文件名 = {task}_{type}_YYYYMMDD_HHMM.md（无编号前缀，任务名进文件名）
 # 注意：项目级记忆 memory_rj 在 docs_rj/memory_rj/（见 memory_shadow_write.write_project）。
-RIJI_SUBDIRS = {'spec_rj', 'task_rj', 'handoff_rj', 'memory_rj', 'archive_rj'}
-RIJI_FILE_PATTERN = re.compile(
+pdca_SUBDIRS = {'spec_rj', 'task_rj', 'handoff_rj', 'memory_rj', 'archive_rj'}
+pdca_FILE_PATTERN = re.compile(
     r'^\w+_(spec|task|handoff|memory)_\d{8}_\d{4}\.md$'
 )
 
@@ -360,11 +360,11 @@ def auto_merge_if_conflict(docs_dir='./docs', docs_rj_dir=None, verbose=True):
     """检测到 docs/ 和 docs_rj/ 同时存在时，自动合并 docs/ → docs_rj/。
 
     全模式入口：在脚本所有模式启动前调用此函数，做到任何模式
-    运行时发现冲突都先自动合并，避免平台 docs/ 与 riji-skill docs_rj/ 冲突。
+    运行时发现冲突都先自动合并，避免平台 docs/ 与 pdca-skill docs_rj/ 冲突。
 
     Args:
         docs_dir: 平台 docs/ 路径（默认 ./docs）
-        docs_rj_dir: riji-skill docs_rj/ 路径（默认 None → 外置 ~/.riji-skill/data/docs_rj）
+        docs_rj_dir: pdca-skill docs_rj/ 路径（默认 None → 外置 ~/.pdca-skill/data/docs_rj）
         verbose: 是否输出详细日志（默认 True）
 
     Returns:
@@ -380,8 +380,8 @@ def auto_merge_if_conflict(docs_dir='./docs', docs_rj_dir=None, verbose=True):
         return {'merged': [], 'skipped': [], 'errors': []}
 
     if verbose:
-        logger.warning("⚠️ 检测到平台自动创建的 docs/ 和 riji-skill 规范的 docs_rj/ 同时存在")
-        logger.warning("   按 riji-skill 规范，自动合并 docs/ 内容到 docs_rj/，然后删除 docs/")
+        logger.warning("⚠️ 检测到平台自动创建的 docs/ 和 pdca-skill 规范的 docs_rj/ 同时存在")
+        logger.warning("   按 pdca-skill 规范，自动合并 docs/ 内容到 docs_rj/，然后删除 docs/")
 
     result = merge_docs_to_docs_rj(docs_abs, docs_rj_abs)
 
@@ -406,7 +406,7 @@ def find_docs_dir(custom_dir=None, create=True):
     5. 第一个找到的 docs_rj 目录
 
     【硬性规则】：当同时存在 ./docs 和 ./docs_rj 时，**必须优先使用 docs_rj**，
-    拒绝使用平台自动创建的 docs 目录，避免与 riji-skill 规范冲突。
+    拒绝使用平台自动创建的 docs 目录，避免与 pdca-skill 规范冲突。
 
     Args:
         custom_dir: 显式指定的 docs 目录（优先于自动检测）。
@@ -453,7 +453,7 @@ def find_docs_dir(custom_dir=None, create=True):
                     # 【硬性规则】：只有在没有 docs_rj 时才考虑 docs
                     if not found_rj:
                         found_dirs.append(os.path.abspath('./docs'))
-                        logger.warning("⚠️ 检测到平台自动创建的 docs/ 目录（非 riji-skill 规范），建议创建 docs_rj/ 并使用 --declare-primary 宣告主 docs")
+                        logger.warning("⚠️ 检测到平台自动创建的 docs/ 目录（非 pdca-skill 规范），建议创建 docs_rj/ 并使用 --declare-primary 宣告主 docs")
                 continue
             depth = root.count(os.sep)
             if depth > 2:
@@ -482,7 +482,7 @@ def find_docs_dir(custom_dir=None, create=True):
     if not found_dirs:
         default_path = str(user_data_path.get_docs_rj_path())
         if create:
-            logger.info(f"未找到 docs 目录，在根目录创建 riji-skill 规范目录: {default_path}")
+            logger.info(f"未找到 docs 目录，在根目录创建 pdca-skill 规范目录: {default_path}")
             try:
                 os.makedirs(default_path, exist_ok=True)
             except OSError as e:
@@ -638,13 +638,13 @@ def print_tree(task_dir):
 # 散落文档检测与归档
 # ============================================================
 
-def detect_riji_task_docs(docs_dir):
-    """扫描一个 docs 目录，返回 riji-skill 特征的文档集列表（兼容扁平+旧结构）
+def detect_pdca_task_docs(docs_dir):
+    """扫描一个 docs 目录，返回 pdca-skill 特征的文档集列表（兼容扁平+旧结构）
 
     返回格式：[{task_name, path, doc_types: [...], flat: bool}, ...]
     - 扁平结构：docs_dir 下直接是 5 类 _rj 文件夹，任务名从文件名提取；
       额外返回一条 docs_dir 自身作为整体文档集（供 scan 汇总）。
-    - 旧结构：docs_dir 下按任务名分子目录，子目录内含 RIJI_SUBDIRS。
+    - 旧结构：docs_dir 下按任务名分子目录，子目录内含 pdca_SUBDIRS。
     """
     results = []
     if not os.path.isdir(docs_dir):
@@ -658,7 +658,7 @@ def detect_riji_task_docs(docs_dir):
 
     # 扁平结构：docs_dir 下直接是 5 类 _rj 文件夹（无 task 子目录）
     top_type_dirs = [e for e in entries
-                     if os.path.isdir(os.path.join(docs_dir, e)) and e in RIJI_SUBDIRS]
+                     if os.path.isdir(os.path.join(docs_dir, e)) and e in pdca_SUBDIRS]
     if top_type_dirs:
         # 收集各类型目录下符合命名模式的任务名
         task_types = {}
@@ -666,7 +666,7 @@ def detect_riji_task_docs(docs_dir):
             td_path = os.path.join(docs_dir, td)
             try:
                 for fname in os.listdir(td_path):
-                    if RIJI_FILE_PATTERN.match(fname):
+                    if pdca_FILE_PATTERN.match(fname):
                         tname = fname.split('_', 1)[0]
                         task_types.setdefault(tname, set()).add(td)
             except OSError:
@@ -700,21 +700,21 @@ def detect_riji_task_docs(docs_dir):
                       if os.path.isdir(os.path.join(entry_path, d))}
         except OSError:
             continue
-        riji_subs = subdirs & RIJI_SUBDIRS
-        if not riji_subs:
+        pdca_subs = subdirs & pdca_SUBDIRS
+        if not pdca_subs:
             continue
-        has_riji_files = False
+        has_pdca_files = False
         doc_types_found = set()
-        for sub in riji_subs:
+        for sub in pdca_subs:
             sub_path = os.path.join(entry_path, sub)
             try:
                 for fname in os.listdir(sub_path):
-                    if fname.endswith('.md') and RIJI_FILE_PATTERN.match(fname):
-                        has_riji_files = True
+                    if fname.endswith('.md') and pdca_FILE_PATTERN.match(fname):
+                        has_pdca_files = True
                         doc_types_found.add(sub)
             except OSError:
                 continue
-        if has_riji_files:
+        if has_pdca_files:
             results.append({
                 'task_name': entry,
                 'path': os.path.abspath(entry_path),
@@ -758,7 +758,7 @@ def scan_scattered_docs(primary_docs):
     for docs_dir in all_docs:
         if os.path.abspath(docs_dir) == primary_abs:
             continue
-        task_docs = detect_riji_task_docs(docs_dir)
+        task_docs = detect_pdca_task_docs(docs_dir)
         if task_docs:
             scattered[docs_dir] = task_docs
 
@@ -1044,7 +1044,7 @@ def generate_doc_with_comment(content, source_path, output_path):
     """在 content 开头加 3 行 generated-by 注释,写到 output_path。
 
     注释格式:
-        <!-- generated-by: riji-skill generate_docs.py -->
+        <!-- generated-by: pdca-skill generate_docs.py -->
         <!-- source: {source_path} -->
         <!-- generated-at: {YYYY-MM-DD HH:MM} -->
 
@@ -1058,7 +1058,7 @@ def generate_doc_with_comment(content, source_path, output_path):
     """
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
     header = (
-        '<!-- generated-by: riji-skill generate_docs.py -->\n'
+        '<!-- generated-by: pdca-skill generate_docs.py -->\n'
         '<!-- source: %s -->\n'
         '<!-- generated-at: %s -->\n\n'
     ) % (source_path, timestamp)
@@ -1229,9 +1229,9 @@ def main():
 
     # 散落归档模式
     parser.add_argument('--scan-docs', action='store_true',
-                        help='扫描所有 docs 目录，输出 riji-skill 任务文档清单（JSON）')
+                        help='扫描所有 docs 目录，输出 pdca-skill 任务文档清单（JSON）')
     parser.add_argument('--archive-scattered', action='store_true',
-                        help='将散落的 riji-skill 任务文档归档到主 docs 目录')
+                        help='将散落的 pdca-skill 任务文档归档到主 docs 目录')
     parser.add_argument('--dry-run', action='store_true',
                         help='归档预演（只输出会做什么，不实际移动文件）')
     parser.add_argument('--primary-docs', help='指定主 docs 目录路径（用于 --archive-scattered）')
@@ -1270,7 +1270,7 @@ def main():
                    or find_docs_dir())
         output = []
         for docs_dir in sorted(all_docs):
-            task_docs = detect_riji_task_docs(docs_dir)
+            task_docs = detect_pdca_task_docs(docs_dir)
             output.append({
                 'docs_dir': docs_dir,
                 'task_docs': task_docs,

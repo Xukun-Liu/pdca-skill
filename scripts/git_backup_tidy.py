@@ -6,7 +6,7 @@ git_backup_tidy.py — git 备份清理管理脚本
 
 用途
 ----
-给 riji-skill 框架新增 git 仓库备份+清理+瘦身+生命周期管理能力。
+给 pdca-skill 框架新增 git 仓库备份+清理+瘦身+生命周期管理能力。
 5个子命令：体检/备份/清理/维护/生命周期，从安全到危险递进。
 集成到 startup_tidy + handoff_tidy 的体检钩子（仅 --analyze，纯只读）。
 

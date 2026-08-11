@@ -13,7 +13,7 @@
 ```
 {工作目录}/
 │
-├─ riji-skill/              ← Skill本身
+├─ pdca-skill/              ← Skill本身
 │   ├─ SKILL.md                ← 核心规则（每次自动加载）
 │   ├─ references/             ← 参考手册（按需读）
 │   │   ├─ debugging.md        ← 出错时读
@@ -109,9 +109,9 @@
 │   │
 │   └──────────────────────────────────────────────────┘
 │
-│   ┌─ riji-skill（热记忆：协作框架本身） ─────────────────┐
+│   ┌─ pdca-skill（热记忆：协作框架本身） ─────────────────┐
 │   │
-├── riji-skill/
+├── pdca-skill/
 │   ├── SKILL.md                       <- 主规则文件（热记忆，每次对话加载）
 │   ├── assets/                        <- 模板文件
 │   │   ├── memory_template.md

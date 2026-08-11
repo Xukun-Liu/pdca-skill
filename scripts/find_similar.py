@@ -1,5 +1,5 @@
 """
-find_similar.py — riji-skill 外部资源搜索脚本
+find_similar.py — pdca-skill 外部资源搜索脚本
 
 功能：
   - scan : 按任务描述/关键词搜索 GitHub + Gitee + 国内 skill 平台，找类似 skill 或项目
@@ -132,7 +132,7 @@ class ScanReport:
 def _build_headers(token_env: Optional[str] = None) -> Dict[str, str]:
     """构建 HTTP 请求头，支持 token 鉴权。"""
     headers = {
-        "User-Agent": "riji-skill/find_similar",
+        "User-Agent": "pdca-skill/find_similar",
         "Accept": "application/json",
     }
     if token_env and os.environ.get(token_env):
@@ -474,7 +474,7 @@ def cmd_list(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="riji-skill 外部资源搜索脚本（/plan 步骤 4a.3 执行工具）"
+        description="pdca-skill 外部资源搜索脚本（/plan 步骤 4a.3 执行工具）"
     )
     subparsers = parser.add_subparsers(dest="command", help="子命令")
 

@@ -192,4 +192,4 @@
 ## 参考
 
 - 已安装的完整原始 skill（参考 / 预览）：`~/.workbuddy/skills/某开源项目/`（含 `SKILL.md` + `references/` 7 个文件 + `docs/`）
-- 本文件为 clean-room 重写：仅借鉴其**设计思想**（Read-Don't-Ask 哲学、5 模式、7 关系类型、SVG 抖动路径规范、状态行信号机制），以 riji-skill 自有结构和措辞重写，不涉及原文复制
+- 本文件为 clean-room 重写：仅借鉴其**设计思想**（Read-Don't-Ask 哲学、5 模式、7 关系类型、SVG 抖动路径规范、状态行信号机制），以 pdca-skill 自有结构和措辞重写，不涉及原文复制

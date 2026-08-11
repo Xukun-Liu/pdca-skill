@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-protocol_align.py — riji-skill 协议对齐检查脚本
+protocol_align.py — pdca-skill 协议对齐检查脚本
 
 作用
 ----
@@ -319,7 +319,7 @@ def run_all_checks(skill_dir):
 # ===========================================================================
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill 协议对齐检查脚本（stdlib-only）')
+        description='pdca-skill 协议对齐检查脚本（stdlib-only）')
     parser.add_argument('--skill-dir', default=None,
                         help='skill 包根目录（默认：scripts/ 的上级目录）')
     parser.add_argument('--json', action='store_true',

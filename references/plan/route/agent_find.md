@@ -53,8 +53,8 @@
 ```
 # 自动探测多个候选位置读取 key（不硬编码明文）
 for p in exa.env.json ../exa.env.json ../../exa.env.json \
-         ~/.agent/skills/riji-skill/exa.env.json \
-         ~/.workbuddy/skills/riji-skill/exa.env.json; do
+         ~/.agent/skills/pdca-skill/exa.env.json \
+         ~/.workbuddy/skills/pdca-skill/exa.env.json; do
   if [ -f "$p" ]; then KEY=$(python -c "import json;print(json.load(open('$p'))['EXA_API_KEY'])"); break; fi
 done
 [ -z "$KEY" ] && KEY="$EXA_API_KEY"   # 退回环境变量
@@ -65,7 +65,7 @@ curl -s -X POST https://api.exa.ai/search \
   -d '{"query":"best claude agent skill for X","numResults":5,"type":"auto"}'
 ```
 
-> key 已自动探测多个候选位置（当前目录 / 仓库根 `../` `../../` / `~/.agent/skills/riji-skill/` / `~/.workbuddy/skills/riji-skill/`），都找不到再退回 `EXA_API_KEY` 环境变量。
+> key 已自动探测多个候选位置（当前目录 / 仓库根 `../` `../../` / `~/.agent/skills/pdca-skill/` / `~/.workbuddy/skills/pdca-skill/`），都找不到再退回 `EXA_API_KEY` 环境变量。
 
 **示例 B：Python `urllib`（标准库，环境必有，无需装 `requests`）**
 
@@ -80,8 +80,8 @@ def load_exa_key():
         "exa.env.json",                      # 当前工作目录
         "../exa.env.json",                   # 仓库根（脚本在子目录时）
         "../../exa.env.json",
-        os.path.expanduser("~/.agent/skills/riji-skill/exa.env.json"),
-        os.path.expanduser("~/.workbuddy/skills/riji-skill/exa.env.json"),
+        os.path.expanduser("~/.agent/skills/pdca-skill/exa.env.json"),
+        os.path.expanduser("~/.workbuddy/skills/pdca-skill/exa.env.json"),
     ]
     for p in candidates:
         try:

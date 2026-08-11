@@ -77,9 +77,9 @@ handoff_tidy 报告 `blocked_gates` 非空时，任务停在 pending，agent 必
 
 跑 `python scripts/skill_graph_build.py --auto`：
 
-- **--auto 约束**：强制 source=riji（仅左轨，L0 安全级，不触发 security.md L2 扫描确认）+ skip_taxonomy（用上次 taxonomy 缓存）
+- **--auto 约束**：强制 source=pdca（仅左轨，L0 安全级，不触发 security.md L2 扫描确认）+ skip_taxonomy（用上次 taxonomy 缓存）
 - **记忆未变**（SHA256 缓存命中）→ 跳过全部阶段，零成本，直接继续
-- **记忆已变** → 自动重算三阶段，更新 `~/.riji-skill/data/docs_rj/skill_graph/` 四件套（md/csv/svg/manifest.json）
+- **记忆已变** → 自动重算三阶段，更新 `~/.pdca-skill/data/docs_rj/skill_graph/` 四件套（md/csv/svg/manifest.json）
 - **taxonomy 缓存缺失** → `[SKIP]` 提示 + exit 0，记录 memory"skill_graph SKIP（taxonomy 缺失）"，继续（由用户点名/手动全量补）
 - **阶段失败** → auto 模式 exit 2，**不阻断** /act：记录 memory"skill_graph 自动刷新失败"后继续；手动全量模式 exit 1 阻断
 - 输出路径已外置用户数据目录（`user_data_path.get_docs_rj_path()/skill_graph/`），升级 skill 不丢图谱

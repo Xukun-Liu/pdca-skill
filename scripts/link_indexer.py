@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-link_indexer.py — riji-skill 文件关系图构建器
+link_indexer.py — pdca-skill 文件关系图构建器
 
 作用
 ----
@@ -314,7 +314,7 @@ def _detect_missing_reverse_links(edges):
 # ===========================================================================
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill 文件关系图构建器(stdlib-only)')
+        description='pdca-skill 文件关系图构建器(stdlib-only)')
     # 位置参数 root_pos(优先)+ --root 选项(兜底默认 docs_rj)
     # 用法: python link_indexer.py [ROOT] [--root PATH] [--max-depth N] [--json]
     #   python link_indexer.py docs_rj --json     → root=docs_rj(位置参数)

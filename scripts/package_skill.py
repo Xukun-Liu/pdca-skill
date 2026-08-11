@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""riji-skill 发布打包脚本
+"""pdca-skill 发布打包脚本
 
 T012: 打包 skill 包为 zip，排除用户数据目录（memory/ docs_rj/ outputs_rj/ server_lite_data/ 等），
 确保发布包只含框架文件，用户解压覆盖升级时数据 0 丢失。
@@ -8,7 +8,7 @@ T012: 打包 skill 包为 zip，排除用户数据目录（memory/ docs_rj/ outp
     python scripts/package_skill.py --version v1.0.1
     python scripts/package_skill.py --version v1.0.1 --output ./dist/
 
-输出文件名：riji-skill-v{版本号}-{YYYYMMDD-HHMM}.zip
+输出文件名：pdca-skill-v{版本号}-{YYYYMMDD-HHMM}.zip
 """
 import argparse
 import os
@@ -38,7 +38,7 @@ EXCLUDE_PATTERNS = [
     r"^tmp_.*\.png$",
     r"^\.pytest_cache/",
     r"\.pytest_cache/",  # 任意层级的 pytest 缓存（含 tests/.pytest_cache/）
-    r"^\.riji-skill/",  # 本地外置目录（若误放包内）
+    r"^\.pdca-skill/",  # 本地外置目录（若误放包内）
     r"^_test_run/",  # 测试运行快照（本地临时产物，不进发布包）
     r"^agents_rj/subagent_call_log\.jsonl$",  # 副 agent 调用日志（运行时产物，不进发布包）
     # 发布骨架例外：以下文件必须进发布包（使用者首次启动需读这些空骨架）
@@ -49,7 +49,7 @@ EXCLUDE_PATTERNS = [
 _EXCLUDE_REGEX = [re.compile(p) for p in EXCLUDE_PATTERNS]
 
 # 发布骨架白名单（优先级高于排除规则，确保 v1.0.0 发布空骨架进发布包）
-# 使用者首次启动 riji-skill 时，§1 启动检查硬性要求读这 3 个文件，缺失会触发 BLOCKER
+# 使用者首次启动 pdca-skill 时，§1 启动检查硬性要求读这 3 个文件，缺失会触发 BLOCKER
 _SKELETON_WHITELIST = {
     "memory/memory_main.md",
     "docs_rj/SUMMARY_RJ.md",
@@ -124,9 +124,9 @@ def package_skill(version: str, output_dir: str, skill_root: str = None) -> str:
     output_path = Path(output_dir).resolve()
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # 文件名：riji-skill-v{版本号}-{YYYYMMDD-HHMM}.zip
+    # 文件名：pdca-skill-v{版本号}-{YYYYMMDD-HHMM}.zip
     timestamp = datetime.now().strftime("%Y%m%d-%H%M")
-    zip_name = f"riji-skill-{version}-{timestamp}.zip"
+    zip_name = f"pdca-skill-{version}-{timestamp}.zip"
     zip_path = output_path / zip_name
 
     # 遍历 skill_root，写入 zip
@@ -187,7 +187,7 @@ def _verify_package(zip_path: str) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="riji-skill 发布打包脚本")
+    parser = argparse.ArgumentParser(description="pdca-skill 发布打包脚本")
     parser.add_argument("--version", required=True, help="版本号（如 v1.0.1）")
     parser.add_argument("--output", default="./dist/", help="输出目录（默认 ./dist/）")
     parser.add_argument("--skill-root", default=None, help="skill 包根目录（默认自动检测）")

@@ -121,7 +121,7 @@
 
 **目录结构示例**：
 ```
-riji-skill/
+pdca-skill/
 ├── SKILL.md                 ← ★ 修改（§2 文件变动声明+沟通原则）
 ├── references/
 │   ├── communication_rules.md
@@ -137,7 +137,7 @@ riji-skill/
 - 删除 [old_config.py](old_config.py)：清理废弃配置
 
 ```
-riji-skill/
+pdca-skill/
 ├── SKILL.md                 ← ★ 修改
 ├── docs_rj/
 │   └── spec_rj/

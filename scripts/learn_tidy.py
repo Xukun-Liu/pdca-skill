@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-learn_tidy.py — riji-skill learn 子流程扫描器（Phase 1 + Phase 2 + Phase 3 + Phase 4 + Phase 5）
+learn_tidy.py — pdca-skill learn 子流程扫描器（Phase 1 + Phase 2 + Phase 3 + Phase 4 + Phase 5）
 =============================================================
 
 用途
@@ -2318,7 +2318,7 @@ def rule_scan_and_pool(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill learn 子流程扫描器（从 memory 提炼可优化点）'
+        description='pdca-skill learn 子流程扫描器（从 memory 提炼可优化点）'
     )
     subparsers = parser.add_subparsers(dest='command', help='子命令')
 

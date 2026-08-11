@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-generate_host_rules.py — riji-skill host rules 索引生成器
+generate_host_rules.py — pdca-skill host rules 索引生成器
 
 作用
 ----
@@ -59,7 +59,7 @@ RULES_SYNC_POLICY = {
     'strategy': 'create_missing_only',  # 策略：create_missing_only/overwrite/skip_existing
     'allow_force_overwrite': False,     # 是否允许 --force 覆盖（False=默认禁，--force 时才开）
     'supports_dry_run': True,           # 是否支持 --dry-run
-    'generated_file_header': '<!-- generated-by: riji-skill generate_host_rules.py -->',
+    'generated_file_header': '<!-- generated-by: pdca-skill generate_host_rules.py -->',
     'runtime_priority': 'low',          # 运行优先级（low/normal/high）
 }
 
@@ -263,7 +263,7 @@ def generate_host_rules(skill_root, dry_run=False, force=False):
 # ===========================================================================
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill host rules 索引生成器（stdlib-only）')
+        description='pdca-skill host rules 索引生成器（stdlib-only）')
     parser.add_argument('skill_root', nargs='?', default='.',
                         help='skill 包根目录（默认：当前目录）')
     parser.add_argument('--dry-run', action='store_true',

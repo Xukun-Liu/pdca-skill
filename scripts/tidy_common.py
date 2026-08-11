@@ -43,7 +43,7 @@ def resolve_user_data_dir():
     外置目录无权限时 raise PermissionError，由调用方（T005b startup_tidy main）捕获告警。
 
     Returns:
-        Path: 用户数据目录路径（~/.riji-skill/data/）
+        Path: 用户数据目录路径（~/.pdca-skill/data/）
     """
     return user_data_path.get_user_data_dir()
 

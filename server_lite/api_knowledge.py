@@ -555,8 +555,8 @@ def promote_memories():
     skipped_tasks = []
     details = []
 
-    # 确保有 ## riji-skill-public v1.0 分段
-    target_section = "## riji-skill-public v1.0"
+    # 确保有 ## pdca-skill-public v1.0 分段
+    target_section = "## pdca-skill-public v1.0"
 
     for fname in files:
         fpath = os.path.join(memory_rj_dir, fname)
@@ -570,7 +570,7 @@ def promote_memories():
             continue
 
         # 解析文件中的条目
-        file_entries = _parse_memory_entries(file_content, "riji-skill-public v1.0", f"docs_rj/memory_rj/{fname}")
+        file_entries = _parse_memory_entries(file_content, "pdca-skill-public v1.0", f"docs_rj/memory_rj/{fname}")
 
         # 检查去重
         all_exist = all(e["task_name"] in existing_task_names for e in file_entries)

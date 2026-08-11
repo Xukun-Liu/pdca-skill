@@ -8,7 +8,7 @@
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
 > 版本：v1.1.4 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-06（安全行加扫描关键词 / skill_graph 行加 L2 确认前置 / 文章写作触发行新增 / 触发词补"去AI味" / 移除 MIGRATION.md 触发行）| PDCA 标签：P.route A.handoff
-> 本文件是 riji-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
+> 本文件是 pdca-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
 ---
@@ -60,7 +60,7 @@
 | /check 验证阶段 | references/check/loop_verifier.md + references/check/red_flags.md | **/check 阶段自动加载，verifier 默认 REJECT until proven otherwise** |
 | /act 归档阶段 / 生成任务状态 | references/common/pda/document_specs.md + references/common/pa/summary_view.md + references/act/persist/act_procedure.md | **/act 阶段自动加载，生成 TASK_STATE.md 并更新 memory** |
 | /loop（"自动循环""跑循环""开始循环""loop模式""自动模式"） | references/do/danger/loop_constraints.md + references/check/loop_verifier.md | **检查前置条件（/plan 已确认 + loop_admission level≥L2 + git 仓库）→ 询问模式（auto/semi）→ 启动 /do→/check 循环** |
-| master_graph/技能图谱/能力画像/skill graph/我看我有什么技能/我未掌握什么/差距分析/技能雷达/我还有什么没学/推荐我学什么 | references/act/learn/skill_graph.md（三阶段流水线+双轨提取+三格式渲染） | **先确认后触发（用户点名全量）：本功能扫描 `~`/APPDATA 等任务外目录（属 security.md L2 门控），必须先向用户确认范围+目的，确认后才自动调用 `python scripts/skill_graph_build.py --source all`；白名单 8 个 AI 工具固定记忆目录豁免确认（用户启用功能即授权，见 skill_graph.md §4），关键词发现扫描仍须确认；输出 `~/.riji-skill/data/docs_rj/skill_graph/` skill_graph.md + .csv + .svg + manifest.json**。**每轮 /act 3.6a 自动刷新仅左轨（`--auto`，L0 安全级免确认，哈希未变缓存命中跳过，taxonomy 缺失 [SKIP] exit 0，阶段失败 exit 2 不阻断）** |
+| master_graph/技能图谱/能力画像/skill graph/我看我有什么技能/我未掌握什么/差距分析/技能雷达/我还有什么没学/推荐我学什么 | references/act/learn/skill_graph.md（三阶段流水线+双轨提取+三格式渲染） | **先确认后触发（用户点名全量）：本功能扫描 `~`/APPDATA 等任务外目录（属 security.md L2 门控），必须先向用户确认范围+目的，确认后才自动调用 `python scripts/skill_graph_build.py --source all`；白名单 8 个 AI 工具固定记忆目录豁免确认（用户启用功能即授权，见 skill_graph.md §4），关键词发现扫描仍须确认；输出 `~/.pdca-skill/data/docs_rj/skill_graph/` skill_graph.md + .csv + .svg + manifest.json**。**每轮 /act 3.6a 自动刷新仅左轨（`--auto`，L0 安全级免确认，哈希未变缓存命中跳过，taxonomy 缺失 [SKIP] exit 0，阶段失败 exit 2 不阻断）** |
 | 市场调研/market research/竞品调研/竞品对比/feature 对比/4 维度调研 | assets/market_research_template.md（9段+6项质检对齐 某开源项目 market-research.md） | **/plan 步骤4a.5 自动加载，覆盖 feature/UX/complaints/technical 4 维度** |
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
 | 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
@@ -123,7 +123,7 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | 版本 | 时间 | 变更说明 |
 |------|------|----------|
 | v1.0.0 | 2026-07-21 | 初版：从 SKILL.md §0 外迁；新增报错询问机制+PDCA 关系节 |
-| v1.1.1 | 2026-08-06 | 安全行加扫描类关键词（扫描文件/搜索文件/找文件/遍历目录/共享盘/涉密/内网）；skill_graph 行加 L2 确认前置（扫 home 属任务外，须先确认）+ v1.0.2 --auto 3.6a 自动刷新双语义（仅左轨 L0 免确认 / 点名全量 L2 确认，输出路径外置 ~/.riji-skill/data/） |
+| v1.1.1 | 2026-08-06 | 安全行加扫描类关键词（扫描文件/搜索文件/找文件/遍历目录/共享盘/涉密/内网）；skill_graph 行加 L2 确认前置（扫 home 属任务外，须先确认）+ v1.0.2 --auto 3.6a 自动刷新双语义（仅左轨 L0 免确认 / 点名全量 L2 确认，输出路径外置 ~/.pdca-skill/data/） |
 | v1.1.2 | 2026-08-06 | 新增文章写作触发行（写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文 → article-writing.md），自动触发列注明"写作任务不生成 spec/task"；头部关键词注释同步 |
 | v1.1.3 | 2026-08-06 | 文章写作触发词补"去AI味"（用户要求：去AI味=文章改写润色场景）；头部关键词注释同步 |
 | v1.1.4 | 2026-08-06 | 移除 MIGRATION.md 触发行（文档规整流程随 MIGRATION.md 删除）；头部关键词注释同步清理 |

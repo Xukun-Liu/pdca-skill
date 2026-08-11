@@ -4,7 +4,7 @@
 
 # references/ 目录索引
 
-> 版本：v1.2.2 | 创建：2026-07-25 | riji-skill 参考模块导航
+> 版本：v1.2.2 | 创建：2026-07-25 | pdca-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
 > 本索引是 references/ 目录的导航地图。47 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
@@ -198,7 +198,7 @@ references/
 
 > 反向查表:已知 reference 文件,查"哪些 agent 会读它"。数据源为 [subagents_rj.md](common/pda/subagents_rj.md) 第二节各副 agent 知识库。
 >
-> **简称对照**: `main` = 主 agent;`bootstrap` = bootstrap_agent_riji;`skill_mgmt` = skill_mgmt_agent_riji;`spec_design` = spec_design_agent_riji;`code_eng` = code_eng_agent_riji;`doc_proc` = doc_proc_agent_riji;`loop` = loop_agent_riji;`learn_opt` = learn_opt_agent_riji;`sync` = sync_agent_riji;`browser` = browser_agent_riji。
+> **简称对照**: `main` = 主 agent;`bootstrap` = bootstrap_agent_pdca;`skill_mgmt` = skill_mgmt_agent_pdca;`spec_design` = spec_design_agent_pdca;`code_eng` = code_eng_agent_pdca;`doc_proc` = doc_proc_agent_pdca;`loop` = loop_agent_pdca;`learn_opt` = learn_opt_agent_pdca;`sync` = sync_agent_pdca;`browser` = browser_agent_pdca。
 >
 > **共读文件高亮**: 标 ⭐ 的文件被 2+ 副 agent 引用,改这些文件时需注意对多 agent 的影响。
 

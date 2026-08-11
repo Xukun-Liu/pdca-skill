@@ -33,7 +33,7 @@ def test_default_dir_permission_denied_raises(tmp_path, monkeypatch):
     - Then raise PermissionError + 不创建包内目录
     """
     # 隔离路径常量到 tmp_path
-    monkeypatch.delenv("RIJI_DATA_DIR", raising=False)
+    monkeypatch.delenv("PDCA_DATA_DIR", raising=False)
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     mock_default = tmp_path / "data"
     monkeypatch.setattr(user_data_path, "DEFAULT_DATA_DIR", mock_default)

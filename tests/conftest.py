@@ -1,4 +1,4 @@
-"""pytest conftest.py - riji-skill 测试基础设施共享 fixture。
+"""pytest conftest.py - pdca-skill 测试基础设施共享 fixture。
 
 提供:
 - tmp_skill_dir: 临时 skill 目录 fixture(构造最小可测结构)
@@ -41,7 +41,7 @@ def tmp_skill_dir(tmp_path):
     # 最小 SKILL.md
     (skill_root / "SKILL.md").write_text(
         "---\n"
-        "name: riji-skill-test\n"
+        "name: pdca-skill-test\n"
         "description: test\n"
         "agent_created: true\n"
         "license: Non-Commercial Source-Available License v1.0\n"

@@ -8,7 +8,7 @@
 4. 检查外置目录数据完整（文件数+字节数一致）
 5. 检查包内无用户数据残留（.migrated 标记除外）
 
-用 tmp_path 隔离测试环境，不污染真实 ~/.riji-skill/。
+用 tmp_path 隔离测试环境，不污染真实 ~/.pdca-skill/。
 """
 import os
 import sys
@@ -29,26 +29,26 @@ import package_skill  # noqa: E402
 @pytest.fixture
 def isolated_env(tmp_path, monkeypatch):
     """隔离测试环境：tmp_path 模拟用户目录 + skill 包"""
-    # 模拟用户目录（替代真实 ~/.riji-skill/）
+    # 模拟用户目录（替代真实 ~/.pdca-skill/）
     fake_home = tmp_path / "fake_home"
     fake_home.mkdir()
-    fake_riji = fake_home / ".riji-skill"
-    fake_data = fake_riji / "data"
+    fake_pdca = fake_home / ".pdca-skill"
+    fake_data = fake_pdca / "data"
 
     # monkeypatch user_data_path 的默认目录 + 配置文件（migrate_user_data 经 user_data_path 获取路径）
     sys.path.insert(0, os.path.join(SKILL_ROOT, "scripts"))
     import user_data_path
     monkeypatch.setattr(user_data_path, "DEFAULT_DATA_DIR", fake_data)
-    monkeypatch.setattr(user_data_path, "CONFIG_FILE", fake_riji / "config.json")
+    monkeypatch.setattr(user_data_path, "CONFIG_FILE", fake_pdca / "config.json")
     # migrate_user_data.LOCK_FILE = user_data_path.CONFIG_FILE.parent / ".migrate.lock"
     # 改 CONFIG_FILE 后 LOCK_FILE 需重新计算
-    monkeypatch.setattr(migrate_user_data, "LOCK_FILE", fake_riji / ".migrate.lock")
+    monkeypatch.setattr(migrate_user_data, "LOCK_FILE", fake_pdca / ".migrate.lock")
 
     # 模拟旧版 skill 包（含框架文件 + 用户数据）
     old_skill = tmp_path / "old_skill"
     old_skill.mkdir()
     # 框架文件
-    (old_skill / "SKILL.md").write_text("# riji-skill v1.0.0", encoding="utf-8")
+    (old_skill / "SKILL.md").write_text("# pdca-skill v1.0.0", encoding="utf-8")
     (old_skill / "scripts").mkdir()
     (old_skill / "scripts" / "app.py").write_text("# old app", encoding="utf-8")
     # 用户数据（老用户累积的）
@@ -116,7 +116,7 @@ class TestUpgradeFlow:
         # 先准备新版框架（模拟新版 skill 包，只有框架文件）
         new_skill = isolated_env["tmp_path"] / "new_skill"
         new_skill.mkdir()
-        (new_skill / "SKILL.md").write_text("# riji-skill v1.0.1 (新版)", encoding="utf-8")
+        (new_skill / "SKILL.md").write_text("# pdca-skill v1.0.1 (新版)", encoding="utf-8")
         (new_skill / "scripts").mkdir()
         (new_skill / "scripts" / "app.py").write_text("# new app v1.0.1", encoding="utf-8")
 

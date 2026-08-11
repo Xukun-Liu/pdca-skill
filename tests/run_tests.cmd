@@ -1,5 +1,5 @@
 @echo off
-REM run_tests.cmd - riji-skill 测试运行器(Windows)
+REM run_tests.cmd - pdca-skill 测试运行器(Windows)
 REM 用法: tests\run_tests.cmd 或双击运行
 REM 依赖: Python 3.8+ 和 pytest
 
@@ -28,7 +28,7 @@ if errorlevel 1 (
 
 REM 跑测试
 echo ========================================
-echo Running riji-skill tests...
+echo Running pdca-skill tests...
 echo ========================================
 python -m pytest tests/ -v
 set EXITCODE=%ERRORLEVEL%

@@ -5,7 +5,7 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-# riji-skill
+# pdca-skill
 
 **把管理学的 PDCA，装进每一次 AI 协作**
 
@@ -20,14 +20,14 @@ AI 是流水的兵，记忆是铁打的营盘
 
 ## 两大核心定位
 
-riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命的两件事：
+pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命的两件事：
 
 ### 1. 自己的记忆 —— 跟你走，不跟工具走
 
-| 痛点 | 有 riji-skill 之后 |
+| 痛点 | 有 pdca-skill 之后 |
 |------|-------------------|
 | 换模型、换客户端，上次约定全没了 | **三层记忆**：热记忆（框架）+ 全局聚合记忆 + 项目记忆 |
-| 升级 skill 包把数据覆盖没了 | **用户数据外置**到 `~/.riji-skill/data/`，升级框架 **0 丢失** |
+| 升级 skill 包把数据覆盖没了 | **用户数据外置**到 `~/.pdca-skill/data/`，升级框架 **0 丢失** |
 | AI 聊着聊着「失忆」 | 每段实质工作 **写入即落盘**，跨对话可恢复 |
 | 经验散落在聊天记录里 | 踩过的坑、定过的规矩，沉淀成**跟你本人的个人资产** |
 
@@ -35,7 +35,7 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ### 2. 文档规整 —— 聊完就散 → 可追溯、可交接
 
-| 痛点 | 有 riji-skill 之后 |
+| 痛点 | 有 pdca-skill 之后 |
 |------|-------------------|
 | 做完一地聊天记录，新人接不上 | 自动落 **spec（方案）/ task（清单）/ handoff（交接）** |
 | 项目文件乱、版本对不齐 | **SUMMARY 根索引** + **sync-matrix 一致性核对** |
@@ -50,7 +50,7 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ## 没有它 / 有它
 
-| 没有 riji-skill | 有 riji-skill |
+| 没有 pdca-skill | 有 pdca-skill |
 |----------------|---------------|
 | 没问清就写代码，做偏了返工 | **HARD-GATE**：方案确认后才动手 |
 | 改崩了找不到上一版 | **回溯保障**：改前检查点，能回退 |
@@ -85,8 +85,8 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ## 30 秒上手
 
-1. **安装**：把 `riji-skill/` 整个目录复制到 AI 编程助手的 skills 目录  
-2. **开聊**：新对话自动加载；首次会引导 Bootstrap（并创建 `~/.riji-skill/data/`）  
+1. **安装**：把 `pdca-skill/` 整个目录复制到 AI 编程助手的 skills 目录  
+2. **开聊**：新对话自动加载；首次会引导 Bootstrap（并创建 `~/.pdca-skill/data/`）  
 3. **正常说话**：简单事直接做；复杂事说 **`/plan`** 走四环；收尾说 **整理一下 / 交接** 走文档规整  
 
 更细的验证命令、数据路径、可选 API Key → [安装详解](#安装详解)。
@@ -134,7 +134,7 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 你说：「帮我写个用户登录功能。」
 
-| 没有框架 | 有 riji-skill |
+| 没有框架 | 有 pdca-skill |
 |---------|---------------|
 | 直接噼里啪啦写代码 | **先澄清**（密码还是验证码？要记住登录吗？） |
 | 风格随缘、安全随缘 | **读规矩**（`code_rules` / `security`） |
@@ -174,7 +174,7 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 |------|------|
 | **自己的记忆（三层）** | 热记忆（SKILL+references）· 全局 `memory_main.md` · 项目 `docs_rj/memory_rj/`；`write_project` 写入即落盘并 upsert 全局 |
 | **文档规整** | spec/task/handoff 三件套 · SUMMARY 根索引 · sync-matrix 版本与引用核对 · `generate_docs` / `handoff_tidy` / `startup_tidy` · 交接 4 闸门证据 |
-| **用户数据外置** | 数据在 `~/.riji-skill/data/`，升级框架不丢记忆与文档 |
+| **用户数据外置** | 数据在 `~/.pdca-skill/data/`，升级框架不丢记忆与文档 |
 | **PDCA 四环** | `/plan` `/do` `/check` `/act`；`/loop` 自动循环；用户只需记 4 个词 |
 | **7 条铁律** | Memory First · HARD-GATE · 流程优先 · No Placeholders · 触发钩子 · 回溯保障 · 逐项核对 |
 | **第一性原理拆解** | 复杂方案前三问：本质目标 / 不可压缩约束 / 从约束推最优解 |
@@ -190,7 +190,7 @@ riji-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **文件扫描门控** | L0 任务内 / L1 点名文件 / L2 任务外须确认（防误扫敏感目录） |
 | **技能图谱** | 能力画像；点名全量先确认；`/act` 自动刷新仅读框架自身记忆 |
 
-> 🔴 **隐私声明（v1.0.1）**：技能图谱（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）生成能力画像。**用户点名/手动全量触发时，运行前会先向你确认**；其中 8 个固定 AI 工具记忆目录属功能核心，**启用该功能即视为授权**、不重复确认（见 skill_graph.md §4）。扫描发现的敏感文件内容**不会被引用、转述或持久化**（敏感行摘录自动过滤）。**每轮 /act 自动刷新（--auto）仅读框架自身记忆**（L0 免确认），不扫外目录，记忆未变化时零成本跳过。其余功能均只读写框架自身目录与 `~/.riji-skill/data/`，零云依赖。
+> 🔴 **隐私声明（v1.0.1）**：技能图谱（master_graph）会扫描本机 AI 工具记忆目录（`~/.claude`、`~/.cursor`、`%APPDATA%` 等）生成能力画像。**用户点名/手动全量触发时，运行前会先向你确认**；其中 8 个固定 AI 工具记忆目录属功能核心，**启用该功能即视为授权**、不重复确认（见 skill_graph.md §4）。扫描发现的敏感文件内容**不会被引用、转述或持久化**（敏感行摘录自动过滤）。**每轮 /act 自动刷新（--auto）仅读框架自身记忆**（L0 免确认），不扫外目录，记忆未变化时零成本跳过。其余功能均只读写框架自身目录与 `~/.pdca-skill/data/`，零云依赖。
 
 ---
 
@@ -273,18 +273,18 @@ spec / task / handoff / memory / memory_bootstrap / daily_log / summary / archiv
 
 ### 方式一：复制到 skills 目录
 
-将 `riji-skill/` 整个目录复制到你的 AI 编程助手的 skills 目录下即可。
+将 `pdca-skill/` 整个目录复制到你的 AI 编程助手的 skills 目录下即可。
 
 ### 用户数据外置（重要）
 
-riji-skill 采用**用户数据外置方案**：你的记忆、文档、输出等数据放在 `~/.riji-skill/data/`（与框架文件物理分离），**不在 skill 包内**。
+pdca-skill 采用**用户数据外置方案**：你的记忆、文档、输出等数据放在 `~/.pdca-skill/data/`（与框架文件物理分离），**不在 skill 包内**。
 
 **为什么这样设计**：每次发布新版 skill 包，你只需解压覆盖框架文件，**用户数据 0 丢失**——再也不用担心升级覆盖丢数据。
 
 **数据目录结构**（首次启动自动创建）：
 
 ```
-~/.riji-skill/
+~/.pdca-skill/
 ├── config.json              # 路径配置（可选，不存在则用默认值）
 └── data/
     ├── memory/              # 全局聚合记忆（memory_main.md）
@@ -299,9 +299,9 @@ riji-skill 采用**用户数据外置方案**：你的记忆、文档、输出�
 
 **三级优先级路径解析**（从高到低）：
 
-1. **环境变量** `RIJI_DATA_DIR`（临时覆盖，如 `set RIJI_DATA_DIR=D:\my-riji-data`）
-2. **配置文件** `~/.riji-skill/config.json` 的 `data_dir` 字段（持久化自定义路径）
-3. **默认值** `~/.riji-skill/data/`（推荐，零配置）
+1. **环境变量** `PDCA_DATA_DIR`（临时覆盖，如 `set PDCA_DATA_DIR=D:\my-pdca-data`）
+2. **配置文件** `~/.pdca-skill/config.json` 的 `data_dir` 字段（持久化自定义路径）
+3. **默认值** `~/.pdca-skill/data/`（推荐，零配置）
 
 **老用户升级**：如果你之前用的是包内数据（旧版本），首次启动新版会**自动迁移**包内数据到外置目录，迁移成功后包内的旧数据目录可安全删除。迁移是原子操作（复制成功才删除源），支持并发锁（防多实例冲突），7 天回滚窗口。
 
@@ -309,11 +309,11 @@ riji-skill 采用**用户数据外置方案**：你的记忆、文档、输出�
 
 ### 首次使用
 
-第一次对话时，框架会自动检测缺失文件并引导 Bootstrap 初始化（同时自动创建外置数据目录 `~/.riji-skill/data/`），按提示确认创建即可。
+第一次对话时，框架会自动检测缺失文件并引导 Bootstrap 初始化（同时自动创建外置数据目录 `~/.pdca-skill/data/`），按提示确认创建即可。
 
 ### 验证安装
 
-完成目录复制后，建议在 `riji-skill/` 项目根目录（包含 `SKILL.md` 的目录）下运行以下命令，确认安装完整、脚本可执行。所有命令仅使用 Python 标准库，无第三方依赖（测试套件需要 pytest）。
+完成目录复制后，建议在 `pdca-skill/` 项目根目录（包含 `SKILL.md` 的目录）下运行以下命令，确认安装完整、脚本可执行。所有命令仅使用 Python 标准库，无第三方依赖（测试套件需要 pytest）。
 
 #### 环境前置检查
 
@@ -321,7 +321,7 @@ riji-skill 采用**用户数据外置方案**：你的记忆、文档、输出�
 |----|------|---------|
 | Python 版本 | 3.9 及以上 | `python --version` |
 | 操作系统 | Windows / macOS / Linux 均可 | — |
-| 当前目录 | 必须在 `riji-skill/` 项目根 | Windows：`cd`（无参数）；macOS/Linux：`pwd` |
+| 当前目录 | 必须在 `pdca-skill/` 项目根 | Windows：`cd`（无参数）；macOS/Linux：`pwd` |
 | pytest（仅测试验证需要） | 任意现代版本 | `python -m pytest --version` |
 
 检查 Python 版本：
@@ -441,7 +441,7 @@ python -m pytest tests/ -v
 ```text
 ========================= test session starts =========================
 platform ... -- Python 3.9.x, pytest-x.x.x, ...
-rootdir: .../riji-skill, configfile: tests/pytest.ini
+rootdir: .../pdca-skill, configfile: tests/pytest.ini
 collected 202 items
 
 tests/test_negative_cases.py::test_no_circular_imports PASSED                [  5%]
@@ -470,22 +470,22 @@ tests/test_protocol_align.py::test_check_alignment_returns_correct_structure PAS
 |------|---------|---------|
 | `python: command not found` | Python 未安装或未加入 PATH | 安装 Python 3.9+ 并勾选 "Add to PATH"；macOS/Linux 用 `python3` |
 | `ModuleNotFoundError: No module named 'pytest'` | 未安装 pytest | `python -m pip install pytest` |
-| `can't open file 'scripts/xxx.py'` | 当前目录不对 | `cd` 到 `riji-skill/` 项目根再执行（须包含 `SKILL.md` 和 `scripts/`） |
+| `can't open file 'scripts/xxx.py'` | 当前目录不对 | `cd` 到 `pdca-skill/` 项目根再执行（须包含 `SKILL.md` 和 `scripts/`） |
 | `startup_tidy` 报 `[BLOCKER] SUMMARY_RJ.md 缺失` | 项目首次使用未初始化 | `python scripts/startup_tidy.py --dry-run --create-summary` 引导创建 |
 | `startup_tidy` 输出乱码或 JSON 解析失败 | Windows 控制台编码问题 | 执行 `chcp 65001` 切换为 UTF-8；或改用 PowerShell 7+ |
 | `validate_skill` 报 SCR-10 缺少版本号引用块 | 部分 `references/*.md` 未补版本号标记 | 属已知待办，可忽略；或手工在文件头部补版本号引用块 |
-| `validate_global_files` 全部失败 | 项目根路径检测异常或核心文件缺失 | 确认在项目根执行；重新完整复制 `riji-skill/` 目录 |
+| `validate_global_files` 全部失败 | 项目根路径检测异常或核心文件缺失 | 确认在项目根执行；重新完整复制 `pdca-skill/` 目录 |
 | `route_check` 报 `unrecognized arguments: .` | 误传了位置参数 | 本脚本不支持位置参数，去掉 `.`；默认检查仓库根；如需指定目录用 `--skill-dir <路径>` |
-| `route_check` 报 `protocol/routing.py 不存在` | protocol/ 包缺失 | 重新完整复制 `riji-skill/protocol/` 目录 |
+| `route_check` 报 `protocol/routing.py 不存在` | protocol/ 包缺失 | 重新完整复制 `pdca-skill/protocol/` 目录 |
 | pytest 报 `configfile: pytest.ini not found` | 当前目录不对 | `cd` 到项目根；`tests/pytest.ini` 会自动加载 |
 | pytest 报 `No module named 'protocol'` | protocol/ 包未正确复制 | 确认 `protocol/__init__.py` 存在；重新复制 `protocol/` 目录 |
 | 中文输出乱码 | Windows 控制台编码问题 | `chcp 65001` 切换 UTF-8，或改用 PowerShell；重定向到文件时用 `Out-File -Encoding utf8` |
 
-通过以上全部验证（或仅核心命令通过 + pytest 201 项全过）后，即可确认 riji-skill 安装完整、可正常使用。下一步可回到上方 [30 秒上手](#30-秒上手) 开始第一次对话。
+通过以上全部验证（或仅核心命令通过 + pytest 201 项全过）后，即可确认 pdca-skill 安装完整、可正常使用。下一步可回到上方 [30 秒上手](#30-秒上手) 开始第一次对话。
 
 ## 可选配置项
 
-riji-skill **默认零配置即可运行**——所有外部搜索能力都有降级链（API 不可用时退回 WebSearch）。但配置以下任一项，对应能力会从"降级模式"升级到"完整模式"。
+pdca-skill **默认零配置即可运行**——所有外部搜索能力都有降级链（API 不可用时退回 WebSearch）。但配置以下任一项，对应能力会从"降级模式"升级到"完整模式"。
 
 **配置总览**：
 
@@ -494,9 +494,9 @@ riji-skill **默认零配置即可运行**——所有外部搜索能力都有�
 | 1 | `EXA_API_KEY` | Exa REST API 全网语义搜索（`agent-find` 钩子用） | 退回 WebSearch 兜底，精准度下降 | ⭐⭐ 简单 |
 | 2 | `GITHUB_TOKEN` | `find_similar.py` 搜 GitHub 仓库（`/plan` 步骤 4a.3 用） | API 限流 60次/小时，常返回 0 条 | ⭐⭐ 简单 |
 | 3 | `GITEE_TOKEN` | `find_similar.py` 搜 Gitee 仓库（`/plan` 步骤 4a.3 用） | API 限流较紧，常返回 0 条 | ⭐⭐ 简单 |
-| 4 | `RIJI_DATA_DIR` | 用户数据外置路径覆盖（默认 `~/.riji-skill/data/`） | 用默认路径，无影响 | ⭐ 极简 |
+| 4 | `PDCA_DATA_DIR` | 用户数据外置路径覆盖（默认 `~/.pdca-skill/data/`） | 用默认路径，无影响 | ⭐ 极简 |
 
-> **建议**：① Exa（最常用，全网搜索）→ ② GitHub Token（搜代码仓库）→ ③ Gitee Token（国内源）→ ④ RIJI_DATA_DIR（仅自定义路径才配）。**全部可选，按需配**。
+> **建议**：① Exa（最常用，全网搜索）→ ② GitHub Token（搜代码仓库）→ ③ Gitee Token（国内源）→ ④ PDCA_DATA_DIR（仅自定义路径才配）。**全部可选，按需配**。
 >
 > **此外还有 3 项运行时配置**（非环境变量，是脚本参数/文件字段，见下方 ⑤ 运行时配置（可选）章节）：`find_similar.py` 命令行参数、server_lite 端口、`/loop` 最大迭代次数。默认值都能跑，仅调整行为时才改。
 
@@ -540,7 +540,7 @@ riji-skill **默认零配置即可运行**——所有外部搜索能力都有�
 grep "exa.env.json" .gitignore
 ```
 
-> 脚本会自动探测多个候选位置：当前目录 / `../` / `../../` / `~/.agent/skills/riji-skill/` / `~/.workbuddy/skills/riji-skill/`，都找不到再退回环境变量。
+> 脚本会自动探测多个候选位置：当前目录 / `../` / `../../` / `~/.agent/skills/pdca-skill/` / `~/.workbuddy/skills/pdca-skill/`，都找不到再退回环境变量。
 
 #### 验证
 
@@ -582,7 +582,7 @@ python -c "import os; print('EXA_API_KEY 已设置' if os.environ.get('EXA_API_K
 1. 浏览器打开 https://github.com/settings/tokens?type=beta （Fine-grained，官方推荐）
 2. 点 **Generate new token** → **Generate new fine-grained token**
 3. 填写：
-   - **Token name**：`find-similar-riji-skill`
+   - **Token name**：`find-similar-pdca-skill`
    - **Expiration**：90 天（到期再生成）
    - **Repository access**：选 **Public Repositories (read-only)**（只读公共仓库，最小权限）
    - **Permissions**：保持默认（搜索 API 不需要额外权限）
@@ -622,7 +622,7 @@ python scripts/find_similar.py scan --task "PDF解析" --keywords "PDF,解析" -
 1. 浏览器打开 https://gitee.com/profile/personal_access_tokens
 2. 点 **生成新令牌**
 3. 填写：
-   - **名称**：`find-similar-riji-skill`
+   - **名称**：`find-similar-pdca-skill`
    - **有效期**：90 天
    - **权限**：只勾 `projects`（仓库读取，最小权限）
 4. 点 **提交** → **立即复制**（格式类似 `xxxxxxxxxxxxxxxxxxxx`）
@@ -652,30 +652,30 @@ python scripts/find_similar.py scan --task "PDF解析" --keywords "PDF,解析" -
 
 ---
 
-### ④ 配置用户数据路径（`RIJI_DATA_DIR`，可选）
+### ④ 配置用户数据路径（`PDCA_DATA_DIR`，可选）
 
-**用途**：覆盖默认用户数据路径 `~/.riji-skill/data/`。仅在你想把数据放到其他位置（如 D 盘、移动硬盘、网络盘）时才配。**不配 = 用默认路径，无任何影响**。
+**用途**：覆盖默认用户数据路径 `~/.pdca-skill/data/`。仅在你想把数据放到其他位置（如 D 盘、移动硬盘、网络盘）时才配。**不配 = 用默认路径，无任何影响**。
 
 **三级优先级**（从高到低）：
 
-1. **环境变量** `RIJI_DATA_DIR`（临时覆盖）
-2. **配置文件** `~/.riji-skill/config.json` 的 `data_dir` 字段（持久化自定义路径）
-3. **默认值** `~/.riji-skill/data/`（推荐，零配置）
+1. **环境变量** `PDCA_DATA_DIR`（临时覆盖）
+2. **配置文件** `~/.pdca-skill/config.json` 的 `data_dir` 字段（持久化自定义路径）
+3. **默认值** `~/.pdca-skill/data/`（推荐，零配置）
 
 **设置环境变量（临时覆盖）**：
 
 | 平台 | 命令 |
 |------|------|
-| **Windows** | CMD：`set RIJI_DATA_DIR=D:\my-riji-data` |
-| **macOS / Linux** | `export RIJI_DATA_DIR=/path/to/my-riji-data` |
+| **Windows** | CMD：`set PDCA_DATA_DIR=D:\my-pdca-data` |
+| **macOS / Linux** | `export PDCA_DATA_DIR=/path/to/my-pdca-data` |
 
 **持久化配置（推荐）**：
 
-编辑 `~/.riji-skill/config.json`（不存在则创建）：
+编辑 `~/.pdca-skill/config.json`（不存在则创建）：
 
 ```json
 {
-  "data_dir": "D:/my-riji-data"
+  "data_dir": "D:/my-pdca-data"
 }
 ```
 
@@ -691,7 +691,7 @@ python -c "from scripts.user_data_path import get_user_data_dir; print(get_user_
 **安全注意**：
 
 - ✅ **路径权限**：确保目标路径当前用户有读写权限
-- ✅ **不要指向网络盘根目录**：建议指向网络盘下的子目录（如 `Z:/riji-data/`，不要直接 `Z:/`）
+- ✅ **不要指向网络盘根目录**：建议指向网络盘下的子目录（如 `Z:/pdca-data/`，不要直接 `Z:/`）
 - ✅ **跨平台路径**：Windows 用 `/` 或 `\\`，macOS/Linux 用 `/`
 
 ---
@@ -786,7 +786,7 @@ max_iterations: 15  # 复杂任务调高（默认 10）
 ## 目录结构
 
 ```
-riji-skill/
+pdca-skill/
 ├── SKILL.md                    # 主入口文件，每次对话自动加载（含 7 铁律 / HARD-GATE / 触发钩子表）
 ├── README.md                   # 本文件
 ├── HISTORY.md                  # 版本历史
@@ -856,15 +856,15 @@ riji-skill/
 │   └── ...
 ├── protocol/                   # 文件协议层（字段契约/路由/校验）
 ├── tests/                      # 测试套件（pytest，202 项）
-├── docs_rj/                    # 项目文档（外置后实际在 ~/.riji-skill/data/docs_rj/）
-├── memory/                     # 全局聚合记忆（外置后实际在 ~/.riji-skill/data/memory/）
-├── outputs_rj/                 # 输出产物（外置后实际在 ~/.riji-skill/data/outputs_rj/）
+├── docs_rj/                    # 项目文档（外置后实际在 ~/.pdca-skill/data/docs_rj/）
+├── memory/                     # 全局聚合记忆（外置后实际在 ~/.pdca-skill/data/memory/）
+├── outputs_rj/                 # 输出产物（外置后实际在 ~/.pdca-skill/data/outputs_rj/）
 ├── agents_rj/                  # 副 agent 配置
 └── evals/
     └── evals.json              # 典型场景测试用例集
 ```
 
-> **注意**：`docs_rj/`、`memory/`、`outputs_rj/` 在打包发布时会自动排除（由 `package_skill.py` 处理），用户安装后这些目录实际位于 `~/.riji-skill/data/` 下。本地开发环境保留这些目录作为骨架和示例。
+> **注意**：`docs_rj/`、`memory/`、`outputs_rj/` 在打包发布时会自动排除（由 `package_skill.py` 处理），用户安装后这些目录实际位于 `~/.pdca-skill/data/` 下。本地开发环境保留这些目录作为骨架和示例。
 
 ## 迭代与质量
 

@@ -6,7 +6,7 @@ skill_graph_build.py — 总入口：串联三阶段 + 缓存
 用法：
   python scripts/skill_graph_build.py                    # 默认全量（双轨）
   python scripts/skill_graph_build.py --source all       # 指定数据源
-  python scripts/skill_graph_build.py --auto             # 自动模式：仅左轨 riji（/act 3.6a 用）
+  python scripts/skill_graph_build.py --auto             # 自动模式：仅左轨 pdca（/act 3.6a 用）
   python scripts/skill_graph_build.py --no-cache         # 强制重算
   python scripts/skill_graph_build.py --skip-taxonomy    # 跳过右轨全集拉取（调试；仍会扫 AI 工具记忆）
   python scripts/skill_graph_build.py --user-name 你的名字   # 自定义用户名
@@ -69,7 +69,7 @@ def _compute_hash(filepath: str) -> str:
 def _collect_input_files(skill_dir: str) -> list:
     """收集所有左轨输入记忆文件路径（外置优先，退回包内兜底）。"""
     files = []
-    # riji memory_main.md
+    # pdca memory_main.md
     p = user_data_path.get_memory_main_path_with_fallback(skill_dir)
     if os.path.isfile(p):
         files.append(p)
@@ -215,12 +215,12 @@ def main():
         description='技能图谱生成器（总入口：串联三阶段 + 缓存）',
     )
     parser.add_argument(
-        '--source', choices=['riji', 'ai_tools', 'all'],
+        '--source', choices=['pdca', 'ai_tools', 'all'],
         default='all', help='数据源（默认 all）',
     )
     parser.add_argument(
         '--auto', action='store_true',
-        help='自动模式（/act 3.6a 用）：只走左轨 riji 记忆（L0 安全级），'
+        help='自动模式（/act 3.6a 用）：只走左轨 pdca 记忆（L0 安全级），'
              '不拉右轨全集（用上次缓存）；输入哈希变化才重算',
     )
     parser.add_argument(
@@ -242,9 +242,9 @@ def main():
 
     args = parser.parse_args()
 
-    # 自动模式约束：只走左轨 riji（L0 安全级，不扫 ~/APPDATA 等外目录），不拉右轨
+    # 自动模式约束：只走左轨 pdca（L0 安全级，不扫 ~/APPDATA 等外目录），不拉右轨
     if args.auto:
-        args.source = 'riji'
+        args.source = 'pdca'
         args.skip_taxonomy = True
 
     start_time = datetime.now()
@@ -254,7 +254,7 @@ def main():
     print(f'{"=" * 60}')
 
     # 检查缓存（仅自动模式用缓存：全量模式=用户点名要最新，始终重算；
-    # auto 模式输入仅左轨 riji 记忆，ai_tools 扫描结果不在 hash 集内，无陈旧风险）
+    # auto 模式输入仅左轨 pdca 记忆，ai_tools 扫描结果不在 hash 集内，无陈旧风险）
     input_files = _collect_input_files(_SKILL_DIR)
     cached_manifest = _load_cache_manifest()
     cache_hit = (not args.no_cache) and args.auto and _check_cache(input_files, cached_manifest)

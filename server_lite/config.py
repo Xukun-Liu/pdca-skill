@@ -5,7 +5,7 @@ import sys
 # server_lite 包目录（server_lite/）
 PACKAGE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# riji-skill 项目根目录（server_lite 的上级）
+# pdca-skill 项目根目录（server_lite 的上级）
 SKILL_ROOT = os.path.dirname(PACKAGE_DIR)
 
 # 把 scripts/ 目录加入 sys.path，以便 import user_data_path
@@ -21,13 +21,13 @@ class DefaultConfig:
     """默认配置"""
     # 扫描根目录（扫上级一层子目录，只列含 docs_rj/ 的）
     SCAN_ROOT = SCAN_ROOT
-    # riji-skill 根目录
+    # pdca-skill 根目录
     SKILL_ROOT = SKILL_ROOT
     # references/ 目录
     REFERENCES_DIR = os.path.join(SKILL_ROOT, "references")
     # agents_rj/ 目录
     AGENTS_DIR = os.path.join(SKILL_ROOT, "agents_rj")
-    # 数据目录（用户数据外置：~/.riji-skill/data/server_lite_data/）
+    # 数据目录（用户数据外置：~/.pdca-skill/data/server_lite_data/）
     DATA_DIR = str(user_data_path.get_server_lite_data_path())
     # sidecar JSON 目录（与 references/ 同级，存频率元数据）
     METADATA_DIR = str(user_data_path.get_server_lite_data_path() / "metadata")

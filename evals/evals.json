@@ -1,6 +1,6 @@
 {
   "version": "v1.0.1",
-  "description": "riji-skill 测试用例库（INT-03 检查项）。每条用例含输入/预期/断言，供 validate_skill.py 校验。v1.0.0 补充 7 铁律 + HARD-GATE + 触发钩子 + 对抗审查覆盖。",
+  "description": "pdca-skill 测试用例库（INT-03 检查项）。每条用例含输入/预期/断言，供 validate_skill.py 校验。v1.0.0 补充 7 铁律 + HARD-GATE + 触发钩子 + 对抗审查覆盖。",
   "evals": [
     {
       "id": "eval_handoff_tidy_trigger",
@@ -30,7 +30,7 @@
       "id": "eval_r10_release_commit_valid",
       "name": "release commit 正例：v1.0.0 格式合规",
       "category": "commit_lint",
-      "input": "用户升级 riji-skill 到 v1.0.0，需要打 release commit",
+      "input": "用户升级 pdca-skill 到 v1.0.0，需要打 release commit",
       "expected": "agent 应使用 `chore(release): v1.0.0` 格式，commit_lint.py 校验通过（exit_code=0，无 R10 issue）",
       "assertion": "实跑 `python scripts/commit_lint.py lint \"chore(release): v1.0.0\" --json`，exit_code=0 且 issues 不含 rule=R10",
       "test_command": "python scripts/commit_lint.py lint \"chore(release): v1.0.0\" --json",
@@ -41,7 +41,7 @@
       "id": "eval_r10_release_commit_invalid",
       "name": "release commit 反例：v1.0 缺补丁号",
       "category": "commit_lint",
-      "input": "用户升级 riji-skill 到 v1.0，subject 缺补丁号（应为 v1.0.0）",
+      "input": "用户升级 pdca-skill 到 v1.0，subject 缺补丁号（应为 v1.0.0）",
       "expected": "commit_lint.py R10 应报 ERROR，阻断提交（exit_code=2，issues 含 rule=R10）",
       "assertion": "实跑 `python scripts/commit_lint.py lint \"chore(release): v1.0\" --json`，exit_code=2 且 issues 含 rule=R10",
       "test_command": "python scripts/commit_lint.py lint \"chore(release): v1.0\" --json",
@@ -64,7 +64,7 @@
       "category": "memory",
       "input": "新对话启动，用户直接给任务",
       "expected": "agent 启动时先读 memory_main.md + docs_rj/SUMMARY_RJ.md + spec_main_rj.md §1 建立全局认知，再接任务",
-      "assertion": "SKILL.md §1 启动检查步骤1 明确读 memory；agent 响应首行含 [skill: riji-skill only] 声明",
+      "assertion": "SKILL.md §1 启动检查步骤1 明确读 memory；agent 响应首行含 [skill: pdca-skill only] 声明",
       "source": "SKILL.md §1 启动检查 + 铁律1"
     },
     {

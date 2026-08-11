@@ -2,16 +2,16 @@
 """tests/test_skill_graph_fix.py - skill_graph 断链修复 + --auto 自动模式 + 提取升级 测试。
 
 覆盖 skill_graph 改造 v1.1（对抗审查后修订版）的关键修复：
-- AC-101: read_riji_memory 单一入口（无参死桩已删，签名带 skill_dir）
-- AC-102: read_riji_memory 外置优先（mock user_data_path 指向 tmp_path）
-- AC-103: --source choices 去重（无重复 'riji'）
+- AC-101: read_pdca_memory 单一入口（无参死桩已删，签名带 skill_dir）
+- AC-102: read_pdca_memory 外置优先（mock user_data_path 指向 tmp_path）
+- AC-103: --source choices 去重（无重复 'pdca'）
 - AC-104: build --auto 且 taxonomy 缓存缺失 → [SKIP] 提示 + exit 0
 - AC-105: render_csv 技能名 CSV 注入防护（= + - @ 前缀加单引号）
 - AC-106: _extract_lesson_skill_names 识别 is_lesson=true 条目内容中的技能
 - AC-107: 经验条目技能置信度加权（+0.1）
 
 设计原则：
-- 用 tmp_path fixture 隔离，不污染真实 ~/.riji-skill/data
+- 用 tmp_path fixture 隔离，不污染真实 ~/.pdca-skill/data
 - monkeypatch user_data_path 路径函数指向 tmp_path
 - 每个测试独立 fixture，不共享状态
 """
@@ -31,20 +31,20 @@ import user_data_path
 
 
 # ===========================================================================
-# AC-101: read_riji_memory 单一入口
+# AC-101: read_pdca_memory 单一入口
 # ===========================================================================
 
-def test_read_riji_memory_single_entry_point():
-    """read_riji_memory 应只有带 skill_dir 参数的版本，无 0 参死桩。"""
-    fn = getattr(skill_graph_extract, "read_riji_memory")
+def test_read_pdca_memory_single_entry_point():
+    """read_pdca_memory 应只有带 skill_dir 参数的版本，无 0 参死桩。"""
+    fn = getattr(skill_graph_extract, "read_pdca_memory")
     sig = inspect.signature(fn)
     params = list(sig.parameters)
-    assert params == ["skill_dir"], "read_riji_memory 必须只接受 skill_dir 参数"
+    assert params == ["skill_dir"], "read_pdca_memory 必须只接受 skill_dir 参数"
 
 
 def test_source_choices_deduplicated():
-    """--source choices 不应有重复的 'riji'。"""
-    args = ["--source", "riji", "--skip-taxonomy"]
+    """--source choices 不应有重复的 'pdca'。"""
+    args = ["--source", "pdca", "--skip-taxonomy"]
     parser = skill_graph_extract.main  # 不直接执行 main，验证 argparse 定义
     # 直接检查源码级别的 choices 去重：通过构造 parser 校验
     import argparse
@@ -54,12 +54,12 @@ def test_source_choices_deduplicated():
         pass  # main 内部解析，此处仅验证 choices 字符串不再重复
     # 读取源码确认 choices 无重复
     src = inspect.getsource(skill_graph_extract)
-    assert "choices=['riji', 'ai_tools', 'riji', 'all']" not in src, "旧版重复 choices 仍存在"
-    assert "choices=['riji', 'ai_tools', 'all']" in src, "去重后的 choices 未生效"
+    assert "choices=['pdca', 'ai_tools', 'pdca', 'all']" not in src, "旧版重复 choices 仍存在"
+    assert "choices=['pdca', 'ai_tools', 'all']" in src, "去重后的 choices 未生效"
 
 
 # ===========================================================================
-# AC-102: read_riji_memory 外置优先
+# AC-102: read_pdca_memory 外置优先
 # ===========================================================================
 
 @pytest.fixture
@@ -80,16 +80,16 @@ def ext_memory(tmp_path, monkeypatch):
     return {"main": str(mem_main), "rj": str(mem_rj)}
 
 
-def test_read_riji_memory_external_priority(ext_memory):
-    """read_riji_memory 应读外置目录（memory_main + memory_rj 各 1 个文件）。"""
-    mems = skill_graph_extract.read_riji_memory("C:/fake_skill_dir")
+def test_read_pdca_memory_external_priority(ext_memory):
+    """read_pdca_memory 应读外置目录（memory_main + memory_rj 各 1 个文件）。"""
+    mems = skill_graph_extract.read_pdca_memory("C:/fake_skill_dir")
     files = [m.file for m in mems]
     assert len(files) == 2, "应读到 2 个外置记忆文件: %s" % files
     assert ext_memory["main"] in files
     assert any(f.endswith("t1_memory_20260801_1000.md") for f in files)
 
 
-def test_read_riji_memory_fallback_when_external_missing(tmp_path, monkeypatch):
+def test_read_pdca_memory_fallback_when_external_missing(tmp_path, monkeypatch):
     """外置目录不存在时退回包内路径（不崩溃，读包内）。"""
     monkeypatch.setattr(user_data_path, "get_memory_main_path_with_fallback",
                         lambda skill_dir=None: os.path.join(skill_dir, "memory", "memory_main.md"))
@@ -99,7 +99,7 @@ def test_read_riji_memory_fallback_when_external_missing(tmp_path, monkeypatch):
     pkg_rj = tmp_path / "docs_rj" / "memory_rj"
     pkg_rj.mkdir(parents=True)
     (pkg_rj / "pkg_memory_20260801_1000.md").write_text("test", encoding="utf-8")
-    mems = skill_graph_extract.read_riji_memory(str(tmp_path))
+    mems = skill_graph_extract.read_pdca_memory(str(tmp_path))
     assert any(f.endswith("pkg_memory_20260801_1000.md") for f in [m.file for m in mems])
 
 
@@ -110,13 +110,13 @@ def test_read_riji_memory_fallback_when_external_missing(tmp_path, monkeypatch):
 def test_build_auto_skip_without_taxonomy(tmp_path, monkeypatch):
     """--auto 且 master_taxonomy.json 缺失 → [SKIP] 提示 + exit 0。
 
-    用 RIJI_DATA_DIR 环境变量做跨进程隔离（monkeypatch 不跨 subprocess）。
+    用 PDCA_DATA_DIR 环境变量做跨进程隔离（monkeypatch 不跨 subprocess）。
     """
     (tmp_path / "memory").mkdir(parents=True)
     (tmp_path / "memory" / "memory_main.md").write_text("", encoding="utf-8")
     (tmp_path / "docs_rj" / "memory_rj").mkdir(parents=True)
     env = dict(os.environ)
-    env["RIJI_DATA_DIR"] = str(tmp_path)
+    env["PDCA_DATA_DIR"] = str(tmp_path)
     result = subprocess.run(
         [sys.executable, os.path.join(os.path.dirname(skill_graph_build.__file__), "skill_graph_build.py"),
          "--auto"],
@@ -137,9 +137,9 @@ def test_render_csv_injection_safe():
     """技能名以 = + - @ 开头时应加单引号前缀（Excel 公式注入防护）。"""
     skills = [
         {"name": "=cmd", "category": "x", "status": "mastered", "confidence": 0.9,
-         "evidence_count": 1, "source_tools": ["riji"], "evidence_refs": []},
+         "evidence_count": 1, "source_tools": ["pdca"], "evidence_refs": []},
         {"name": "normal_skill", "category": "y", "status": "extra_mastered",
-         "confidence": 0.8, "evidence_count": 2, "source_tools": ["riji"],
+         "confidence": 0.8, "evidence_count": 2, "source_tools": ["pdca"],
          "evidence_refs": []},
     ]
     csv_out = skill_graph_render.render_csv(skills)
@@ -169,7 +169,7 @@ def lesson_memory():
 def test_extract_lesson_skill_names(lesson_memory):
     """is_lesson=true 条目内容中的技能应被识别为经验技能。"""
     from skill_graph_extract import RawMemory, _extract_lesson_skill_names
-    mems = [RawMemory(source_tool="riji", file="C:/x/memory_main.md",
+    mems = [RawMemory(source_tool="pdca", file="C:/x/memory_main.md",
                       timestamp="2026-08-01", content=lesson_memory)]
     ls = _extract_lesson_skill_names(mems)
     assert "Python" in ls
@@ -178,7 +178,7 @@ def test_extract_lesson_skill_names(lesson_memory):
 def test_lesson_skill_confidence_boost(lesson_memory):
     """经验条目的技能置信度应加权（0.75 → 0.85）。"""
     from skill_graph_extract import RawMemory, extract_skills_rulebased
-    mems = [RawMemory(source_tool="riji", file="C:/x/memory_main.md",
+    mems = [RawMemory(source_tool="pdca", file="C:/x/memory_main.md",
                       timestamp="2026-08-01", content=lesson_memory)]
     skills = extract_skills_rulebased(mems)
     by_name = {s.name: s.confidence for s in skills}

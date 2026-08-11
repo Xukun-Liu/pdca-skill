@@ -120,10 +120,10 @@ def migrate_data():
     从包内迁到新目标（与 task T010 第 155 行描述一致）。
 
     cycle 5 MEDIUM-4 修复（环境变量优先级导致 set_user_data_dir 无效）：
-    set_user_data_dir 写配置文件，但 get_user_data_dir 优先读环境变量 RIJI_DATA_DIR——
+    set_user_data_dir 写配置文件，但 get_user_data_dir 优先读环境变量 PDCA_DATA_DIR——
     如果环境变量已设置，set_user_data_dir 写的配置不会生效，migrate_if_needed 读到的
     仍是旧路径（环境变量指向的旧位置）。
-    修复方案：临时设置环境变量 RIJI_DATA_DIR=target_path 覆盖配置文件优先级；
+    修复方案：临时设置环境变量 PDCA_DATA_DIR=target_path 覆盖配置文件优先级；
     迁移成功后 pop 环境变量（让后续读配置文件 target_path），
     迁移失败时恢复原环境变量（与配置回滚一致）。
     cycle 7 H-1-NEW 修复：migrate_if_needed 返回 failed_* / skip_lock_busy 时按失败处理
@@ -148,7 +148,7 @@ def migrate_data():
         except (OSError, UnicodeDecodeError):
             config_backup = None  # 配置文件读取失败时无备份可回滚
     # cycle 5 MEDIUM-4 修复：备份原环境变量（迁移后恢复）
-    env_backup = os.environ.get("RIJI_DATA_DIR")
+    env_backup = os.environ.get("PDCA_DATA_DIR")
     try:
         import migrate_user_data
         # HIGH-2 修复：先写配置让 migrate_if_needed 读到新目标路径（而非旧路径）
@@ -156,7 +156,7 @@ def migrate_data():
         # cycle 5 MEDIUM-4 修复：临时设置环境变量覆盖配置文件优先级
         # （set_user_data_dir 写配置，但 get_user_data_dir 优先读环境变量——
         #  如果环境变量已设置，配置文件不生效；临时设置环境变量强制覆盖）
-        os.environ["RIJI_DATA_DIR"] = target_path
+        os.environ["PDCA_DATA_DIR"] = target_path
         skill_root = Path(__file__).resolve().parent.parent
         report = migrate_user_data.migrate_if_needed(str(skill_root))
         status = report.get("status", "")
@@ -166,15 +166,15 @@ def migrate_data():
         #   failed_* / skip_lock_busy 走成功路径导致 target_path 空目录 + 配置未回滚 → 用户立即看不到老数据）
         if status in ("success", "skip_no_source", "skip_target_not_empty"):
             # 成功或安全跳过：pop 环境变量，让后续读配置文件 target_path
-            os.environ.pop("RIJI_DATA_DIR", None)
+            os.environ.pop("PDCA_DATA_DIR", None)
             return jsonify(report)
         else:
             # 失败（skip_lock_busy / failed_verify_mismatch / failed_rolled_back 等）：
             # 走失败路径——恢复 env_backup + 回滚配置（与 except 块逻辑一致）
             if env_backup is not None:
-                os.environ["RIJI_DATA_DIR"] = env_backup
+                os.environ["PDCA_DATA_DIR"] = env_backup
             else:
-                os.environ.pop("RIJI_DATA_DIR", None)
+                os.environ.pop("PDCA_DATA_DIR", None)
             if config_backup is not None:
                 try:
                     user_data_path.CONFIG_FILE.write_text(config_backup, encoding="utf-8")
@@ -189,9 +189,9 @@ def migrate_data():
     except (PermissionError, OSError) as e:
         # cycle 6 H-1 修复：失败时恢复环境变量（让后续读旧路径，与配置回滚一致）
         if env_backup is not None:
-            os.environ["RIJI_DATA_DIR"] = env_backup
+            os.environ["PDCA_DATA_DIR"] = env_backup
         else:
-            os.environ.pop("RIJI_DATA_DIR", None)
+            os.environ.pop("PDCA_DATA_DIR", None)
         # cycle 5 MEDIUM-5 修复：迁移失败回滚配置文件（恢复备份）
         # cycle 6 M-3 修复：config_backup is None 时删除配置文件（set_user_data_dir 已创建新配置）
         if config_backup is not None:
@@ -208,9 +208,9 @@ def migrate_data():
     except Exception as e:
         # cycle 6 H-1 修复：失败时恢复环境变量
         if env_backup is not None:
-            os.environ["RIJI_DATA_DIR"] = env_backup
+            os.environ["PDCA_DATA_DIR"] = env_backup
         else:
-            os.environ.pop("RIJI_DATA_DIR", None)
+            os.environ.pop("PDCA_DATA_DIR", None)
         # cycle 5 MEDIUM-5 修复：迁移失败回滚配置文件（恢复备份）
         # cycle 6 M-3 修复：config_backup is None 时删除配置文件
         if config_backup is not None:

@@ -1,10 +1,10 @@
 ---
-name: riji-skill
+name: pdca-skill
 description: 协作框架 + 技能编排器。自身不实现具体能力，只负责跨任务硬规则（7条铁律/HARD-GATE/Memory First/触发钩子路由）与按需加载 references/ 下的专业模块；每次对话自动加载，全局生效。
 agent_created: true
 license: Non-Commercial Source-Available License v1.0
 version: "v1.0.1"
-author: riji-skill contributors
+author: pdca-skill contributors
 keywords:
   - 协作框架
   - PDCA
@@ -16,7 +16,7 @@ category: workflow
 
 <!-- Skill 版本：v1.0.1 | 更新：2026-08-06 | 历史变更详见 HISTORY.md -->
 
-# riji skill
+# pdca skill
 
 > 协作框架 + 技能编排器。自身不干活，只管「跨任务硬规则 + 技能路由」；每次对话自动加载，全局生效。
 >
@@ -26,10 +26,10 @@ category: workflow
 
 > 默认画像，使用本框架时按实际情况覆盖。
 
-- **身份/角色**：使用者 + 框架作者。管理者视角，关注"这事能不能成、风险在哪、进度如何"；同时也是 riji-skill 的 owner，持续把验证过的协作方法写进框架。
-- **与 skill 的关系**：riji-skill 是工作方法的长期沉淀。它不是"借来的工具"，而是**协作宪法**——7条铁律、HARD-GATE、Memory First、触发钩子表、references/ 下的参考模块，都是过去反复踩坑后固化下来的规则。Agent 每次加载本文件，等于加载了已验证的工作方式。
+- **身份/角色**：使用者 + 框架作者。管理者视角，关注"这事能不能成、风险在哪、进度如何"；同时也是 pdca-skill 的 owner，持续把验证过的协作方法写进框架。
+- **与 skill 的关系**：pdca-skill 是工作方法的长期沉淀。它不是"借来的工具"，而是**协作宪法**——7条铁律、HARD-GATE、Memory First、触发钩子表、references/ 下的参考模块，都是过去反复踩坑后固化下来的规则。Agent 每次加载本文件，等于加载了已验证的工作方式。
 - **技术背景**：可覆盖从 0 基础到资深开发者的各类用户；框架用管理视角拆解问题，涉及部署/证书/基础设施等概念时用生活类比（如"门禁身份证""租车公司"）而非术语堆砌。
-- **沟通偏好**：①汇报/交付必须附**完整绝对路径**（如 `/path/to/riji-skill/SKILL.md`），方便直接复制打开；②技术概念用**大白话+类比**，少堆术语，给可点击链接与最简步骤；③表达不清楚时**不要去猜**，先澄清；④**验证要克制**——小改动做完用轻量核对（curl/语法检查/grep），不轻易拉浏览器/多 agent 做重型验证，除非明确要求或属高风险核心功能。
+- **沟通偏好**：①汇报/交付必须附**完整绝对路径**（如 `/path/to/pdca-skill/SKILL.md`），方便直接复制打开；②技术概念用**大白话+类比**，少堆术语，给可点击链接与最简步骤；③表达不清楚时**不要去猜**，先澄清；④**验证要克制**——小改动做完用轻量核对（curl/语法检查/grep），不轻易拉浏览器/多 agent 做重型验证，除非明确要求或属高风险核心功能。
 - **使用场景**：覆盖从一句话问答到完整项目开发；同时会把新的有效做法持续沉淀回 skill（SKILL.md / references/ / memory/）。
 
 ## 对 Agent 的要求描述（Agent Requirements）
@@ -55,7 +55,7 @@ category: workflow
 
 ## 🧬 三定位 + PDCA 四环：/plan → /do → /check → /act
 
-> **riji-skill 三个核心定位（三位一体闭环）**：
+> **pdca-skill 三个核心定位（三位一体闭环）**：
 > ```
 > ① 记忆（基础·个人资产·跟人不跟工具）
 >    ↓ 撑起（记忆是 PDCA 的输入/输出物质）
@@ -67,7 +67,7 @@ category: workflow
 > ```
 > - **记忆**：跟随你本人（不跟项目、不跟工具）的个人资产——经验沉淀（做过什么、学到什么）+ 状态记忆（做到哪、卡在哪）两个分量持续积累，越用越厚。AI 是流水的兵，记忆是铁打的营盘
 > - **PDCA**：既是解决问题的思维方法论，又是统一调度中枢——所有能力归一到 /plan /do /check /act 四指令
-> - **docs**：把 AI 协作从"聊完就散"升级为可追溯/可交接/可复用的工程化方法——spec（方案）+ task（执行清单）+ handoff（交接记录）+ memory（结构化记忆），每次协作成果都变成文件留下来。riji-skill 自身就是这套方法搭出来的活样本
+> - **docs**：把 AI 协作从"聊完就散"升级为可追溯/可交接/可复用的工程化方法——spec（方案）+ task（执行清单）+ handoff（交接记录）+ memory（结构化记忆），每次协作成果都变成文件留下来。pdca-skill 自身就是这套方法搭出来的活样本
 >
 > 本框架所有动作归到 PDCA 4 环。SKILL.md 正文按主题组织（方便翻阅），此模型用于"理解全貌 + 路由到对应 reference"。每个 reference 文件头部贴 PDCA 标签（母标签 P/D/C/A + 子标签 X.xxx），按标签即可定位。
 >
@@ -105,7 +105,7 @@ category: workflow
 > |------|------|------|----------|
 > | **L1** | Report-only | 只分析、输出报告/优先级/方案，不修改业务代码 | 全程决策 |
 > | **L2** | Assisted | /plan 确认后，Agent 在约束和 verifier 监督下自动执行小改动（无人值守执行阶段规则见 loop_constraints.md） | 定方向 + 异常时介入 |
-> | **L3** | Unattended | 定时/事件触发，完全无人值守自动执行 | **不在 riji-skill 范围** |
+> | **L3** | Unattended | 定时/事件触发，完全无人值守自动执行 | **不在 pdca-skill 范围** |
 
 ### 参考模块按 PDCA 阶段索引（母标签+子标签，新增文件请同步加一行 + 在文件头贴 PDCA 标签）
 
@@ -215,11 +215,11 @@ category: workflow
 
 > 本节说明用户数据与框架文件的物理分离机制，所有路径引用以本节为准。
 
-**核心机制**：用户数据外置到 `~/.riji-skill/data/`（跨平台用户目录下），skill 包纯框架。升级 skill 包（解压覆盖）时用户数据天然不受影响——数据 0 丢失。
+**核心机制**：用户数据外置到 `~/.pdca-skill/data/`（跨平台用户目录下），skill 包纯框架。升级 skill 包（解压覆盖）时用户数据天然不受影响——数据 0 丢失。
 
-**路径解析三级优先级**：环境变量 `RIJI_DATA_DIR` > 配置文件 `~/.riji-skill/config.json` 的 `data_dir` 字段 > 默认值 `~/.riji-skill/data/`。由 `scripts/user_data_path.py` 统一解析，所有脚本经此模块读写用户数据。
+**路径解析三级优先级**：环境变量 `PDCA_DATA_DIR` > 配置文件 `~/.pdca-skill/config.json` 的 `data_dir` 字段 > 默认值 `~/.pdca-skill/data/`。由 `scripts/user_data_path.py` 统一解析，所有脚本经此模块读写用户数据。
 
-**外置目录结构**（`~/.riji-skill/data/` 下）：
+**外置目录结构**（`~/.pdca-skill/data/` 下）：
 - `memory/memory_main.md` — 全局聚合记忆（原 skill 包内 `memory/memory_main.md`）
 - `docs_rj/` — 项目文档（spec/task/handoff/memory/archive + SUMMARY_RJ.md + 项目级 spec_main_rj.md）
 - `outputs_rj/` — 任务输出（loop_ledger.json 等）
@@ -227,11 +227,11 @@ category: workflow
 
 **框架文件**（skill 包内，可覆盖升级）：SKILL.md / scripts/ / references/ / assets/ / agents_rj/ / tests/ / evals/ / protocol/ / server_lite/ 框架代码 + assets/ 模板。
 
-**启动自动迁移**：老用户首次启动新版时，`startup_tidy.py` 检测包内有用户数据 + 外置为空 → 自动迁移到外置目录 + 写 `.migrated` 标记（保留 7 天回滚窗口）。迁移用跨平台文件锁（`~/.riji-skill/.migrate.lock`）防并发竞争。
+**启动自动迁移**：老用户首次启动新版时，`startup_tidy.py` 检测包内有用户数据 + 外置为空 → 自动迁移到外置目录 + 写 `.migrated` 标记（保留 7 天回滚窗口）。迁移用跨平台文件锁（`~/.pdca-skill/.migrate.lock`）防并发竞争。
 
-**⚠️ 锁文件说明**：`~/.riji-skill/.migrate.lock` 残留正常（空文件，O_CREAT 复用，不依赖文件不存在），不要手工删除。
+**⚠️ 锁文件说明**：`~/.pdca-skill/.migrate.lock` 残留正常（空文件，O_CREAT 复用，不依赖文件不存在），不要手工删除。
 
-**server_lite 说明**：server_lite（日积面板）是已完整实现但不主动引导使用的可选组件——功能与 AI 对话定位重叠，当前版本不再引导用户启动。代码保留供未来扩展或用户主动启用，如需使用：`python run_server.py` 启动后访问 http://127.0.0.1:5210。数据路径管理可由 AI 对话直接改 `~/.riji-skill/config.json` + 跑 `scripts/migrate_user_data.py` 替代。
+**server_lite 说明**：server_lite（日积面板）是已完整实现但不主动引导使用的可选组件——功能与 AI 对话定位重叠，当前版本不再引导用户启动。代码保留供未来扩展或用户主动启用，如需使用：`python run_server.py` 启动后访问 http://127.0.0.1:5210。数据路径管理可由 AI 对话直接改 `~/.pdca-skill/config.json` + 跑 `scripts/migrate_user_data.py` 替代。
 
 **发布打包**：`scripts/package_skill.py --version v1.0.0` 打包时自动排除用户数据目录，发布包只含框架文件。
 
@@ -512,7 +512,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 
 **多 agent 地界机制**（融合·C8 部分放弃）：副 agent 调研时传递全局上下文（整体干什么/调研哪块/结论回哪里）；共享写入点归属 / A 证据过 B 战场 / 建设删除分离 / 合并排队 4 项因副 agent 只读不写而**显式放弃，不适用**。详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "多 agent 地界"节
 
-**与 §1.6 的关系**：召唤副 agent 后，§1.6 声明格式扩展为 `[skill: riji-skill + subagent: xxx_agent_riji]`
+**与 §1.6 的关系**：召唤副 agent 后，§1.6 声明格式扩展为 `[skill: pdca-skill + subagent: xxx_agent_pdca]`
 
 ---
 
@@ -599,20 +599,20 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 
 ## §1.6 每轮声明 skill 使用【硬性】
 
-> 每次响应开始时，agent 必须声明"本轮是否调用 riji-skill + 其他专用 skill"。本节是 §0.55 先查 skill 原则的"留痕侧"——§0.55 说"必须查"，§1.6 说"查到用了什么必须声明"。两者配合形成"查 + 声明"的完整闭环，给用户 / 未来审查者一个清晰的"本轮用了哪些能力"轨迹，便于复盘 + 审计 + 调试。
+> 每次响应开始时，agent 必须声明"本轮是否调用 pdca-skill + 其他专用 skill"。本节是 §0.55 先查 skill 原则的"留痕侧"——§0.55 说"必须查"，§1.6 说"查到用了什么必须声明"。两者配合形成"查 + 声明"的完整闭环，给用户 / 未来审查者一个清晰的"本轮用了哪些能力"轨迹，便于复盘 + 审计 + 调试。
 
 **硬规则**：
 
-1. **每次响应首行必声明**：agent 在思考或响应首行声明"本轮是否调用 riji-skill + 其他专用 skill"
+1. **每次响应首行必声明**：agent 在思考或响应首行声明"本轮是否调用 pdca-skill + 其他专用 skill"
 2. **声明格式（四选一）**：
-   - `[skill: riji-skill + (可选)其他专用 skill]` —— 调用了 riji-skill 和其他专用 skill（如 web-dev / frontend-design / pdf）
-   - `[skill: riji-skill only]` —— 只调用了 riji-skill，未调用其他专用 skill
-   - `[skill: riji-skill + subagent: xxx_agent_riji]` —— 召唤了副 agent（§0.56），可并列多个副 agent
-   - `[skill: none, 通用能力]` —— 未调用任何 skill（含 riji-skill），纯通用能力
+   - `[skill: pdca-skill + (可选)其他专用 skill]` —— 调用了 pdca-skill 和其他专用 skill（如 web-dev / frontend-design / pdf）
+   - `[skill: pdca-skill only]` —— 只调用了 pdca-skill，未调用其他专用 skill
+   - `[skill: pdca-skill + subagent: xxx_agent_pdca]` —— 召唤了副 agent（§0.56），可并列多个副 agent
+   - `[skill: none, 通用能力]` —— 未调用任何 skill（含 pdca-skill），纯通用能力
 3. **跳过声明视为偏离**：违反 Memory First（轨迹不可追溯）+ 违反 §0.55 先查 skill 原则（无法判断是否查过 skill），触发 SKILL.md §7 Red Flags
 4. **声明的目的**：给用户 / 未来审查者一个清晰的"本轮用了哪些能力"轨迹，便于 ①事后复盘"为什么这么做" ②审计"是否走了专用 skill 路径" ③调试"问题出在哪个 skill 调用上"
 
-**声明示例**：`[skill: riji-skill only]` —— 本轮处理"读 SUMMARY + memory 建立上下文"任务，只调用了 riji-skill（读状态 / 写记忆），未涉及其他专用 skill。
+**声明示例**：`[skill: pdca-skill only]` —— 本轮处理"读 SUMMARY + memory 建立上下文"任务，只调用了 pdca-skill（读状态 / 写记忆），未涉及其他专用 skill。
 
 **与 §0.55 / Memory First 的关系**：§0.55 是"动作侧"（接任务必须查 skill），本节是"留痕侧"（用了什么每轮声明），两环缺一即偏离；声明轨迹同时是下一轮 /plan 步骤1 读状态的数据源——memory 记"做了什么"，声明记"用了什么能力"。
 
@@ -646,7 +646,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 
 | 要素 | 要求 | 示例 |
 |------|------|------|
-| 文件路径 | **完整绝对路径**（如 `/path/to/riji-skill/SKILL.md`），确保复制即可在文件管理器打开；**禁止相对路径** | `/path/to/riji-skill/SKILL.md` |
+| 文件路径 | **完整绝对路径**（如 `/path/to/pdca-skill/SKILL.md`），确保复制即可在文件管理器打开；**禁止相对路径** | `/path/to/pdca-skill/SKILL.md` |
 | 变动类型 | 新增/修改/删除/重命名 | 修改 |
 | 变动位置 | 行号范围或函数/区块名 | #L100-L110 / §0 触发钩子表 |
 | 变动内容 | 一句话简述 | 新增一行触发钩子 |
@@ -1048,7 +1048,7 @@ docs_rj/
 3.5a. **§7.1 ADR 候选确认【硬性·REQ-009】**：handoff_tidy 报告 `adr_candidates` 逐条判定写入 §7.1（最新置顶+TOP5 归档）或明说"本次无新 ADR"（不说=偏离）；`adr_pending_agent=true` 未判定 = 偏离（细则见 act_procedure.md）
 3.5b. **§7.3 风险候选确认【硬性·REQ-009】**：同上判定 `risk_candidates` 写入 §7.3 或明说"本次无新风险"；§7.2/§7.4 由 handoff_tidy 自动刷新，无需 agent 干预（细则见 act_procedure.md）
 3.6. **learn 累积量门控【自动触发】**：跑 `python scripts/learn_tidy.py count --threshold 20` → should_run=false 记录"learn 跳过"进步骤4；true 自动 `scan --dry-run` → reflect **仅产 proposals.md（禁应用，限 5 分钟）** → 等步骤4 adopt HARD-GATE；scan 无发现/失败（退码2）/用户喊停分别记录跳过（完整分支见 act_procedure.md）
-3.6a. **技能图谱自动刷新【自动触发·v1.0.1】**：跑 `python scripts/skill_graph_build.py --auto`（仅左轨 riji，L0 安全级；记忆哈希未变缓存命中零成本跳过；taxonomy 缺失 [SKIP] exit 0；阶段失败 exit 2 不阻断 /act 仅记录 memory；细则见 act_procedure.md）
+3.6a. **技能图谱自动刷新【自动触发·v1.0.1】**：跑 `python scripts/skill_graph_build.py --auto`（仅左轨 pdca，L0 安全级；记忆哈希未变缓存命中零成本跳过；taxonomy 缺失 [SKIP] exit 0；阶段失败 exit 2 不阻断 /act 仅记录 memory；细则见 act_procedure.md）
 3.7. **读 Gate Evidence 确认闸门【硬性·handoff_gate_fix】**：不再靠 agent 自觉声明——读 TASK_STATE 的 Gate Evidence 段核对 4 闸门；证据不全时 `--mark-completed` 会被拒签（signoff_blocked，报告 blocked_gates 列出缺项）；用户强制完成需显式 `--force`，且 Sign-off 记 `forced: true` 审计标记
 3.8. **前端面板同步（server_lite，可选）**：默认跳过；用户主动启用 server_lite 时提醒点「🔄 同步数据」刷新前端缓存
 4. **adopt HARD-GATE**（若步骤3.6 有 proposals）：呈现 proposals.md → 确认"adopt" → 备份原文件+应用编辑+write_project 写 memory；"跳过"记录跳过；"调整"重新 reflect；无 proposals 直接进步骤4.1

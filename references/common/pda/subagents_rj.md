@@ -3,11 +3,11 @@
 <!-- 关键词清单：副agent/多agent/并行/召唤/调度/顾问团/专业分工/spec_design/code_eng/doc_proc/loop_agent/learn_opt/sync_agent/browser_agent/bootstrap_agent/skill_mgmt_agent -->
 <!-- 引用范围：main（元数据文件，定义副 agent 自身配置） -->
 
-# 副 agent 角色配置总表（riji-skill 多 agent 架构）
+# 副 agent 角色配置总表（pdca-skill 多 agent 架构）
 
 > 版本：v1.0.0 | 创建：2026-07-21 | 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
 >
-> 本文件定义 riji-skill 的 9 个副 agent 角色配置。主 agent 按触发钩子表的关键词，用 TRAE Task 工具临时召唤对应副 agent 做只读调研，结果回传给主 agent，主 agent 守 HARD-GATE 后写操作。
+> 本文件定义 pdca-skill 的 9 个副 agent 角色配置。主 agent 按触发钩子表的关键词，用 TRAE Task 工具临时召唤对应副 agent 做只读调研，结果回传给主 agent，主 agent 守 HARD-GATE 后写操作。
 >
 > **架构定位**：主 agent（总经理，守宪法）+ 副 agent（顾问团，只读调研）+ references（知识库，双轨加载）
 >
@@ -77,7 +77,7 @@
 
 本节是 SKILL.md §0.56 副 agent 调度规则的"实现层说明"——§0.56 定义"何时召唤副 agent"（规则层），本节定义"副 agent 怎么被召唤"（实现层）。两者互补，不冲突。
 
-> **决策记录**：2026-07-25 评估副 agent 必要性，结论是保留现状（选项 A）。理由：G 批次测试已验证对抗审查+并行+独立上下文的不可替代价值，软实现虽然不优雅但可用，删除会损失这些能力且需重测，升级平台级硬集成超出 riji-skill 范围。
+> **决策记录**：2026-07-25 评估副 agent 必要性，结论是保留现状（选项 A）。理由：G 批次测试已验证对抗审查+并行+独立上下文的不可替代价值，软实现虽然不优雅但可用，删除会损失这些能力且需重测，升级平台级硬集成超出 pdca-skill 范围。
 
 ---
 
@@ -158,14 +158,14 @@
 主 agent 召唤副 agent 后，响应首行声明格式扩展为：
 
 ```
-[skill: riji-skill + subagent: spec_design_agent_riji + code_eng_agent_riji]
+[skill: pdca-skill + subagent: spec_design_agent_pdca + code_eng_agent_pdca]
 本轮处理"写 spec + 搜代码库"任务，并行召唤了方案设计专家和代码工程专家。
 ```
 
 或单副 agent：
 
 ```
-[skill: riji-skill + subagent: spec_design_agent_riji]
+[skill: pdca-skill + subagent: spec_design_agent_pdca]
 本轮处理"写 spec"任务，召唤了方案设计专家。
 ```
 
@@ -173,7 +173,7 @@
 
 ## 二、9 个副 agent 角色配置
 
-### 1. bootstrap_agent_riji（架构/流程顾问）
+### 1. bootstrap_agent_pdca（架构/流程顾问）
 
 **角色定位**：负责项目初始化、架构设计、流程规划、多项目管理。遇到"项目怎么搭""流程怎么走""多项目怎么切换"时召唤。
 
@@ -204,7 +204,7 @@
 
 **system_prompt 模板**：
 ```
-你是 riji-skill 的架构/流程顾问（bootstrap_agent_riji）。
+你是 pdca-skill 的架构/流程顾问（bootstrap_agent_pdca）。
 你的职责是：项目初始化、架构设计、流程规划、多项目管理。
 你只做只读调研，不能写文件、不能改代码。
 请基于以下知识库给出专业建议：{知识库列表}
@@ -213,7 +213,7 @@
 
 ---
 
-### 2. skill_mgmt_agent_riji（技能管理顾问）
+### 2. skill_mgmt_agent_pdca（技能管理顾问）
 
 **角色定位**：负责搜索、安装、验证外部 skill。遇到"有没有现成的 skill""怎么装 skill""部署相关"时召唤。
 
@@ -236,7 +236,7 @@
 
 ---
 
-### 3. spec_design_agent_riji（方案设计专家）
+### 3. spec_design_agent_pdca（方案设计专家）
 
 **角色定位**：负责写 spec、task、方案文档。遇到"写方案""需求分析""出方案"时召唤。
 
@@ -259,7 +259,7 @@
 
 ---
 
-### 4. code_eng_agent_riji（代码工程专家）
+### 4. code_eng_agent_pdca（代码工程专家）
 
 **角色定位**：负责写代码、调试、Git 操作、Git 备份清理、安全审查。遇到"写代码""改代码""调试""Git 操作""仓库清理"时召唤。
 
@@ -289,7 +289,7 @@
 
 ---
 
-### 5. doc_proc_agent_riji（文档处理专家）
+### 5. doc_proc_agent_pdca（文档处理专家）
 
 **角色定位**：负责处理 Office 文档、转 Markdown、Excel 分析。遇到"处理 PDF/Word/Excel""转 Markdown""数据分析"时召唤。
 
@@ -313,7 +313,7 @@
 
 ---
 
-### 6. loop_agent_riji（Loop 循环专家）
+### 6. loop_agent_pdca（Loop 循环专家）
 
 **角色定位**：负责 /loop 自动循环、L2 无人值守执行。遇到"/loop""自动循环""L2 模式"时召唤。
 
@@ -336,7 +336,7 @@
 
 ---
 
-### 7. learn_opt_agent_riji（学习优化专家）
+### 7. learn_opt_agent_pdca（学习优化专家）
 
 **角色定位**：负责 learn_cycle 自进化、prompt 优化、技能图谱生成。遇到"learn""自进化""prompt 优化""技能图谱"时召唤。
 
@@ -360,7 +360,7 @@
 
 ---
 
-### 8. sync_agent_riji（同步对齐专家）
+### 8. sync_agent_pdca（同步对齐专家）
 
 **角色定位**：负责同步、整理、交接、版本号一致性检查。遇到"同步""整理""交接""版本号一致"时召唤。
 
@@ -383,7 +383,7 @@
 
 ---
 
-### 9. browser_agent_riji（浏览器自动化专家）
+### 9. browser_agent_pdca（浏览器自动化专家）
 
 **角色定位**：负责浏览器操控、网页操作、RPA。遇到"浏览器操控""网页操作""自动填表"时召唤。
 
@@ -416,11 +416,11 @@
 ### 3.2 命名规范
 
 ```
-{领域}_agent_riji
+{领域}_agent_pdca
 ```
 
 - `领域`：bootstrap / skill_mgmt / spec_design / code_eng / doc_proc / loop / learn_opt / sync / browser
-- `_agent_riji`：后缀，避免与平台 agent 冲突（符合用户偏好）
+- `_agent_pdca`：后缀，避免与平台 agent 冲突（符合用户偏好）
 
 ### 3.3 版本管理
 
@@ -486,11 +486,11 @@ references/（知识库）
 
 ### 使用场景
 - 任务复杂度超阈值时强制召唤副 agent
-- 需要副 agent 显式声明身份时（query_template 含 `[subagent: xxx_agent_riji]` 首行声明）
+- 需要副 agent 显式声明身份时（query_template 含 `[subagent: xxx_agent_pdca]` 首行声明）
 - 需要将 role_identity 注入副 agent system prompt 时
 
 ### query 模板规范
-- 首行强制声明 `[subagent: xxx_agent_riji]`
+- 首行强制声明 `[subagent: xxx_agent_pdca]`
 - 含 role_identity（角色定义 prompt，≤200字）
 - 含 task（任务描述）
 - 含知识库路径（不内联，引用 references/ 路径）
@@ -506,8 +506,8 @@ python scripts/launch_subagent_rj.py dispatch --task "初始化项目" --json
 ## 七、参考来源
 
 - TRAE Task 工具文档（支持 subagent_type=general_purpose_task）
-- riji-skill §0.55 先查 skill 原则
-- riji-skill §1.6 每轮声明 skill 使用
+- pdca-skill §0.55 先查 skill 原则
+- pdca-skill §1.6 每轮声明 skill 使用
 - 某开源项目 plan/build 机制（父 deny 全继承 + 子缺省 deny）
 
 ---

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-validate_skill.py — riji-skill 工具调用校验 loop 脚本
+validate_skill.py — pdca-skill 工具调用校验 loop 脚本
 ============================================================
 
 用途
 ----
-给 riji-skill 装上一道"硬校验"：暴露"声明了但没真正跑"的环节。
+给 pdca-skill 装上一道"硬校验"：暴露"声明了但没真正跑"的环节。
 用户已发现「doc 归档」指令未被执行，本脚本即是对此类缺口的可执行体检。
 
 技术约束
@@ -186,14 +186,14 @@ def build_skill_search_roots():
 
     覆盖：
       ~/.workbuddy/skills/
-      ~/.riji-memory/skills/
+      ~/.pdca-memory/skills/
       ~/.trae-cn/skills/
       ~/.trae-cn/builtin/work/*/skills/   （glob 展开）
       ~/.codebuddy/plugins/marketplaces/codebuddy-plugins-official/plugins/
     """
     home = os.environ.get('USERPROFILE') or os.environ.get('HOME') or ''
     roots = []
-    for sub in ['.workbuddy/skills', '.riji-memory/skills', '.trae-cn/skills']:
+    for sub in ['.workbuddy/skills', '.pdca-memory/skills', '.trae-cn/skills']:
         roots.append(os.path.join(home, *sub.split('/')))
 
     work_base = os.path.join(home, '.trae-cn', 'builtin', 'work')
@@ -734,8 +734,8 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
         """SUMMARY_RJ.md 存在性硬校验（ARC-04，与 startup_tidy 的 [BLOCKER] 警告互补）。
 
         双路径检查（兼容本地开发环境与用户安装环境）：
-        - 用户安装后：检查外置路径 ~/.riji-skill/data/docs_rj/SUMMARY_RJ.md
-        - 本地开发环境（riji-skill 仓库本身，未迁移）：回退检查项目根 docs_rj/SUMMARY_RJ.md
+        - 用户安装后：检查外置路径 ~/.pdca-skill/data/docs_rj/SUMMARY_RJ.md
+        - 本地开发环境（pdca-skill 仓库本身，未迁移）：回退检查项目根 docs_rj/SUMMARY_RJ.md
         两者任一存在即 PASS。两者都不存在才 FAIL。
         """
         # 优先检查外置路径（用户安装后场景）
@@ -1271,7 +1271,7 @@ def resolve_skill_dir(arg):
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description='riji-skill 工具调用校验 loop 脚本（stdlib-only）')
+        description='pdca-skill 工具调用校验 loop 脚本（stdlib-only）')
     parser.add_argument('--skill-dir', default=None,
                         help='skill 根目录（默认 scripts/ 的上级）')
     parser.add_argument('--loop', action='store_true',

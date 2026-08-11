@@ -70,7 +70,7 @@ class TestShouldExclude:
         assert package_skill._should_exclude(".git/config") is True
 
     def test_exclude_dist(self):
-        assert package_skill._should_exclude("dist/riji-skill-v1.0.1.zip") is True
+        assert package_skill._should_exclude("dist/pdca-skill-v1.0.1.zip") is True
 
     def test_keep_skill_md(self):
         assert package_skill._should_exclude("SKILL.md") is False
@@ -94,7 +94,7 @@ class TestPackageSkill:
     def fake_skill_root(self, tmp_path):
         """构造模拟 skill 包结构"""
         # 框架文件（应保留）
-        (tmp_path / "SKILL.md").write_text("# riji-skill", encoding="utf-8")
+        (tmp_path / "SKILL.md").write_text("# pdca-skill", encoding="utf-8")
         (tmp_path / "scripts").mkdir()
         (tmp_path / "scripts" / "user_data_path.py").write_text("# path", encoding="utf-8")
         (tmp_path / "references").mkdir()

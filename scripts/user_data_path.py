@@ -3,12 +3,12 @@
 
 本模块负责解析用户数据外置目录的位置，与 skill 包框架文件物理分离。
 升级 skill 包（解压覆盖）时，用户累积的 memory/docs_rj/outputs_rj/server_lite_data
-数据不丢失——它们存在 ~/.riji-skill/data/ 下，与包内文件无关。
+数据不丢失——它们存在 ~/.pdca-skill/data/ 下，与包内文件无关。
 
 三级优先级：
-1. 环境变量 RIJI_DATA_DIR（最高优先级，供测试/多实例使用）
-2. 配置文件 ~/.riji-skill/config.json 的 data_dir 字段（供前端修改）
-3. 默认值 ~/.riji-skill/data/（首次使用自动创建）
+1. 环境变量 PDCA_DATA_DIR（最高优先级，供测试/多实例使用）
+2. 配置文件 ~/.pdca-skill/config.json 的 data_dir 字段（供前端修改）
+3. 默认值 ~/.pdca-skill/data/（首次使用自动创建）
 
 安全防护：
 - MAX_PATH 检测（Windows 260 字符限制）
@@ -25,8 +25,8 @@ import json
 import stat
 from pathlib import Path
 
-DEFAULT_DATA_DIR = Path.home() / ".riji-skill" / "data"
-CONFIG_FILE = Path.home() / ".riji-skill" / "config.json"
+DEFAULT_DATA_DIR = Path.home() / ".pdca-skill" / "data"
+CONFIG_FILE = Path.home() / ".pdca-skill" / "config.json"
 MAX_PATH_LIMIT = 260  # Windows MAX_PATH 限制
 
 
@@ -48,8 +48,8 @@ def get_user_data_dir(ensure_subdirs: bool = True) -> Path:
             告警退出，不降级到包内（防数据双写 + 升级丢失）。
     """
     result = None
-    # 1. 环境变量 RIJI_DATA_DIR
-    env_path = os.environ.get("RIJI_DATA_DIR")
+    # 1. 环境变量 PDCA_DATA_DIR
+    env_path = os.environ.get("PDCA_DATA_DIR")
     if env_path:
         p = Path(env_path).expanduser().resolve()
         # cycle 5 HIGH-1 修复：_check_path_safety raise 后 try/except 捕获降级（与 §4.1 边界情况对齐）
@@ -58,10 +58,10 @@ def get_user_data_dir(ensure_subdirs: bool = True) -> Path:
             if _ensure_dir(p):
                 result = p
             else:
-                sys.stderr.write("[WARN] 环境变量 RIJI_DATA_DIR 指向目录无权限，降级到下一级\n")
+                sys.stderr.write("[WARN] 环境变量 PDCA_DATA_DIR 指向目录无权限，降级到下一级\n")
         except OSError as e:
-            sys.stderr.write("[WARN] 环境变量 RIJI_DATA_DIR 路径安全检测失败(%s)，降级到下一级\n" % e)
-    # 2. 配置文件 ~/.riji-skill/config.json
+            sys.stderr.write("[WARN] 环境变量 PDCA_DATA_DIR 路径安全检测失败(%s)，降级到下一级\n" % e)
+    # 2. 配置文件 ~/.pdca-skill/config.json
     if result is None and CONFIG_FILE.exists():
         try:
             cfg = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
@@ -79,7 +79,7 @@ def get_user_data_dir(ensure_subdirs: bool = True) -> Path:
                     sys.stderr.write("[WARN] 配置文件 data_dir 路径安全检测失败(%s)，降级到默认值\n" % e)
         except (json.JSONDecodeError, KeyError):
             sys.stderr.write("[WARN] 配置文件 JSON 格式错误，用默认值: %s\n" % CONFIG_FILE)
-    # 3. 默认值 ~/.riji-skill/data/
+    # 3. 默认值 ~/.pdca-skill/data/
     if result is None:
         # cycle 5 HIGH-1 修复：默认值路径安全检测失败也降级告警退出（不降级到包内）
         try:
@@ -89,7 +89,7 @@ def get_user_data_dir(ensure_subdirs: bool = True) -> Path:
             raise PermissionError("默认用户数据目录路径安全检测失败: %s" % e)
         if not _ensure_dir(DEFAULT_DATA_DIR):
             sys.stderr.write("[ERROR] 默认外置目录无法创建（无权限/磁盘满），告警退出，不降级到包内\n")
-            raise PermissionError("无法创建用户数据目录，请检查权限或设置 RIJI_DATA_DIR 环境变量")
+            raise PermissionError("无法创建用户数据目录，请检查权限或设置 PDCA_DATA_DIR 环境变量")
         result = DEFAULT_DATA_DIR
     # 创建子目录（memory/ docs_rj/ outputs_rj/ server_lite_data/，权限 700）
     # HIGH-009 修复：ensure_subdirs=False 时不创建，供迁移检测"外置是否为空"使用
@@ -202,7 +202,7 @@ def get_memory_main_path_with_fallback(skill_dir=None):
     等脚本兼容老用户（包内 memory_main.md）+ 新用户（外部 memory_main.md）。
 
     优先级：
-    1. 外部路径 ~/.riji-skill/data/memory/memory_main.md（经 get_memory_main_path 三级解析）
+    1. 外部路径 ~/.pdca-skill/data/memory/memory_main.md（经 get_memory_main_path 三级解析）
        —— 仅当文件存在时采用（避免新用户/未迁移时把检查指向空路径）
     2. 包内路径 {skill_dir}/memory/memory_main.md（退回兜底）
        —— 老用户未迁移 / 外部路径解析失败 / 外部文件不存在 时使用

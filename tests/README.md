@@ -1,4 +1,4 @@
-# tests/ - riji-skill 测试套件
+# tests/ - pdca-skill 测试套件
 
 > 测试基础设施,基于 pytest。纯 Python 标准库,零外部依赖。
 

@@ -294,7 +294,7 @@ class ArchiveTidy:
             original_content,
             '',
             '---',
-            '> 本文档由 riji-skill archive_tidy.py 自动归档。',
+            '> 本文档由 pdca-skill archive_tidy.py 自动归档。',
         ]
         return '\n'.join(lines)
 

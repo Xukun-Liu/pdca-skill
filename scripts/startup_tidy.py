@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-startup_tidy.py — riji-skill 启动整理管线
+startup_tidy.py — pdca-skill 启动整理管线
 
 每次对话启动前自动整理文档（参考 PARA / Obsidian startup hook 等开源做法）：
   1. 确保项目结构完整（Bootstrap 守卫·报告型）——检测 docs_rj 5类（含 memory_rj）+ outputs_rj/ + .agent/ 是否齐备，缺失仅报告、绝不静默建
@@ -632,7 +632,7 @@ class StartupTidy:
             'archive_rj': '归档沉淀——按任务子文件夹聚合（{task}_{ts}/），保留决策轨迹。',
         }
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
-        parts = ['---', 'title: riji-skill', 'version: v1.0.1',
+        parts = ['---', 'title: pdca-skill', 'version: v1.0.1',
                  'last_updated: %s' % now, 'total_docs: 0',
                  'require-rule-mention: true', '---', '',
                  '# 📚 文档汇总视图（SUMMARY）', '',
@@ -830,7 +830,7 @@ def _integrate_migration_to_main():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill 启动整理管线（stdlib-only）')
+        description='pdca-skill 启动整理管线（stdlib-only）')
     parser.add_argument('--dry-run', action='store_true',
                         help='预演：不实际移动/下沉文件，仅输出会做什么')
     parser.add_argument('--primary-docs', default=None,

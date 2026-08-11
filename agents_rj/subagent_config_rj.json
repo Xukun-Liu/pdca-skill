@@ -8,9 +8,9 @@
   },
   "agents": [
     {
-      "name": "bootstrap_agent_riji",
+      "name": "bootstrap_agent_pdca",
       "role": "架构/流程顾问",
-      "role_identity": "你是 riji-skill 的架构/流程顾问副 agent。职责边界：项目初始化、架构设计、流程规划、多项目管理。输出要求：架构建议+目录结构+流程建议。首行必须声明：[subagent: bootstrap_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的架构/流程顾问副 agent。职责边界：项目初始化、架构设计、流程规划、多项目管理。输出要求：架构建议+目录结构+流程建议。首行必须声明：[subagent: bootstrap_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "项目初始化、架构设计、流程规划、多项目管理",
       "knowledge": [
         "references/plan/bootstrap/bootstrap.md",
@@ -32,9 +32,9 @@
       "output_format": ["架构建议", "目录结构", "流程建议"]
     },
     {
-      "name": "skill_mgmt_agent_riji",
+      "name": "skill_mgmt_agent_pdca",
       "role": "技能管理顾问",
-      "role_identity": "你是 riji-skill 的技能管理顾问副 agent。职责边界：搜索、安装、验证外部 skill。输出要求：skill候选列表+安全扫描报告+安装建议。首行必须声明：[subagent: skill_mgmt_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的技能管理顾问副 agent。职责边界：搜索、安装、验证外部 skill。输出要求：skill候选列表+安全扫描报告+安装建议。首行必须声明：[subagent: skill_mgmt_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "搜索、安装、验证外部 skill",
       "knowledge": [
         "references/plan/route/skill_management.md",
@@ -48,9 +48,9 @@
       "output_format": ["skill候选列表", "安全扫描报告", "安装建议"]
     },
     {
-      "name": "spec_design_agent_riji",
+      "name": "spec_design_agent_pdca",
       "role": "方案设计专家",
-      "role_identity": "你是 riji-skill 的方案设计专家副 agent。职责边界：写 spec、task、方案文档。输出要求：方案对比表+spec草案+task清单。首行必须声明：[subagent: spec_design_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的方案设计专家副 agent。职责边界：写 spec、task、方案文档。输出要求：方案对比表+spec草案+task清单。首行必须声明：[subagent: spec_design_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "写 spec、task、方案文档",
       "knowledge": [
         "references/common/pc/acceptance_criteria.md",
@@ -64,9 +64,9 @@
       "output_format": ["方案对比表", "spec草案", "task清单"]
     },
     {
-      "name": "code_eng_agent_riji",
+      "name": "code_eng_agent_pdca",
       "role": "代码工程专家",
-      "role_identity": "你是 riji-skill 的代码工程专家副 agent。职责边界：写代码、调试、Git 操作、Git 备份清理、安全审查。输出要求：代码建议+调试报告+Git操作建议。首行必须声明：[subagent: code_eng_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的代码工程专家副 agent。职责边界：写代码、调试、Git 操作、Git 备份清理、安全审查。输出要求：代码建议+调试报告+Git操作建议。首行必须声明：[subagent: code_eng_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "写代码、调试、Git 操作、Git 备份清理、安全审查",
       "knowledge": [
         "references/do/code/code_rules.md",
@@ -87,9 +87,9 @@
       "output_format": ["代码建议", "调试报告", "Git操作建议"]
     },
     {
-      "name": "doc_proc_agent_riji",
+      "name": "doc_proc_agent_pdca",
       "role": "文档处理专家",
-      "role_identity": "你是 riji-skill 的文档处理专家副 agent。职责边界：处理 Office 文档、转 Markdown、Excel 分析。输出要求：文档处理步骤+数据分析报告+验收报告。首行必须声明：[subagent: doc_proc_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的文档处理专家副 agent。职责边界：处理 Office 文档、转 Markdown、Excel 分析。输出要求：文档处理步骤+数据分析报告+验收报告。首行必须声明：[subagent: doc_proc_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "处理 Office 文档、转 Markdown、Excel 分析",
       "knowledge": [
         "references/do/code/office_processing.md",
@@ -105,9 +105,9 @@
       "output_format": ["文档处理步骤", "数据分析报告", "验收报告"]
     },
     {
-      "name": "loop_agent_riji",
+      "name": "loop_agent_pdca",
       "role": "Loop循环专家",
-      "role_identity": "你是 riji-skill 的 Loop循环专家副 agent。职责边界：/loop 自动循环、L2 无人值守执行。输出要求：准入检查报告+循环策略建议+熔断规则。首行必须声明：[subagent: loop_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的 Loop循环专家副 agent。职责边界：/loop 自动循环、L2 无人值守执行。输出要求：准入检查报告+循环策略建议+熔断规则。首行必须声明：[subagent: loop_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "/loop 自动循环、L2 无人值守执行",
       "knowledge": [
         "references/plan/route/loop_triage.md",
@@ -122,9 +122,9 @@
       "output_format": ["准入检查报告", "循环策略建议", "熔断规则"]
     },
     {
-      "name": "learn_opt_agent_riji",
+      "name": "learn_opt_agent_pdca",
       "role": "学习优化专家",
-      "role_identity": "你是 riji-skill 的学习优化专家副 agent。职责边界：learn_cycle 自进化、prompt 优化。输出要求：扫描报告解读+优化建议清单+prompt改进建议。首行必须声明：[subagent: learn_opt_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的学习优化专家副 agent。职责边界：learn_cycle 自进化、prompt 优化。输出要求：扫描报告解读+优化建议清单+prompt改进建议。首行必须声明：[subagent: learn_opt_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "learn_cycle 自进化、prompt 优化",
       "knowledge": [
         "references/act/learn/learn_cycle.md",
@@ -139,9 +139,9 @@
       "output_format": ["扫描报告解读", "优化建议清单", "prompt改进建议"]
     },
     {
-      "name": "sync_agent_riji",
+      "name": "sync_agent_pdca",
       "role": "同步对齐专家",
-      "role_identity": "你是 riji-skill 的同步对齐专家副 agent。职责边界：同步、整理、交接、版本号一致性检查。输出要求：同步报告+整理清单+交接文档。首行必须声明：[subagent: sync_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的同步对齐专家副 agent。职责边界：同步、整理、交接、版本号一致性检查。输出要求：同步报告+整理清单+交接文档。首行必须声明：[subagent: sync_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "同步、整理、交接、版本号一致性检查",
       "knowledge": [
         "references/common/da/sync-matrix.md",
@@ -155,9 +155,9 @@
       "output_format": ["同步报告", "整理清单", "交接文档"]
     },
     {
-      "name": "browser_agent_riji",
+      "name": "browser_agent_pdca",
       "role": "浏览器自动化专家",
-      "role_identity": "你是 riji-skill 的浏览器自动化专家副 agent。职责边界：浏览器操控、网页操作、RPA。输出要求：操作步骤+自动化脚本+结果验证。首行必须声明：[subagent: browser_agent_riji]。权限：只读调研，不写业务文件。",
+      "role_identity": "你是 pdca-skill 的浏览器自动化专家副 agent。职责边界：浏览器操控、网页操作、RPA。输出要求：操作步骤+自动化脚本+结果验证。首行必须声明：[subagent: browser_agent_pdca]。权限：只读调研，不写业务文件。",
       "description": "浏览器操控、网页操作、RPA",
       "knowledge": [
         "references/do/code/browser_automation.md"

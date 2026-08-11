@@ -46,7 +46,7 @@
 ### 自动触发（每轮 /act · v1.0.1）
 
 - 每轮 /act 步骤 3.6a 自动跑 `python scripts/skill_graph_build.py --auto`（无需用户点名）
-- `--auto` 语义：仅左轨 riji（记忆已积累，安全 L0 级，不触发 L2 扫描确认）；记忆哈希未变 → 缓存命中直接跳过（零成本）；哈希变化 → 自动重算三阶段并更新 `~/.riji-skill/data/docs_rj/skill_graph/` 四件套（实际路径由 `user_data_path.get_docs_rj_path()` 动态解析：RIJI_DATA_DIR > config.json > 默认）
+- `--auto` 语义：仅左轨 pdca（记忆已积累，安全 L0 级，不触发 L2 扫描确认）；记忆哈希未变 → 缓存命中直接跳过（零成本）；哈希变化 → 自动重算三阶段并更新 `~/.pdca-skill/data/docs_rj/skill_graph/` 四件套（实际路径由 `user_data_path.get_docs_rj_path()` 动态解析：PDCA_DATA_DIR > config.json > 默认）
 - taxonomy 缓存缺失时 `[SKIP]` 提示 + exit 0，记录 memory"skill_graph SKIP（taxonomy 缺失）"，由手动全量补
 - 退出码：0=成功/跳过；2=阶段失败（auto 模式下告警并记录 memory"skill_graph 自动刷新失败"，**不阻断** /act，继续后续步骤）
 - 失败语义：手动全量 exit 1 阻断；auto 失败降级不阻断（详见 act_procedure.md 步骤 3.6a）
@@ -113,10 +113,10 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 跳过右轨全集拉取�
 
 | 格式 | 路径（v1.0.1 起外置用户数据目录） | 受众 | 说明 |
 |------|------|------|------|
-| Markdown + SVG | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.md` | 人看（Trae 预览器） | 单文件自包含，零依赖 |
-| CSV | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.csv` | Excel/程序 | UTF-8 BOM，13 列 |
-| SVG | `~/.riji-skill/data/docs_rj/skill_graph/skill_graph.svg` | 浏览器/分享 | 1200×800，支持缩放 |
-| Manifest | `~/.riji-skill/data/docs_rj/skill_graph/manifest.json` | 同步校验 | 三文件 SHA256 |
+| Markdown + SVG | `~/.pdca-skill/data/docs_rj/skill_graph/skill_graph.md` | 人看（Trae 预览器） | 单文件自包含，零依赖 |
+| CSV | `~/.pdca-skill/data/docs_rj/skill_graph/skill_graph.csv` | Excel/程序 | UTF-8 BOM，13 列 |
+| SVG | `~/.pdca-skill/data/docs_rj/skill_graph/skill_graph.svg` | 浏览器/分享 | 1200×800，支持缩放 |
+| Manifest | `~/.pdca-skill/data/docs_rj/skill_graph/manifest.json` | 同步校验 | 三文件 SHA256 |
 
 ### SVG 颜色方案（色盲友好）
 
@@ -144,7 +144,7 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 跳过右轨全集拉取�
 - **全量模式（用户点名/手动）不用缓存**：始终完整重算三阶段（要最新数据），跑完更新缓存供后续 --auto 用
 - `--no-cache` 强制重算（auto 模式用）
 - 仅完整三阶段跑完才更新缓存；`--force-stage` 部分跑不写缓存（防误命中）
-- 缓存 manifest：`~/.riji-skill/data/docs_rj/memory_rj/.skill_graph_cache/cache_manifest.json`
+- 缓存 manifest：`~/.pdca-skill/data/docs_rj/memory_rj/.skill_graph_cache/cache_manifest.json`
 
 ---
 
@@ -167,7 +167,7 @@ python scripts/skill_graph_build.py --skip-taxonomy  # 跳过右轨全集拉取�
 | AC1 | 输出稳定性 | 同输入跑2次 diff < 5% |
 | AC2 | SVG 可读性 | Trae 预览器正常显示 |
 | AC3 | 无占位符 | grep TBD/TODO = 0 |
-| AC4 | 多源覆盖 | sources_scanned ≥ riji + 1 AI 工具 |
+| AC4 | 多源覆盖 | sources_scanned ≥ pdca + 1 AI 工具 |
 | AC5 | 缓存生效 | 第二次跑跳过全部阶段 |
 | AC6 | 分类数量 | 3 ≤ N ≤ 7 |
 | AC7 | 零外部依赖 | 仅 Python 标准库 |
@@ -201,5 +201,5 @@ A: 每轮 /act 自动刷新一次（--auto：记忆没变则秒过，变了才�
 
 | 版本 | 日期 | 变更 |
 |------|------|------|
-| v1.0.1 | 2026-08-06 | 自动化改造：/act 每轮 3.6a 自动刷新（--auto 仅左轨 L0 安全级，哈希未变缓存命中零成本）；缓存/输出外置 `~/.riji-skill/data/`；断链修复（read_riji_memory 单入口）；结构化经验字段置信度加权；CSV 公式注入防护；右轨补真 URL + 适配 roadmap 新仓库结构；扫描确认门控配套（触发前确认、白名单豁免声明、非交互不读未确认目录、敏感行摘录过滤、扫描根去父链） |
+| v1.0.1 | 2026-08-06 | 自动化改造：/act 每轮 3.6a 自动刷新（--auto 仅左轨 L0 安全级，哈希未变缓存命中零成本）；缓存/输出外置 `~/.pdca-skill/data/`；断链修复（read_pdca_memory 单入口）；结构化经验字段置信度加权；CSV 公式注入防护；右轨补真 URL + 适配 roadmap 新仓库结构；扫描确认门控配套（触发前确认、白名单豁免声明、非交互不读未确认目录、敏感行摘录过滤、扫描根去父链） |
 | v1.0 | 2026-07-17 | 初版：三阶段流水线 + 双轨提取 + 三格式渲染 |

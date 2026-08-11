@@ -134,7 +134,7 @@
 
 ## 五、循环失败模式
 
-以下失败模式来自 loop-engineering 经验，riji-skill 在自动循环中需警惕：
+以下失败模式来自 loop-engineering 经验，pdca-skill 在自动循环中需警惕：
 
 ### 5.1 Infinite Fix Loop（无限修复循环）
 - 特征：同一错误反复出现，Agent 不断尝试相同修复。

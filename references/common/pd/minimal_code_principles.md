@@ -103,7 +103,7 @@ AI 在动手写代码前，必须按这个顺序决策：
 
 ---
 
-## 与 riji-skill 现有规则的衔接
+## 与 pdca-skill 现有规则的衔接
 
 - 与 `references/do/code/code_rules.md` 的 **Simplicity First** 一致：能 50 行解决的不写 200 行。
 - 与 **No Placeholders** 一致：少写代码不等于写省略号或伪代码，而是给完整且最小化的实现。

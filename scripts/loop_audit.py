@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-loop_audit.py — riji-skill PDCA Ready Score 评分器
+loop_audit.py — pdca-skill PDCA Ready Score 评分器
 ===================================================
 
 用途
@@ -17,7 +17,7 @@ loop_audit.py — riji-skill PDCA Ready Score 评分器
 用法
 ----
     python scripts/loop_audit.py
-    python scripts/loop_audit.py --project-root /path/to/riji-skill
+    python scripts/loop_audit.py --project-root /path/to/pdca-skill
     python scripts/loop_audit.py --json outputs_rj/loop_audit_result.json
 
 评分维度（总分 100）
@@ -45,7 +45,7 @@ import tempfile
 from datetime import datetime, timezone, timedelta
 
 # AC-005 修补（T008 遗漏）：用户数据外置后，记忆系统路径检查需走 user_data_path 解析，
-# 否则 loop_audit 会误报 project_root/memory/memory_main.md 缺失（实际数据在 ~/.riji-skill/data/）。
+# 否则 loop_audit 会误报 project_root/memory/memory_main.md 缺失（实际数据在 ~/.pdca-skill/data/）。
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import user_data_path
 
@@ -191,7 +191,7 @@ def _resolve_required_path(item, project_root):
     """根据 REQUIRED_MEMORY 的逻辑标识解析实际路径（用户数据外置支持）。
 
     AC-005 修补（T008 遗漏）：用户数据外置后路径经 user_data_path 解析，
-    避免误报缺失（实际数据在 ~/.riji-skill/data/ 而非 project_root/）。
+    避免误报缺失（实际数据在 ~/.pdca-skill/data/ 而非 project_root/）。
     解析失败时回退到 project_root 拼接（兼容老用户包内数据或外置目录不可创建场景）。
 
     Args:
@@ -202,7 +202,7 @@ def _resolve_required_path(item, project_root):
         project_root: 项目根目录（未知 item 或解析失败时的回退基准）。
 
     Returns:
-        str: 实际路径（可能在外置目录 ~/.riji-skill/data/ 下）。
+        str: 实际路径（可能在外置目录 ~/.pdca-skill/data/ 下）。
     """
     try:
         if item == "memory/memory_main.md":
@@ -387,7 +387,7 @@ def run_audit(project_root):
 # ---------------------------------------------------------------------------
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="riji-skill PDCA Ready Score 评分器（stdlib-only）")
+        description="pdca-skill PDCA Ready Score 评分器（stdlib-only）")
     parser.add_argument("--project-root", default=os.getcwd(),
                         help="项目根目录（默认当前目录）")
     parser.add_argument("--json", default=DEFAULT_OUTPUT,

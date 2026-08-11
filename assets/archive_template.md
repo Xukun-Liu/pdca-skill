@@ -39,4 +39,4 @@ archive_rj/{task}_{ts}/
 - 相关 memory：
 
 ---
-> 本任务袋由 riji-skill archive_tidy.py 自动归档（D1 方案：按任务子文件夹聚合）。
+> 本任务袋由 pdca-skill archive_tidy.py 自动归档（D1 方案：按任务子文件夹聚合）。

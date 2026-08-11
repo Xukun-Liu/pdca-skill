@@ -28,7 +28,7 @@ class _DummyLock:
 
 def _setup_memory_with_entries(monkeypatch, tmp_path, entries):
     """构造 memory_main.md，entries 是 list of dict"""
-    monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
     import generate_docs
     monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
     fake_global = str(tmp_path / "memory" / "memory_main.md")
@@ -80,7 +80,7 @@ class TestMemoryRethink:
 
     def test_rethink_no_memory_main(self, monkeypatch, tmp_path):
         """memory_main 不存在应返回空"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", str(tmp_path / "nonexistent.md"))
         result = learn_tidy.memory_rethink(project_name='test_project')
         assert result['total_scanned'] == 0
@@ -114,7 +114,7 @@ class TestMemoryRethink:
 class TestHandoffAutoDistill:
     def test_distill_failure_does_not_block_handoff(self, monkeypatch, tmp_path):
         """distill 失败不应阻断 handoff（隔离机制）"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # mock distill 抛异常

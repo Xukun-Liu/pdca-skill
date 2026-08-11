@@ -1,6 +1,6 @@
 # protocol/ - 协议层结构化常量
 
-> riji-skill 协议层说明
+> pdca-skill 协议层说明
 > 借鉴业界 AI PM 协议实践，Python 版改造
 
 ## 用途
@@ -26,12 +26,12 @@
 - **纯 Python 标准库**：零第三方依赖，可直接 `import`
 - **PEP 8 大写命名**：所有常量用 `UPPER_SNAKE_CASE`
 - **中文注释**：对齐项目风格，docstring 说明用途
-- **路径相对 skill 包根**：如 `'SKILL.md'` 不是 `'skills/riji-skill/SKILL.md'`
+- **路径相对 skill 包根**：如 `'SKILL.md'` 不是 `'skills/pdca-skill/SKILL.md'`
 
 ## 借鉴来源
 
 - 业界 AI PM 协议实践（Python 版改造）
-- riji-skill 实际目录结构
+- pdca-skill 实际目录结构
 - assets/*_template.md 实际章节
 
 ## 如何使用
@@ -62,6 +62,6 @@ print(ROUTE_TARGETS['plan']['triggers'])
 ## 验证命令
 
 ```bash
-cd /path/to/riji-skill
+cd /path/to/pdca-skill
 python -c "import sys; sys.path.insert(0, '.'); from protocol import FILE_ROLES; assert len(FILE_ROLES)==10; print('OK')"
 ```

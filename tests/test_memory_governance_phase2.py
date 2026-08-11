@@ -72,7 +72,7 @@ class TestFlagUpdate:
 # T009: write_project 支持 status 参数
 class TestWriteProjectWithFlag:
     def test_write_with_archived_status(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         expected_dir = str(user_data_path.get_memory_rj_path())
@@ -97,7 +97,7 @@ class TestWriteProjectWithFlag:
 # T011: check_capacity_threshold()
 class TestCapacityThreshold:
     def _setup_memory_main(self, monkeypatch, tmp_path, entries_per_seg=0, num_segs=1):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         fake_global = str(tmp_path / "memory" / "memory_main.md")
         os.makedirs(os.path.dirname(fake_global), exist_ok=True)
         monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", fake_global)
@@ -137,7 +137,7 @@ class TestCapacityThreshold:
         assert result['exceeded'] is False
 
     def test_no_memory_main(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", str(tmp_path / "nonexistent.md"))
         result = memory_shadow_write.check_capacity_threshold()
         assert result['exceeded'] is False
@@ -147,7 +147,7 @@ class TestCapacityThreshold:
 # T012: _quarantine_entry()
 class TestQuarantine:
     def test_quarantine_creates_file(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "atomic_write", lambda p, c: open(p, 'w', encoding='utf-8').write(c))
         result = memory_shadow_write._quarantine_entry(
@@ -163,7 +163,7 @@ class TestQuarantine:
         assert "待 LLM 复核" in content
 
     def test_quarantine_dir_location(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "atomic_write", lambda p, c: open(p, 'w', encoding='utf-8').write(c))
         memory_shadow_write._quarantine_entry("test", "block", "reason")
@@ -172,7 +172,7 @@ class TestQuarantine:
         assert os.path.isdir(q_dir)
 
     def test_quarantine_failure_returns_none(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         def _raise(p, c):
             raise PermissionError("denied")
@@ -181,7 +181,7 @@ class TestQuarantine:
         assert result is None
 
     def test_quarantine_preserves_original_block(self, monkeypatch, tmp_path):
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "atomic_write", lambda p, c: open(p, 'w', encoding='utf-8').write(c))
         original_block = "### 记忆条目 · task1（2026-07-30）\n**重要性**: high\n关键经验\n"

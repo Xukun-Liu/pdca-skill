@@ -1,4 +1,4 @@
-"""test_protocol_align.py - riji-skill 协议对齐脚本测试。
+"""test_protocol_align.py - pdca-skill 协议对齐脚本测试。
 
 测试对象: scripts/protocol_align.py（325 行）
 3 个测试函数:

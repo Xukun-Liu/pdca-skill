@@ -1,4 +1,4 @@
-"""test_negative_cases.py - riji-skill 负向测试。
+"""test_negative_cases.py - pdca-skill 负向测试。
 
 3 个负向断言:
 1. test_no_circular_imports: protocol/ 包无循环 import

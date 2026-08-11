@@ -220,7 +220,7 @@ class HandoffTidy:
         # 逃生舱：--allow-any-dir（明确知情时使用）
         has_primary = os.path.isfile('.primary_docs_rj') or os.path.isdir('docs_rj')
         if not has_primary and not self.allow_any_dir:
-            logger.error("当前目录不是 riji-skill 仓库根（缺 .primary_docs_rj / docs_rj），已中止。")
+            logger.error("当前目录不是 pdca-skill 仓库根（缺 .primary_docs_rj / docs_rj），已中止。")
             logger.error("如确需在任意目录运行，请显式加 --allow-any-dir")
             sys.exit(2)
         # === 共享动作 ===

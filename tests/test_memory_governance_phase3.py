@@ -28,7 +28,7 @@ class _DummyLock:
 
 def _setup_memory_main(monkeypatch, tmp_path, project_name="test_project", task_name="test_task"):
     """辅助：构造含 1 条记忆的 memory_main.md"""
-    monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
     import generate_docs
     monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
     fake_global = str(tmp_path / "memory" / "memory_main.md")

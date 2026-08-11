@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-route_check.py — riji-skill 路由层检查脚本
+route_check.py — pdca-skill 路由层检查脚本
 
 作用
 ----
@@ -318,7 +318,7 @@ def run_all_checks(skill_dir):
 # ===========================================================================
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill 路由层检查脚本（stdlib-only）')
+        description='pdca-skill 路由层检查脚本（stdlib-only）')
     parser.add_argument('path', nargs='?', default=None,
                         help='skill 包根目录（位置参数，默认：当前目录；与 --skill-dir 互斥，同时给以 --skill-dir 为准）')
     parser.add_argument('--skill-dir', default=None,

@@ -2,7 +2,7 @@
 """用户数据迁移脚本（原子操作 + 文件锁防并发）。
 
 本脚本负责将 skill 包内的用户数据（memory/ docs_rj/ outputs_rj/ server_lite_data/）
-一键迁移到外置目录（~/.riji-skill/data/），实现用户数据与框架文件物理分离。
+一键迁移到外置目录（~/.pdca-skill/data/），实现用户数据与框架文件物理分离。
 升级 skill 包（解压覆盖）时，用户累积数据不丢失——它们存在外置目录下。
 
 设计要点：
@@ -95,7 +95,7 @@ def _release_lock():
       释放锁，文件名残留不影响下次获取锁；跨平台一致，代码最简
     - 方案③（os.open 后 fstat 比 inode 再决定 unlink）：同方案①的 Windows 问题
 
-    锁文件残留说明：~/.riji-skill/.migrate.lock 是迁移锁空文件，正常残留，
+    锁文件残留说明：~/.pdca-skill/.migrate.lock 是迁移锁空文件，正常残留，
     O_CREAT 复用，无需清理。文档（SKILL.md/references）应注明此文件用途。
     """
     global _lock_fd

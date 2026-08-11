@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-check_skill_updates.py — riji-skill skill 更新检查脚本
+check_skill_updates.py — pdca-skill skill 更新检查脚本
 
 作用
 ----
@@ -222,7 +222,7 @@ def check_updates(cwd):
 # ===========================================================================
 def main():
     parser = argparse.ArgumentParser(
-        description='riji-skill skill 更新检查脚本(stdlib-only)')
+        description='pdca-skill skill 更新检查脚本(stdlib-only)')
     parser.add_argument('--skill-dir', default=None,
                         help='skill 包根目录(默认: scripts/ 的上级目录)')
     parser.add_argument('--json', action='store_true',

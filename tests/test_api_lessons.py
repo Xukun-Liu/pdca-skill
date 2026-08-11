@@ -22,7 +22,7 @@ import json
 import pytest
 from pathlib import Path
 
-# 把 riji-skill-public v1.0 加入 sys.path
+# 把 pdca-skill-public v1.0 加入 sys.path
 SKILL_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, SKILL_ROOT)
 # 把 scripts/ 加入 sys.path 以便 import user_data_path

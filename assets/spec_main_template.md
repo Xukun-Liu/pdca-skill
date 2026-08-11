@@ -94,7 +94,7 @@ based_on: null  # 本文件是顶层模板，不派生自其他（实例才填 b
 
 ## §4 产品需求（PRD）边界
 
-> **本节是新内容段**：手工填写项目需求边界。借鉴 某开源项目 PRD 层 + riji-skill spec_template §1 PRD 层。
+> **本节是新内容段**：手工填写项目需求边界。借鉴 某开源项目 PRD 层 + pdca-skill spec_template §1 PRD 层。
 
 **项目愿景**：{一句话愿景，如：成为使用者与 AI 协作的唯一宪法，让框架规则随对话自动加载，无需每次重教}
 
@@ -265,8 +265,8 @@ based_on: null  # 本文件是顶层模板，不派生自其他（实例才填 b
 
 | 占位符 | 含义 | 格式 | 示例 |
 |---|---|---|---|
-| `{项目名}` | 项目名称（英文小写下划线，文件名用） | `[a-z_]+` | `riji_skill` |
-| `{项目根}` | 项目根目录绝对路径 | 绝对路径 | `C:\Users\...\riji-skill` |
+| `{项目名}` | 项目名称（英文小写下划线，文件名用） | `[a-z_]+` | `pdca_skill` |
+| `{项目根}` | 项目根目录绝对路径 | 绝对路径 | `C:\Users\...\pdca-skill` |
 | `{负责人}` | 项目负责人 | 自由文本 | `使用者` |
 | `{任务名1}` `{任务名2}` | 任务名称（活跃任务表用） | `[a-z_]+` | `spec_main_template` |
 | `{task}` | 任务名（memory/handoff 文件名前缀，与 `{任务名}` 同义） | `[a-z_]+` | `spec_main_template` |
@@ -312,7 +312,7 @@ based_on: null  # 本文件是顶层模板，不派生自其他（实例才填 b
 | `{决策一句话}` | ADR 决策描述 | 自由文本 | `用 PDCA 4环循环` |
 | `{决策}` | ADR 决策（简写） | 自由文本 | `用 4环` |
 | `{理由}` | ADR 决策理由 | 自由文本 | `6环节点过多` |
-| `{详细位置}` | ADR 详细记录位置 | 文件路径 | `memory_main.md §riji-skill` |
+| `{详细位置}` | ADR 详细记录位置 | 文件路径 | `memory_main.md §pdca-skill` |
 | `{memory_rj/{task}_memory_*.md 或 memory_main.md §{项目名}}` | ADR 详细位置（复合占位符） | 文件路径 | `memory_rj/spec_main_template_memory_*.md` |
 | `{修改的章节/原则}` | Sync Impact Report 修改项 | 章节号+描述 | `§6 改混合段` |
 | `{下游任务 spec/memory 列表}` | 受影响的下游文件 | 文件名列表 | `spec_main_template_spec.md` |

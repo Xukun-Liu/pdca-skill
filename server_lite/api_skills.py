@@ -110,7 +110,7 @@ def _load_agent_config(agents_dir: str) -> dict:
             config = json.load(f)
         for agent in config.get("agents", []):
             agent_name = agent.get("name", "")
-            display_name = agent_name.replace("_agent_riji", "").replace("_riji", "")
+            display_name = agent_name.replace("_agent_pdca", "").replace("_pdca", "")
             for kn in agent.get("knowledge", []):
                 if isinstance(kn, str) and kn.startswith("references/") and kn.endswith(".md"):
                     base = kn[len("references/"):-len(".md")]

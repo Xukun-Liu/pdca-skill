@@ -13,7 +13,7 @@
 9. test_rollback_within_retention：迁移后删外置 + 删 .migrated → 重新迁移成功
 
 设计原则：
-- 用 tmp_path 创建模拟 skill 包结构 + 模拟外置目录，不污染真实 ~/.riji-skill/
+- 用 tmp_path 创建模拟 skill 包结构 + 模拟外置目录，不污染真实 ~/.pdca-skill/
 - monkeypatch 改 LOCK_FILE/CONFIG_FILE/DEFAULT_DATA_DIR 路径到 tmp_path
 - mock time.sleep 避免 skip_lock_busy 测试等待 5 秒
 - 每个测试独立隔离，不依赖执行顺序
@@ -39,15 +39,15 @@ import migrate_user_data  # noqa: E402
 
 @pytest.fixture
 def isolate_paths(tmp_path, monkeypatch):
-    """隔离路径常量到 tmp_path，避免污染真实 ~/.riji-skill/。
+    """隔离路径常量到 tmp_path，避免污染真实 ~/.pdca-skill/。
 
-    - 删除 RIJI_DATA_DIR 环境变量
+    - 删除 PDCA_DATA_DIR 环境变量
     - Path.home 改为 tmp_path（_check_path_safety 用 is_relative_to(home) 校验）
     - DEFAULT_DATA_DIR 改为 tmp_path/data
     - CONFIG_FILE 改为 tmp_path/config.json
     - migrate_user_data.LOCK_FILE 改为 tmp_path/.migrate.lock
     """
-    monkeypatch.delenv("RIJI_DATA_DIR", raising=False)
+    monkeypatch.delenv("PDCA_DATA_DIR", raising=False)
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     mock_default = tmp_path / "data"
     monkeypatch.setattr(user_data_path, "DEFAULT_DATA_DIR", mock_default)

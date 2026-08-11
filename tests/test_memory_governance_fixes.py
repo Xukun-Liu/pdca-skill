@@ -30,7 +30,7 @@ class _DummyLock:
 
 def _setup_memory_main(monkeypatch, tmp_path, project_name="test_project", task_name="test_task"):
     """辅助：构造含 1 条记忆的 memory_main.md"""
-    monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
     import generate_docs
     monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
     fake_global = str(tmp_path / "memory" / "memory_main.md")
@@ -53,7 +53,7 @@ def _setup_memory_main(monkeypatch, tmp_path, project_name="test_project", task_
 class TestS1DryRunGuard:
     def test_dry_run_skips_distill(self, monkeypatch, tmp_path):
         """dry_run=True 时应跳过 distill，不调 memory_distill.distill"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         import handoff_tidy
@@ -114,7 +114,7 @@ class TestS3ColonCompatibility:
 class TestS4RollbackExcludePreRestore:
     def test_rollback_excludes_pre_restore_dir(self, monkeypatch, tmp_path):
         """rollback 应排除 rollback_pre_restore 目录"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         undo_base = str(tmp_path / "undo")
@@ -147,7 +147,7 @@ class TestS10Concurrency:
         """并发删除不同 task 应串行化，无数据损坏"""
         fake_global = str(tmp_path / "memory" / "memory_main.md")
         os.makedirs(os.path.dirname(fake_global), exist_ok=True)
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # 构造 3 条记忆
@@ -207,7 +207,7 @@ class TestS11EndToEnd:
 
     def test_capacity_threshold_after_write(self, monkeypatch, tmp_path):
         """端到端：write 后自动容量告警（构造超阈值场景）"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         fake_global = str(tmp_path / "memory" / "memory_main.md")
@@ -248,7 +248,7 @@ class TestS12RealBackupFailure:
 
     def test_quarantine_real_failure_returns_none(self, monkeypatch, tmp_path):
         """quarantine 真实失败应返回 None（不崩溃）—— mock os.makedirs 失败"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "atomic_write", lambda p, c: open(p, 'w', encoding='utf-8').write(c))
         # mock os.makedirs 抛 PermissionError

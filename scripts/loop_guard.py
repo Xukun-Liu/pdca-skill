@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-loop_guard.py — riji-skill 自动循环熔断器
+loop_guard.py — pdca-skill 自动循环熔断器
 ============================================
 
 用途
@@ -398,7 +398,7 @@ def check_loop_allow(task_id, root='.'):
 # ---------------------------------------------------------------------------
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="riji-skill 自动循环熔断器（stdlib-only）")
+        description="pdca-skill 自动循环熔断器（stdlib-only）")
     sub = parser.add_subparsers(dest="command", required=True)
 
     check = sub.add_parser("check", help="记录一次尝试并检查熔断条件")

@@ -1,4 +1,4 @@
-"""test_ai_pm_tools.py - riji-skill 7 个 AI PM 工具的测试。
+"""test_ai_pm_tools.py - pdca-skill 7 个 AI PM 工具的测试。
 
 文件用途
 --------

@@ -8,7 +8,7 @@
 
 > 版本：v1.1.0 | 更新：2026-08-01（新增 §2.2 记忆条目增强格式，自 SKILL.md 下沉为唯一维护源）
 
-> 📦 **用户数据外置说明（v1.0.0 新增）**：全局聚合记忆 `memory/memory_main.md` 与项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 均位于外置目录 `~/.riji-skill/data/` 下（非 skill 包内）。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落外置项目记忆 + 幂等 upsert 外置全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
+> 📦 **用户数据外置说明（v1.0.0 新增）**：全局聚合记忆 `memory/memory_main.md` 与项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 均位于外置目录 `~/.pdca-skill/data/` 下（非 skill 包内）。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落外置项目记忆 + 幂等 upsert 外置全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
 
 > 📖 **什么时候读这个文件**：
 > - 不知道memory该写什么/怎么写时

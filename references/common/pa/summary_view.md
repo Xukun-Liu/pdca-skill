@@ -83,7 +83,7 @@
 
 **模式 B 优势**：①SUMMARY 只维护 INDEX 链接（不维护文件列表），减少漂移；②每个 INDEX.md 内部维护自己类目的文件列表 + 状态，职责单一；③handoff_tidy.py 自动维护 5 个 INDEX.md，SUMMARY 自动维护"当前活跃任务"section。
 **模式 B 劣势**：多一层跳转（SUMMARY → INDEX → 文件），不适合小项目。
-**选择标准**：文件数 ≤20 用模式 A，>20 用模式 B。riji-skill-public v1.0 目前 40 文件，用模式 B。
+**选择标准**：文件数 ≤20 用模式 A，>20 用模式 B。pdca-skill-public v1.0 目前 40 文件，用模式 B。
 
 每个 section 顶部必须有 leading paragraph（≤250 字符）。
 

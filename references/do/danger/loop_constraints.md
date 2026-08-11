@@ -6,7 +6,7 @@
 ---
 name: loop-constraints
 description: >
-  riji-skill 的运行时约束。每次 L2 任务 /do 阶段开始前必须读取并强制执行。
+  pdca-skill 的运行时约束。每次 L2 任务 /do 阶段开始前必须读取并强制执行。
   这些规则是底线，不可被任务目标覆盖。
 pdca: D.danger
 keywords: [constraints, safety, denylist, auto-merge]

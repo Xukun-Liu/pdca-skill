@@ -4,7 +4,7 @@
 skill_graph_extract.py — 阶段1：双轨提取
 
 左轨（记忆挖掘）：
-  多源归一化读取（riji-skill + 8白名单AI工具 + 关键词发现）
+  多源归一化读取（pdca-skill + 8白名单AI工具 + 关键词发现）
   → 规则提取技能线索 → skills_raw.json
 
 右轨（多源全集）：
@@ -14,7 +14,7 @@ skill_graph_extract.py — 阶段1：双轨提取
 用法：
   python scripts/skill_graph_extract.py --source all --output skills_raw.json
   python scripts/skill_graph_extract.py --source ai_tools --discover-only
-  python scripts/skill_graph_extract.py --source riji --no-cache
+  python scripts/skill_graph_extract.py --source pdca --no-cache
 
 技术约束：
   - 仅 Python 标准库（os/sys/json/re/hashlib/argparse/pathlib/urllib/subprocess）
@@ -230,7 +230,7 @@ FALLBACK_TAXONOMY = [
 @dataclass
 class RawMemory:
     """归一化后的记忆条目。"""
-    source_tool: str          # riji / trae / claude_code / cursor / ...
+    source_tool: str          # pdca / trae / claude_code / cursor / ...
     file: str                 # 文件路径
     timestamp: str            # ISO 格式或空
     content: str              # 文件内容（或摘要）
@@ -310,16 +310,16 @@ def _is_tty() -> bool:
 # 左轨：记忆归一化读取
 # ===========================================================================
 
-def read_riji_memory(skill_dir: str) -> List[RawMemory]:
-    """读取 riji-skill 自身的记忆文件（优先外置用户数据，退回包内兜底）。"""
+def read_pdca_memory(skill_dir: str) -> List[RawMemory]:
+    """读取 pdca-skill 自身的记忆文件（优先外置用户数据，退回包内兜底）。"""
     memories = []
 
-    # 1. memory/memory_main.md（外置 ~/.riji-skill/data/memory/ 优先，包内退回）
+    # 1. memory/memory_main.md（外置 ~/.pdca-skill/data/memory/ 优先，包内退回）
     memory_main = user_data_path.get_memory_main_path_with_fallback(skill_dir)
     if os.path.isfile(memory_main):
         content = _safe_read_text(memory_main)
         memories.append(RawMemory(
-            source_tool='riji',
+            source_tool='pdca',
             file=memory_main,
             timestamp=datetime.fromtimestamp(
                 os.path.getmtime(memory_main)
@@ -327,7 +327,7 @@ def read_riji_memory(skill_dir: str) -> List[RawMemory]:
             content=content,
         ))
     else:
-        logger.warning('riji memory_main.md 不存在: %s', memory_main)
+        logger.warning('pdca memory_main.md 不存在: %s', memory_main)
 
     # 2. docs_rj/memory_rj/*.md（外置优先，包内退回）
     memory_rj_dir = str(user_data_path.get_memory_rj_path())
@@ -342,7 +342,7 @@ def read_riji_memory(skill_dir: str) -> List[RawMemory]:
                 continue
             content = _safe_read_text(fpath)
             memories.append(RawMemory(
-                source_tool='riji',
+                source_tool='pdca',
                 file=fpath,
                 timestamp=datetime.fromtimestamp(
                     os.path.getmtime(fpath)
@@ -350,7 +350,7 @@ def read_riji_memory(skill_dir: str) -> List[RawMemory]:
                 content=content,
             ))
 
-    logger.info('riji 记忆: 读取 %d 个文件', len(memories))
+    logger.info('pdca 记忆: 读取 %d 个文件', len(memories))
     return memories
 
 def _read_tool_memory(tool_name: str, tool_path: str) -> List[RawMemory]:
@@ -1068,7 +1068,7 @@ def main():
         description='阶段1：双轨提取（左轨记忆挖掘 + 右轨多源全集）',
     )
     parser.add_argument(
-        '--source', choices=['riji', 'ai_tools', 'all'],
+        '--source', choices=['pdca', 'ai_tools', 'all'],
         default='all', help='数据源（默认 all）',
     )
     parser.add_argument(
@@ -1093,7 +1093,7 @@ def main():
     )
     parser.add_argument(
         '--skill-dir', default=_SKILL_DIR,
-        help='riji-skill 根目录（默认自动检测）',
+        help='pdca-skill 根目录（默认自动检测）',
     )
     parser.add_argument(
         '--skip-taxonomy', action='store_true',
@@ -1118,8 +1118,8 @@ def main():
     memories: List[RawMemory] = []
     tools_info = {'hit_tools': [], 'discovered_tools': []}
 
-    if args.source in ('riji', 'all'):
-        memories.extend(read_riji_memory(args.skill_dir))
+    if args.source in ('pdca', 'all'):
+        memories.extend(read_pdca_memory(args.skill_dir))
 
     if args.source in ('ai_tools', 'all'):
         ai_mems, ai_tools_info = read_ai_tools_memory()

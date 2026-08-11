@@ -8,10 +8,10 @@
 
 > 版本：v1.0.0 | 更新：2026-07-24
 
-> 📦 **用户数据外置说明（v1.0.0 新增）**：用户数据（memory/ docs_rj/ outputs_rj/ server_lite_data/）外置到 `~/.riji-skill/data/`，skill 包纯框架。其中 `server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，该目录即使为空也无负面影响）。本流程初始化的是**外置目录下的结构**（从 `assets/` 模板复制到外置 `docs_rj/`），不是包内。路径解析经 `scripts/user_data_path.py`（三级优先级：环境变量 > 配置文件 > 默认值）。老用户首次启动新版时 `startup_tidy.py` 自动迁移包内数据到外置目录。
+> 📦 **用户数据外置说明（v1.0.0 新增）**：用户数据（memory/ docs_rj/ outputs_rj/ server_lite_data/）外置到 `~/.pdca-skill/data/`，skill 包纯框架。其中 `server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，该目录即使为空也无负面影响）。本流程初始化的是**外置目录下的结构**（从 `assets/` 模板复制到外置 `docs_rj/`），不是包内。路径解析经 `scripts/user_data_path.py`（三级优先级：环境变量 > 配置文件 > 默认值）。老用户首次启动新版时 `startup_tidy.py` 自动迁移包内数据到外置目录。
 
 > 📖 **什么时候读这个文件**：
-> - 首次使用 riji-skill 时
+> - 首次使用 pdca-skill 时
 > - 启动检查（startup_tidy）报告项目结构缺失（docs_rj/memory_rj/ 或 docs_rj 5类 不存在）时
 > - 需要创建项目级必需文件时
 > - 首次使用需校准 SKILL.md 中的示例绝对路径时（§四 路径校准）
@@ -86,7 +86,7 @@ Bootstrap 在以下情况自动触发：
 │   └─ python {skill_dir}/scripts/startup_tidy.py --create-summary
 │       → 建 SUMMARY_RJ.md（要素 8）
 │
-│   注：{skill_dir} = riji-skill 安装目录（如 c:\Users\xxx\.agent\skills\riji-skill）
+│   注：{skill_dir} = pdca-skill 安装目录（如 c:\Users\xxx\.agent\skills\pdca-skill）
 │
 ├─ 你拒绝 → 停下，告知"未初始化无法保证 Memory First，建议先初始化再继续"
 │
@@ -123,7 +123,7 @@ Bootstrap 在以下情况自动触发：
 
 ## 四、路径校准（首次使用时）
 
-若用户从源码复制安装，SKILL.md 中的示例路径为 `/path/to/riji-skill/...` 形式。首次使用时建议替换为实际安装路径，便于复制打开。
+若用户从源码复制安装，SKILL.md 中的示例路径为 `/path/to/pdca-skill/...` 形式。首次使用时建议替换为实际安装路径，便于复制打开。
 
 ---
 

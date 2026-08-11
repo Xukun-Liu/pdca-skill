@@ -1,7 +1,7 @@
 """file_roles.py - 文件角色定义
 
 定义 skill 包内 10 个核心文件角色：written_by / read_by / description。
-路径相对 skill 包根（如 'SKILL.md' 不是 'skills/riji-skill/SKILL.md'）。
+路径相对 skill 包根（如 'SKILL.md' 不是 'skills/pdca-skill/SKILL.md'）。
 基于实际目录结构。
 设计来源: SKILL.md §3 文档体系, references/plan/design/project_structure.md
 """

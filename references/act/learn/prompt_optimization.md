@@ -15,7 +15,7 @@
 
 ## §1 12 条原则速查表
 
-| # | 原则 | 一句话 | riji-skill 对应 | 判断标准 |
+| # | 原则 | 一句话 | pdca-skill 对应 | 判断标准 |
 |---|---|---|---|---|
 | 1 | 先简化（Trim） | 从已工作的 prompt 开始，一次移除一组，重跑 evals | SKILL.md 主体+references/*.md（真实数据见 §5） | 重复规则重述≥3次→考虑合并 |
 | 2 | 结果优先（Outcome-first） | 描述目标而非规定每步；ALWAYS/NEVER 只用于真不变量 | L150"第一步永远是"（过程指令） | 判断类用决策规则，非绝对词 |
@@ -115,11 +115,11 @@ agent 提建议时，每条按 learn_cycle.md §3 bounded edit 格式，并追�
 
 ---
 
-## §5 OpenAI 原则 vs riji-skill 真实数据对照
+## §5 OpenAI 原则 vs pdca-skill 真实数据对照
 
 基于真实扫描数据（scan_report.json 20260715-160938）：
 
-| 原则 | riji-skill 现状 | 真实数据 | 缺口 |
+| 原则 | pdca-skill 现状 | 真实数据 | 缺口 |
 |---|---|---|---|
 | 1 先简化 | 7764行（SKILL.md+references）+125个【硬性】 | 20条规则重述≥3次（rule_repetitions） | HIGH |
 | 2 结果优先 | 262个绝对规则词 | ALWAYS类125+NEVER类75+must类7+only类55；过程指令521 vs 结果指令30（ratio=17.37:1） | HIGH |
@@ -140,8 +140,8 @@ agent 提建议时，每条按 learn_cycle.md §3 bounded edit 格式，并追�
 
 | 原则 | 不适用理由 |
 |---|---|
-| 6 程序化工具调用（PTC） | riji-skill 是 markdown 框架，无程序化工具调用场景 |
-| 10 前端/视觉 | riji-skill 非前端框架，无视觉/布局/设计系统 |
+| 6 程序化工具调用（PTC） | pdca-skill 是 markdown 框架，无程序化工具调用场景 |
+| 10 前端/视觉 | pdca-skill 非前端框架，无视觉/布局/设计系统 |
 | 12 prompt 结构8段式 | 按主题组织也合理，OpenAI 明确说"Use this structure as a starting point"，不强制改 |
 
 ---

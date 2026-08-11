@@ -17,7 +17,7 @@
 
 把 某开源项目 的 `harvest → mine → replay → consolidate → stage → adopt` 降维成 agent 可执行的 6 阶段流程（bounded edit 并入 reflect，gate 并入 adopt）：
 
-| 某开源项目 阶段 | riji-skill learn 对应 | 实现方式 |
+| 某开源项目 阶段 | pdca-skill learn 对应 | 实现方式 |
 |---|---|---|
 | harvest（采集会话） | 读 memory_main.md + 项目 memory_rj | 复用 Memory First 已有的读操作 |
 | mine（挖循环任务） | `learn_tidy.py scan` 扫描整个 skill | 脚本扫描输出 scan_report.json |
@@ -98,7 +98,7 @@ agent 提建议时，每条必须含 4 字段：
 ### 建议 #{编号}
 
 - **操作类型**：add / delete / replace
-- **目标文件**：{完整绝对路径，如 /path/to/riji-skill/SKILL.md}
+- **目标文件**：{完整绝对路径，如 /path/to/pdca-skill/SKILL.md}
 - **位置**：{行号范围或区块名，如 #L100-L110 / §0 触发钩子表}
 - **内容**：
   ```
@@ -254,7 +254,7 @@ learn 建议禁止触及以下核心规则（HARD-GATE 时 agent 必须主动标
 
 ## §7 与 某开源项目 的差异说明
 
-| 维度 | 某开源项目 | riji-skill learn |
+| 维度 | 某开源项目 | pdca-skill learn |
 |---|---|---|
 | 形态 | Python 训练引擎 | markdown 框架 + agent 执行 |
 | replay | LLM 重放+评分 | 省略（agent 自身具备语义理解） |
@@ -263,7 +263,7 @@ learn 建议禁止触及以下核心规则（HARD-GATE 时 agent 必须主动标
 | 调度 | nightly cron | /act 步骤3.6 累积量门控自动触发 |
 | 作用面 | CLAUDE.md + SKILL.md | memory（memory_main.md + 项目 memory_rj） |
 
-**降维理由**：riji-skill 的 agent 自身就是 optimizer，不需要额外的 LLM replay 循环；框架规则是"协作宪法"，自动 gate 可能接受破坏性改动，人工 HARD-GATE 更安全。
+**降维理由**：pdca-skill 的 agent 自身就是 optimizer，不需要额外的 LLM replay 循环；框架规则是"协作宪法"，自动 gate 可能接受破坏性改动，人工 HARD-GATE 更安全。
 
 ---
 

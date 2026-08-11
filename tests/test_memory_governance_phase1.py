@@ -33,7 +33,7 @@ class TestGetMemoryRjPath:
 
     def test_returns_path_under_docs_rj(self, monkeypatch, tmp_path):
         """get_memory_rj_path() 应返回 docs_rj/memory_rj/"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         result = user_data_path.get_memory_rj_path()
         assert isinstance(result, Path)
         assert result.name == "memory_rj"
@@ -42,7 +42,7 @@ class TestGetMemoryRjPath:
 
     def test_consistent_with_get_docs_rj_path(self, monkeypatch, tmp_path):
         """get_memory_rj_path() 应等于 get_docs_rj_path() / 'memory_rj'"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         expected = user_data_path.get_docs_rj_path() / "memory_rj"
         actual = user_data_path.get_memory_rj_path()
         assert actual == expected
@@ -57,7 +57,7 @@ class TestPathAlignment:
 
     def test_resolve_memory_rj_dir_returns_user_data_path(self, monkeypatch, tmp_path):
         """无 primary_docs marker 时，_resolve_memory_rj_dir 应走 user_data_path"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         # mock read_primary_docs_marker 返回 None
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
@@ -67,7 +67,7 @@ class TestPathAlignment:
 
     def test_resolve_memory_rj_dir_prefers_primary_marker(self, monkeypatch, tmp_path):
         """有 primary_docs marker 时，_resolve_memory_rj_dir 应走 primary/memory_rj"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         primary_dir = str(tmp_path / "primary_docs")
         os.makedirs(primary_dir, exist_ok=True)
         import generate_docs
@@ -77,7 +77,7 @@ class TestPathAlignment:
 
     def test_write_project_uses_user_data_path_when_no_marker(self, monkeypatch, tmp_path):
         """write_project 无 marker 时应写到 user_data_path.get_memory_rj_path()"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # 预先创建新路径目录，避免老路径 ./memory/ 回退触发
@@ -115,7 +115,7 @@ class TestBackupBeforeOperation:
 
     def test_backup_creates_undo_dir(self, monkeypatch, tmp_path):
         """备份应创建 undo/{tool}_{ts}/ 目录"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # 准备 fake memory_main.md
@@ -138,7 +138,7 @@ class TestBackupBeforeOperation:
 
     def test_backup_includes_memory_rj(self, monkeypatch, tmp_path):
         """备份应包含 memory_rj/ 目录"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # 准备 fake memory_main.md
@@ -161,7 +161,7 @@ class TestBackupBeforeOperation:
 
     def test_backup_returns_none_on_failure(self, monkeypatch, tmp_path):
         """备份失败应返回 None，不抛异常"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # 创建 fake GLOBAL_MEMORY_FILE
@@ -191,7 +191,7 @@ class TestMemoryRollback:
 
     def test_rollback_restores_memory_main(self, monkeypatch, tmp_path):
         """回滚应恢复 memory_main.md"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
         # 准备 fake memory_main.md
@@ -216,14 +216,14 @@ class TestMemoryRollback:
 
     def test_rollback_no_match_returns_false(self, monkeypatch, tmp_path):
         """无匹配 timestamp 应返回 rolled_back=False"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         result = memory_shadow_write.memory_rollback("nonexistent_timestamp")
         assert result['rolled_back'] is False
         assert 'reason' in result
 
     def test_rollback_no_undo_dir_returns_false(self, monkeypatch, tmp_path):
         """undo 目录不存在应返回 rolled_back=False"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         result = memory_shadow_write.memory_rollback("20260730")
         assert result['rolled_back'] is False
 
@@ -237,7 +237,7 @@ class TestCleanupOldUndos:
 
     def test_cleanup_removes_old_undos(self, monkeypatch, tmp_path):
         """清理应删除超期 undo 目录"""
-        monkeypatch.setenv("RIJI_DATA_DIR", str(tmp_path))
+        monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         undo_base = os.path.join(str(tmp_path), "undo")
         os.makedirs(undo_base, exist_ok=True)
         # 创建一个"老"目录（修改 mtime 为 35 天前）

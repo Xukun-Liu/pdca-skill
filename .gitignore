@@ -35,7 +35,7 @@ memory/memory_main.md
 !memory/memory_main.md
 
 # T013 用户数据外置：排除用户数据目录（不进 git，每个用户独立）
-# 用户数据默认在 ~/.riji-skill/data/，但若用户误放包内也排除
+# 用户数据默认在 ~/.pdca-skill/data/，但若用户误放包内也排除
 memory/*
 !memory/memory_main.md
 docs_rj/

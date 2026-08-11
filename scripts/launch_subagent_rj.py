@@ -1,5 +1,5 @@
 """
-launch_subagent_rj.py — riji-skill 副 agent 调度辅助工具
+launch_subagent_rj.py — pdca-skill 副 agent 调度辅助工具
 
 功能：
   - list      : 列出所有配置的副 agent
@@ -357,7 +357,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="riji-skill 副 agent 调度辅助工具",
+        description="pdca-skill 副 agent 调度辅助工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例：
@@ -365,7 +365,7 @@ def main() -> int:
   python scripts/launch_subagent_rj.py suggest --task "帮我写一个 spec"
   python scripts/launch_subagent_rj.py suggest --task "写代码 + 调试" --json
   python scripts/launch_subagent_rj.py validate
-  python scripts/launch_subagent_rj.py log --agent spec_design_agent_riji --task "写spec" --result success
+  python scripts/launch_subagent_rj.py log --agent spec_design_agent_pdca --task "写spec" --result success
         """,
     )
     sub = parser.add_subparsers(dest="command", required=True)

@@ -6,7 +6,7 @@ commit_lint.py — Git Commit Message 校验脚本
 
 用途
 ----
-给 riji-skill 框架新增 commit message 校验能力，对齐 Conventional Commits 1.0.0
+给 pdca-skill 框架新增 commit message 校验能力，对齐 Conventional Commits 1.0.0
 规范 + 框架 §0.6 任务名关联规则。支持三种子命令：
   lint       — 校验单条 commit message 字符串
   lint-file  — 校验文件中的 commit message（commit-msg hook 调用）
@@ -605,7 +605,7 @@ def _format_check_last_human(output):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Git Commit Message 校验脚本（对齐 Conventional Commits + riji-skill 框架规范）',
+        description='Git Commit Message 校验脚本（对齐 Conventional Commits + pdca-skill 框架规范）',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 校验规则：

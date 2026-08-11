@@ -1,6 +1,6 @@
 """protocol - 协议层结构化常量
 
-riji-skill 协议层任务产出。
+pdca-skill 协议层任务产出。
 借鉴业界 AI PM 协议实践，Python 版改造。
 
 定义所有跨任务的协议常量：

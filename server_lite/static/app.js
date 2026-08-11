@@ -289,7 +289,7 @@ async function loadAgents() {
         }
         document.getElementById('statAgents').textContent = agents.length;
         grid.innerHTML = agents.map(a => {
-            const shortName = a.name.replace('_agent_riji', '').replace(/_riji$/, '');
+            const shortName = a.name.replace('_agent_pdca', '').replace(/_pdca$/, '');
             const knowledgeHtml = (a.knowledge || []).map(k => {
                 const base = k.replace('references/', '').replace('.md', '');
                 return `<span class="tag tag-skill">${escapeHtml(base)}</span>`;

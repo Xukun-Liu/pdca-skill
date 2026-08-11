@@ -23,7 +23,7 @@
 
 ### 主 docs 目录概念
 
-一个项目**只有一个主 docs 目录**，所有 riji-skill 任务文档（spec_rj/task_rj/handoff_rj/archive_rj）+ 项目记忆（memory_rj）都存放在这里；项目记忆在 `docs_rj/memory_rj/` 内。位置不固定，默认 `./docs_rj/`。
+一个项目**只有一个主 docs 目录**，所有 pdca-skill 任务文档（spec_rj/task_rj/handoff_rj/archive_rj）+ 项目记忆（memory_rj）都存放在这里；项目记忆在 `docs_rj/memory_rj/` 内。位置不固定，默认 `./docs_rj/`。
 
 ### 优先级路由
 
@@ -73,7 +73,7 @@
 
 ### 散落归档
 
-检测到 riji-skill 任务文档散落在非主 docs 目录时：
+检测到 pdca-skill 任务文档散落在非主 docs 目录时：
 1. **扫描识别**：运行 `python generate_docs.py --scan-docs` 输出 JSON 清单
 2. **告知用户**：列出散落文档的位置和内容
 3. **用户确认后归档**：运行 `python generate_docs.py --archive-scattered --primary-docs {主docs}`
@@ -81,14 +81,14 @@
 
 ### 识别特征
 
-riji-skill 产出的任务文档有固定结构：
+pdca-skill 产出的任务文档有固定结构：
 
 | 特征 | 说明 | 示例 |
 |------|------|------|
 | 子目录名 | 固定4种 | `spec_rj/` `task_rj/` `handoff_rj/` `archive_rj/`（记忆不在内，独立在根 `memory/`） |
 | 文件名前缀 | 类型+任务名+时间戳（无编号前缀） | `user_auth_spec_20260710_1430.md` |
 
-非 riji-skill 文档（如 Sphinx API 文档、用户手册）不会被误识别。
+非 pdca-skill 文档（如 Sphinx API 文档、用户手册）不会被误识别。
 
 ### 冲突处理
 
@@ -143,14 +143,14 @@ riji-skill 产出的任务文档有固定结构：
 ```bash
 # {主docs} 替换为实际主 docs 路径，默认 ./docs_rj/
 mkdir -p {主docs}/{spec_rj,task_rj,handoff_rj,archive_rj}
-cp ~/.agent/skills/riji-skill/assets/spec_template.md {主docs}/spec_rj/{任务名}_spec_YYYYMMDD_HHMM.md
-cp ~/.agent/skills/riji-skill/assets/task_template.md {主docs}/task_rj/{任务名}_task_YYYYMMDD_HHMM.md
-cp ~/.agent/skills/riji-skill/assets/handoff_template.md {主docs}/handoff_rj/{任务名}_handoff_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/spec_template.md {主docs}/spec_rj/{任务名}_spec_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/task_template.md {主docs}/task_rj/{任务名}_task_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/handoff_template.md {主docs}/handoff_rj/{任务名}_handoff_YYYYMMDD_HHMM.md
 # 项目记忆在 docs_rj/memory_rj/ 内，经 memory_shadow_write.write_project 双写
-cp ~/.agent/skills/riji-skill/assets/memory_template.md {项目根}/docs_rj/memory_rj/{任务名}_memory_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/memory_template.md {项目根}/docs_rj/memory_rj/{任务名}_memory_YYYYMMDD_HHMM.md
 ```
 
-> ⚠️ 脚本路径：`riji-skill/scripts/generate_docs.py`（skill 安装目录下）
+> ⚠️ 脚本路径：`pdca-skill/scripts/generate_docs.py`（skill 安装目录下）
 
 ---
 

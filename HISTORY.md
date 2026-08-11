@@ -1,13 +1,13 @@
 ---
-title: riji-skill 版本历史
+title: pdca-skill 版本历史
 version: v1.0.1
-last_updated: 2026-08-07
+last_updated: 2026-08-10
 author: huihui
 ---
 
-# riji-skill 版本历史
+# pdca-skill 版本历史
 
-> 本文件记录 riji-skill(前身 huihui-skill)从 2026-06-27 诞生到 2026-07-21 公开发布版的完整进化历程。
+> 本文件记录 pdca-skill（前身 riji-skill，再前身 huihui-skill）从 2026-06-27 诞生到 2026-07-21 公开发布版的完整进化历程。
 > 不是冷冰冰的变更日志,而是一份带温度的"成长档案"——记录每一次重构、每一轮对抗审查、每一个深夜踩坑后顿悟的瞬间。
 
 ---
@@ -278,8 +278,8 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 ## 维护规则
 
 > 每次版本升级在此追加一行,并同步更新 SKILL.md 头部版本号。
-> 维护者:riji-skill 框架自动维护 + 人工审核
-> License: riji-skill 非商业源码可得许可证 v1.0（非商业免费，商用须书面授权）
+> 维护者:pdca-skill 框架自动维护 + 人工审核
+> License: pdca-skill 非商业源码可得许可证 v1.0（非商业免费，商用须书面授权）
 
 ### 2026-08-01：SKILL.md 结构瘦身（-306 行）
 
@@ -362,6 +362,14 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - A/B 双副本一致：公开仓库与本地技能副本均切换；validate_skill A/B 均 32/32 MUST FIX=0
 - 范围与效力：新许可证只约束此后发布版本（已发 Apache 旧副本不追溯）；执行靠作者本人（平台版权投诉为主要手段）
 
+### 2026-08-10：更名 riji-skill → pdca-skill（v1.0.1）
+
+- 用户拍板品牌改名：riji-skill-public v1.0.1 → pdca-skill-public v1.0.1（7 条映射全仓库替换，89 文件 / 1010 处，git 历史不改写）
+- 用户数据迁移：~/.riji-skill/data → ~/.pdca-skill/data（10430 文件 / 19.68MB，零丢失），桥接 config.json 保持已安装副本路径兼容
+- HISTORY 历史正文按「历史保真」原则保留原名（仿 huihui→riji 先例）：时间线 / 版本表 / 对抗审查记录中的 riji 引用不改；仅 frontmatter title、H1、首段前身声明、维护规则块品牌行更新
+- 对抗性审查 2 轮（独立 subagent）：第 1 轮 6 HIGH + 14 MEDIUM；第 2 轮 fresh 验证 HIGH 全真修复 + 无新增 HIGH（HOME 权限收窄 / 测试死参数 / 自伤风险 / 对账口径 / 数字漂移等）
+- 决策记录：不删旧数据 ✅ / 数据迁移 + 桥接（不追已安装副本）✅ / 文件夹整体改名 ✅ / 一次性批量替换 + git diff 全量核验 ✅ / HISTORY 历史保真 ✅
+
 ---
 
-**版本**:v1.0.1 | **最后更新**:2026-08-07 | **作者**:huihui
+**版本**:v1.0.1 | **最后更新**:2026-08-10 | **作者**:huihui
