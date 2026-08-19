@@ -1,7 +1,7 @@
 ---
 title: {任务名} - 需求规格说明
 version: v1.0.0
-skill_version: v1.0.1
+skill_version: v1.0.2
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 owner: [负责人]

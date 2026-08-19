@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
-version: v1.0.1
-last_updated: 2026-08-10
+version: v1.0.2
+last_updated: 2026-08-19
 author: huihui
 ---
 
@@ -74,7 +74,7 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
 2026-07-11  v1.5       校验增强 ROUT-03(检查数 15→16)
 2026-07-12  v1.0.0     riji_skill v1.0.0(改名 huihui-skill → riji_skill,落地四道安全锁)
                        ─────── 9 天稳定期 ───────
-2026-07-21  v1.0.0     🚀 riji-skill-public v1.0.0 公开发布版(当前版本)
+2026-07-21  v1.0.0     🚀 riji-skill-public v1.0.0 公开发布版
                        PDCA 4 环脊柱模型 + 10 副 agent + 8 要素启动检查
 2026-07-31  v1.0.0     吸收 i-have-adhd（MIT, Ayoub Ghriss）输出节奏规则
                         ── 评审 https://github.com/ayghri/i-have-adhd 后融合
@@ -88,6 +88,13 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                         ── 6 条规则 riji-skill 已覆盖不重复（#2/#4/#5/#7/#8/#10）
 2026-08-06  v1.0.1     文件扫描确认门控（security.md L2：任务外扫描先确认范围+目的+关键词）
                         ── 技能图谱自动化（--auto 每轮 /act 3.6a 自动刷新）+ 数据外置 ~/.riji-skill/data/
+2026-08-11  v1.0.1     Excel 分析能力系统性升级（当时未登记，v1.0.2 补登）
+                       ── excel_analysis.md v1.0.0→v1.3.0：新增 7 章 + 从 4 个外部 skill 提炼 9 项方法论；4 个配套文件交叉引用闭环
+2026-08-13  v1.0.1     融合 HTML/PPT 制作（自包含方法论，内网可用）
+                       ── 新增 references/do/code/html_ppt_creation.md：PPT 用 python-pptx/PptxGenJS 生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件；HTML 网页手写 + 前端设计五原则；图表手写 SVG；内网边界明确
+                       ── trigger_hooks 新增 2 触发钩子行（v1.1.4→v1.1.5）；index 47→48；README/网页说明/subagents 登记；版本不 bump 保持 v1.0.1
+2026-08-19  v1.0.2     🚀 pdca-skill-public v1.0.2 公开发布版（当前版本）
+                       两批能力升级（Excel v1.3.0 + HTML/PPT 模块）+ 发布瘦身（缓存/私人数据/占位外链清理）
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
@@ -370,6 +377,30 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 对抗性审查 2 轮（独立 subagent）：第 1 轮 6 HIGH + 14 MEDIUM；第 2 轮 fresh 验证 HIGH 全真修复 + 无新增 HIGH（HOME 权限收窄 / 测试死参数 / 自伤风险 / 对账口径 / 数字漂移等）
 - 决策记录：不删旧数据 ✅ / 数据迁移 + 桥接（不追已安装副本）✅ / 文件夹整体改名 ✅ / 一次性批量替换 + git diff 全量核验 ✅ / HISTORY 历史保真 ✅
 
+### 2026-08-13：融合 HTML/PPT 制作（v1.0.1）
+
+- 背景：用户反馈 riji-skill 在 HTML 制作与 PPT 制作上是短板——office_processing.md 只有 python-pptx 文件操作，SKILL.md 触发钩子表无"做网页/做PPT"路由；且目标环境是**内网离线机**（无 trae 插件、无 CDN），因此不做插件路由，改为把方法论直接沉淀为自包含模块
+- 方案：自包含方法论（从已装 trae 插件提炼精华后内化，**不依赖插件**）——新增 `references/do/code/html_ppt_creation.md`：PPT 用 python-pptx（纯 Python）/PptxGenJS（Node）生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件（16:9 舞台 + 键盘翻页 + Node 导出）；HTML 网页手写 + 前端设计五原则；图表手写 SVG / 本地 echarts；内网边界见 §四
+- 登记 7 处：trigger_hooks.md（+2 触发钩子行 v1.1.4→v1.1.5）/ index.md（47→48、do 8→9、code 5→6、doc_proc 4→5）/ SKILL.md §0.5 资源索引（+2 行）/ README.md（能力地图 + 参考手册 23→24 高频模块 + 包内 47→48）/ subagents_rj.md（doc_proc_agent 知识库 + 触发词）/ 网页说明.html / HISTORY.md 本节
+- 验证：validate_skill MUST FIX=0 + 残留 grep 0 + 版本号一致性
+- 决策记录：自包含方法论（非路由、非整体嵌入）✅ / HTML 与 PPT 都做 ✅ / 版本不 bump 保持 v1.0.1 ✅ / 变更记录落盘 `C:\Users\86029\Desktop\PDCA-skill v1.0.2升级\` ✅
+
+### 2026-08-11：Excel 分析能力系统性升级（v1.0.2 内容，本节 2026-08-19 补登）
+
+- 背景：用户反馈 Excel 深度分析是短板——excel_analysis.md 停留在 v1.0.0 基础方法论，缺颜色编码/可视化/格式规范/做表前规划等工程实践
+- 三阶段推进：① excel_analysis.md 核心方法论扩充（新增颜色编码速查/可视化设计原则/专业表格格式规范/做表前规划/KPI 卡片设计等 6 章 + 验收清单扩充，v1.0.0→v1.2.1）② 打通 4 个配套文件引用关系形成「分析能力 + 配套工具 + 审查保障」闭环——office_processing.md v1.1.0（交叉引用表）/ file_to_markdown.md v1.1.0（Excel 转 MD 6 场景注意事项）/ code_rules.md v1.1（第十章 Excel 代码规范）/ adversarial_review.md v1.1.0（§四数据分析专项审查 8 维度）③ 从 4 个新装 skill（industry-researcher / lark-sheets / lark-base / lark-drive）提炼 9 项方法论融入（意图→操作映射/数据源范围 3 步确认/全局 vs 局部/图表数据源精确控制/扩展图表选型/三方对照验证法/交付验收 6 项追溯/美化 5 维度/条件格式设计方法论新增章，v1.2.1→v1.3.0），剥离飞书 API 依赖纯 Python 可用
+- 来源：xlsx skill + data-processing 插件 + 4 个 lark/industry skill 提炼，内网离线可用；源记录见《本次对话变更记录_20260811.md》
+- 验证：5 文件版本号 header 与版本历史一致 + 无占位符 + 交叉引用路径有效 + 内网零依赖
+- 本节为 2026-08-19 发布 v1.0.2 时补登（当时未写入 HISTORY）
+
+### 2026-08-19：v1.0.2 公开发布版
+
+- 版本 bump：v1.0.1 → v1.0.2 全链路同步 17 处——SKILL.md frontmatter + HTML 注释 / README 版本行 / 网页说明.html 3 处 / HISTORY.md frontmatter + 时间线 + 页脚 / assets 11 个模板 `skill_version` / evals.json / subagent_config_rj.json（+last_updated）/ server_lite `__init__.py`+`app.py` 健康检查+static/index.html 面板版本 / startup_tidy.py SUMMARY 生成戳 / package_skill.py 用法示例；references 模块自身版本号与「【v1.0.1 新增】」类历史标记按惯例保留
+- 本版内容（相对 v1.0.1 发布包）：① Excel 分析系统性升级（见 2026-08-11 补登条目）② HTML/PPT 制作模块（见 2026-08-13 条目）③ 发布瘦身
+- 发布瘦身（按可复用 SOP，开发环境复制为发布目录后剔除）：.git/（446 文件 git 历史+个人远端）/ docs_rj/（88 文件私人用户数据）/ outputs_rj/ / .playwright-mcp/ / __pycache__×4（3.10+3.11 双份）/ tests/.pytest_cache / .primary_docs_rj（私人本地路径）/ agents_rj/subagent_call_log.jsonl（运行日志）；README 顶部 img.shields.io 外链徽章换纯文本版本行；网页说明.html 占位 clone 命令（github.com/yourname）改「下载 ZIP 解压」；成品 156 文件（v1.0.1 为 155，差 1 = 新增 html_ppt_creation.md），框架本体零损失
+- 决策记录：exa.env.json.example 保留（README 方式B 引用作配置模板，内容仅占位符无真实 key，用户拍板）✅ / 发布文案 = HISTORY 登记 + 独立《v1.0.2 发布介绍》✅ / 验证后打 zip ✅
+- 验证：validate_skill 32/32 pass MUST FIX=0（版本同步前后各跑一轮均全绿）+ 身份残留扫描 0 命中（Xukun-Liu/huihui_9999/yourname/img.shields.io 全零；HISTORY 内 3 处 `~/.riji-skill/data` 为改名历史保真记录）
+
 ---
 
-**版本**:v1.0.1 | **最后更新**:2026-08-10 | **作者**:huihui
+**版本**:v1.0.2 | **最后更新**:2026-08-19 | **作者**:huihui

@@ -1,7 +1,7 @@
 ---
 title: {项目名} 项目总 spec（source of truth）
 version: v1.0.0
-skill_version: v1.0.1
+skill_version: v1.0.2
 date_created: YYYY-MM-DD HH:MM
 last_updated: YYYY-MM-DD HH:MM
 owner: {负责人}

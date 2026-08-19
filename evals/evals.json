@@ -1,5 +1,5 @@
 {
-  "version": "v1.0.1",
+  "version": "v1.0.2",
   "description": "pdca-skill 测试用例库（INT-03 检查项）。每条用例含输入/预期/断言，供 validate_skill.py 校验。v1.0.0 补充 7 铁律 + HARD-GATE + 触发钩子 + 对抗审查覆盖。",
   "evals": [
     {

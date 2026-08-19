@@ -1,6 +1,6 @@
 ---
 version: v1.0.0
-skill_version: v1.0.1
+skill_version: v1.0.2
 ---
 
 # skill_graph.md 输出模板

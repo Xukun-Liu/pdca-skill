@@ -5,8 +5,8 @@ T012: 打包 skill 包为 zip，排除用户数据目录（memory/ docs_rj/ outp
 确保发布包只含框架文件，用户解压覆盖升级时数据 0 丢失。
 
 用法：
-    python scripts/package_skill.py --version v1.0.1
-    python scripts/package_skill.py --version v1.0.1 --output ./dist/
+    python scripts/package_skill.py --version v1.0.2
+    python scripts/package_skill.py --version v1.0.2 --output ./dist/
 
 输出文件名：pdca-skill-v{版本号}-{YYYYMMDD-HHMM}.zip
 """

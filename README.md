@@ -1,7 +1,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.0.1-green.svg)](HISTORY.md)
+[![Version](https://img.shields.io/badge/version-v1.0.2-green.svg)](HISTORY.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
@@ -121,7 +121,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **技能编排器**：按触发词读手册 / 调度外部专业 skill | 自带画图、Excel、爬虫的万能工具箱 |
 | 纯本地 Markdown + Python 标准库脚本，零云依赖 | 必须联网/开账号才能跑的在线服务 |
 
-> 包内：**47** 个参考模块 · **12** 个模板 · **34** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
+> 包内：**48** 个参考模块 · **12** 个模板 · **34** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
 
 **装前 2 个前提**：
 
@@ -186,6 +186,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **agent-find** | 外部能力搜索（Exa → WebFetch → WebSearch 降级链） |
 | **Red Flags** | 19 条偏离信号自检 |
 | **手绘呈现** | 验收/汇报 → 手绘 SVG 速记 |
+| **HTML/PPT 制作** | 做网页/落地页 → 手写 HTML/CSS/JS（前端设计五原则）；做 PPT → python-pptx / PptxGenJS 生成可编辑 .pptx 或 HTML 幻灯片；自包含方法论见 `html_ppt_creation.md`（内网可用） |
 | **活人感写作** | 写文章/知乎/去AI味等 13 触发词 → 直接出稿 + `check_prose.py` |
 | **文件扫描门控** | L0 任务内 / L1 点名文件 / L2 任务外须确认（防误扫敏感目录） |
 | **技能图谱** | 能力画像；点名全量先确认；`/act` 自动刷新仅读框架自身记忆 |
@@ -194,7 +195,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ---
 
-## 参考手册（references/）—— 47 个按需读取模块
+## 参考手册（references/）—— 48 个按需读取模块
 
 不全部加载到上下文，触发钩子按「你正在做什么」自动指引读取。按使用场景分 8 类：
 
@@ -206,6 +207,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | [design_patterns.md](references/plan/design/design_patterns.md) | 6 种设计模式应用指南 |
 | [project_structure.md](references/plan/design/project_structure.md) | 标准项目结构/模块划分/配置管理 |
 | [git_workflow.md](references/do/code/git_workflow.md) | Git 分支策略/Commit 规范/回溯保障/回滚 SOP |
+| [html_ppt_creation.md](references/do/code/html_ppt_creation.md) | 做 HTML 网页/落地页 → 手写 HTML/CSS/JS；做 PPT → python-pptx/PptxGenJS 可编辑 .pptx 或 HTML 幻灯片（自包含、内网可用） |
 
 **② 出错 / 调试时**
 
@@ -261,7 +263,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 |------|------|
 | [article-writing.md](references/common/style/article-writing.md) | 活人感写作入口（知乎/公众号/去AI味等；直接出稿；材料澄清最多三问） |
 
-> 上表按场景收录 23 个高频模块；全量 47 个模块索引见 [references/index.md](references/index.md)。
+> 上表按场景收录 24 个高频模块；全量 48 个模块索引见 [references/index.md](references/index.md)。
 
 ## 模板文件（assets/）—— 12 个开箱即用
 
@@ -809,7 +811,7 @@ pdca-skill/
 │   ├── skill_graph_template.md
 │   ├── index_template.md
 │   └── readme/                     # README 配图（hero-loop.svg 手绘闭环图）
-├── references/                 # 47 个参考手册（按需读取，见上表）
+├── references/                 # 48 个参考手册（按需读取，见上表）
 ├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 34 个）
 │   ├── archive_tidy.py
 │   ├── browser_inspect_docs.py      # 文档浏览器检视辅助

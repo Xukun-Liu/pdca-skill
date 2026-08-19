@@ -29,7 +29,7 @@ def create_app(config=None):
     # 健康检查
     @app.route("/api/health")
     def health():
-        return jsonify({"status": "ok", "version": "v1.0.1"})
+        return jsonify({"status": "ok", "version": "v1.0.2"})
 
     # 前端入口
     @app.route("/")
