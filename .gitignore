@@ -3,6 +3,9 @@ __pycache__/
 *.pyc
 *.pyo
 
+# 私人本地路径指针（运行时产物，指向用户本机 docs_rj 绝对路径，不进 git）
+.primary_docs_rj
+
 # 备份文件（改前手动备份，不进 git）
 *.bak
 *.bak.*
