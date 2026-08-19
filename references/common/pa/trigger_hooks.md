@@ -1,13 +1,13 @@
 <!-- PDCA标签：P.route A.handoff -->
 <!-- 子标签场景：路由判断、关键词触发、reference 索引 -->
-<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味 -->
+<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck -->
 <!-- 引用范围：main + bootstrap_agent -->
 
 # 触发钩子表（从 SKILL.md §0 外迁）
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.4 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-06（安全行加扫描关键词 / skill_graph 行加 L2 确认前置 / 文章写作触发行新增 / 触发词补"去AI味" / 移除 MIGRATION.md 触发行）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.5 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-13（新增 HTML/PPT 制作两行触发钩子，路由到 html_ppt_creation.md 自包含方法论，python-pptx/PptxGenJS/手写 HTML，内网可用）| PDCA 标签：P.route A.handoff
 > 本文件是 pdca-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -65,6 +65,8 @@
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
 | 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
 | 写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味 | references/common/style/article-writing.md（活人感写作入口：按任务链式读 article-writing/ 下子模块） | **写作任务不生成 spec/task，直接出稿；材料澄清最多三问；正文只交作品（详见入口"流程覆盖声明"）** |
+| 做网页/前端/HTML/落地页/网站/组件/页面/landing/网页制作 | references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，内网可用） | **按本文档手写 HTML/CSS/JS 制作；图片用用户提供/本地素材（无在线生成时），图表手写 SVG 或本地 echarts** |
+| 做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck/PPT制作 | references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，内网可用） | **按本文档制作：python-pptx（纯 Python）或 PptxGenJS（Node）生成可编辑 .pptx，或手写单文件 HTML 幻灯片；视觉方法论见 §一/§二** |
 
 > ❌ 禁止以"我记得规则"为借口跳过读文件。RAM（上下文）是易失的，细节必须从硬盘重读。触发信号出现不读对应reference = Red Flag偏离。
 
@@ -127,3 +129,4 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | v1.1.2 | 2026-08-06 | 新增文章写作触发行（写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文 → article-writing.md），自动触发列注明"写作任务不生成 spec/task"；头部关键词注释同步 |
 | v1.1.3 | 2026-08-06 | 文章写作触发词补"去AI味"（用户要求：去AI味=文章改写润色场景）；头部关键词注释同步 |
 | v1.1.4 | 2026-08-06 | 移除 MIGRATION.md 触发行（文档规整流程随 MIGRATION.md 删除）；头部关键词注释同步清理 |
+| v1.1.5 | 2026-08-13 | 新增 HTML/PPT 制作两行触发钩子（做网页/前端/HTML/落地页/做PPT/幻灯片/演示文稿/课件 → html_ppt_creation.md 自包含方法论），自动触发列注明"按本文档自包含制作（python-pptx / PptxGenJS / 手写 HTML，内网可用）"；头部关键词注释同步 |
