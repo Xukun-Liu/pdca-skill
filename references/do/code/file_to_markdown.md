@@ -7,7 +7,7 @@
 
 > 阶段标签：D（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 更新：2026-07-13
+> 版本：v1.1.0 | 更新：2026-08-11
 > v1.0 变更：四期交付。综合网上最佳实践（微软 某工具，82.9k★，2025 检索）+ 本地 office_processing.md（二期），沉淀「各类文件→Markdown」为纯文本参考模块，内网离线可用、零外部依赖。沙箱实测纠正——`某工具` 安装命令改为「extras 必装」（`某工具[pdf,docx,pptx,xlsx]`），裸装转不了 Office 文件（`MissingDependencyException`）；§一、§五加沙箱踩坑说明。核心四格式纯 Python 离线路径已实测全 PASS。
 
 > 📖 **什么时候读这个文件**：
@@ -103,6 +103,19 @@ with open("数据.md", "w", encoding="utf-8") as f:
         f.write(xl.parse(sheet).to_markdown(index=False))
 ```
 > 不用 pandas 也行：`openpyxl` 读单元格，自己拼 `| 列1 | 列2 |` 表格字符串。
+
+### ⚠️ Excel 转 MD 注意事项
+
+| 场景 | 问题 | 处理方式 |
+|------|------|----------|
+| **公式** | 转 MD 只保留当前值，不保留公式 | 需要公式时在 `excel_analysis.md` 中用 openpyxl 读公式（`data_only=False`），或保留 `xlsx` 原文件 |
+| **合并单元格** | 合并格只保留左上角值，其余为 NaN | 转前先用 pandas `ffill()` 填充合并值 |
+| **多级表头** | 转 MD 后表头可能变 MultiIndex | 转前 `df.columns = ['_'.join(col).strip() for col in df.columns]` 拉平 |
+| **日期格式** | 转 MD 后日期可能变时间戳 | 转前 `df['日期'] = df['日期'].astype(str)` 固化字符串 |
+| **大数据量（>10万行）** | MD 文件过大（>10MB），AI 读取困难 | 先抽样（`df.sample(1000)`）或只转关键列 |
+| **条件格式/颜色** | MD 无颜色概念，语义色丢失 | 颜色编码见 `excel_analysis.md` §十六，转 MD 前用额外列标注语义 |
+
+> 需要先分析再转 MD（如清洗→透视→转 MD 做报告）？测 `excel_analysis.md` 的分析流程，再做转换。
 
 ---
 

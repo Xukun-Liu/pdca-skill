@@ -6,7 +6,7 @@
 # 代码规则
 > 阶段标签：D（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 更新：2026-07-08
+> 版本：v1.1 | 更新：2026-08-11
 
 > 📖 **什么时候读这个文件**：
 > - 准备写/改任何代码前
@@ -559,8 +559,87 @@ def search():
 
 ---
 
+---
+
+## 第十章：Excel 代码规范（openpyxl / pandas）
+
+> 当任务涉及 Python 操作 Excel（openpyxl 写公式/格式、pandas 分析数据）时，除遵循通用规则外，还需遵守以下 Excel 专属规范。
+
+### 10.1 openpyxl 代码规范
+
+| 规则 | 说明 | 正例 | 反例 |
+|------|------|------|------|
+| **常量定义复用** | 样式常量（Fill/Border/Font）在文件顶部一次定义，全表复用 | 见下方"可复用样式助手" | 每格单独 new PatternFill |
+| **公式优先** | 用 Excel 公式字符串而非 Python 计算后硬编码值 | `ws['B10'] = '=SUM(B2:B9)'` | `ws['B10'] = 5000` |
+| **索引 1 基** | openpyxl 行列从 1 开始 | `row=5, col=3` = C5 | `row=0, col=0` 报错 |
+| **data_only 只读不存** | `data_only=True` 读计算值，但不要 save | `load_workbook(f, data_only=True)` 仅读 | `load_workbook(f, data_only=True).save()` 丢公式 |
+| **列映射核查** | 第 64 列是 BL 不是 BK | `openpyxl.utils.get_column_letter(64)` → 'BL' | 凭印象写 'BK' |
+| **公式后必重算** | 写完公式后交付前必须重算验证 | 用 `formulas` 库重算（离线可用） | 交付后打开全是 0/空白 |
+
+### 10.2 pandas 数据分析代码规范
+
+| 规则 | 说明 | 正例 | 反例 |
+|------|------|------|------|
+| **inplace 慎用** | 默认不原地修改，显式赋值 | `df = df.dropna()` | `df.dropna(inplace=True)`（难追踪） |
+| **链式操作圆括号** | 多步操作用小括号包起来分行 | `(df .query("...") .groupby(...) .agg(...))` | 一行几百字符 |
+| **类型显式指定** | 读 Excel 时指定 dtype 防止推断错误 | `pd.read_excel(f, dtype={'id': str})` | 让 pandas 自动推断 id 变 float |
+| **索引拉平** | 透视/分组后导出到 Excel 前拉平索引 | `pivot.reset_index(inplace=True)` | 多层索引直接 to_excel |
+| **NaN 处理** | 运算前处理 NaN，否则结果全 NaN | `df['值'].fillna(0).sum()` | `df['值'].sum()` 含 NaN 返回 NaN |
+| **抽样调试** | 大数据先抽样调试，确认逻辑后再全量跑 | `df.sample(1000).pipe(分析函数)` | 10 万行直接跑，debug 时重跑 5 分钟 |
+
+### 10.3 Excel 代码常见陷阱
+
+| 陷阱 | 现象 | 原因 | 修复 |
+|------|------|------|------|
+| **DataFrame 行号偏移** | Excel 行号比预期大 1 | DataFrame 索引 0 基，Excel 1 基 | 写公式时 `row = df_index + 2`（+1 转 1 基，+1 表头行） |
+| **日期变时间戳** | Excel 里显示 45000 而非 2023-01-01 | pandas 读 Excel 日期格式丢失 | `pd.to_datetime()` 或 `read_excel(parse_dates=['日期列'])` |
+| **空值公式 #DIV/0!** | 打开 Excel 整片 #DIV/0! | 公式中分母可能有空值 | `=IF(denom=0,"",num/denom)` |
+| **跨表引用掉链** | 改名后公式失效 | 公式引用了其他 Sheet 名 | 用 `Sheet1!A1` 格式，改名后自动更新 |
+| **大数据写入慢** | 写入 10 万行耗时 > 1 分钟 | openpyxl 逐行写入慢 | 用 `write_only=True` 或 pandas 的 `to_excel()` |
+
+### 10.4 可复用样式助手（推荐复制到项目中）
+
+```python
+from openpyxl.styles import PatternFill, Border, Side, Font
+
+# 一次定义，全表复用
+ZEBRA_FILL_1 = PatternFill("solid", fgColor="FFFFFF")
+ZEBRA_FILL_2 = PatternFill("solid", fgColor="F7F9FC")
+HEADER_FILL = PatternFill("solid", fgColor="1F2937")
+HEADER_FONT = Font(bold=True, color="FFFFFF", size=11)
+KPI_FILL = PatternFill("solid", fgColor="EAF2FF")
+THIN_BORDER = Border(
+    left=Side(style="thin", color="D9DEE7"),
+    right=Side(style="thin", color="D9DEE7"),
+    top=Side(style="thin", color="D9DEE7"),
+    bottom=Side(style="thin", color="D9DEE7"),
+)
+
+def style_header(ws, row, min_col, max_col):
+    """统一表头样式"""
+    for c in range(min_col, max_col + 1):
+        cell = ws.cell(row, c)
+        cell.fill = HEADER_FILL
+        cell.font = HEADER_FONT
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+
+def style_data_area(ws, min_row, max_row, min_col, max_col):
+    """数据区域斑马纹+细边框"""
+    for r in range(min_row, max_row + 1):
+        fill = ZEBRA_FILL_1 if (r - min_row) % 2 == 0 else ZEBRA_FILL_2
+        for c in range(min_col, max_col + 1):
+            cell = ws.cell(r, c)
+            cell.fill = fill
+            cell.border = THIN_BORDER
+```
+
+> 完整样式函数（含 KPI 高亮、合计行强调、数字格式）见 `excel_analysis.md` §十八「可复用样式助手函数」。
+
+---
+
 ## 版本历史
 
 | 版本 | 时间 | 变更说明 |
 |------|------|----------|
 | v1.0 | 2026-06-29 | 从 SKILL.md §8 抽出独立成文 |
+| v1.1 | 2026-08-11 | 新增第十章 Excel 代码规范（openpyxl/pandas 规范、常见陷阱、样式助手） |
