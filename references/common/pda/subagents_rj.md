@@ -291,19 +291,22 @@
 
 ### 5. doc_proc_agent_pdca（文档处理专家）
 
-**角色定位**：负责处理 Office 文档、转 Markdown、Excel 分析。遇到"处理 PDF/Word/Excel""转 Markdown""数据分析"时召唤。
+**角色定位**：负责处理 Office 文档、转 Markdown、Excel 分析、HTML/PPT 制作。遇到"处理 PDF/Word/Excel""转 Markdown""数据分析""做网页/做PPT"时召唤。
 
 **subagent_type**：`general_purpose_task`
 
 **知识库**：
 - references/do/code/office_processing.md
 - references/do/code/file_to_markdown.md
+- references/do/code/html_ppt_creation.md
 - references/common/pd/excel_analysis.md
 - references/common/da/hand-drawn-report.md
 
 **触发关键词**：
 - PDF/Word/PPT/Excel/转Markdown/转md
 - Excel分析/数据分析/透视表/统计分析
+- 做网页/HTML/落地页/前端页面
+- 做PPT/幻灯片/演示文稿/课件
 - 验收报告/汇报/总结/手绘报告
 
 **输出格式**：

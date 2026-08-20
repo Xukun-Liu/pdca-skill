@@ -670,7 +670,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 资源索引（触发→文件）
 │
 ├─ 🗂️ 导航
-│   └─ 查找 references/ 结构 → [references/index.md](references/index.md)（47 个模块 × PDCA 子文件夹归属速查表）
+│   └─ 查找 references/ 结构 → [references/index.md](references/index.md)（48 个模块 × PDCA 子文件夹归属速查表）
 │
 ├─ 📝 模板（复制用）
 │   ├─ 写项目总spec → assets/spec_main_template.md（项目级 source of truth 模板·实例 docs_rj/spec_main_{项目名}.md）
@@ -688,6 +688,8 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 │   ├─ 准备审方案/挑刺/大改后审查 → references/common/pc/adversarial_review.md（第一性原理拆解+对抗性审查流程）
 │   ├─ 定验收标准/写 DoD/验收严格点 → references/common/pc/acceptance_criteria.md（DoD+Given/When/Then+4道质量闸门）
 │   ├─ 处理 Office 文档（PDF/Word/PPT/Excel 读写改转合并提取）→ references/do/code/office_processing.md（纯本地工具，内网可用）
+│   ├─ 做 HTML 网页/落地页/前端页面 → references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，手写 HTML/CSS/JS，内网可用）
+│   ├─ 做 PPT/幻灯片/演示文稿 → references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，python-pptx / PptxGenJS / HTML 幻灯片，内网可用）
 │   ├─ 把文件转成 Markdown（PDF/Word/PPT/Excel/HTML→MD）→ references/do/code/file_to_markdown.md（纯Python离线可用，一键转MD）
 │   ├─ 做 Excel 数据分析（清洗/透视/统计/图表/预测/看板/数据质量/趋势分析/结构拆解/异常识别/报告合成/数据合并）→ references/common/pd/excel_analysis.md（纯本地，内网可用）
 │   ├─ memory怎么读写 → references/common/pa/working_memory_rules.md（RAM/Disk+存盘检查点+5问）

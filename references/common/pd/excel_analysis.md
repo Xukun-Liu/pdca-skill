@@ -7,9 +7,12 @@
 
 > 阶段标签：P · D（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 更新：2026-08-10
+> 版本：v1.3.0 | 更新：2026-08-11
 > v1.0 变更：三期交付。综合本地技能库（xlsx skill）+ 网上最佳实践（Excel 分析五步法、DATA→CLEAN→STRUCTURE→ANALYZE→VISUALIZE→REPORT 工作流），沉淀为纯文本参考模块，内网可用、零外部依赖。
 > v1.1 变更：新增7章方法论（数据质量评估/趋势分析/结构拆解/异常识别/可视化升级/报告合成/数据合并），从插件市场3个数据分析插件提炼，纯文本扩充，内网可用、零外部依赖。
+> v1.2 变更：透视表进阶扩充（五级进阶+常见模式+pandas高级用法）；新增4章（颜色编码速查表/可视化设计原则/专业表格格式规范/做表前规划方法论），从 xlsx skill + data-processing 插件提炼，纯文本扩充，内网可用、零外部依赖。
+> v1.2.1 变更：§十五 验收清单新增4项（颜色编码/可视化设计/表格格式/做表前规划），覆盖新章节验收需求。
+> v1.3 变更：从4个新skill（industry-researcher/lark-sheets/lark-base/lark-drive）提炼9项方法论，融入§二/§五/§十五/§十八，新增§二十条件格式设计方法论。涵盖意图→操作映射、数据源范围确认、全局vs局部原则、图表数据源精确控制、扩展图表类型（漏斗/雷达/词云）、三方对照验证法、交付验收6项追溯、美化5维度checklist、列宽像素估算、格式刷三步法。纯文本扩充，内网可用、零外部依赖。
 
 > 📖 **什么时候读这个文件**：
 > - 任务涉及「分析数据」——从 Excel/CSV 里找出规律、对比、趋势、结论
@@ -74,6 +77,47 @@ Excel 数据分析脊柱
 
 > 每条原则：原数据**留一份别动**（备份），所有改动在新表/新列做，方便回溯。
 
+### 2.1 意图→操作映射表（用户说一句话→该用哪个 pandas 操作）
+
+> 来源：lark-base-data-analysis-sop。避免"先想清楚3个问题"后仍不知道该写什么代码。
+
+| 用户说 | pandas 操作 | 示例 |
+|--------|------------|------|
+| "看几条/预览" | `df.head(N)` + `df[需要的列]` | `df[['姓名','部门']].head(10)` |
+| "找某个人的信息" | `df.loc[df['id']==x]` | `df.loc[df['工号']=='A001']` |
+| "按条件找" | `df.query()` 或 `df[df['列']>值]` | `df.query('销售额 > 10000')` |
+| "排序/Top N" | `df.sort_values().head(N)` | `df.sort_values('销售额', ascending=False).head(10)` |
+| "按 X 统计 Y" | `df.groupby('X')['Y'].agg()` | `df.groupby('部门')['销售额'].sum()` |
+| "各 X 占比" | `groupby + transform` | `df['占比'] = df.groupby('X')['Y'].transform(lambda x: x/x.sum())` |
+| "环比/同比" | `df.pct_change()` | `df['环比'] = df['销售额'].pct_change()` |
+| "去重计数" | `df['列'].nunique()` | `df['客户ID'].nunique()` |
+| "交叉表" | `pd.crosstab()` | `pd.crosstab(df['部门'], df['等级'])` |
+| "查找匹配" | `df.merge()` | `df.merge(other, on='key', how='left')` |
+
+### 2.2 数据源范围 3 步确认法
+
+> 来源：lark-sheets + lark-base。分析前必须精确确认数据范围，否则透视/聚合结果全错。
+
+| 步骤 | 做什么 | pandas 实现 |
+|------|--------|-------------|
+| ①确认表头与列对应 | 读表头 + 确认列名与列索引映射 | `print(df.columns.tolist())` + `print(df.dtypes)` |
+| ②排除空行/汇总行/总计行 | 空行和汇总行会被当作数据参与聚合 | `df = df.dropna(how='all')` + `df = df[~df['关键列'].str.contains('合计\|总计', na=False)]` |
+| ③读 3-5 行样本确认列义 | 表头语义含糊时（如"时间""日期"多列同名）需看实际值区分 | `print(df.head(5))` + `print(df.tail(5))` |
+
+> 用 `df.shape` 确认数据边界（行数×列数），用 `df.dtypes` 确认字段类型（数字列不能是 object）。
+
+### 2.3 全局 vs 局部原则
+
+> 来源：lark-base Hard Rules。"最高/最低/最新/最早/Top/Bottom/总数/全部/异常/最大/最小"等全局语义，**必须用完整聚合或排序后取极值**，禁止用 `head()` 片面回答。
+
+| 错误做法 | 正确做法 | 原因 |
+|----------|----------|------|
+| `df.head(5)` 回答"销售额最高的5个人" | `df.sort_values('销售额', ascending=False).head(5)` | head(5) 只看前5行，未必是全局最高 |
+| 在筛选后子集上回答"总销售额" | 在完整数据上 `df['销售额'].sum()` | 子集求和 ≠ 全局总计 |
+| 在局部数据上回答"平均" | `df['列'].mean()` 在完整数据上计算 | 局部均值不能代表全局 |
+
+> 判断"数据是否完整"的信号：`df.shape[0]` 等于预期总行数、无未读取的分页数据。
+
 ---
 
 ## 三、数据清洗（最费时，80% 精力在这）
@@ -113,10 +157,73 @@ print(df.median(numeric_only=True))   # 中位数（不受极端值影响）
 > 类比：体检报告——先看清"平均身高、最高最矮"，再深挖异常。
 
 ### 4.2 透视表思维（分组汇总的核心）
+
 四要素：**行 / 列 / 值 / 筛选**。把"按地区×品类算销售额"变成拖拽：
 - 行=地区，列=品类，值=求和(销售额)，筛选=某时间段
 - 可下钻（双击汇总格看明细）
 - pandas 等价：`df.pivot_table(index="地区", columns="品类", values="销售额", aggfunc="sum")`
+
+#### 4.2.1 透视表五级进阶（从拖拽到自动化）
+
+| 级别 | 能力 | Excel 操作 | pandas 等价 | 什么时候用 |
+|------|------|-----------|-------------|-----------|
+| **L1 基础汇总** | 行×列×值三要素拖拽 | 插入→数据透视表→拖字段 | `df.pivot_table(index, columns, values, aggfunc)` | 第一次看数据全貌 |
+| **L2 筛选联动** | 加筛选器+切片器实现交互 | 拖字段到"筛选"区→插入切片器→连接到所有透视表 | `df[df["地区"]=="华东"].pivot_table(...)` | 给别人看、需要交互筛选 |
+| **L3 分组汇总** | 按日期/数值区间自动分组 | 右键日期列→组合→按月/季/年 | `df.groupby(pd.Grouper(key="日期", freq="M")).sum()` | 时间序列按月/季汇总 |
+| **L4 计算字段** | 在透视表内新增自定义公式 | 透视表分析→字段/项目/集→计算字段 | `pivot["利润率"] = pivot["利润"] / pivot["收入"]` | 原始字段算不出、需要衍生指标 |
+| **L5 多表关联透视** | Power Query 合并多表后透视 | 数据→获取数据→合并查询→透视 | `pd.merge(df1, df2, on="ID").pivot_table(...)` | 数据分散在多张表 |
+
+> 类比：L1 是"算盘"（能算账），L2 是"遥控器"（能切换看），L3 是"自动分类"（按时间归档），L4 是"自定义公式"（算衍生指标），L5 是"多账本合并"（跨表汇总）。逐级递进，先掌握 L1-L2 解决 80% 场景。
+
+#### 4.2.2 透视表常见模式决策表
+
+| 你想分析什么 | 行 | 列 | 值 | 聚合方式 | 示例 |
+|-------------|----|----|----|---------|------|
+| 各地区销售额对比 | 地区 | — | 销售额 | 求和 | 华东 520 / 华南 380 |
+| 地区×品类交叉表 | 地区 | 品类 | 销售额 | 求和 | 华东-A产品 200 / 华东-B产品 320 |
+| 各产品占比 | 产品 | — | 销售额 | 求和+占比% | A产品 40% / B产品 60% |
+| 月度趋势 | 月份(分组) | — | 销售额 | 求和 | 1月 100 / 2月 120 |
+| 客户排名 | 客户 | — | 销售额 | 求和+降序 | 客户甲 500 / 客户乙 300 |
+| 同环比对比 | 地区 | 月份 | 销售额 | 求和+差异% | 华东 1月 vs 12月 |
+| 多指标看板 | 地区 | — | 收入/成本/利润 | 求和 | 华东 收入500/成本300/利润200 |
+
+#### 4.2.3 pandas 透视进阶用法
+
+```python
+import pandas as pd
+
+# 基础透视（等价 L1）
+pivot = df.pivot_table(index="地区", columns="品类", values="销售额", aggfunc="sum")
+
+# 多聚合函数（同时看求和+均值+计数）
+pivot_multi = df.pivot_table(
+    index="地区", columns="品类", values="销售额",
+    aggfunc=["sum", "mean", "count"]
+)
+
+# 加小计/总计行
+pivot_with_margin = df.pivot_table(
+    index="地区", columns="品类", values="销售额",
+    aggfunc="sum", margins=True, margins_name="总计"
+)
+
+# 按月分组透视（等价 L3）
+df["日期"] = pd.to_datetime(df["日期"])
+pivot_monthly = df.pivot_table(
+    index=pd.Grouper(key="日期", freq="M"),
+    columns="地区", values="销售额", aggfunc="sum"
+)
+
+# 计算衍生字段（等价 L4）
+pivot = df.pivot_table(index="地区", values=["收入", "成本"], aggfunc="sum")
+pivot["利润"] = pivot["收入"] - pivot["成本"]
+pivot["利润率"] = (pivot["利润"] / pivot["收入"] * 100).round(1)
+
+# 交叉表（计数专用，非数值聚合）
+cross = pd.crosstab(df["地区"], df["状态"])
+```
+
+> ⚠️ pandas pivot_table vs Excel 透视表的关键差异：①pandas 不会自动生成"总计"行（需 `margins=True`）；②pandas 多层级索引（MultiIndex）读取时需 `pivot.loc["华东"]` 而非 `pivot["华东"]`；③导出到 Excel 前建议 `pivot.reset_index()` 拉平索引，否则行索引会变成不直观的多层表头。
 
 ### 4.3 核心函数（Excel 原生，够用 90% 场景）
 | 函数 | 干什么 | 示例 |
@@ -148,6 +255,50 @@ print(df.median(numeric_only=True))   # 中位数（不受极端值影响）
 | **KPI 组合** | 组合图（柱+线） | — |
 
 **去 chart junk（图表垃圾）**：别加多余阴影/立体/网格线；标题说清结论（"华东利润最高"而非"利润图"）；配色有主有次。
+
+### 5.1 图表数据源精确控制
+
+> 来源：lark-sheets-chart。图表引用透视表/汇总表时，数据源范围控制不当会导致图表完全失真。
+
+| 原则 | 说明 | pandas 实现 |
+|------|------|-------------|
+| **排除总计行** | `pivot_table(margins=True)` 生成的 'All' 行必须排除，否则柱形图末尾多一根天文数字柱子、饼图多一个"总计"扇区 | `pivot.drop('All', axis=0).drop('All', axis=1)` |
+| **合并标题行跳过** | 表格上方有合并大标题时，数据源范围从真正的列标题行开始 | `df.columns = df.iloc[0]; df = df[1:]` |
+| **数据与表头分离** | 只画数据子集（如"只看某个分组"）时，不能把全局表头并进来 | `subset = df[df['分组']=='A'][['x','y']]` |
+| **轴口径对齐** | 用户要"占比"时纵轴应是百分比，不能交付纵轴是原始计数的图 | `ax.set_ylabel('占比 (%)')` + 数据乘 100 |
+
+### 5.2 扩展图表选型表
+
+> 来源：lark-base-dashboard。在基础 6 种图表（折线/饼图/柱形/直方/散点/组合）外补充 3 种：
+
+| 你想表达什么 | 用这个图 | 数据源配置 | matplotlib 实现 |
+|--------------|----------|------------|-----------------|
+| **流程转化**（各阶段递减） | 漏斗图 | 状态字段分组+数值聚合 | `plt.barh(range(n), values)` 倒序绘制 |
+| **多维度评分**（产品对比） | 雷达图 | 多个维度字段+分类分组 | `polar=True` + `plt.plot(angles, values)` |
+| **文本频率分布** | 词云 | 文本字段分组+计数 | `WordCloud().generate_from_frequencies()` |
+
+```python
+# 漏斗图示例
+import matplotlib.pyplot as plt
+stages = ['访问', '注册', '试用', '付费', '续费']
+values = [10000, 6000, 3000, 800, 500]
+plt.barh(range(len(stages))[::-1], values, color='steelblue')
+plt.yticks(range(len(stages))[::-1], stages)
+plt.xlabel('人数')
+plt.title('销售漏斗：各阶段转化')
+
+# 雷达图示例
+import numpy as np
+categories = ['性能', '价格', '服务', '易用性', '功能']
+angles = np.linspace(0, 2*np.pi, len(categories), endpoint=False).tolist()
+angles += angles[:1]
+values_a = [4, 3, 5, 4, 3] + [4]  # 产品A
+fig, ax = plt.subplots(subplot_kw=dict(polar=True))
+ax.plot(angles, values_a, 'o-', label='产品A')
+ax.fill(angles, values_a, alpha=0.25)
+ax.set_thetagrids(np.array(angles[:-1]) * 180/np.pi, categories)
+ax.set_title('产品多维度评分对比')
+```
 
 ---
 
@@ -408,6 +559,36 @@ outliers = df[(df["值"] < Q1 - 1.5*IQR) | (df["值"] > Q3 + 1.5*IQR)]
 
 > ⚠️ 图表数量建议：单个看板 ≤5 张图，超过5张考虑拆成多个看板。
 
+### 11.5 KPI 卡片设计规范（来自 data-processing 插件）
+
+> KPI 卡片是看板顶部的"核心数字区"——一眼看到最重要的 3-5 个指标。设计不当会喧宾夺主。
+
+| 设计要素 | 规范 | 反例（禁止） |
+|----------|------|-------------|
+| **结构** | 一行文字标签 + 一个格式化数值，够了 | 加装饰图标/emoji/花边分割线 |
+| **语义色** | 左侧 3px 色条体现状态（绿=正常/红=异常/橙=关注） | 整卡片变色/大面积彩色背景 |
+| **变化值** | 有时间对比时加一行小字变化值（↑6.6% / ↓3.2%） | 彩色箭头图标/大号↑↓符号 |
+| **数值格式** | 千分位+单位（¥1.28M / 5,200件） | 裸数字 1280000 / 无单位 |
+| **高亮数量** | 3-5 个 KPI 卡，选最重要的 | 堆 10+ 个 KPI 卡变成数字墙 |
+| **排列** | 横向等宽排列，间距一致 | 大小不一/随意排列 |
+
+**openpyxl 实现 KPI 卡片色条**：
+```python
+from openpyxl.styles import PatternFill, Font, Alignment, Border, Side
+
+def kpi_card(ws, row, col, label, value, status="normal"):
+    """在指定位置画一个 KPI 卡片（标签+值+左侧色条）"""
+    color_map = {"normal": "00A651", "warning": "FF8C00", "danger": "FF0000"}
+    bar_color = color_map.get(status, "00A651")
+    # 左侧 3px 色条（用窄列填充模拟）
+    ws.cell(row, col).fill = PatternFill("solid", fgColor=bar_color)
+    ws.column_dimensions[ws.cell(row, col).column_letter].width = 0.5
+    # 标签
+    ws.cell(row, col+1, label).font = Font(size=10, color="6B7280")
+    # 数值
+    ws.cell(row+1, col+1, value).font = Font(size=18, bold=True, color="1F2937")
+```
+
 ---
 
 ## 十二、报告合成方法论（结论怎么写）
@@ -536,15 +717,412 @@ pip install pandas openpyxl scipy numpy        # 分析主力
 | 报告结构 | 结论先行；数字附口径+时间+基准（第十二节） |
 | 数据合并 | 关联键命中率≥95%；行数变化符合预期（第十三节） |
 | 可追溯 | 每个数字能回溯到源表某行；预测附"假设+误差" |
+| 颜色编码 | 遵循语义规则（蓝=手填/黑=公式/绿=同簿引用/红=外链）；整表颜色≤5种；去除颜色后信息仍完整（第十六章） |
+| 可视化设计 | 无装饰性渐变/动画/emoji/彩虹色；标题即结论；配色≤4色；单系列无多余图例（第十七章） |
+| 表格格式 | 斑马纹+浅色细边框+合计行粗体强调；KPI 高亮一致；公式零硬编码（第十八章） |
+| 做表前规划 | 已做过三步规划（问题审查→工作簿计划→确认后实施）；源数据有独立 Sheet；每个 Sheet 用途明确不重叠（第十九章） |
+| 条件格式 | 触发词正确映射规则类型；空值比较已防护（`AND(E<>"",...)`）；背景/前景色未混淆（第二十章） |
+| 意图映射 | 全局问题用完整聚合回答，未用 `head()` 片面回答；意图→操作映射正确（§二） |
+| 公式验证 | 公式等价性三方对照通过（Excel 语义==Python 复现==openpyxl 回读）；代表性输入行覆盖首/中/末/空值/异常（§15.1） |
+
+### 15.1 公式等价性验证：三方对照法
+
+> 来源：lark-sheets-formula-translation。公式翻译/计算完成后，挑 3-5 个代表性输入行验证三方一致。
+
+**代表性输入行选择策略**：首行 / 中段行 / 末行 / 含空值行 / 含异常格式行 各选一。
+
+| 对照方 | 值来源 | 一致性要求 |
+|--------|--------|------------|
+| ① Excel 原公式语义 | openpyxl 回读 `cell.value` | 公式文本正确 |
+| ② Python 独立复现 | pandas 手算等价值 | 计算逻辑等价 |
+| ③ openpyxl 回读值 | 保存后重新打开读取 | 值未丢失/未变形 |
+
+> 三方全部一致才交付。仅靠语法转换通过不足以保证业务结果正确——数组/日期差/范围引用上极易出现等价性偏差。
+
+### 15.2 交付验收 6 项追溯清单
+
+> 来源：lark-base-data-analysis-sop。形成交付输出前必须确认 6 项：
+
+| # | 追溯项 | 确认内容 |
+|---|--------|----------|
+| 1 | 问题范围 | 是局部样例、单点定位、全局原始记录、聚合分析、多表关联还是查询后写入 |
+| 2 | 筛选层面 | 筛选/排序/聚合是否在正确的层面完成（不是在局部数据上做全局结论） |
+| 3 | 局部数据可靠性 | 如果用了局部数据，输入是否在可靠范围内（超过阈值应改用全量聚合） |
+| 4 | 数据完整性 | `df.shape` 覆盖全部数据行；无遗漏的空行/汇总行被当作数据 |
+| 5 | 关联回查 | 如果涉及关系查询，是否按业务 key 精确回查，交付输出来自关联表真实字段 |
+| 6 | 来源链路 | 交付输出能追溯到：表→字段→筛选条件→排序/聚合条件→连接键 |
+
+> 任一项无法确认时，继续查询或明确说明只能得到局部结论。
 
 > 这些是 DoD 的「分析专项底线」，叠加 acceptance_criteria.md 的 4 道质量闸门（规格自检→diff 复查→测试证据→你签收）与 office_processing.md 的 Excel 铁律，构成完整验收闭环。
+
+---
+
+## 十六、颜色编码体系速查表（金融模型标准）
+
+> 来源：xlsx skill Color Coding Standards。做涉及财务/预算/预测的 Excel 时，颜色不是装饰，是"语义"——让人一眼分清哪些是手填的、哪些是算出来的。
+
+### 16.1 文字颜色编码
+
+| 颜色 | RGB | 含义 | 什么时候用 | openpyxl 代码 |
+|------|-----|------|----------|--------------|
+| **蓝色** | 0,0,255 | 手填输入值 / 场景假设数字 | 用户手动输入的原始数据、需要调整的参数 | `Font(color="0000FF")` |
+| **黑色** | 0,0,0 | 公式和计算结果 | 所有 `=` 开头的公式单元格 | `Font(color="000000")` |
+| **绿色** | 0,128,0 | 同簿跨表引用 | 公式引用了同一工作簿其他 Sheet 的单元格 | `Font(color="008000")` |
+| **红色** | 255,0,0 | 跨文件外部链接 | 公式引用了其他 Excel 文件的数据 | `Font(color="FF0000")` |
+
+> 类比：蓝字=你亲手写的答案，黑字=计算器算的，绿字=从隔壁房间拿的，红字=从别的楼拿的。颜色越"远"，数据来源越"远"。
+
+### 16.2 背景色编码
+
+| 颜色 | RGB | 含义 | 什么时候用 | openpyxl 代码 |
+|------|-----|------|----------|--------------|
+| **黄色底** | 255,255,0 | 需关注的假设 | 关键假设单元格、需要用户更新的参数 | `PatternFill("solid", fgColor="FFFF00")` |
+| **浅蓝底** | 234,242,255 | KPI 高亮 | 核心指标、汇总行、当前期关键值 | `PatternFill("solid", fgColor="EAF2FF")` |
+| **白色底** | 255,255,255 | 斑马纹奇数行 | 数据区域隔行底色（第1/3/5...行） | `PatternFill("solid", fgColor="FFFFFF")` |
+| **浅灰底** | 247,249,252 | 斑马纹偶数行 | 数据区域隔行底色（第2/4/6...行） | `PatternFill("solid", fgColor="F7F9FC")` |
+
+### 16.3 数字格式速查
+
+| 数据类型 | 格式代码 | 示例 | openpyxl 代码 |
+|----------|----------|------|--------------|
+| **年份** | 文本（不千分位） | 2024（不是 2,024） | `cell.number_format = "@"` |
+| **货币** | `$#,##0` | $1,280 | `cell.number_format = "$#,##0"` |
+| **零值显示为横杠** | `$#,##0;($#,##0);-` | $1,280 / ($500) / - | `cell.number_format = "$#,##0;($#,##0);-"` |
+| **百分比** | `0.0%` | 12.5% | `cell.number_format = "0.0%"` |
+| **估值倍数** | `0.0x` | 8.5x | `cell.number_format = '0.0"x"'` |
+| **负数** | 括号 `(123)` | ($123) 不是 -123 | `cell.number_format = "#,##0;(#,##0)"` |
+
+### 16.4 颜色编码使用原则
+
+| 原则 | 说明 |
+|------|------|
+| **语义色仅用于告警** | 红/橙/黄不用于装饰，只标识异常/需关注 |
+| **整表颜色≤5种** | 不含灰阶（白/浅灰/边框灰不算） |
+| **装饰移除后信息仍完整** | 去掉所有颜色后数据应仍可读 |
+| **假设值必须黄底标记** | 任何需要用户修改的参数必须标黄底 |
+| **公式禁止硬编码** | 蓝字输入值用单元格引用，不写死在公式里 |
+
+---
+
+## 十七、可视化设计原则（反"AI 生成味"）
+
+> 来源：data-processing 插件 §可视化原则。产出图表和看板应像内部分析工具（Grafana/Metabase 风格），不像 AI 生成的演示页面。追求**数据密度高、视觉干扰低**。
+
+### 17.1 禁止清单（典型 AI 生成特征）
+
+| 禁止项 | 为什么禁 | Excel 中的体现 |
+|--------|---------|---------------|
+| 装饰性渐变背景/发光效果 | 干扰数据阅读 | 不用渐变填充/艺术字 |
+| 花哨入场动画 | 无实际价值 | Excel 图表不加动画 |
+| 在 CSS 中罗列大段配色板 | 噪声大 | 配色≤4色（见§十一.4） |
+| 厚重圆角+大阴影卡片 | 浪费空间 | 表格用 1px 细线边框 |
+| 装饰性图标/emoji/花边 | 无信息量 | 图表标题不加 emoji |
+| 为"好看"加的空状态卡片 | 无数据支撑 | 不加无数据的装饰行 |
+
+### 17.2 遵循清单
+
+| 原则 | 含义 | Excel 实现 |
+|------|------|-----------|
+| **安静的容器** | 面板用 1px 细线边框或极浅底色区分 | 边框色 `#D9DEE7`，不用厚框 |
+| **数据说话** | 图表直接标注关键值，不依赖动效 | 数据标签直接标在图上 |
+| **克制的颜色** | 默认配色即可，语义色仅用于告警 | 蓝为主色，红仅标异常 |
+| **稳定的布局** | 面板尺寸固定，不因数据变化抖动 | 列宽行高固定 |
+| **功能性优先** | 筛选/排序因为有用才加 | 切片器/筛选器有实际需求才加 |
+
+### 17.3 图表设计规范
+
+| 要素 | 规范 | 禁止 |
+|------|------|------|
+| **配色** | 使用 Excel 默认主题配色 | 自定义彩虹色板 |
+| **网格线** | 保持默认浅灰 | 加粗/变色网格线 |
+| **图例** | 单系列不加图例 | 单系列也加图例 |
+| **标题** | 标题即结论（"华东利润最高"） | 标题只写"利润图" |
+| **数据标签** | 关键值直接标注 | 标注所有点导致拥挤 |
+
+### 17.4 可视化自检清单
+
+交付图表/看板前逐项检查：
+
+- [ ] 去掉所有装饰性颜色后，信息是否仍然完整可读？
+- [ ] 整体是否像 Grafana/Metabase 的输出？而不是 Dribbble 概念稿？
+- [ ] 颜色数量是否 ≤ 5 种（不含灰阶）？
+- [ ] 单系列图表是否有多余的图例？
+- [ ] 标题是否说清了结论而非只写图名？
+- [ ] 有没有为"好看"而加的无信息量元素？
+
+---
+
+## 十八、专业表格格式规范
+
+> 来源：xlsx skill Visual Table Design + Number Formatting + Reusable Styling Helpers。做表不是把数据塞进去就行，格式规范决定了别人能不能快速读懂。
+
+### 18.1 表格视觉设计三要素
+
+| 要素 | 规范 | openpyxl 实现 |
+|------|------|--------------|
+| **斑马纹** | 数据区域隔行底色（不含表头/合计行），低对比度交替 | 白色 `#FFFFFF` + 浅灰 `#F7F9FC` |
+| **边框** | 细线浅色边框，外框+行分隔优先，不用满格粗框 | 边框色 `#D9DEE7` |
+| **层级强调** | 小计/合计行用粗体+顶部边框强调，不用粗框圈每格 | `Font(bold=True)` + 顶部 medium 边框 |
+
+### 18.2 KPI 视觉层次
+
+| 场景 | 处理方式 |
+|------|----------|
+| 汇总行 / 合计行 | 粗体 + 顶部边框强调 |
+| 当前期关键值 | 浅蓝底 `#EAF2FF` + 粗体 |
+| 异常值 / 负值 | 红色字或红色底 |
+| 核心指标标签 | 在指标旁加短标签（"核心 KPI"/"异常"） |
+
+### 18.3 可复用样式助手函数
+
+```python
+from openpyxl.styles import PatternFill, Border, Side, Font
+
+# 常量定义（一次定义，全表复用）
+ZEBRA_FILL_1 = PatternFill("solid", fgColor="FFFFFF")
+ZEBRA_FILL_2 = PatternFill("solid", fgColor="F7F9FC")
+KPI_FILL = PatternFill("solid", fgColor="EAF2FF")
+THIN_BORDER = Border(
+    left=Side(style="thin", color="D9DEE7"),
+    right=Side(style="thin", color="D9DEE7"),
+    top=Side(style="thin", color="D9DEE7"),
+    bottom=Side(style="thin", color="D9DEE7"),
+)
+TOP_EMPHASIS = Border(
+    left=Side(style="thin", color="D9DEE7"),
+    right=Side(style="thin", color="D9DEE7"),
+    top=Side(style="medium", color="AAB4C5"),
+    bottom=Side(style="thin", color="D9DEE7"),
+)
+
+def apply_zebra(ws, min_row, max_row, min_col, max_col):
+    """给数据区域加斑马纹"""
+    for r in range(min_row, max_row + 1):
+        fill = ZEBRA_FILL_1 if (r - min_row) % 2 == 0 else ZEBRA_FILL_2
+        for c in range(min_col, max_col + 1):
+            ws.cell(r, c).fill = fill
+
+def apply_borders(ws, min_row, max_row, min_col, max_col):
+    """给区域加细线边框"""
+    for r in range(min_row, max_row + 1):
+        for c in range(min_col, max_col + 1):
+            ws.cell(r, c).border = THIN_BORDER
+
+def highlight_kpis(ws, cells, label_col=None, label_text=None):
+    """高亮 KPI 单元格（cells 如 ["F5", "F12"]）"""
+    for ref in cells:
+        cell = ws[ref]
+        cell.fill = KPI_FILL
+        cell.font = Font(bold=True, color="1F2937")
+    if label_col and label_text and cells:
+        ws[f"{label_col}{ws[cells[0]].row}"] = label_text
+
+# 用法示例：
+# apply_zebra(ws, min_row=2, max_row=30, min_col=1, max_col=8)
+# apply_borders(ws, min_row=1, max_row=30, min_col=1, max_col=8)
+# highlight_kpis(ws, cells=["F5", "F12"], label_col="G", label_text="核心 KPI")
+# ws["A31"].border = TOP_EMPHASIS  # 合计行强调
+```
+
+### 18.4 公式构造规则
+
+| 规则 | 正例 | 反例 |
+|------|------|------|
+| **假设值独立单元格** | `=B5*(1+$B$6)` | `=B5*1.05`（1.05 写死） |
+| **用单元格引用不用硬编码** | `=SUM(B2:B9)` | `=5000`（Python 算完塞数字） |
+| **除零防护** | `=IF(B6=0,"",B5/B6)` | `=B5/B6`（B6=0 时 #DIV/0!） |
+| **跨表引用用正确格式** | `=Sheet2!A1` | `=A1`（忘了 Sheet2） |
+| **硬编码值加注释** | 旁边写"来源: XX报表, 2026-07" | 无来源说明 |
+
+### 18.5 美化任务 5 维度全覆盖 checklist
+
+> 来源：lark-sheets-visual-standards。用户说"美化/整理/让表更清晰"时，必须遍历 5 个维度逐一落地，只动一处就交付属于违规。
+
+| 维度 | 规范 | 验收点 |
+|------|------|--------|
+| ①表头格式 | 加粗+背景色+居中 | 表头与数据行有视觉区分 |
+| ②对齐方式 | 文本左对齐、数值右对齐、日期居中 | 每列对齐方式一致 |
+| ③数值格式 | 每列统一小数位+千分位，禁止 0 位/1 位/2 位混杂 | 百分比/金额/倍数各有统一格式 |
+| ④边框 | 覆盖含汇总/总计/表尾说明行，内外框线清晰 | 无遗漏行/列 |
+| ⑤列宽+行高 | 列宽适配内容，长文本自动换行+调整行高 | 无截断显示 |
+
+> 差异化标注场景（重复行/异常值/重要项）必须与普通数据有显著不同的样式。
+
+### 18.6 列宽自适应像素估算
+
+> 来源：lark-sheets-visual-standards。禁止硬编码固定列宽，须根据列实际内容长度估算。
+
+| 内容类型 | 每字像素 | padding | 上下限 |
+|----------|----------|---------|--------|
+| 中文 | 15-18px | +10-16px | 80~400px |
+| 英文/数字 | 7-9px | +10-16px | 80~400px |
+
+```python
+def estimate_column_width(ws, col_letter, min_width=8, max_width=50):
+    """根据列实际内容估算 openpyxl 列宽（中文字符按 2 个宽度计算）"""
+    max_len = 0
+    for cell in ws[col_letter]:
+        if cell.value is None:
+            continue
+        text = str(cell.value)
+        visual_len = sum(2 if ord(c) > 127 else 1 for c in text)
+        max_len = max(max_len, visual_len)
+    width = min(max(max_len + 2, min_width), max_width)
+    ws.column_dimensions[col_letter].width = width
+
+# 用法：遍历所有列自适应
+# for col in "ABCDEFGH":
+#     estimate_column_width(ws, col)
+```
+
+> 超上限（400px）启用自动换行 `Alignment(wrap_text=True)` + 调整行高。
+
+### 18.7 格式刷三步分层法
+
+> 来源：lark-sheets-visual-standards。基于模板区域批量格式化时，分三步执行避免混乱。
+
+| 步骤 | 做什么 | openpyxl 实现 |
+|------|--------|--------------|
+| **Step1 格式铺开** | 将模板行的全部格式（样式、边框、数字格式）复制到目标区域，只铺格式不动值/公式 | `copy.copy(cell.font)` / `copy.copy(cell.fill)` / `copy.copy(cell.border)` |
+| **Step2 内容覆写** | 将实际数据写入，不传任何样式（格式已在 Step1 就位） | `ws.cell(r, c).value = data` |
+| **Step3 微调收尾** | 调整行高列宽、处理合并单元格、扩展条件格式范围 | `ws.row_dimensions[r].height = ...` |
+
+```python
+import copy
+
+def clone_style_from_template(ws, template_row, target_rows, min_col, max_col):
+    """将模板行格式复制到目标行（只复制格式，不动值）"""
+    for r in target_rows:
+        for c in range(min_col, max_col + 1):
+            src = ws.cell(template_row, c)
+            dst = ws.cell(r, c)
+            dst.font = copy.copy(src.font)
+            dst.fill = copy.copy(src.fill)
+            dst.border = copy.copy(src.border)
+            dst.alignment = copy.copy(src.alignment)
+            dst.number_format = src.number_format
+
+# 用法：第2行是模板行，复制到第3-30行
+# clone_style_from_template(ws, template_row=2, target_rows=range(3, 31), min_col=1, max_col=8)
+# 然后再写入数据（Step2）
+```
+
+---
+
+## 十九、做表前规划方法论（Pre-Build Planning）
+
+> 来源：xlsx skill Pre-Build Planning。做表前不规划 = 边做边改 = 返工率高。先花 5 分钟规划，省 30 分钟返工。
+
+### 19.1 三步规划流程
+
+| 步骤 | 做什么 | 产出 |
+|------|--------|------|
+| **① 问题审查** | 读源文件 + 结合用户需求，用一句话复述任务意图 | "这表要回答 XX 问题" |
+| **② 工作簿计划** | 规划 Sheet 数量/名称/用途 + 每个表的行列结构 + 值来源 | Sheet/Schema/Style 三计划 |
+| **③ 确认后实施** | 按计划创建，不边做边改 | 按 plan 逐 Sheet 实施 |
+
+### 19.2 Sheet 计划模板
+
+```markdown
+## 工作簿计划
+
+### Sheet 计划
+1. Sheet: 原始数据 — 用途: 存放源数据，不动
+2. Sheet: 清洗后 — 用途: 清洗结果（去重/补缺/统一格式）
+3. Sheet: 透视分析 — 用途: 按地区×品类的汇总透视
+4. Sheet: 看板 — 用途: KPI+图表+明细的组合展示
+
+### Schema 计划（以"透视分析"为例）
+- 行字段: 地区（华东/华南/华北/西部）
+- 列字段: 品类（A/B/C/D）
+- 值字段: 销售额（求和）、利润（求和）、利润率（计算字段=利润/收入）
+- 值来源: 从"清洗后"Sheet 引用
+
+### Style 计划
+- 表头: 深蓝底白字粗体
+- 斑马纹: 白/浅灰交替
+- KPI 高亮: 浅蓝底（汇总行）
+- 配色: 主色蓝 + 辅色灰 + 警示色红，≤4色
+```
+
+### 19.3 规划检查清单
+
+- [ ] 能一句话说清这表要回答什么问题
+- [ ] 每个 Sheet 的用途明确、不重叠
+- [ ] 每个Sheet的行列字段和值来源已列出
+- [ ] 样式方案已确定（表头/斑马纹/KPI高亮/配色）
+- [ ] 源数据有独立 Sheet 存放，不在分析表里直接改
+
+> 类比：盖楼前先画图纸——几层楼、每层几个房间、水电怎么走。不画图纸边盖边改，盖到三层发现地基只按两层设计的。
+
+---
+
+## 二十、条件格式设计方法论
+
+> 来源：lark-sheets-conditional-format。条件格式不是"改颜色"，是"让颜色随数据自动变化"——数据一改，颜色跟着改，不用手工重涂。
+
+### 20.1 触发词→规则类型映射
+
+用户说以下词汇时，必须用条件格式而非静态背景色：
+
+| 触发词 | 条件格式规则类型 | openpyxl 实现 |
+|--------|-----------------|--------------|
+| "标红/标黄/上色/染色" | CellIsRule（单元格值判断） | `CellIsRule(operator='lessThan', formula=['0'], fill=red_fill)` |
+| "高亮/突出/标记" | CellIsRule 或 FormulaRule | `FormulaRule(formula=['$A1>阈值'], fill=highlight_fill)` |
+| "颜色随数据变" | ColorScaleRule（色阶） | `ColorScaleRule(start_type='min', start_color='FF0000', end_type='max', end_color='00FF00')` |
+| "数据条/进度条" | DataBarRule | `DataBarRule(start_type='min', end_type='max', color='638EC6')` |
+| "前 N 名标绿" | FormulaRule + RANK | `FormulaRule(formula=['RANK($A1,$A$1:$A$30)<=3'], fill=green_fill)` |
+
+### 20.2 四大陷阱防范
+
+| 陷阱 | 错误写法 | 正确写法 | 原因 |
+|------|----------|----------|------|
+| **空值比较** | `=E1<=TODAY()` | `=AND(E1<>"",E1<=TODAY())` | 空值被当作 0，全表标红 |
+| **背景 vs 前景色混淆** | "标红"→用 `font.color`（红字） | "标红"→用 `fill`（红底）；"文字红"才用 `font.color` | 中文"标红/高亮/染色"指背景色 |
+| **辅助列绕过** | 用 expression 一步搞定多条件 | 先建判断列，再做条件格式引用判断列 | 用户明确要求辅助列时禁止绕过 |
+| **未读样本就写规则** | 只读表头就写条件格式 | 先读 3-5 行数据样本确认列对应 | 列顺序可能与预期不同 |
+
+### 20.3 openpyxl 条件格式代码模板
+
+```python
+from openpyxl.formatting.rule import CellIsRule, FormulaRule, ColorScaleRule, DataBarRule
+from openpyxl.styles import PatternFill
+
+# 1. 负值标红（背景色）
+red_fill = PatternFill("solid", fgColor="FFC7CE")
+ws.conditional_formatting.add('B2:B30',
+    CellIsRule(operator='lessThan', formula=['0'], fill=red_fill))
+
+# 2. 过期日期标黄（防空值陷阱）
+yellow_fill = PatternFill("solid", fgColor="FFEB9C")
+ws.conditional_formatting.add('E2:E30',
+    FormulaRule(formula=['AND(E2<>"",E2<=TODAY())'], fill=yellow_fill))
+
+# 3. 色阶（低→高 红→黄→绿）
+ws.conditional_formatting.add('F2:F30',
+    ColorScaleRule(start_type='min', start_color='FF0000',
+                   mid_type='percentile', mid_value=50, mid_color='FFEB84',
+                   end_type='max', end_color='63BE7B'))
+
+# 4. 数据条
+ws.conditional_formatting.add('G2:G30',
+    DataBarRule(start_type='min', end_type='max', color='638EC6'))
+
+# 5. Top 3 标绿
+green_fill = PatternFill("solid", fgColor="C6EFCE")
+ws.conditional_formatting.add('H2:H30',
+    FormulaRule(formula=['RANK(H2,$H$2:$H$30)<=3'], fill=green_fill))
+```
+
+> 类比：条件格式像"自动感应灯"——有人（数据）来了灯亮，走了灯灭。手动涂色像"手电筒"，涂了就不会自动变。
 
 ---
 
 ## 引用来源
 
 - 本地技能库（本机已装，纯文本可用）：
-  - `xlsx` skill — Excel 公式优先 / 重算 / 零错误 / 金融配色规范（第四节铁律引用）
+  - `xlsx` skill — Excel 公式优先 / 重算 / 零错误 / 金融配色规范（第四节铁律引用）；颜色编码标准/数字格式/视觉表格设计/样式助手函数/做表前规划（第十六、十八、十九章引用）
   - `office_processing.md` — Excel 文件读写改转（本模块互补：它管"文件"，本模块管"分析"）
 - 网上最佳实践（2026-07-13 检索）：
   - 九数云《Excel 数据分析从入门到精通·五步法》（采集→预处理→分析建模→验证→可视化）
@@ -552,7 +1130,11 @@ pip install pandas openpyxl scipy numpy        # 分析主力
   - CSDN《Excel 数据分析从清洗到可视化 5 步全攻略》（分列/快速填充 Ctrl+E/删除重复项/核心函数）
   - 匡优 Excel《像专家一样分析营销数据》（透视表=最佳伙伴、图表讲故事）
   - 九数云《用 Excel 数据分析》（透视表核心、图表选型：趋势→折线）
-- 插件市场方法论提炼（2026-08-10 提炼）：
-  - `data-processing` 插件 — 数据合并与转换模式、可视化看板设计原则（第十一、十三章）
+- 插件市场方法论提炼（2026-08-10/11 提炼）：
+  - `data-processing` 插件 — 数据合并与转换模式、可视化看板设计原则（第十一、十三章）；可视化设计原则/反AI生成味/KPI卡片设计规范（第十一章.5、第十七章）
   - `business-ops-analysis` 插件 — 数据质量评估框架、趋势分析方法、结构拆解归因、异常识别方法、报告合成结构（第七、八、九、十、十二章）
   - `industry-panorama-research` 插件 — 结构化分析思路参考
+  - `industry-researcher` 插件（sector-research）— 估值表Excel规范/公式标准/Sanity Check清单（§十八公式构造规则参考）
+  - `lark-sheets` 插件 — 9条铁律/公式等价性验证/条件格式设计/图表数据源控制/视觉标准/格式刷三步法（§二数据源确认、§五图表数据源控制、§十五三方对照验证、§十八美化5维度/列宽估算/格式刷、§二十条件格式设计）
+  - `lark-base` 插件 — 数据分析SOP/意图→操作映射/全局vs局部原则/交付验收6项追溯/仪表盘图表选型（§二意图映射/全局局部原则、§五扩展图表类型、§十五交付验收6项追溯）
+  - `lark-drive` 插件 — 知识组织工作流（资源归一化/问题检测参考）

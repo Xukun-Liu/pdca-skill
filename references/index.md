@@ -4,10 +4,10 @@
 
 # references/ 目录索引
 
-> 版本：v1.2.2 | 创建：2026-07-25 | pdca-skill 参考模块导航
+> 版本：v1.2.3 | 创建：2026-07-25 | pdca-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
-> 本索引是 references/ 目录的导航地图。47 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
+> 本索引是 references/ 目录的导航地图。48 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
 
 ---
 
@@ -28,8 +28,8 @@ references/
 │   ├── bootstrap/  (3个) P.bootstrap 启动恢复
 │   ├── route/      (5个) P.route 路由判断
 │   └── design/     (3个) P.design 方案设计
-├── do/                       ← D 环节：动手做（8个）
-│   ├── code/       (5个) D.code 编码
+├── do/                       ← D 环节：动手做（9个）
+│   ├── code/       (6个) D.code 编码
 │   ├── comm/       (1个) D.comm 执行期任务流
 │   └── danger/     (2个) D.danger 安全危险
 ├── check/                    ← C 环节：验结果（2个）
@@ -69,7 +69,7 @@ references/
 | `plan/` | `bootstrap/` | P.bootstrap | 启动恢复（3个） |
 | `plan/` | `route/` | P.route | 路由判断（5个） |
 | `plan/` | `design/` | P.design | 方案设计（3个） |
-| `do/` | `code/` | D.code | 编码（5个） |
+| `do/` | `code/` | D.code | 编码（6个） |
 | `do/` | `comm/` | D.comm | 执行期任务流（1个） |
 | `do/` | `danger/` | D.danger | 安全危险（2个） |
 | `check/` | （不细分） | C.verify / C.reflexion | 验证/反思（2个） |
@@ -102,7 +102,7 @@ references/
 
 ---
 
-## 四、文件归属速查表（47 个模块 × 所属子文件夹 × 引用范围）
+## 四、文件归属速查表（48 个模块 × 所属子文件夹 × 引用范围）
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
@@ -149,7 +149,7 @@ references/
 | project_structure.md | plan/design/ | P.design | main + bootstrap |
 | goal_brief.md | plan/design/ | P.design | main |
 
-### do/（8个）
+### do/（9个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -157,6 +157,7 @@ references/
 | code_rules.md | do/code/ | D.code | main + code_eng |
 | file_to_markdown.md | do/code/ | D.code | main + doc_proc |
 | git_workflow.md | do/code/ | D.code | main + code_eng |
+| html_ppt_creation.md | do/code/ | D.code | main + doc_proc |
 | office_processing.md | do/code/ | D.code | main + doc_proc |
 | security.md | do/danger/ | D.danger | main + code_eng |
 | loop_constraints.md | do/danger/ | D.danger | main + loop |
@@ -210,7 +211,7 @@ references/
 | skill_mgmt_agent | 3 | plan/route/{skill_management, skill_security, agent_find}.md |
 | spec_design_agent | 3 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md |
 | code_eng_agent | 7 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md |
-| doc_proc_agent | 4 | do/code/{office_processing, file_to_markdown}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md |
+| doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown, html_ppt_creation}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md |
 | loop_agent | 3 | plan/route/loop_triage.md · do/danger/loop_constraints.md · check/loop_verifier.md |
 | learn_opt_agent | 4 | act/learn/{learn_cycle, prompt_optimization, skill_graph}.md · common/pc/adversarial_review.md |
 | sync_agent | 3 | common/da/{sync-matrix, hand-drawn-report}.md · common/pa/summary_view.md |
@@ -257,6 +258,7 @@ references/
 | code_rules.md | do/code/ | main + code_eng |
 | file_to_markdown.md | do/code/ | main + doc_proc |
 | git_workflow.md | do/code/ | main + code_eng |
+| html_ppt_creation.md | do/code/ | main + doc_proc |
 | office_processing.md | do/code/ | main + doc_proc |
 | security.md | do/danger/ | main + code_eng |
 | loop_constraints.md | do/danger/ | main + loop |
@@ -272,7 +274,7 @@ references/
 
 | 指标 | 值 |
 |------|-----|
-| reference 总数 | 47 |
+| reference 总数 | 48 |
 | 仅 main 读的 reference | 12（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md + memory_governance.md + writing_style.md + goal_brief.md + article-writing 入口 + 5 子模块） |
 | 被 2+ 副 agent 共读的 reference | 3（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐） |
 | 知识库最大的副 agent | bootstrap_agent(10 个 reference) |
@@ -290,3 +292,4 @@ references/
 | v1.2.0 | 2026-08-06 | 融合文章写作模块：41→47、common 16→22、style 1→7（article-writing 入口 + 5 子模块）；2.1 补嵌套例外条款；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源） |
 | v1.2.1 | 2026-08-06 | 对抗审查第 1 轮修复：common 21→22、style 6→7、分类规则表 style 行 1→7（补入口文件计数）；速查表 memory_governance/goal_brief 引用范围列对齐 main；头部版本同步 v1.2.1 |
 | v1.2.2 | 2026-08-10 | excel_analysis.md v1.0.0→v1.1.0 内容变更触发索引版本刷新（新增7章方法论：数据质量评估/趋势分析/结构拆解/异常识别/可视化升级/报告合成/数据合并；描述列/PDCA标签/引用范围均不变；SKILL.md §3 资源索引描述同步更新）|
+| v1.2.3 | 2026-08-13 | 融合 HTML/PPT 制作：新增 html_ppt_creation.md（D.code），47→48、do 8→9、code 5→6、doc_proc_agent 4→5；速查表 + 反向索引同步 |

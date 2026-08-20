@@ -7,7 +7,7 @@
 
 > 阶段标签：D（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.0 | 更新：2026-07-13
+> 版本：v1.1.0 | 更新：2026-08-11
 > v1.0 变更：二期交付。综合本地技能库（pdf/docx/pptx/xlsx 四个 skill）+ 网上最佳实践，沉淀为纯文本参考模块，内网可用、零外部依赖。离线边界纠正：用户环境确认=内网离线机只有 Python、不能装系统软件、但私有 PyPI 源可 pip 纯 Python 包。将 pandoc/LibreOffice/Tesseract/Poppler 标「内网离线不可用」，公式重算补纯 Python 替代库 `formulas`，§六 重写为「私有源 pip 装纯 Python + 能力边界表」。沙箱实测纠正——§6.1 依赖清单 `某工具` 加 extras（`某工具[pdf,docx,pptx,xlsx]`），裸装转不了 Office 文件。核心四格式纯 Python 离线路径已实测全 PASS（openpyxl/python-docx/python-pptx/reportlab+pdfplumber）。
 
 > 📖 **什么时候读这个文件**：
@@ -147,6 +147,19 @@ python -m 某工具 deck.pptx | grep -iE "xxxx|lorem|ipsum|this.*(page|slide).*l
 - [ ] 抽 2–3 个公式核对取值是否正确
 - [ ] 列映射对（第 64 列是 BL 不是 BK）
 - [ ] 处理 NaN（`pd.notna()`）、除零、跨表引用格式 `Sheet1!A1`
+
+### 📎 交叉引用
+
+| 需要做什么 | 读哪个文件 |
+|-----------|-----------|
+| 数据分析（清洗/透视/统计/图表/趋势/拆解/异常/看板/报告） | **[excel_analysis.md](../../common/pd/excel_analysis.md)**（数据分析方法论，D.code/P.design） |
+| 颜色编码体系（金融模型蓝/黑/绿/红标准） | `excel_analysis.md` 第十六章 |
+| 可视化设计原则（反"AI 生成味"） | `excel_analysis.md` 第十七章 |
+| 专业表格格式规范（斑马纹/边框/KPI 高亮/样式助手函数） | `excel_analysis.md` 第十八章 |
+| 做表前规划方法论（Sheet/Schema/Style 三计划） | `excel_analysis.md` 第十九章 |
+| 文件转 Markdown | **[file_to_markdown.md](file_to_markdown.md)**（D.code，单向转换） |
+
+> 关系：**office_processing.md** 管"Excel 文件的读写改"（文件操作层），**excel_analysis.md** 管"Excel 数据怎么分析"（分析方法论层），两者互补。涉及分析/透视/图表/看板时优先读 `excel_analysis.md`。
 
 ---
 

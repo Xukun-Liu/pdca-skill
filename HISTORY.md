@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
 version: v1.0.1
-last_updated: 2026-08-10
+last_updated: 2026-08-13
 author: huihui
 ---
 
@@ -88,6 +88,9 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                         ── 6 条规则 riji-skill 已覆盖不重复（#2/#4/#5/#7/#8/#10）
 2026-08-06  v1.0.1     文件扫描确认门控（security.md L2：任务外扫描先确认范围+目的+关键词）
                         ── 技能图谱自动化（--auto 每轮 /act 3.6a 自动刷新）+ 数据外置 ~/.riji-skill/data/
+2026-08-13  v1.0.1     融合 HTML/PPT 制作（自包含方法论，内网可用）
+                        ── 新增 references/do/code/html_ppt_creation.md：PPT 用 python-pptx/PptxGenJS 生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件；HTML 网页手写 + 前端设计五原则；图表手写 SVG；内网边界明确
+                        ── trigger_hooks 新增 2 触发钩子行（v1.1.4→v1.1.5）；index 47→48；README/网页说明/subagents 登记；版本不 bump 保持 v1.0.1
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
@@ -370,6 +373,14 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 对抗性审查 2 轮（独立 subagent）：第 1 轮 6 HIGH + 14 MEDIUM；第 2 轮 fresh 验证 HIGH 全真修复 + 无新增 HIGH（HOME 权限收窄 / 测试死参数 / 自伤风险 / 对账口径 / 数字漂移等）
 - 决策记录：不删旧数据 ✅ / 数据迁移 + 桥接（不追已安装副本）✅ / 文件夹整体改名 ✅ / 一次性批量替换 + git diff 全量核验 ✅ / HISTORY 历史保真 ✅
 
+### 2026-08-13：融合 HTML/PPT 制作（v1.0.1）
+
+- 背景：用户反馈 riji-skill 在 HTML 制作与 PPT 制作上是短板——office_processing.md 只有 python-pptx 文件操作，SKILL.md 触发钩子表无"做网页/做PPT"路由；且目标环境是**内网离线机**（无 trae 插件、无 CDN），因此不做插件路由，改为把方法论直接沉淀为自包含模块
+- 方案：自包含方法论（从已装 trae 插件提炼精华后内化，**不依赖插件**）——新增 `references/do/code/html_ppt_creation.md`：PPT 用 python-pptx（纯 Python）/PptxGenJS（Node）生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件（16:9 舞台 + 键盘翻页 + Node 导出）；HTML 网页手写 + 前端设计五原则；图表手写 SVG / 本地 echarts；内网边界见 §四
+- 登记 7 处：trigger_hooks.md（+2 触发钩子行 v1.1.4→v1.1.5）/ index.md（47→48、do 8→9、code 5→6、doc_proc 4→5）/ SKILL.md §0.5 资源索引（+2 行）/ README.md（能力地图 + 参考手册 23→24 高频模块 + 包内 47→48）/ subagents_rj.md（doc_proc_agent 知识库 + 触发词）/ 网页说明.html / HISTORY.md 本节
+- 验证：validate_skill MUST FIX=0 + 残留 grep 0 + 版本号一致性
+- 决策记录：自包含方法论（非路由、非整体嵌入）✅ / HTML 与 PPT 都做 ✅ / 版本不 bump 保持 v1.0.1 ✅ / 变更记录落盘 `C:\Users\86029\Desktop\PDCA-skill v1.0.2升级\` ✅
+
 ---
 
-**版本**:v1.0.1 | **最后更新**:2026-08-10 | **作者**:huihui
+**版本**:v1.0.1 | **最后更新**:2026-08-13 | **作者**:huihui
