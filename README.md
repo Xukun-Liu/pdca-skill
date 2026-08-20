@@ -7,7 +7,9 @@
 
 # pdca-skill
 
-**把管理学的 PDCA，装进每一次 AI 协作**
+> **English**: PDCA collaboration framework for AI agents: /plan → /do → /check → /act closed loop. Personal memory follows you not the tool, spec/task/handoff auto-persisted. 100% local, zero cloud.
+>
+> **把管理学的 PDCA，装进每一次 AI 协作**
 
 AI 是流水的兵，记忆是铁打的营盘  
 先问清再动手 · 改崩了能回退 · 聊完记得住
