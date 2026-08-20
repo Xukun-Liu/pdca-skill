@@ -80,6 +80,9 @@ class TestPathAlignment:
         monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
+        # v1.0.3：write_project 走 find_docs_dir 完整 R3 链（G2 补丁）。
+        # mock 返回 None 模拟"项目无任何 docs 目录"——隔离 cwd 下真实 docs_rj（Hidden 属性，LS 不可见）
+        monkeypatch.setattr(generate_docs, "find_docs_dir", lambda custom_dir=None, create=True: None)
         # 预先创建新路径目录，避免老路径 ./memory/ 回退触发
         expected_dir = str(user_data_path.get_memory_rj_path())
         os.makedirs(expected_dir, exist_ok=True)

@@ -45,7 +45,7 @@ Bootstrap 在以下情况自动触发：
 - ❌ 跳过本流程 = 违反 SKILL.md §0 启动前置检查硬规则
 
 **8 要素清单**（与 SKILL.md §0 启动前置检查一致）：
-1. `.primary_docs_rj` 标记（项目根）
+1. `.primary_docs_rj` 标记**有效**（项目根；read_primary_docs_marker() 非 None；空/BOM/坏路径=缺失）
 2. `docs_rj/` 主目录
 3. `docs_rj/spec_rj/`
 4. `docs_rj/task_rj/`
@@ -90,7 +90,7 @@ Bootstrap 在以下情况自动触发：
 │
 ├─ 你拒绝 → 停下，告知"未初始化无法保证 Memory First，建议先初始化再继续"
 │
-└─ 验证 8 要素全齐 → 继续任务
+└─ 验证 8 要素全齐**且有效**（marker 用 read_primary_docs_marker() 验证，禁止 isfile）─ 继续任务
 ```
 
 ### Bootstrap 覆盖范围（8 要素·完整规范）

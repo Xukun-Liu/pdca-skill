@@ -3,7 +3,7 @@ name: pdca-skill
 description: 协作框架 + 技能编排器。自身不实现具体能力，只负责跨任务硬规则（7条铁律/HARD-GATE/Memory First/触发钩子路由）与按需加载 references/ 下的专业模块；每次对话自动加载，全局生效。
 agent_created: true
 license: Non-Commercial Source-Available License v1.0
-version: "v1.0.1"
+version: "v1.0.3"
 author: pdca-skill contributors
 keywords:
   - 协作框架
@@ -14,7 +14,7 @@ keywords:
 category: workflow
 ---
 
-<!-- Skill 版本：v1.0.1 | 更新：2026-08-06 | 历史变更详见 HISTORY.md -->
+<!-- Skill 版本：v1.0.3 | 更新：2026-08-20 | 历史变更详见 HISTORY.md -->
 
 # pdca skill
 
@@ -240,7 +240,7 @@ category: workflow
 接到任何任务（含简单任务），流程判断后、动手前，必须先确认项目 `docs_rj/` 完整性。
 
 **检查清单（8 要素）**：
-1. `.primary_docs_rj` 标记存在（项目根）
+1. `.primary_docs_rj` 标记**有效**（项目根；以 `read_primary_docs_marker()` 返回非 None 为准；空文件/BOM 文件/路径不存在一律视为缺失，走 bootstrap 修复）
 2. `docs_rj/` 主目录存在
 3. `docs_rj/spec_rj/` 存在
 4. `docs_rj/task_rj/` 存在

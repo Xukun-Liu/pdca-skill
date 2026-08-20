@@ -130,7 +130,8 @@ def read_primary_docs_marker(marker_name='.primary_docs_rj'):
     if not os.path.isfile(marker_path):
         return None
     try:
-        with open(marker_path, 'r', encoding='utf-8') as f:
+        # utf-8-sig：有 BOM 自动剥、无 BOM 无副作用（G1 修复 D1——marker 带 BOM 不再导致解析失败）
+        with open(marker_path, 'r', encoding='utf-8-sig') as f:
             content = f.read().strip()
     except (OSError, UnicodeDecodeError):
         return None

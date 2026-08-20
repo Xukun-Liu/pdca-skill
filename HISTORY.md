@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
-version: v1.0.1
-last_updated: 2026-08-13
+version: v1.0.3
+last_updated: 2026-08-20
 author: huihui
 ---
 
@@ -91,6 +91,8 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
 2026-08-13  v1.0.1     融合 HTML/PPT 制作（自包含方法论，内网可用）
                         ── 新增 references/do/code/html_ppt_creation.md：PPT 用 python-pptx/PptxGenJS 生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件；HTML 网页手写 + 前端设计五原则；图表手写 SVG；内网边界明确
                         ── trigger_hooks 新增 2 触发钩子行（v1.1.4→v1.1.5）；index 47→48；README/网页说明/subagents 登记；版本不 bump 保持 v1.0.1
+2026-08-20  v1.0.3     修复 .primary_docs_rj 无效 marker 导致项目记忆静默 fallback 用户目录（D1/D2/D3 三缺陷）
+                        ── G1 reader 容 BOM；G2 write_project/force_sync 对齐 R3 解析链+fallback 告警+返回落点；G3 8 要素口径"存在"→"有效"；G4 startup_tidy marker 健康检查
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
@@ -381,6 +383,15 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 验证：validate_skill MUST FIX=0 + 残留 grep 0 + 版本号一致性
 - 决策记录：自包含方法论（非路由、非整体嵌入）✅ / HTML 与 PPT 都做 ✅ / 版本不 bump 保持 v1.0.1 ✅ / 变更记录落盘 `C:\Users\86029\Desktop\PDCA-skill v1.0.2升级\` ✅
 
+### 2026-08-20：修复 marker 无效导致记忆静默 fallback（v1.0.3）
+
+- 背景：实测发现项目 `.primary_docs_rj` 指向已消亡路径（更名 riji-skill→pdca-skill 时 marker 未同步），`read_primary_docs_marker()` 返回 None 后 `write_project` 静默 fallback 到用户目录——项目 memory_rj 空置数月，跨项目记忆沉积在 `~/.pdca-skill/data/docs_rj/memory_rj/`（33 个文件）。根因三缺陷：D1 reader 不容 BOM、D2 write_project 静默 fallback 且不走 R3 解析链、D3 8 要素检查"存在≠有效"
+- 方案（补丁规格 v3 + 微调）：G1 reader 容 BOM（utf-8→utf-8-sig，无 BOM 无副作用）；G2 write_project 与 tidy_common.force_sync_project_to_global 对齐 startup_tidy 的 R3 解析链（marker→MEMORY_RJ 约定→路由 ./docs_rj>./.agent/documents>./src/docs>首个 docs_rj）；微调：find_docs_dir 兜底返回外置用户目录而非 None，解析结果等于外置目录视为 fallback（告警+置位），否则原规格告警分支永不触发；G5 返回值增 fallback 标志+实际落点；G3 SKILL.md/bootstrap.md 8 要素口径"标记存在"→"标记有效（read_primary_docs_marker() 非 None）"；G4 startup_tidy run() 加 marker 健康检查（errors 列表承载，不阻断）
+- 对抗审核修正：废弃 v1 自愈方案 declare_primary_docs(cwd/docs_rj)（主 docs 非 docs_rj 的项目会误写 marker）；G4 条件从 not primary 改为判 marker 本身有效性（R3 路由可救时前者永不触发）；handoff_tidy 的 isfile 守卫是 cwd 防呆兜底不改
+- 影响面：改动 5 文件——scripts/generate_docs.py(G1) / scripts/memory_shadow_write.py(G2/G5) / scripts/tidy_common.py(G2 同源) / scripts/startup_tidy.py(G4) / SKILL.md+references/plan/bootstrap/bootstrap.md(G3)
+- 验证：BOM marker 解析 / 空 marker 路由对齐（记忆落项目 docs_rj/memory_rj + fallback:false）/ 真 fallback 可见（空 cwd fallback:true+告警）/ 多 docs 不误宣告（.agent/documents 落点 + 不产生 marker）/ marker 有效回归不变 / startup_tidy --dry-run 报 marker_invalid
+- 决策记录：不代写 marker（守 R3 告警不静默改写）✅ / fallback 只告警不阻断（B5 隔离）✅ / 不改 TidyReport 数据类 ✅
+
 ---
 
-**版本**:v1.0.1 | **最后更新**:2026-08-13 | **作者**:huihui
+**版本**:v1.0.3 | **最后更新**:2026-08-20 | **作者**:huihui

@@ -75,6 +75,8 @@ class TestWriteProjectWithFlag:
         monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
+        # v1.0.3：隔离 cwd 下真实 docs_rj（同 phase1，还原"项目无任何 docs 目录"场景）
+        monkeypatch.setattr(generate_docs, "find_docs_dir", lambda custom_dir=None, create=True: None)
         expected_dir = str(user_data_path.get_memory_rj_path())
         os.makedirs(expected_dir, exist_ok=True)
         fake_global = str(tmp_path / "memory" / "memory_main.md")

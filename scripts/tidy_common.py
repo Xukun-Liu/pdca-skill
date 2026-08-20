@@ -595,10 +595,14 @@ def force_sync_project_to_global(project_memory_dir=None):
       3. user_data_path.get_memory_rj_path()（外置用户数据目录）
     """
     if project_memory_dir is None:
-        primary_marker = generate_docs.read_primary_docs_marker()
-        if primary_marker:
-            project_memory_dir = os.path.join(primary_marker, 'memory_rj')
+        # 与 write_project 同一 R3 解析链（修路径分裂 bug 第二处，v1.0.3）
+        primary = generate_docs.find_docs_dir(create=False)
+        external_docs = os.path.abspath(str(user_data_path.get_docs_rj_path()))
+        if primary and os.path.isdir(primary) and os.path.abspath(primary) != external_docs:
+            project_memory_dir = os.path.join(primary, 'memory_rj')
         else:
+            logger.warning("[force_sync] R3 解析链无结果，fallback 用户目录: %s",
+                           user_data_path.get_memory_rj_path())
             project_memory_dir = str(user_data_path.get_memory_rj_path())
     result = {'synced': [], 'skipped': [], 'errors': []}
     if not os.path.isdir(project_memory_dir):

@@ -379,12 +379,26 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
     #   1. primary_docs marker（.primary_docs_rj 标记，项目级 docs）
     #   2. user_data_path.get_memory_rj_path()（外置用户数据目录）
     #   3. 老路径 ./memory/（向后兼容）
+    fallback_used = False
     if project_memory_dir is None:
-        primary_marker = generate_docs.read_primary_docs_marker()
-        if primary_marker:
-            project_memory_dir = os.path.join(primary_marker, 'memory_rj')
+        # 对齐 startup_tidy 的 R3 解析链（marker→MEMORY_RJ约定→路由 ./docs_rj>./.agent/documents>./src/docs>首个docs_rj）
+        # 原实现只认 marker：marker 空/带BOM/指向死路径时 startup_tidy 能路由到项目 docs，
+        # 这里却静默落用户目录（D2 根因，v1.0.3 修复）
+        primary = generate_docs.find_docs_dir(create=False)
+        # 微调：find_docs_dir 无项目 docs 时返回外置用户目录（非 None），
+        # 解析结果等于外置目录视为 fallback（告警+置位），保证"真 fallback 可见"
+        external_docs = os.path.abspath(str(user_data_path.get_docs_rj_path()))
+        if primary and os.path.isdir(primary) and os.path.abspath(primary) != external_docs:
+            project_memory_dir = os.path.join(primary, 'memory_rj')
         else:
+            logger.warning("[write_project] R3 解析链无结果，记忆 fallback 用户目录: %s",
+                           user_data_path.get_memory_rj_path())
             project_memory_dir = str(user_data_path.get_memory_rj_path())
+            fallback_used = True
+        # marker 存在但无效（空/BOM/坏路径）→ 显式告警提示修复（不静默、不代写 marker，守 R3）
+        if os.path.isfile('.primary_docs_rj') and generate_docs.read_primary_docs_marker() is None:
+            logger.warning(".primary_docs_rj 存在但无效（空/BOM/路径不存在），"
+                           "建议运行 python generate_docs.py --declare-primary 修复")
         # 向后兼容：检测老路径 ./memory/（仅当新路径不存在且老路径存在时回退）
         old_path = './memory'
         if not os.path.isdir(project_memory_dir) and os.path.isdir(old_path):
@@ -444,7 +458,9 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
         except Exception as exc:
             logger.debug("[write_project] 容量检查失败（不影响写入）: %s", exc)
 
-    return {'project_ok': True, 'global_ok': True}
+    # G5：返回落点信息（fallback 标志 + 实际目录），CLI stdout 可核对每次记忆落点
+    return {'project_ok': True, 'global_ok': True,
+            'fallback': fallback_used, 'project_memory_dir': project_memory_dir}
 
 
 def _ensure_parent(path):

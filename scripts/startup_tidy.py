@@ -396,6 +396,13 @@ class StartupTidy:
         logger.info("=== 启动整理管线（startup_tidy）===")
         primary = self._resolve_primary_docs()
         self.report.primary_docs = primary
+        # marker 健康检查：文件存在但 reader 返回 None（空/BOM/坏路径）→ 显式告警，防记忆静默 fallback（G4）
+        # 注意：不能用 "and not primary" 作条件——R3 路由会在 marker 无效时仍解析出 primary（那样永不触发）
+        if os.path.isfile('.primary_docs_rj') and generate_docs.read_primary_docs_marker() is None:
+            logger.warning(".primary_docs_rj 存在但无效（空/BOM/路径不存在），"
+                           "建议运行 python generate_docs.py --declare-primary 修复，否则项目记忆 fallback 用户目录")
+            self.report.errors.append({'stage': 'marker_invalid',
+                                       'error': '.primary_docs_rj 存在但无效'})
 
         self.report.missing_dirs = self._ensure_project_structure()
         if not primary or not os.path.isdir(primary):
