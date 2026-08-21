@@ -81,6 +81,8 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                         ── 新增 SKILL.md §2.1：首行动作/尾行下一步/时间估计具体化/发送前自检
                         ── 按 PDCA 阶段差异化适用（/plan 不适用，/do/check/act/问答适用）
                         ── 不采用 #9 列表上限 5（与 riji-skill 长表格载体冲突）
+                        ── ⚠️ 完整性注记：§2.1 于 2026-08-01 被发现已从 SKILL.md 丢失（HISTORY 记录在、正文不在，丢失经过无记录），
+                        ── 2026-08-21 v1.0.3 第三批按本条目决策记录重建（非原件复原，措辞差异以决策记录要素为准），详见 CHANGELOG_v1.0.3.md 第三批
 2026-08-01  v1.0.0     新增「任务启动 Git 管理询问」（用户反馈融合）
                         ── 复杂任务开工前问 2 问（工作区状态/分支策略）+ 3 默认值（git init/WIP commit/任务 tag 默认打）
                         ── 简单任务轻量 git status 检查，脏才问，不啰嗦
@@ -392,6 +394,13 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 验证：BOM marker 解析 / 空 marker 路由对齐（记忆落项目 docs_rj/memory_rj + fallback:false）/ 真 fallback 可见（空 cwd fallback:true+告警）/ 多 docs 不误宣告（.agent/documents 落点 + 不产生 marker）/ marker 有效回归不变 / startup_tidy --dry-run 报 marker_invalid
 - 决策记录：不代写 marker（守 R3 告警不静默改写）✅ / fallback 只告警不阻断（B5 隔离）✅ / 不改 TidyReport 数据类 ✅
 
+### 2026-08-21：v1.0.3 第三批——§2.1 输出节奏规则重建（完整性修复）
+
+- 缺口：07-31 吸收的 §2.1（首行动作/尾行下一步/时间估计具体化/发送前自检）于 08-01 被发现丢失，HISTORY 记录与 SKILL.md 实际漂移 20 天，sync-matrix 未捕获
+- 修复：按 07-31 会话决策记录（10 条规则映射：6 覆盖/4 吸收/#9 不采用/#1、#3 /plan 排除）重建 §2.1 六子节；HISTORY 本条目上方补丢失经过注记；CHANGELOG_v1.0.3.md 追加第三批
+- 验证：Grep 首行动作/尾行下一步/发送前自检由 0 命中→命中；SKILL.md 无来源标注（无 i-have-adhd/adhd/URL 字样）；validate_skill 全绿；版本号保持 v1.0.3
+- 来源归属：原始素材评审自 GitHub 开源项目（MIT），SKILL.md 正文按 07-31 用户要求不含来源标注，归属记录仅存本 HISTORY
+
 ---
 
-**版本**:v1.0.3 | **最后更新**:2026-08-20 | **作者**:huihui
+**版本**:v1.0.3 | **最后更新**:2026-08-21 | **作者**:huihui
