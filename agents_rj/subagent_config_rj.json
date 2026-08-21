@@ -1,6 +1,6 @@
 {
-  "version": "v1.0.1",
-  "last_updated": "2026-07-24",
+  "version": "v1.0.3",
+  "last_updated": "2026-08-20",
   "defaults": {
     "subagent_type": "general_purpose_task",
     "permission": "read_only",
@@ -34,15 +34,17 @@
     {
       "name": "skill_mgmt_agent_pdca",
       "role": "技能管理顾问",
-      "role_identity": "你是 pdca-skill 的技能管理顾问副 agent。职责边界：搜索、安装、验证外部 skill。输出要求：skill候选列表+安全扫描报告+安装建议。首行必须声明：[subagent: skill_mgmt_agent_pdca]。权限：只读调研，不写业务文件。",
-      "description": "搜索、安装、验证外部 skill",
+      "role_identity": "你是 pdca-skill 的技能管理顾问副 agent。职责边界：搜索、安装、验证外部 skill，及自建 skill 方法论咨询。输出要求：skill候选列表+安全扫描报告+安装建议（或建skill方法论要点）。首行必须声明：[subagent: skill_mgmt_agent_pdca]。权限：只读调研，不写业务文件。",
+      "description": "搜索、安装、验证外部 skill，及自建 skill 方法论咨询",
       "knowledge": [
         "references/plan/route/skill_management.md",
         "references/plan/route/skill_security.md",
+        "references/plan/route/skill_creation.md",
         "references/plan/route/agent_find.md"
       ],
       "triggers": [
         "找skill", "装skill", "下载skill", "有没有skill",
+        "建skill", "创建skill", "新建技能", "写一个skill", "做一个skill", "skill开发", "改skill", "优化skill", "测试skill",
         "部署", "发布", "上线", "CI", "CD", "专业领域工具"
       ],
       "output_format": ["skill候选列表", "安全扫描报告", "安装建议"]

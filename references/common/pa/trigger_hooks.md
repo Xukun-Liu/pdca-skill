@@ -1,13 +1,13 @@
 <!-- PDCA标签：P.route A.handoff -->
 <!-- 子标签场景：路由判断、关键词触发、reference 索引 -->
-<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck -->
+<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck -->
 <!-- 引用范围：main + bootstrap_agent -->
 
 # 触发钩子表（从 SKILL.md §0 外迁）
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.5 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-13（新增 HTML/PPT 制作两行触发钩子，路由到 html_ppt_creation.md 自包含方法论，python-pptx/PptxGenJS/手写 HTML，内网可用）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.7 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-20（新增建 skill 触发钩子（10 词：建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 → skill_creation.md）；对抗审查修复：声明 skill 域词优先于"技能/测试/优化"泛词、登记指令改为两分支、改 skill 先快照）| PDCA 标签：P.route A.handoff
 > 本文件是 pdca-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -44,6 +44,7 @@
 | 转Markdown/转md/文件转markdown/PDF转md/Word转md/PPT转md/Excel转md/HTML转md/文档转markdown/提取成markdown | references/do/code/file_to_markdown.md（PDF·Word·PPT·Excel·HTML→MD，纯Python离线可用，某工具 一行转） | **兜底用：agent-find 搜不到合适外部 skill 时，用本模块本地 某工具 方案；首选 某工具 一行命令，精细控制换专用库** |
 | 分析数据/Excel数据分析/数据清洗/透视表/统计分析/图表可视化/同比环比/做看板/从表里找规律/数据分析方法论 | references/common/pd/excel_analysis.md（清洗·透视·统计·图表·预测 方法论，纯本地，内网可用） | **兜底用：agent-find 搜不到合适外部 skill 时，用本模块本地方法论；动手前先读第一节"想清楚3问"；与 office_processing.md 分工：它管"读写Excel文件"，本模块管"怎么分析出结论"** |
 | 安装skill/装skill/下载skill/找一个skill/有没有skill/skill推荐/技能/插件/扩展 | references/plan/route/skill_security.md | **自动执行 SkillAudit 安全扫描** |
+| 建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 | references/plan/route/skill_creation.md（意图捕获4问+四件套结构+三级渐进加载+description写法+测试迭代循环） | **建之前先过"找现成 vs 自己建"闸（复用优先，先查 skill_management.md）；建完登记 SKILL.md §0.5 索引 + 经 write_project 记忆** |
 | 同步一下/整理文档/整理一下/更新记忆/梳理一下/收尾/这个阶段做完了/新人能直接上手/检查规范/审计规则/规范体检/交接/里程碑/sync/neat/tidy/版本号一致/一致性检查/清理/打扫/对一下 | references/common/da/sync-matrix.md（按矩阵逐项核对版本号+引用+文件一致性） | **自动执行全局版本号一致性检查** |
 | 验收/验收一下/审核/看一下做得对不对/看一下进度报告/交接/给你接手/handoff/存档/总结/总结一下/汇报/进度/汇总/梳理一下做了什么/产出报告/报告/让我看看总结/确认一下做得对不对/计划/方案/规划一下/出方案/做规划/盘点/能力清单 | references/common/da/hand-drawn-report.md（按内容关系类型生成手绘 SVG） | **报告/计划/盘点类输出默认在对话内附手绘 SVG 速览图，若生成 md 则 md 顶部同时内联同款 SVG（带图、单文件自包含）；交接时额外刷新 {主docs}/SUMMARY_RJ.md（见 summary_view.md）** |
 | 交接/收尾/给你接手/handoff/存档/交接工作 | references/common/da/sync-matrix.md → **自动调用 `python scripts/handoff_tidy.py --task {任务名}`** | **硬性：交接时必跑 handoff_tidy**<br>　管线：守卫+归档+刷新+漂移+外部记忆清理+平台记忆融入技能记忆+强制#3→#4同步+五问预跑+sync-matrix核对<br>　效果：自动整理文档+对齐记忆+强制走技能记忆（禁止用平台记忆替代）+融入平台记忆并删除原件 |
@@ -130,3 +131,5 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | v1.1.3 | 2026-08-06 | 文章写作触发词补"去AI味"（用户要求：去AI味=文章改写润色场景）；头部关键词注释同步 |
 | v1.1.4 | 2026-08-06 | 移除 MIGRATION.md 触发行（文档规整流程随 MIGRATION.md 删除）；头部关键词注释同步清理 |
 | v1.1.5 | 2026-08-13 | 新增 HTML/PPT 制作两行触发钩子（做网页/前端/HTML/落地页/做PPT/幻灯片/演示文稿/课件 → html_ppt_creation.md 自包含方法论），自动触发列注明"按本文档自包含制作（python-pptx / PptxGenJS / 手写 HTML，内网可用）"；头部关键词注释同步 |
+| v1.1.6 | 2026-08-20 | 新增建 skill 触发钩子（建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 → skill_creation.md），自动触发列注明"先过找现成vs自建闸+建完登记索引和记忆"；头部关键词注释同步 |
+| v1.1.7 | 2026-08-20 | 对抗审查修复（H9/H7）：触发行声明 skill 域词优先于"技能/测试/优化"泛词（与 SKILL.md 仲裁规则联动）；登记指令改为两分支（reference 模块→SKILL.md 索引表 / 独立 skill→memory）；补"改 skill 先快照旧版"；头部版本说明词数修正（4→10） |

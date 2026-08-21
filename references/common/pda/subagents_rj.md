@@ -5,7 +5,7 @@
 
 # 副 agent 角色配置总表（pdca-skill 多 agent 架构）
 
-> 版本：v1.0.0 | 创建：2026-07-21 | 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
+> 版本：v1.0.1 | 创建：2026-07-21 | 更新：2026-08-20（skill_mgmt_agent 知识库 3→4：纳入 skill_creation.md；触发词补建skill域；L528 计数 47→48）| 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
 >
 > 本文件定义 pdca-skill 的 9 个副 agent 角色配置。主 agent 按触发钩子表的关键词，用 TRAE Task 工具临时召唤对应副 agent 做只读调研，结果回传给主 agent，主 agent 守 HARD-GATE 后写操作。
 >
@@ -525,6 +525,6 @@ python scripts/launch_subagent_rj.py dispatch --task "初始化项目" --json
 > **维护规则**:
 > - 修改副 agent 知识库(本文件第二节)→ 同步更新 [index.md 第六节](../../index.md)的反向索引表
 > - 新增/删除副 agent → 同步更新 index.md 第六节 6.1(agent 分组) + 6.2(reference 分组) + 6.3(统计摘要)
-> - 47 个 reference 文件头部的 `<!-- 引用范围 -->` 标注也需同步更新
+> - 48 个 reference 文件头部的 `<!-- 引用范围 -->` 标注也需同步更新
 >
 > **原因**:历史执行中曾出现同一份数据在两处维护导致漂移(详见用户偏好"先合并再删除")。反向索引集中在 index.md,本文件只放正向配置,避免双源漂移。

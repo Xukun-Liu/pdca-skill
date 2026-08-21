@@ -145,6 +145,7 @@
 | references/do/danger/security.md | `> 版本：v` | （手写） | grep `版本：v\d` |
 | references/plan/route/skill_management.md | `> 版本：v` | （手写） | grep `版本：v\d` |
 | references/plan/route/skill_security.md | `> 版本：v` | （手写） | grep `版本：v\d` |
+| references/plan/route/skill_creation.md | `> 版本：v` | （手写） | grep `版本：v\d` |
 | references/common/pa/working_memory_rules.md | `> 版本：v` | （手写） | grep `版本：v\d` |
 | references/common/da/sync-matrix.md | `> 版本：v1.0` | （手写） | 直接读 |
 | references/plan/bootstrap/bootstrap.md | `> 版本：v` | （手写） | grep `版本：v\d` |

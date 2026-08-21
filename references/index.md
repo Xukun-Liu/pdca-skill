@@ -4,10 +4,10 @@
 
 # references/ 目录索引
 
-> 版本：v1.2.3 | 创建：2026-07-25 | pdca-skill 参考模块导航
+> 版本：v1.2.5 | 创建：2026-07-25 | pdca-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
-> 本索引是 references/ 目录的导航地图。48 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
+> 本索引是 references/ 目录的导航地图。49 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
 
 ---
 
@@ -24,9 +24,9 @@ references/
 │   ├── dc/   (2个) D+C 执行+调试验证
 │   ├── da/   (3个) D+A 执行+归档整理
 │   └── style/ (7个) P+D 写作风格（特例，含 writing_style + article-writing 入口 + 5 子模块）
-├── plan/                     ← P 环节：想清楚（11个）
+├── plan/                     ← P 环节：想清楚（12个）
 │   ├── bootstrap/  (3个) P.bootstrap 启动恢复
-│   ├── route/      (5个) P.route 路由判断
+│   ├── route/      (6个) P.route 路由判断
 │   └── design/     (3个) P.design 方案设计
 ├── do/                       ← D 环节：动手做（9个）
 │   ├── code/       (6个) D.code 编码
@@ -67,7 +67,7 @@ references/
 | 环节 | 子文件夹 | 子标签 | 含义 |
 |------|----------|--------|------|
 | `plan/` | `bootstrap/` | P.bootstrap | 启动恢复（3个） |
-| `plan/` | `route/` | P.route | 路由判断（5个） |
+| `plan/` | `route/` | P.route | 路由判断（6个） |
 | `plan/` | `design/` | P.design | 方案设计（3个） |
 | `do/` | `code/` | D.code | 编码（6个） |
 | `do/` | `comm/` | D.comm | 执行期任务流（1个） |
@@ -95,14 +95,14 @@ references/
 | 交接/同步/整理 | `common/da/`（sync-matrix, hand-drawn-report, git_backup_cleanup） |
 | 学习进化/prompt 优化 | `act/learn/` |
 | 处理 Office/PDF/Excel | `do/code/`（office_processing, file_to_markdown）+ `common/pd/`（excel_analysis） |
-| 找/装外部 skill | `plan/route/`（skill_management, skill_security, agent_find） |
+| 找/装/建外部 skill | `plan/route/`（skill_management, skill_security, skill_creation, agent_find） |
 | 多项目管理 | `plan/bootstrap/`（multi_project） |
 | 上下文压缩恢复 | `plan/bootstrap/`（compaction_recovery）+ `common/pa/`（working_memory_rules） |
 | 副 agent 调度 | `common/pda/`（subagents_rj） |
 
 ---
 
-## 四、文件归属速查表（48 个模块 × 所属子文件夹 × 引用范围）
+## 四、文件归属速查表（49 个模块 × 所属子文件夹 × 引用范围）
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
@@ -133,7 +133,7 @@ references/
 | formats.md | common/style/article-writing/ | 链式加载（入口） | main |
 | revision.md | common/style/article-writing/ | 链式加载（入口） | main |
 
-### plan/（11个）
+### plan/（12个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -143,6 +143,7 @@ references/
 | usage_examples.md | plan/route/ | P.route | main + bootstrap |
 | skill_management.md | plan/route/ | P.route | main + skill_mgmt |
 | skill_security.md | plan/route/ | P.route | main + skill_mgmt |
+| skill_creation.md | plan/route/ | P.route | main + skill_mgmt |
 | agent_find.md | plan/route/ | P.route | main + skill_mgmt |
 | loop_triage.md | plan/route/ | P.route | main + loop |
 | design_patterns.md | plan/design/ | P.design | main + bootstrap |
@@ -208,7 +209,7 @@ references/
 | agent | 知识库(reference 数) | 引用的 reference |
 |------|----------------------|------------------|
 | bootstrap_agent | 10 | plan/bootstrap/{bootstrap, compaction_recovery, multi_project}.md · common/pa/{summary_view, working_memory_rules, trigger_hooks}.md · plan/route/usage_examples.md · plan/design/{project_structure, design_patterns}.md · common/pd/minimal_code_principles.md |
-| skill_mgmt_agent | 3 | plan/route/{skill_management, skill_security, agent_find}.md |
+| skill_mgmt_agent | 4 | plan/route/{skill_management, skill_security, skill_creation, agent_find}.md |
 | spec_design_agent | 3 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md |
 | code_eng_agent | 7 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md |
 | doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown, html_ppt_creation}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md |
@@ -227,6 +228,7 @@ references/
 | usage_examples.md | plan/route/ | main + bootstrap |
 | skill_management.md | plan/route/ | main + skill_mgmt |
 | skill_security.md | plan/route/ | main + skill_mgmt |
+| skill_creation.md | plan/route/ | main + skill_mgmt |
 | agent_find.md | plan/route/ | main + skill_mgmt |
 | loop_triage.md | plan/route/ | main + loop |
 | design_patterns.md | plan/design/ | main + bootstrap |
@@ -274,7 +276,7 @@ references/
 
 | 指标 | 值 |
 |------|-----|
-| reference 总数 | 48 |
+| reference 总数 | 49 |
 | 仅 main 读的 reference | 12（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md + memory_governance.md + writing_style.md + goal_brief.md + article-writing 入口 + 5 子模块） |
 | 被 2+ 副 agent 共读的 reference | 3（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐） |
 | 知识库最大的副 agent | bootstrap_agent(10 个 reference) |
@@ -293,3 +295,5 @@ references/
 | v1.2.1 | 2026-08-06 | 对抗审查第 1 轮修复：common 21→22、style 6→7、分类规则表 style 行 1→7（补入口文件计数）；速查表 memory_governance/goal_brief 引用范围列对齐 main；头部版本同步 v1.2.1 |
 | v1.2.2 | 2026-08-10 | excel_analysis.md v1.0.0→v1.1.0 内容变更触发索引版本刷新（新增7章方法论：数据质量评估/趋势分析/结构拆解/异常识别/可视化升级/报告合成/数据合并；描述列/PDCA标签/引用范围均不变；SKILL.md §3 资源索引描述同步更新）|
 | v1.2.3 | 2026-08-13 | 融合 HTML/PPT 制作：新增 html_ppt_creation.md（D.code），47→48、do 8→9、code 5→6、doc_proc_agent 4→5；速查表 + 反向索引同步 |
+| v1.2.4 | 2026-08-20 | 融合建 Skill 参考：新增 skill_creation.md（P.route，方法论提炼自外部开源资产，归属见包级 NOTICE），48→49、plan 11→12、route 5→6、skill_mgmt_agent 3→4；速查表 + 正/反向索引同步 |
+| v1.2.5 | 2026-08-20 | 对抗审查修复（14 HIGH）：目录树/分类表 plan·route 计数同步（11→12、5→6）、§6.2 反向索引表补 skill_creation.md 行（修正 v1.2.4"反向索引同步"未兑现）、subagents_rj/config json 权威源同步（见各文件自身版本） |

@@ -74,7 +74,7 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
 2026-07-11  v1.5       校验增强 ROUT-03(检查数 15→16)
 2026-07-12  v1.0.0     riji_skill v1.0.0(改名 huihui-skill → riji_skill,落地四道安全锁)
                        ─────── 9 天稳定期 ───────
-2026-07-21  v1.0.0     🚀 riji-skill-public v1.0.0 公开发布版(当前版本)
+2026-07-21  v1.0.0     🚀 riji-skill-public v1.0.0 公开发布版
                        PDCA 4 环脊柱模型 + 10 副 agent + 8 要素启动检查
 2026-07-31  v1.0.0     吸收 i-have-adhd（MIT, Ayoub Ghriss）输出节奏规则
                         ── 评审 https://github.com/ayghri/i-have-adhd 后融合
@@ -90,9 +90,13 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                         ── 6 条规则 riji-skill 已覆盖不重复（#2/#4/#5/#7/#8/#10）
 2026-08-06  v1.0.1     文件扫描确认门控（security.md L2：任务外扫描先确认范围+目的+关键词）
                         ── 技能图谱自动化（--auto 每轮 /act 3.6a 自动刷新）+ 数据外置 ~/.riji-skill/data/
+2026-08-11  v1.0.1     Excel 分析能力系统性升级（当时未登记，v1.0.2 补登）
+                       ── excel_analysis.md v1.0.0→v1.3.0：新增 7 章 + 从 4 个外部 skill 提炼 9 项方法论；4 个配套文件交叉引用闭环
 2026-08-13  v1.0.1     融合 HTML/PPT 制作（自包含方法论，内网可用）
                         ── 新增 references/do/code/html_ppt_creation.md：PPT 用 python-pptx/PptxGenJS 生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件；HTML 网页手写 + 前端设计五原则；图表手写 SVG；内网边界明确
                         ── trigger_hooks 新增 2 触发钩子行（v1.1.4→v1.1.5）；index 47→48；README/网页说明/subagents 登记；版本不 bump 保持 v1.0.1
+2026-08-19  v1.0.2     🚀 pdca-skill-public v1.0.2 公开发布版（当前版本）
+                       两批能力升级（Excel v1.3.0 + HTML/PPT 模块）+ 发布瘦身（缓存/私人数据/占位外链清理）
 2026-08-20  v1.0.3     修复 .primary_docs_rj 无效 marker 导致项目记忆静默 fallback 用户目录（D1/D2/D3 三缺陷）
                         ── G1 reader 容 BOM；G2 write_project/force_sync 对齐 R3 解析链+fallback 告警+返回落点；G3 8 要素口径"存在"→"有效"；G4 startup_tidy marker 健康检查
 ```
@@ -385,6 +389,22 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 验证：validate_skill MUST FIX=0 + 残留 grep 0 + 版本号一致性
 - 决策记录：自包含方法论（非路由、非整体嵌入）✅ / HTML 与 PPT 都做 ✅ / 版本不 bump 保持 v1.0.1 ✅ / 变更记录落盘 `C:\Users\86029\Desktop\PDCA-skill v1.0.2升级\` ✅
 
+### 2026-08-11：Excel 分析能力系统性升级（v1.0.2 内容，本节 2026-08-19 补登）
+
+- 背景：用户反馈 Excel 深度分析是短板——excel_analysis.md 停留在 v1.0.0 基础方法论，缺颜色编码/可视化/格式规范/做表前规划等工程实践
+- 三阶段推进：① excel_analysis.md 核心方法论扩充（新增颜色编码速查/可视化设计原则/专业表格格式规范/做表前规划/KPI 卡片设计等 6 章 + 验收清单扩充，v1.0.0→v1.2.1）② 打通 4 个配套文件引用关系形成「分析能力 + 配套工具 + 审查保障」闭环——office_processing.md v1.1.0（交叉引用表）/ file_to_markdown.md v1.1.0（Excel 转 MD 6 场景注意事项）/ code_rules.md v1.1（第十章 Excel 代码规范）/ adversarial_review.md v1.1.0（§四数据分析专项审查 8 维度）③ 从 4 个新装 skill（industry-researcher / lark-sheets / lark-base / lark-drive）提炼 9 项方法论融入（意图→操作映射/数据源范围 3 步确认/全局 vs 局部/图表数据源精确控制/扩展图表选型/三方对照验证法/交付验收 6 项追溯/美化 5 维度/条件格式设计方法论新增章，v1.2.1→v1.3.0），剥离飞书 API 依赖纯 Python 可用
+- 来源：xlsx skill + data-processing 插件 + 4 个 lark/industry skill 提炼，内网离线可用；源记录见《本次对话变更记录_20260811.md》
+- 验证：5 文件版本号 header 与版本历史一致 + 无占位符 + 交叉引用路径有效 + 内网零依赖
+- 本节为 2026-08-19 发布 v1.0.2 时补登（当时未写入 HISTORY）
+
+### 2026-08-19：v1.0.2 公开发布版
+
+- 版本 bump：v1.0.1 → v1.0.2 全链路同步 17 处——SKILL.md frontmatter + HTML 注释 / README 版本行 / 网页说明.html 3 处 / HISTORY.md frontmatter + 时间线 + 页脚 / assets 11 个模板 `skill_version` / evals.json / subagent_config_rj.json（+last_updated）/ server_lite `__init__.py`+`app.py` 健康检查+static/index.html 面板版本 / startup_tidy.py SUMMARY 生成戳 / package_skill.py 用法示例；references 模块自身版本号与「【v1.0.1 新增】」类历史标记按惯例保留
+- 本版内容（相对 v1.0.1 发布包）：① Excel 分析系统性升级（见 2026-08-11 补登条目）② HTML/PPT 制作模块（见 2026-08-13 条目）③ 发布瘦身
+- 发布瘦身（按可复用 SOP，开发环境复制为发布目录后剔除）：.git/（446 文件 git 历史+个人远端）/ docs_rj/（88 文件私人用户数据）/ outputs_rj/ / .playwright-mcp/ / __pycache__×4（3.10+3.11 双份）/ tests/.pytest_cache / .primary_docs_rj（私人本地路径）/ agents_rj/subagent_call_log.jsonl（运行日志）；README 顶部 img.shields.io 外链徽章换纯文本版本行；网页说明.html 占位 clone 命令（github.com/yourname）改「下载 ZIP 解压」；成品 156 文件（v1.0.1 为 155，差 1 = 新增 html_ppt_creation.md），框架本体零损失
+- 决策记录：exa.env.json.example 保留（README 方式B 引用作配置模板，内容仅占位符无真实 key，用户拍板）✅ / 发布文案 = HISTORY 登记 + 独立《v1.0.2 发布介绍》✅ / 验证后打 zip ✅
+- 验证：validate_skill 32/32 pass MUST FIX=0（版本同步前后各跑一轮均全绿）+ 身份残留扫描 0 命中（Xukun-Liu/huihui_9999/yourname/img.shields.io 全零；HISTORY 内 3 处 `~/.riji-skill/data` 为改名历史保真记录）
+
 ### 2026-08-20：修复 marker 无效导致记忆静默 fallback（v1.0.3）
 
 - 背景：实测发现项目 `.primary_docs_rj` 指向已消亡路径（更名 riji-skill→pdca-skill 时 marker 未同步），`read_primary_docs_marker()` 返回 None 后 `write_project` 静默 fallback 到用户目录——项目 memory_rj 空置数月，跨项目记忆沉积在 `~/.pdca-skill/data/docs_rj/memory_rj/`（33 个文件）。根因三缺陷：D1 reader 不容 BOM、D2 write_project 静默 fallback 且不走 R3 解析链、D3 8 要素检查"存在≠有效"
@@ -394,6 +414,20 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 验证：BOM marker 解析 / 空 marker 路由对齐（记忆落项目 docs_rj/memory_rj + fallback:false）/ 真 fallback 可见（空 cwd fallback:true+告警）/ 多 docs 不误宣告（.agent/documents 落点 + 不产生 marker）/ marker 有效回归不变 / startup_tidy --dry-run 报 marker_invalid
 - 决策记录：不代写 marker（守 R3 告警不静默改写）✅ / fallback 只告警不阻断（B5 隔离）✅ / 不改 TidyReport 数据类 ✅
 
+### 2026-08-20：v1.0.3 建 Skill 参考融合 + 3 视角对抗审查修复
+
+- 新增 `references/plan/route/skill_creation.md`（P.route）：建/改/测自建 Skill 全流程方法论，提炼自外部开源资产（归属见包级 NOTICE）——与 skill_management（找/装）、skill_security（安全）组成「找→装→建」三件套；references 48→49、plan 11→12、route 5→6
+- **3 视角对抗审查**（保真度 68 / 一致性 70 / 可执行性 60 → 全修）：3 个独立 fresh subagent 并行挑刺，产出 HIGH 14 / MEDIUM 15 / LOW 11，报告落盘 docs_rj/check_rj/add_skill_creation_ref_adversarial_20260820_1230.md；用户拍板「方案 1 全修 + H13 包级 NOTICE 集中声明」
+- 修复要点：①同步漏改 6 处（SKILL.md/index.md 计数、§6.2 反向索引、subagents_rj+config json 双权威源、README+网页说明发布物料、sync-matrix 登记）②指令指空修正（登记改两分支：reference 模块→框架索引 / 独立 skill→memory；补落地目录 ~/.trae-cn/skills/ 与 _huihui 命名）③触发仲裁冲突（skill 域词优先于「技能/测试/优化」泛词，SKILL.md 仲裁规则补 2 条）④能力边界声明（量化工具链不内置，正文改手工等价流程：同轮发射/timing 即时落盘/grading 三字段契约/人类先看 AI 后改/规模化）⑤合规双输修复（正文去第三方名，新建包级 NOTICE 按 Apache 2.0 §4(c) 集中归属）⑥改 skill 三重保护（快照旧版/保留原名/只读路径先拷出）
+- 版本联动：SKILL.md v1.0.2→v1.0.3（frontmatter+注释）、index.md v1.2.4→v1.2.5、trigger_hooks.md v1.1.6→v1.1.7、skill_creation.md v1.0.0→v1.1.0、skill_management.md v1.0.0→v1.1.0、subagents_rj.md v1.0.0→v1.0.1、subagent_config_rj.json v1.0.2→v1.0.3
+- 待办（LOW 债务）：.bak 备份文件迁移 %TEMP% 已执行；「术语分级沟通指南/roleplay 判例」等 5 项 LOW 记录在审查报告，后续版本参考
+
+### 2026-08-20：v1.0.3 追加——记忆凝炼触发修复（learn_gap_fix）
+
+- 用户发现 /act 的 learn 环连续两次静默未触发，根因三层：①distill 产出 0 条时静默跳过（agent 无感知）②handoff_tidy 失败降级时未补挂起标记（降级丢步骤无补偿）③learn 门控仅看累积量阈值（降级挂起场景盲区）
+- 修复三件套：`memory_distill.py` 0 条时输出 notice + [NOTICE] 行（可见跳过，agent 须复述，禁静默）；`learn_tidy.py count` 增门控双条件②——扫描 memory_rj/TASK_STATE_*.md 检测 `learn_distill_pending: true` 挂起标记，命中即强制 should_run=true（保持 H4：total=0 仍不空跑），JSON 输出 pending_degraded_learn + pending_files；`SKILL.md` /act 步骤3（手动降级必须补挂起标记）/3.6（门控双条件+补跑后置 false 防重复触发）/4.1（0 条复述 NOTICE）三处同步，`act_procedure.md` 同步细则（v1.0.1→v1.0.2）
+- 验证（实跑贴输出）：①count 基线 54≥20 → should_run=true ②反向验证 threshold=9999+探针挂起标记 → should_run=true + pending_degraded_learn=true + pending_files 命中（条件②独立强制触发，探针已清理还原）③distill 0 条 → stdout 输出 [NOTICE] 行不再静默 ④validate_skill 32/32 pass MUST FIX=0
+
 ### 2026-08-21：v1.0.3 第三批——§2.1 输出节奏规则重建（完整性修复）
 
 - 缺口：07-31 吸收的 §2.1（首行动作/尾行下一步/时间估计具体化/发送前自检）于 08-01 被发现丢失，HISTORY 记录与 SKILL.md 实际漂移 20 天，sync-matrix 未捕获
@@ -401,6 +435,13 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 验证：Grep 首行动作/尾行下一步/发送前自检由 0 命中→命中；SKILL.md 无来源标注（无 i-have-adhd/adhd/URL 字样）；validate_skill 全绿；版本号保持 v1.0.3
 - 来源归属：原始素材评审自 GitHub 开源项目（MIT），SKILL.md 正文按 07-31 用户要求不含来源标注，归属记录仅存本 HISTORY
 
+### 2026-08-22：v1.0.3 第四批——问诊式澄清停止条件操作化 + 收口结构化（含 HISTORY 对齐）
+
+- 背景：/plan 步骤3"疯狂追问"两个模糊点——停止条件"追问到无歧义"不可判定（谁判断无歧义？）；澄清结束无事实/假设分离出口，未验证假设散落在对话不进 spec。经 3 视角对抗审查（修正原问诊协议方案：与"每答即写回+§10 Clarifications"双轨重复）后按减法式扩展落地
+- 改动：①SKILL.md 步骤3 停止条件操作化（连续 1 问未新增关键变量即停，够用即停不凑问数）+ 问诊收口 1 行（进步骤4 前在 spec §10.1 写收口摘要，只在收口呈现一次、禁止逐问复述增量）②spec_template.md §10 表格加"关键变量/未验证假设"2 列 + §10.1 问诊收口摘要块（已确认事实/未验证假设带验证方式/关键变量）
+- 同批修复：HISTORY.md 与 _sync_tmp/HISTORY.md 既有分叉对齐（工作区补 Excel 升级/v1.0.2 发布/建 Skill 融合/learn_gap_fix 4 条，_sync_tmp 补 marker 修复 1 条，两边 18 条条目一致）；_sync_tmp 新增 assets/spec_template.md
+- 验证：探针词红→绿（停止条件（操作化）/问诊收口/10.1 问诊收口摘要 改前 0 命中→命中）；"每答即写回/三分领导的话/BRD 5 问/§10 标题"原样保留；validate_skill 32/32 pass MUST FIX=0；版本号保持 v1.0.3
+
 ---
 
-**版本**:v1.0.3 | **最后更新**:2026-08-21 | **作者**:huihui
+**版本**:v1.0.3 | **最后更新**:2026-08-22 | **作者**:huihui

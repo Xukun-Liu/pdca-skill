@@ -111,7 +111,7 @@ category: workflow
 
 | PDCA 母标签 | 子标签槽位（可扩展） | 参考模块 |
 |------|------|------|
-| P (Plan) | P.bootstrap · P.route · P.design · P.gate | bootstrap · compaction_recovery · multi_project · summary_view · working_memory_rules · skill_management · skill_security · agent_find · usage_examples · trigger_hooks · acceptance_criteria · adversarial_review · design_patterns · document_specs · excel_analysis · project_structure · minimal_code_principles · loop_triage · article-writing |
+| P (Plan) | P.bootstrap · P.route · P.design · P.gate | bootstrap · compaction_recovery · multi_project · summary_view · working_memory_rules · skill_management · skill_security · skill_creation · agent_find · usage_examples · trigger_hooks · acceptance_criteria · adversarial_review · design_patterns · document_specs · excel_analysis · project_structure · minimal_code_principles · loop_triage · article-writing |
 | D (Do) | D.code · D.comm · D.danger | browser_automation · code_rules · communication_rules · debugging · document_specs · excel_analysis · file_to_markdown · git_workflow · hand-drawn-report · office_processing · security · sync-matrix · minimal_code_principles · loop_constraints · insert_new_task · article-writing |
 | C (Check) | C.verify · C.adversarial · C.reflexion | acceptance_criteria · adversarial_review · communication_rules · debugging · red_flags · loop_verifier · article-writing |
 | A (Act) | A.persist · A.tidy · A.handoff · A.learn | document_specs · summary_view · sync-matrix · working_memory_rules · hand-drawn-report · trigger_hooks · learn_cycle · prompt_optimization · skill_graph · act_procedure |
@@ -352,7 +352,8 @@ category: workflow
 - **"交接"**：先走 sync-matrix.md（核对版本号+一致性），再走 hand-drawn-report.md（生成手绘交接速记）
 - **"重构"**：先进 brainstorming（方案对比），方案确认后写代码时再读 code_rules.md
 - **"检查一下"**：按上下文限定——"检查代码/逻辑"→red_flags.md；"检查规范/版本号"→sync-matrix.md；"检查做得对不对/产出报告"→hand-drawn-report.md
-- **"优化"**：统一先进澄清菜单（因"优化"目标模糊），澄清后再按目标触发对应 reference
+- **"优化"**：统一先进澄清菜单（因"优化"目标模糊），澄清后再按目标触发对应 reference；**例外**——"优化skill/改skill/建skill/测试skill"等 skill 域词目标已明确，直接走 skill_creation.md，不进澄清菜单
+- **"技能/测试"泛词 vs skill 域词**：泛词（装skill行的"技能"、测试行的"测试"）与 skill 域触发词（建/改/优化/测试+skill）同时命中时，**skill 域词优先**——用户明确说了 skill 就路由到 skill 域（建/改→skill_creation.md，装/找→skill_security.md+skill_management.md）
 - **"梳理一下"**：默认走 sync-matrix.md（整理规范），除非明确说"梳理一下做了什么"才走 hand-drawn-report.md
 - **"需求分析/出方案"**：带 /plan 前缀或"从头开始/新项目"→走 /plan 硬指令（计划 md 顶部按 hand-drawn-report.md 带图）；否则→document_specs.md，**方案文档顶部按 hand-drawn-report.md 内联手绘 SVG 速览图（默认带图、单文件自包含）**
 
@@ -452,7 +453,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 本 Skill 是协作框架，不覆盖所有专业能力。遇到专业领域任务，优先调用对应的专用 Skill。
 
 - **完整决策树 / 搜索→安装→验证流程 / agent-find 动态搜索机制 / Skill 调用铁律**：全部下沉至 [references/plan/route/skill_management.md](references/plan/route/skill_management.md)（按需读，零系统依赖）。
-- 一句话：任务涉及专业领域 → 走 skill_management.md 的「搜索→安装→验证」；你点名“用 XX skill” → 直接加载；能力不足 → 先搜专用 Skill 再动手。
+- 一句话：任务涉及专业领域 → 走 skill_management.md 的「搜索→安装→验证」；你点名“用 XX skill” → 直接加载；能力不足 → 先搜专用 Skill 再动手；要新建/改写一个 skill → 走 skill_creation.md 的「意图捕获→结构→写法→测试迭代」。
 
 ### 外部术语引入即登记或澄清【硬性·v1.0.0 新增】
 
@@ -479,7 +480,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 3. **调用专用 skill 时必记 memory**：在 memory 中记录"调用了 XX skill 处理 YY 任务"（经 `write_project` 落盘），留痕便于后续追溯——这也是 §1.6 每轮声明 skill 使用的数据源
 4. **专用 skill 不可用时才回退通用能力**：专用 skill 未安装 / 不匹配 / 能力不足时，才回退到通用能力，**且需明确告知用户**"专用 skill XX 不可用，使用通用能力顶上，可能效果不如专用 skill"
 
-**与 §0.5 的关系**：§0.5 定义"何时调用其他 Skill"的决策树（静态能力清单），§0.55 定义"接到任务必须先查"的执行时点（动态触发规则）。两者互补，不冲突——§0.5 是"知道有这些 skill"，§0.55 是"每次接任务都要查一遍"。
+**与 §0.5 的关系**：§0.5 定义"何时调用其他 Skill"的决策树（完整决策树见 skill_management.md），§0.55 定义"接到任务必须先查"的执行时点（动态触发规则）。两者互补，不冲突——§0.5 是"知道有这些 skill"，§0.55 是"每次接任务都要查一遍"。
 
 > 类比：医生接诊第一动作是翻诊断手册 + 查专科医生目录，不是凭经验直接开药。专科医生在（专用 skill）→ 转诊；不在 → 自己看（通用能力）+ 告知患者"这科没专科医生，我全科顶上"。
 
@@ -713,7 +714,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 资源索引（触发→文件）
 │
 ├─ 🗂️ 导航
-│   └─ 查找 references/ 结构 → [references/index.md](references/index.md)（48 个模块 × PDCA 子文件夹归属速查表）
+│   └─ 查找 references/ 结构 → [references/index.md](references/index.md)（49 个模块 × PDCA 子文件夹归属速查表）
 │
 ├─ 📝 模板（复制用）
 │   ├─ 写项目总spec → assets/spec_main_template.md（项目级 source of truth 模板·实例 docs_rj/spec_main_{项目名}.md）
@@ -754,7 +755,8 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 │   ├─ 戏文/训话/写作风格/大白话 → references/common/style/writing_style.md（参考项目 写作风格：大白话规范/戏文三铁律/训话6句/标题表15个/语气句5条/画饼4条）
 │   ├─ 写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文 → references/common/style/article-writing.md（活人感写作入口：按任务链式加载 article-writing/ 5 子模块；写作任务不生成 spec/task，直接出稿）
 │   ├─ /act 步骤细则（spec_main刷新/ADR/learn门控）→ references/act/persist/act_procedure.md（/act 阶段必读）
-│   └─ 涉及专业领域能力 → 见 references/plan/route/skill_management.md 先搜专用 Skill
+│   ├─ 涉及专业领域能力 → 见 references/plan/route/skill_management.md 先搜专用 Skill
+│   └─ 建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 → references/plan/route/skill_creation.md（意图捕获4问/四件套结构/三级渐进加载/description写法/测试迭代循环）
 │
 └─ 🧪 测试验证：evals/evals.json（典型场景+预期响应+断言）
 ```
@@ -887,7 +889,7 @@ docs_rj/
 
 **步骤3：需求澄清**：
 - 默认用户零背景，疯狂追问（目标/约束/技术栈/范围/现有代码/优先级/时间线）
-- 每个回答追问到无歧义；一次只问一个关键点，给建议答案
+- 每个回答追问到无歧义；一次只问一个关键点，给建议答案。**停止条件（操作化）**：连续 1 问未新增关键变量（=影响方案选型或验收标准的信息）即停，够用即停、不凑问数
 - 分节展示【弹性】：按架构→组件→数据流→错误处理分节，每节确认
 - **BRD 5 问（业务维度补充）**：复杂任务必问，简单任务（一句话能说清）可跳过。与现有"疯狂追问"（技术维度）并行，不替代。回答写入 spec §1.0-§1.4：
   1. **业务背景与痛点**（→§1.0）：为什么做，当前痛点
@@ -897,6 +899,7 @@ docs_rj/
   5. **干系人**（→§1.4）：发起人/使用者/验收人
 - **脱敏提示【硬性】**：BRD 5 问回答仅用于内部 spec（§1.0-§1.4），**市场调研关键词必须脱敏**（用通用技术名词替代项目名/客户名，如"用户认证系统"而非"XX银行用户认证系统"）
 - **每答即写回**：每个 BRD 回答立即 integrate 到 spec §1.0-§1.4 + §10 Clarifications 节，并重跑 Self-Review（每答即写+重跑 checklist 机制）
+- **问诊收口（停止条件触发，一次呈现）**：澄清结束进入步骤4 前，在 spec §10.1 写收口摘要（已确认事实/未验证假设/关键变量各若干行，未验证假设必须带验证方式）；只在收口呈现一次，禁止逐问复述增量
 - **三分领导的话**（参考项目 澄清指引）【硬性·复杂任务】：需求澄清时把用户的话分三层处理：
   1. **目标升华成数字**：用户说"加个登录功能"→追问"登录成功率目标多少？<1s 还是 <3s？"——把模糊目标变成可验收数字
   2. **手段当假设检验**：用户说"加 Redis"→实际要的是"变快"，Redis 是假设不是结论；与事实不符时目标进正文、手段写进 spec §0.1 方案对比
@@ -1088,16 +1091,16 @@ docs_rj/
    - **原因**：历史执行中曾出现 MUST FIX 项从批次前遗留到收尾才修，技术债跨批次累积
 1. **写项目记忆**：经 `write_project(task, content)` 落 `docs_rj/memory_rj/{task}_memory_*.md` + 自动 upsert 全局 `memory/memory_main.md`
 2. **刷新 `{主docs}/SUMMARY_RJ.md`**（见 references/common/pa/summary_view.md §三触发2）
-3. **跑 `python scripts/handoff_tidy.py --task {任务名}`** 整理归档（含临时文件清理/死引用清理/漂移检查/平台记忆融入/五问预跑/loop_guard ledger 归档/**生成 `docs_rj/memory_rj/TASK_STATE_{task_id}.md`**）；**若 handoff_tidy 失败**（脚本异常/Python 缺失），至少手动 `write_project` 写 memory + 刷 SUMMARY + 手写 TASK_STATE.md，告警用户"handoff_tidy 失败，已手动落盘核心产出，下次 /act 补跑"
+3. **跑 `python scripts/handoff_tidy.py --task {任务名}`** 整理归档（含临时文件清理/死引用清理/漂移检查/平台记忆融入/五问预跑/loop_guard ledger 归档/**生成 `docs_rj/memory_rj/TASK_STATE_{task_id}.md`**）；**若 handoff_tidy 失败**（脚本异常/Python 缺失），至少手动 `write_project` 写 memory + 刷 SUMMARY + 手写 TASK_STATE.md，告警用户"handoff_tidy 失败，已手动落盘核心产出，下次 /act 补跑"；**手动 TASK_STATE.md 必须补一行 `learn_distill_pending: true`**（learn/distill 补跑挂起标记——下次 /act 步骤 3.6 检测到即强制补跑，防降级丢步骤【learn_gap_fix】）
 3.5. **刷新 `spec_main_rj.md` §1§2§7 指针目标**【硬性】（数据源=TASK_STATE.md）：§1⑦状态总览链接（Glob 按文件名时间戳取最新，残留 `{xxx}` 占位文字必须替换为实际链接，取不到则保留+告警）、§2⑤任务大纲（最新任务置顶）、§7⑥ADR（新决策加行+TOP5 归档）；不重写 §3§4§5§6，刷新后更新 frontmatter `last_updated`。完整操作细则（Glob 规则/TOP5/降级分支）见 [references/act/persist/act_procedure.md](references/act/persist/act_procedure.md)
 3.5a. **§7.1 ADR 候选确认【硬性·REQ-009】**：handoff_tidy 报告 `adr_candidates` 逐条判定写入 §7.1（最新置顶+TOP5 归档）或明说"本次无新 ADR"（不说=偏离）；`adr_pending_agent=true` 未判定 = 偏离（细则见 act_procedure.md）
 3.5b. **§7.3 风险候选确认【硬性·REQ-009】**：同上判定 `risk_candidates` 写入 §7.3 或明说"本次无新风险"；§7.2/§7.4 由 handoff_tidy 自动刷新，无需 agent 干预（细则见 act_procedure.md）
-3.6. **learn 累积量门控【自动触发】**：跑 `python scripts/learn_tidy.py count --threshold 20` → should_run=false 记录"learn 跳过"进步骤4；true 自动 `scan --dry-run` → reflect **仅产 proposals.md（禁应用，限 5 分钟）** → 等步骤4 adopt HARD-GATE；scan 无发现/失败（退码2）/用户喊停分别记录跳过（完整分支见 act_procedure.md）
+3.6. **learn 门控【自动触发·双条件·learn_gap_fix】**：跑 `python scripts/learn_tidy.py count --threshold 20`——门控双条件：①累积量≥阈值 ②检测到 TASK_STATE 挂起标记 `learn_distill_pending: true`（上次 /act 降级遗留；脚本自动扫描 TASK_STATE_*.md，命中时 JSON 输出 `pending_degraded_learn: true`），任一满足即 should_run=true；should_run=false 记录"learn 跳过"进步骤4；true 自动 `scan --dry-run` → reflect **仅产 proposals.md（禁应用，限 5 分钟）** → 等步骤4 adopt HARD-GATE；**补跑完成后将对应 TASK_STATE 的 learn_distill_pending 置 false（防每次 /act 重复触发）**；scan 无发现/失败（退码2）/用户喊停分别记录跳过（完整分支见 act_procedure.md）
 3.6a. **技能图谱自动刷新【自动触发·v1.0.1】**：跑 `python scripts/skill_graph_build.py --auto`（仅左轨 pdca，L0 安全级；记忆哈希未变缓存命中零成本跳过；taxonomy 缺失 [SKIP] exit 0；阶段失败 exit 2 不阻断 /act 仅记录 memory；细则见 act_procedure.md）
 3.7. **读 Gate Evidence 确认闸门【硬性·handoff_gate_fix】**：不再靠 agent 自觉声明——读 TASK_STATE 的 Gate Evidence 段核对 4 闸门；证据不全时 `--mark-completed` 会被拒签（signoff_blocked，报告 blocked_gates 列出缺项）；用户强制完成需显式 `--force`，且 Sign-off 记 `forced: true` 审计标记
 3.8. **前端面板同步（server_lite，可选）**：默认跳过；用户主动启用 server_lite 时提醒点「🔄 同步数据」刷新前端缓存
 4. **adopt HARD-GATE**（若步骤3.6 有 proposals）：呈现 proposals.md → 确认"adopt" → 备份原文件+应用编辑+write_project 写 memory；"跳过"记录跳过；"调整"重新 reflect；无 proposals 直接进步骤4.1
-4.1. **distill 询问（经验采纳）**：跑 `python scripts/memory_distill.py distill --project {项目名} --output-dir docs_rj/learn_rj` → ≥1 条经验则 AskUserQuestion 展示 TOP3 问"是否采纳"（采纳/拒绝/稍后）；采纳经 write_project 写全局 `## {项目名}` 分段（importance_level=high, is_lesson=true, experience_tags 含 "adopted_lesson"）；0 条跳过（细则见 act_procedure.md）
+4.1. **distill 询问（经验采纳）**：跑 `python scripts/memory_distill.py distill --project {项目名} --output-dir docs_rj/learn_rj` → ≥1 条经验则 AskUserQuestion 展示 TOP3 问"是否采纳"（采纳/拒绝/稍后）；采纳经 write_project 写全局 `## {项目名}` 分段（importance_level=high, is_lesson=true, experience_tags 含 "adopted_lesson"）；0 条 → 输出一行可见告知「distill 完成：0 条新经验（无 is_lesson=true 条目可采纳）」再跳过，**禁止静默跳过**【learn_gap_fix】（脚本已加 NOTICE 行，agent 须复述；细则见 act_procedure.md）
 5. **任务收尾 commit**【硬性·v1.0.0 新增】：/act 阶段最后，确保工作区干净（任务产出已 commit），避免交接/启动时看到未提交改动。
    - **触发条件**：/act 步骤1-4.1 全部完成后执行
    - **非 git 仓库降级**：若项目未用 git 管理（无 .git 目录），跳过本步，告警"非 git 仓库，建议初始化"

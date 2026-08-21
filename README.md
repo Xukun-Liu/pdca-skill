@@ -1,7 +1,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.0.1-green.svg)](HISTORY.md)
+[![Version](https://img.shields.io/badge/version-v1.0.2-green.svg)](HISTORY.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
@@ -195,7 +195,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ---
 
-## 参考手册（references/）—— 48 个按需读取模块
+## 参考手册（references/）—— 49 个按需读取模块
 
 不全部加载到上下文，触发钩子按「你正在做什么」自动指引读取。按使用场景分 8 类：
 
@@ -247,6 +247,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | [browser_automation.md](references/do/code/browser_automation.md) | 浏览器操控/自动化 |
 | [agent_find.md](references/plan/route/agent_find.md) | 第三方 agent/能力 搜索安装验证 |
 | [skill_management.md](references/plan/route/skill_management.md) | Skill 搜索→安装→验证→安全扫描 |
+| [skill_creation.md](references/plan/route/skill_creation.md) | 建/改/测自建 Skill（意图捕获→四件套→测试迭代） |
 
 **⑦ 初始化 / 审查 / 示范时**
 
@@ -263,7 +264,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 |------|------|
 | [article-writing.md](references/common/style/article-writing.md) | 活人感写作入口（知乎/公众号/去AI味等；直接出稿；材料澄清最多三问） |
 
-> 上表按场景收录 24 个高频模块；全量 48 个模块索引见 [references/index.md](references/index.md)。
+> 上表按场景收录 25 个高频模块；全量 49 个模块索引见 [references/index.md](references/index.md)。
 
 ## 模板文件（assets/）—— 12 个开箱即用
 
@@ -811,7 +812,7 @@ pdca-skill/
 │   ├── skill_graph_template.md
 │   ├── index_template.md
 │   └── readme/                     # README 配图（hero-loop.svg 手绘闭环图）
-├── references/                 # 48 个参考手册（按需读取，见上表）
+├── references/                 # 49 个参考手册（按需读取，见上表）
 ├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 34 个）
 │   ├── archive_tidy.py
 │   ├── browser_inspect_docs.py      # 文档浏览器检视辅助
