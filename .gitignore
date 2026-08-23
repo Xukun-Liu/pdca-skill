@@ -49,6 +49,9 @@ docs_rj/**
 !docs_rj/learn_rj/20260823-231938/
 !docs_rj/learn_rj/20260823-231938/SUMMARY_v103_t3.md
 !docs_rj/learn_rj/20260823-231938/scan_report.json
+# v103_t4 skillhub 发布准备：release_notes 入仓作可追溯事件记录
+!docs_rj/release_notes/
+!docs_rj/release_notes/v103_t4_*.md
 outputs_rj/
 server_lite_data/
 server_lite/data/
