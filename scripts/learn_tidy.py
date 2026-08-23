@@ -1398,16 +1398,14 @@ def scan_memory_layer_drift(primary_docs, project_name=None):
     memory_content = _read_text(MEMORY_MAIN_PATH)
     if memory_content:
         lines = memory_content.split('\n')
-        heading = '## %s' % project_name
         in_section = False
         current_entry = None
         current_lines = []
         for line in lines:
-            if line.rstrip('\n') == heading:
+            # v103t3 修复#5：扫全部 ## 项目分段（原只扫 ## {project_name} 单段，外置数据目录下恒为空→global_total=0 误报）
+            if line.startswith('## ') and not line.startswith('### '):
                 in_section = True
                 continue
-            if in_section and line.startswith('## ') and line.rstrip('\n') != heading:
-                break
             if in_section:
                 match = MEMORY_ENTRY_RE.match(line)
                 if match:
