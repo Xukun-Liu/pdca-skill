@@ -190,10 +190,11 @@ def build_skill_search_roots():
       ~/.trae-cn/skills/
       ~/.trae-cn/builtin/work/*/skills/   （glob 展开）
       ~/.codebuddy/plugins/marketplaces/codebuddy-plugins-official/plugins/
+      ~/.config/opencode/skills/         （v103t3 修复#4：opencode 平台技能目录）
     """
     home = os.environ.get('USERPROFILE') or os.environ.get('HOME') or ''
     roots = []
-    for sub in ['.workbuddy/skills', '.pdca-memory/skills', '.trae-cn/skills']:
+    for sub in ['.workbuddy/skills', '.pdca-memory/skills', '.trae-cn/skills', '.config/opencode/skills']:
         roots.append(os.path.join(home, *sub.split('/')))
 
     work_base = os.path.join(home, '.trae-cn', 'builtin', 'work')
