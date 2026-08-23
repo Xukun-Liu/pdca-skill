@@ -84,6 +84,9 @@ def parse_memory_entries(memory_content: str, project_name: str = None) -> List[
                         tags_str = fl.replace('**经验标签**: ', '').strip()
                         if tags_str and tags_str != "无":
                             entry["experience_tags"] = [t.strip() for t in tags_str.split(',')]
+                    elif fl.startswith('**状态**: '):
+                        # v103t3 修复#3：解析状态字段，供 distill 阶段过滤 archived/demoted
+                        entry["status"] = fl.replace('**状态**: ', '').strip().lower()
                     else:
                         if fl:
                             entry["content_lines"].append(fl)
@@ -96,6 +99,8 @@ def parse_memory_entries(memory_content: str, project_name: str = None) -> List[
     # 按项目过滤
     if project_name:
         entries = [e for e in entries if e["project"] == project_name]
+    # v103t3 修复#3：跳过 archived/demoted 条目，避免把已经下线/归档的经验再次蒸馏
+    entries = [e for e in entries if e.get("status", "active") not in ("archived", "demoted")]
     return entries
 
 
