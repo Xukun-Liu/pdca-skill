@@ -205,7 +205,18 @@ class HandoffTidy:
         self.dry_run = bool(dry_run)
         self.task_name = task_name  # 让 None 透传，refresh_spec_main 收到 None 时只刷 §1（REQ-009）
         self.task_status = task_status  # §2 状态列数据源（REQ-009 对抗审查P0修复）
-        self.project_name = project_name or os.path.basename(os.getcwd())
+        # v103t3 修复#2：禁用 cwd 基名作为 project_name 默认值（外置数据目录下恒为"data"→污染 memory_main.md）。
+        # 显式传 project_name 直接用；task_name 传了则优先用它；都没传时回退到基名（仅基名命中白名单时）
+        _base = os.path.basename(os.getcwd())
+        _safe_base = {'data', 'docs_rj', 'memory', 'desktop', '桌面文件'}
+        if project_name:
+            self.project_name = project_name
+        elif task_name:
+            self.project_name = task_name
+        elif _base in _safe_base:
+            self.project_name = _base
+        else:
+            self.project_name = None  # cwd 基名不可信时不污染下游，宁缺勿滥
         self.report = HandoffReport()
         # handoff_gate_fix：4 闸门判定缺项清单（_check_task_completion 写入，_write_signoff 读取）
         self._last_blocked_gates = []
