@@ -1,0 +1,1611 @@
+{
+  "timestamp": "20260823-231938",
+  "scope": "all",
+  "primary_docs": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj",
+  "errors": [],
+  "memory_duplicates": [],
+  "memory_conflicts": [
+    {
+      "topic": "add_skill_creation_ref",
+      "entries": [
+        {
+          "timestamp": "2026-08-20 21:10",
+          "hash": "33363996d1e83cbd1bd18eae3a0c9215",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 11
+        },
+        {
+          "timestamp": "2026-08-20 12:01",
+          "hash": "c3ca7f06637f07ddc0b4df9f0b3d8bd5",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 605
+        }
+      ],
+      "location": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md:11",
+      "count": 2
+    },
+    {
+      "topic": "02_Riji技能推文",
+      "entries": [
+        {
+          "timestamp": "2026-08-01 19:07",
+          "hash": "87e5723e62ee799c38bca2d129d318c1",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 47
+        },
+        {
+          "timestamp": "2026-08-01 19:16",
+          "hash": "d3108faae8fcba79c3f64f3509c7b81e",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 55
+        },
+        {
+          "timestamp": "2026-08-01 19:30",
+          "hash": "411952a897a29cee12dff130f28f662f",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 63
+        },
+        {
+          "timestamp": "2026-08-01 19:38",
+          "hash": "7be73ffac54698c8c62b15357bb6b78b",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 71
+        },
+        {
+          "timestamp": "2026-08-01 19:42",
+          "hash": "0f7b8c2fe655e47676186d714524ee2c",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 79
+        },
+        {
+          "timestamp": "2026-08-01 19:43",
+          "hash": "e5307c5afe852df3981795bd193769c1",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 87
+        }
+      ],
+      "location": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md:47",
+      "count": 6
+    },
+    {
+      "topic": "AI日报周报项目",
+      "entries": [
+        {
+          "timestamp": "2026-08-01 20:02",
+          "hash": "37e358c4a977e461339663566fca0b1c",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 98
+        },
+        {
+          "timestamp": "2026-08-01 20:21",
+          "hash": "81556894c62b3ad618d283d56da397d5",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 123
+        }
+      ],
+      "location": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md:98",
+      "count": 2
+    },
+    {
+      "topic": "opencode_vision_qna",
+      "entries": [
+        {
+          "timestamp": "2026-08-08 15:24",
+          "hash": "3399b7cc3cdca5cfeb890d67cf0c17e7",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 345
+        },
+        {
+          "timestamp": "2026-08-08 15:26",
+          "hash": "d267a357fd4f940f32afb1096f2f645a",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 353
+        }
+      ],
+      "location": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md:345",
+      "count": 2
+    },
+    {
+      "topic": "mindmap_workflow",
+      "entries": [
+        {
+          "timestamp": "2026-08-14 10:17",
+          "hash": "30f324c71e4da8b23f8cbdafb56386c1",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 565
+        },
+        {
+          "timestamp": "2026-08-14 09:42",
+          "hash": "3a7a15043020f87c41ffca02486b5bd9",
+          "file_path": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md",
+          "line_number": 679
+        }
+      ],
+      "location": "C:\\Users\\86029\\.pdca-skill\\data\\memory\\memory_main.md:565",
+      "count": 2
+    }
+  ],
+  "memory_stale": [],
+  "project_memory_rj": {
+    "duplicates": [
+      {
+        "hash": "9e947f6a20fe422031ee0da3d6356c83",
+        "count": 2,
+        "entries": [
+          {
+            "task": "e2e_task_0",
+            "timestamp": "2026-08-20 09:47",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_0_memory_20260820_0947.md",
+            "line_number": 1
+          },
+          {
+            "task": "e2e_task_0",
+            "timestamp": "2026-08-20 10:00",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_0_memory_20260820_1000.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_0_memory_20260820_0947.md:1",
+        "content": "内容0"
+      },
+      {
+        "hash": "9769ee568100b0c530a06ec3f0c0044d",
+        "count": 2,
+        "entries": [
+          {
+            "task": "e2e_task_1",
+            "timestamp": "2026-08-20 09:47",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_1_memory_20260820_0947.md",
+            "line_number": 1
+          },
+          {
+            "task": "e2e_task_1",
+            "timestamp": "2026-08-20 10:00",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_1_memory_20260820_1000.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_1_memory_20260820_0947.md:1",
+        "content": "内容1"
+      },
+      {
+        "hash": "c50159e2acff0f4ffdce4c67ec3513a3",
+        "count": 2,
+        "entries": [
+          {
+            "task": "e2e_task_2",
+            "timestamp": "2026-08-20 09:47",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_2_memory_20260820_0947.md",
+            "line_number": 1
+          },
+          {
+            "task": "e2e_task_2",
+            "timestamp": "2026-08-20 10:00",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_2_memory_20260820_1000.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\e2e_task_2_memory_20260820_0947.md:1",
+        "content": "内容2"
+      },
+      {
+        "hash": "30d4e4abf10250c149eef7b19b010f82",
+        "count": 2,
+        "entries": [
+          {
+            "task": "promote_task",
+            "timestamp": "2026-08-20 09:47",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\promote_task_memory_20260820_0947.md",
+            "line_number": 1
+          },
+          {
+            "task": "promote_task",
+            "timestamp": "2026-08-20 10:00",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\promote_task_memory_20260820_1000.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\promote_task_memory_20260820_0947.md:1",
+        "content": "# 项目记忆\n内容"
+      }
+    ],
+    "conflicts": [
+      {
+        "topic": "handoff_gate_fix",
+        "entries": [
+          {
+            "timestamp": "2026-08-06 11:50",
+            "hash": "2df4e8d8f58f25431eecfdcc662675eb",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\handoff_gate_fix_memory_20260806_1150.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-06 12:08",
+            "hash": "32900446ee66c95253d134ed9b6d6659",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\handoff_gate_fix_memory_20260806_1208.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\handoff_gate_fix_memory_20260806_1150.md:1",
+        "count": 2
+      },
+      {
+        "topic": "license_noncommercial",
+        "entries": [
+          {
+            "timestamp": "2026-08-07 03:44",
+            "hash": "64603c455fb5e80342d119e48eabf258",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\license_noncommercial_memory_20260807_0344.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-07 03:45",
+            "hash": "81c46fcea8632e26dc0682df7b7fda8a",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\license_noncommercial_memory_20260807_0345.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-07 08:45",
+            "hash": "d0860d02c61ee0cebb260b9e75196d49",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\license_noncommercial_memory_20260807_0845.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-07 11:32",
+            "hash": "e5c875bd01dcc19b37d8358eb93fed7d",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\license_noncommercial_memory_20260807_1132.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\license_noncommercial_memory_20260807_0344.md:1",
+        "count": 4
+      },
+      {
+        "topic": "marker_fallback_fix_v1_0_3",
+        "entries": [
+          {
+            "timestamp": "2026-08-20 10:01",
+            "hash": "9240cc3404b521f3dd277caaf665d9f6",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\marker_fallback_fix_v1_0_3_memory_20260820_1001.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-20 10:02",
+            "hash": "1ee88f673f72e9befc6ac7a68dc286d4",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\marker_fallback_fix_v1_0_3_memory_20260820_1002.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\marker_fallback_fix_v1_0_3_memory_20260820_1001.md:1",
+        "count": 2
+      },
+      {
+        "topic": "riji-skill-public v1.0",
+        "entries": [
+          {
+            "timestamp": "2026-08-08 14:44",
+            "hash": "559f7fb18dc6560245a2449e460be26a",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\riji-skill-public v1.0_memory_20260808_1444.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-08 15:05",
+            "hash": "d49e24f50bb79795414e4c6e98f1ec2e",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\riji-skill-public v1.0_memory_20260808_1505.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-08 15:14",
+            "hash": "9b432ef40512150b7d4e6460e5f9abd5",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\riji-skill-public v1.0_memory_20260808_1514.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-08 15:25",
+            "hash": "be4d6523ad3f495e4ea5565f15359854",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\riji-skill-public v1.0_memory_20260808_1525.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\riji-skill-public v1.0_memory_20260808_1444.md:1",
+        "count": 4
+      },
+      {
+        "topic": "skill_fuse_article_writing",
+        "entries": [
+          {
+            "timestamp": "2026-08-06 16:58",
+            "hash": "2f83f0e67564aeb2efcc50d1d13c4d06",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\skill_fuse_article_writing_memory_20260806_1658.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-06 17:17",
+            "hash": "208ed20d4df74d3e60ed9e8082fbae57",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\skill_fuse_article_writing_memory_20260806_1717.md",
+            "line_number": 1
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\skill_fuse_article_writing_memory_20260806_1658.md:1",
+        "count": 2
+      },
+      {
+        "topic": "v103t3_ac001_test",
+        "entries": [
+          {
+            "timestamp": "2026-08-23 23:18",
+            "hash": "facbcd0b6fafa0306a1d31adc99232f8",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\v103t3_ac001_test_memory_20260823_2318.md",
+            "line_number": 1
+          },
+          {
+            "timestamp": "2026-08-23 23:18",
+            "hash": "11cc682e9e3a0c0b48e5f7bb2e2342e7",
+            "file_path": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\v103t3_ac001_test_memory_20260823_2318.md",
+            "line_number": 8
+          }
+        ],
+        "location": "C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\PDCA-SKILL 文件夹\\pdca-skill\\PDCA-skill-public v1.0.2_开发环境\\docs_rj\\memory_rj\\v103t3_ac001_test_memory_20260823_2318.md:1",
+        "count": 2
+      }
+    ],
+    "stale": [],
+    "files": [
+      "INDEX.md",
+      "TASK_STATE_handoff_gate_fix.md",
+      "TASK_STATE_marker_fallback_fix_v1_0_3.md",
+      "e2e_task_0_memory_20260820_0947.md",
+      "e2e_task_0_memory_20260820_1000.md",
+      "e2e_task_1_memory_20260820_0947.md",
+      "e2e_task_1_memory_20260820_1000.md",
+      "e2e_task_2_memory_20260820_0947.md",
+      "e2e_task_2_memory_20260820_1000.md",
+      "enc_test_v103t3_memory_20260823_2312.md",
+      "excel_analysis_p1p5_memory_20260811_1026.md",
+      "git-ask-gate_memory_20260801_2028.md",
+      "handoff_gate_fix_handoff_memory_20260806_1208.md",
+      "handoff_gate_fix_memory_20260806_1150.md",
+      "handoff_gate_fix_memory_20260806_1208.md",
+      "html_ppt_fuse_memory_20260813_2248.md",
+      "license_noncommercial_memory_20260807_0344.md",
+      "license_noncommercial_memory_20260807_0345.md",
+      "license_noncommercial_memory_20260807_0845.md",
+      "license_noncommercial_memory_20260807_1132.md",
+      "marker_fallback_fix_v1_0_3_handoff_memory_20260820_1002.md",
+      "marker_fallback_fix_v1_0_3_memory_20260820_1001.md",
+      "marker_fallback_fix_v1_0_3_memory_20260820_1002.md",
+      "memory_governance_3r_complete_memory_20260730_1735.md",
+      "memory_governance_3r_phase1_memory_20260730_1633.md",
+      "memory_governance_3r_phase2_memory_20260730_1713.md",
+      "memory_governance_3r_review_fix_memory_20260730_1810.md",
+      "memory_main_s4_bugfix_memory_20260811_0915.md",
+      "memory_migrate_20260820_memory_20260820_1011.md",
+      "promote_task_memory_20260820_0947.md",
+      "promote_task_memory_20260820_1000.md",
+      "readme_hand_drawn_svg_memory_20260807_1111.md",
+      "readme_product_20260806_memory_20260807_0848.md",
+      "repro_task_memory_20260820_0949.md",
+      "riji-skill-public v1.0_memory_20260808_1444.md",
+      "riji-skill-public v1.0_memory_20260808_1505.md",
+      "riji-skill-public v1.0_memory_20260808_1514.md",
+      "riji-skill-public v1.0_memory_20260808_1525.md",
+      "riji-skill_memory_20260804_1328.md",
+      "scan_gate_security_memory_20260806_1109.md",
+      "skill_fuse_article_writing_memory_20260806_1658.md",
+      "skill_fuse_article_writing_memory_20260806_1717.md",
+      "skill_md_slim_memory_20260801_2351.md",
+      "skilllub_release_pack_memory_20260810_2042.md",
+      "t01_rename_pdca_memory_20260811_0915.md",
+      "test_flag_task_memory_20260820_0947.md",
+      "test_task_memory_20260820_0947.md",
+      "v103_t1_restore_adhd_memory_20260821_1802.md",
+      "v103_t2_clarify_stop_memory_20260822_0033.md",
+      "v103t3_ac001_test_memory_20260823_2318.md"
+    ]
+  },
+  "memory_layer_drift": {
+    "project_only": [
+      {
+        "task": "e2e_task_1",
+        "timestamp": "2026-08-20 09:47",
+        "source": "memory_rj/e2e_task_1_memory_20260820_0947.md"
+      },
+      {
+        "task": "e2e_task_0",
+        "timestamp": "2026-08-20 09:47",
+        "source": "memory_rj/e2e_task_0_memory_20260820_0947.md"
+      },
+      {
+        "task": "handoff_gate_fix_handoff",
+        "timestamp": "2026-08-06 12:08",
+        "source": "memory_rj/handoff_gate_fix_handoff_memory_20260806_1208.md"
+      },
+      {
+        "task": "riji-skill-public v1.0",
+        "timestamp": "2026-08-08 15:14",
+        "source": "memory_rj/riji-skill-public v1.0_memory_20260808_1514.md"
+      },
+      {
+        "task": "promote_task",
+        "timestamp": "2026-08-20 10:00",
+        "source": "memory_rj/promote_task_memory_20260820_1000.md"
+      },
+      {
+        "task": "marker_fallback_fix_v1_0_3_handoff",
+        "timestamp": "2026-08-20 10:02",
+        "source": "memory_rj/marker_fallback_fix_v1_0_3_handoff_memory_20260820_1002.md"
+      },
+      {
+        "task": "marker_fallback_fix_v1_0_3",
+        "timestamp": "2026-08-20 10:01",
+        "source": "memory_rj/marker_fallback_fix_v1_0_3_memory_20260820_1001.md"
+      },
+      {
+        "task": "test_flag_task",
+        "timestamp": "2026-08-20 09:47",
+        "source": "memory_rj/test_flag_task_memory_20260820_0947.md"
+      },
+      {
+        "task": "skill_fuse_article_writing",
+        "timestamp": "2026-08-06 17:17",
+        "source": "memory_rj/skill_fuse_article_writing_memory_20260806_1717.md"
+      },
+      {
+        "task": "e2e_task_2",
+        "timestamp": "2026-08-20 10:00",
+        "source": "memory_rj/e2e_task_2_memory_20260820_1000.md"
+      },
+      {
+        "task": "v103t3_ac001_test",
+        "timestamp": "2026-08-23 23:18",
+        "source": "memory_rj/v103t3_ac001_test_memory_20260823_2318.md"
+      },
+      {
+        "task": "license_noncommercial",
+        "timestamp": "2026-08-07 03:45",
+        "source": "memory_rj/license_noncommercial_memory_20260807_0345.md"
+      },
+      {
+        "task": "license_noncommercial",
+        "timestamp": "2026-08-07 08:45",
+        "source": "memory_rj/license_noncommercial_memory_20260807_0845.md"
+      },
+      {
+        "task": "riji-skill-public v1.0",
+        "timestamp": "2026-08-08 14:44",
+        "source": "memory_rj/riji-skill-public v1.0_memory_20260808_1444.md"
+      },
+      {
+        "task": "skill_fuse_article_writing",
+        "timestamp": "2026-08-06 16:58",
+        "source": "memory_rj/skill_fuse_article_writing_memory_20260806_1658.md"
+      },
+      {
+        "task": "readme_hand_drawn_svg",
+        "timestamp": "2026-08-07 11:11",
+        "source": "memory_rj/readme_hand_drawn_svg_memory_20260807_1111.md"
+      },
+      {
+        "task": "license_noncommercial",
+        "timestamp": "2026-08-07 11:32",
+        "source": "memory_rj/license_noncommercial_memory_20260807_1132.md"
+      },
+      {
+        "task": "marker_fallback_fix_v1_0_3",
+        "timestamp": "2026-08-20 10:02",
+        "source": "memory_rj/marker_fallback_fix_v1_0_3_memory_20260820_1002.md"
+      },
+      {
+        "task": "v103_t2_clarify_stop",
+        "timestamp": "2026-08-22 00:33",
+        "source": "memory_rj/v103_t2_clarify_stop_memory_20260822_0033.md"
+      },
+      {
+        "task": "riji-skill-public v1.0",
+        "timestamp": "2026-08-08 15:25",
+        "source": "memory_rj/riji-skill-public v1.0_memory_20260808_1525.md"
+      },
+      {
+        "task": "e2e_task_2",
+        "timestamp": "2026-08-20 09:47",
+        "source": "memory_rj/e2e_task_2_memory_20260820_0947.md"
+      },
+      {
+        "task": "promote_task",
+        "timestamp": "2026-08-20 09:47",
+        "source": "memory_rj/promote_task_memory_20260820_0947.md"
+      },
+      {
+        "task": "enc_test_v103t3",
+        "timestamp": "2026-08-23 23:12",
+        "source": "memory_rj/enc_test_v103t3_memory_20260823_2312.md"
+      },
+      {
+        "task": "readme_product_20260806",
+        "timestamp": "2026-08-07 08:48",
+        "source": "memory_rj/readme_product_20260806_memory_20260807_0848.md"
+      },
+      {
+        "task": "e2e_task_0",
+        "timestamp": "2026-08-20 10:00",
+        "source": "memory_rj/e2e_task_0_memory_20260820_1000.md"
+      },
+      {
+        "task": "repro_task",
+        "timestamp": "2026-08-20 09:49",
+        "source": "memory_rj/repro_task_memory_20260820_0949.md"
+      },
+      {
+        "task": "handoff_gate_fix",
+        "timestamp": "2026-08-06 12:08",
+        "source": "memory_rj/handoff_gate_fix_memory_20260806_1208.md"
+      },
+      {
+        "task": "license_noncommercial",
+        "timestamp": "2026-08-07 03:44",
+        "source": "memory_rj/license_noncommercial_memory_20260807_0344.md"
+      },
+      {
+        "task": "test_task",
+        "timestamp": "2026-08-20 09:47",
+        "source": "memory_rj/test_task_memory_20260820_0947.md"
+      },
+      {
+        "task": "e2e_task_1",
+        "timestamp": "2026-08-20 10:00",
+        "source": "memory_rj/e2e_task_1_memory_20260820_1000.md"
+      },
+      {
+        "task": "riji-skill-public v1.0",
+        "timestamp": "2026-08-08 15:05",
+        "source": "memory_rj/riji-skill-public v1.0_memory_20260808_1505.md"
+      },
+      {
+        "task": "handoff_gate_fix",
+        "timestamp": "2026-08-06 11:50",
+        "source": "memory_rj/handoff_gate_fix_memory_20260806_1150.md"
+      }
+    ],
+    "global_only": [
+      {
+        "task": "agentmd_rule_update",
+        "timestamp": "2026-08-01 22:50",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "opencode_config",
+        "timestamp": "2026-08-14 00:02",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "02_Riji技能推文",
+        "timestamp": "2026-08-01 19:16",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "AI日报周报项目",
+        "timestamp": "2026-08-01 20:02",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "xhs_note_ai_media_6steps",
+        "timestamp": "2026-08-20 17:40",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "repo_metadata_cleanup_20260820",
+        "timestamp": "2026-08-20 11:14",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "add_skill_creation_ref",
+        "timestamp": "2026-08-20 12:01",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "redskill_install",
+        "timestamp": "2026-08-06 14:53",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "auto_ai_daily_ppt_v3fix",
+        "timestamp": "2026-08-01 22:56",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "add_skill_creation_ref",
+        "timestamp": "2026-08-20 21:10",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "02_Riji技能推文",
+        "timestamp": "2026-08-01 19:42",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "t02_merge_pptx_20260813",
+        "timestamp": "2026-08-13 22:01",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "02_Riji技能推文",
+        "timestamp": "2026-08-01 19:30",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "opencode_vision_qna",
+        "timestamp": "2026-08-08 15:26",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "repo_desc_refine_20260820",
+        "timestamp": "2026-08-20 11:24",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "mindmap_workflow",
+        "timestamp": "2026-08-14 10:17",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "mindmap_workflow",
+        "timestamp": "2026-08-14 09:42",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "AI日报周报项目",
+        "timestamp": "2026-08-01 20:21",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "02_Riji技能推文",
+        "timestamp": "2026-08-01 19:43",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "t04_docx_refine_20260801",
+        "timestamp": "2026-08-01 22:39",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "02_Riji技能推文",
+        "timestamp": "2026-08-01 19:38",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "md图片base64内嵌",
+        "timestamp": "2026-08-03 21:58",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "learn_gap_fix",
+        "timestamp": "2026-08-20 15:36",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "VibeCoding推荐文",
+        "timestamp": "2026-08-03 23:01",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "agentmd_add_docs_rule",
+        "timestamp": "2026-08-01 22:45",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "opencode_vision_qna",
+        "timestamp": "2026-08-08 15:24",
+        "source": "memory_main.md"
+      },
+      {
+        "task": "02_Riji技能推文",
+        "timestamp": "2026-08-01 19:07",
+        "source": "memory_main.md"
+      }
+    ],
+    "project_total": 44,
+    "global_total": 39
+  },
+  "tasks": [
+    {
+      "id": "0e36c3660af416cc",
+      "intent": "任务启动前询问 git 管理偏好，特别是复杂任务",
+      "context": "riji-skill-public v1.0 副本，5 文件小改",
+      "tools_used": [
+        "edit",
+        "grep",
+        "bash"
+      ],
+      "feedback_signals": [
+        "positive"
+      ],
+      "outcome": "success",
+      "tags": [
+        "git",
+        "framework",
+        "feature"
+      ],
+      "source_entries": [
+        {
+          "task": "git-ask-gate",
+          "timestamp": "2026-08-01 20:28"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "d0e59dc6a152392f",
+      "intent": "将介绍.md的11张PNG图片base64内嵌，解决复制到其他平台图片失效报错",
+      "context": "C:\\Users\\86029\\Desktop\\Vibe Coding  工具推荐--新手上手\\介绍.md，图片原为相对路径 image/介绍/*.png",
+      "tools_used": [
+        "PowerShell (ReadAllText/ToBase64String)"
+      ],
+      "feedback_signals": [
+        "positive"
+      ],
+      "outcome": "success",
+      "tags": [
+        "markdown",
+        "base64",
+        "图片内嵌"
+      ],
+      "source_entries": [
+        {
+          "task": "md图片base64内嵌",
+          "timestamp": "2026-08-03 21:58"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "dd89ac6cd92aaccc",
+      "intent": "完成记忆治理体系3-R全部4阶段实施",
+      "context": "方案3-R分4阶段25个任务全部完成",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "memory_governance_3r_complete",
+          "timestamp": "2026-07-30 17:35"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "ec643f0202e65dd8",
+      "intent": "实施记忆治理体系3-R阶段1",
+      "context": "方案3-R分4阶段实施阶段1止血",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "memory_governance_3r_phase1",
+          "timestamp": "2026-07-30 16:33"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "69d3f10a5b45c499",
+      "intent": "实施记忆治理体系3-R阶段2防膨胀",
+      "context": "方案3-R分4阶段实施阶段2容量+flag",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "memory_governance_3r_phase2",
+          "timestamp": "2026-07-30 17:13"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "91e941f273054721",
+      "intent": "修复对抗性审查发现的12个严重问题",
+      "context": "交付前对抗性审查45个问题中12个严重问题全修复",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "memory_governance_3r_review_fix",
+          "timestamp": "2026-07-30 18:10"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "06809cbb90f978d4",
+      "intent": "为 riji-skill public 版新增文件扫描确认门控 v1.0.1，并完成对抗性审查第1轮修复",
+      "context": "内网失败案例（AI 无确认扫任务外文件）；技能图谱功能扫 home/AI 工具记忆目录",
+      "tools_used": [
+        "pytest",
+        "git",
+        "skill_graph_extract.py",
+        "adversarial_review"
+      ],
+      "feedback_signals": [
+        "positive"
+      ],
+      "outcome": "success",
+      "tags": [
+        "security",
+        "scan-gate",
+        "adversarial-review"
+      ],
+      "source_entries": [
+        {
+          "task": "scan_gate_security",
+          "timestamp": "2026-08-06 11:09"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "a96165fa24979a42",
+      "intent": "修复 S4 测试隔离漏洞 + 从档案重建 memory_main.md",
+      "context": "S4 是唯一漏 patch GLOBAL_MEMORY_FILE 的治理测试（S2/S10/S11/S12 均有 patch）；记忆双写机制（memory_rj 档案 + memory_main 聚合）是恢复关键",
+      "tools_used": [
+        "pytest",
+        "python",
+        "git"
+      ],
+      "feedback_signals": [
+        "negative",
+        "positive"
+      ],
+      "outcome": "success",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "memory_main_s4_bugfix",
+          "timestamp": "2026-08-11 09:15"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "cba80e023e13b6aa",
+      "intent": "品牌更名 riji→pdca + 用户数据迁移 + 桥接保持已安装副本兼容",
+      "context": "t01_rename_pdca_spec v0.3 经 2 轮对抗审查；数据迁移走 Move+对账+桥接（不追已安装副本）；替换脚本放 %TEMP% 不进仓库",
+      "tools_used": [
+        "git",
+        "python",
+        "pytest",
+        "PowerShell"
+      ],
+      "feedback_signals": [
+        "positive"
+      ],
+      "outcome": "success",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "t01_rename_pdca",
+          "timestamp": "2026-08-11 09:15"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "7e8b2e3a33f282f6",
+      "intent": "迁移用户目录 31 条历史记忆回对应项目",
+      "context": "v1.0.3 marker 修复后记忆归位收尾",
+      "tools_used": [
+        "python",
+        "shutil",
+        "md5"
+      ],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [
+        "migration",
+        "memory",
+        "housekeeping"
+      ],
+      "source_entries": [
+        {
+          "task": "memory_migrate_20260820",
+          "timestamp": "2026-08-20 10:11"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "aa331badc509b088",
+      "intent": "任务：根据桌面《新建 Microsoft Word 文档.docx》笔记（AI自媒体六步流程+4坑+平台推流）写一篇小红书推文。产出：标题「🔥AI自媒体避坑指南，这4坑你千万别踩！」（title_sc",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [
+        "xhs",
+        "文案",
+        "skill调用"
+      ],
+      "source_entries": [
+        {
+          "task": "xhs_note_ai_media_6steps",
+          "timestamp": "2026-08-20 17:40"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "635d214d89554c11",
+      "intent": "修复 marker 无效导致项目记忆静默 fallback 用户目录",
+      "context": "pdca-skill v1.0.3 发布，补丁规格 v3 对抗审核后应用",
+      "tools_used": [
+        "grep",
+        "python",
+        "pytest",
+        "git"
+      ],
+      "feedback_signals": [],
+      "outcome": "success",
+      "tags": [
+        "bugfix",
+        "memory",
+        "marker",
+        "v1.0.3"
+      ],
+      "source_entries": [
+        {
+          "task": "marker_fallback_fix_v1_0_3",
+          "timestamp": "2026-08-20 10:02"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "3f7acb7a37accfc9",
+      "intent": "【任务】add_skill_creation_ref 收尾：对抗审查 14H/15M/11L 按方案1全修 + 12 文件同步回开发环境 + 终验\n\n【做了什么】\n1. **同步回开发环境（f6）**",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "add_skill_creation_ref",
+          "timestamp": "2026-08-20 21:10"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "365b9630070e618d",
+      "intent": "改写 riji-skill_TRAE_Work最佳实践 _5000字.docx：方向从\"把制造业PDCA理论做成AI规矩\"调整为\"用制造业项目管理思维运营AI，让AI按我的习惯干活\"（用户确认：习惯落",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "02_Riji技能推文",
+          "timestamp": "2026-08-01 19:07"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "ab19521d1e0908e8",
+      "intent": "第二轮修改 5000字版（用户手改后的再修正）：用户手动调整了文档（新标题\"如何让TRAE Work打造一个只属于自己的SKILL\"、身份改为\"0基础开发人员\"、日期改为6-8月、新增①开场问题两段\"",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "02_Riji技能推文",
+          "timestamp": "2026-08-01 19:16"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "9a0f6f1477671210",
+      "intent": "同步方向调整到 riji-skill_TRAE_Work最佳实践.md（原始详细版源文件）：先做对抗审查发现1个HIGH（开发周期具体日2026-06-27至08-01只有35天，与\"磨了两个月\"矛盾",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "02_Riji技能推文",
+          "timestamp": "2026-08-01 19:30"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "db9fb52839e40f98",
+      "intent": "同步HTML：02_Riji技能推文 介绍.html 已用 riji-skill-public v1.0\\网页说明.html 直接覆盖（用户确认，两版定位不同：旧版区域管理定制版 vs 新版公开通用版",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "02_Riji技能推文",
+          "timestamp": "2026-08-01 19:38"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "3ca208ee4082a0ca",
+      "intent": "【/act 收尾】HTML同步任务闭环完成。成果：02_Riji技能推文 介绍.html = riji-skill-public v1.0\\网页说明.html（公开通用版），MD5 一致 F060B1",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "02_Riji技能推文",
+          "timestamp": "2026-08-01 19:42"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "5e8f4c29525d2ae3",
+      "intent": "【/learn 跳过】learn_tidy.py count 结果：total_entries=3 < threshold=20，should_run=false，按 learn_cycle.md §",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "02_Riji技能推文",
+          "timestamp": "2026-08-01 19:43"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "0d56500aa6c38429",
+      "intent": "**任务完成总结**\n\n**完成事项**\n- T1: 分析现有 PPT 结构（24页）\n- T2: 替换日报界面截图（Slide 10）\n- T3: 替换周报 Dashboard 截图（Slide 1",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "AI日报周报项目",
+          "timestamp": "2026-08-01 20:02"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "b7df19ac000b8aa4",
+      "intent": "**PPT补救任务完成总结**\n\n**完成事项**\n1. **截图完成**：用PowerPoint COM对象导出25页PPT为PNG图片（1920x1080）\n2. **模板截图**：导出4页模板P",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "AI日报周报项目",
+          "timestamp": "2026-08-01 20:21"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "52fcff1db45f29b1",
+      "intent": "任务：将 image\\介绍\\ 下 11 张图片按 介绍_内嵌图片版.md 顺序（从上到下）重命名为序号+描述格式，并同步更新 介绍.md 引用路径。顺序：01-安装OpenCode插件/02-安装Op",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "VibeCoding推荐文",
+          "timestamp": "2026-08-03 23:01"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "84577c453aaa0195",
+      "intent": "任务：把「好记性不如烂笔头」写入 AGENTS.md。背景：用户要求将 docs 存档优先原则固化到全局规则。动作：在 C:\\Users\\86029\\.config\\opencode\\AGENTS.m",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "agentmd_add_docs_rule",
+          "timestamp": "2026-08-01 22:45"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "a1136164574ebe16",
+      "intent": "任务：将用户原话「每次任务必须调用 riji skill，禁止未加载直接执行，不省 token，不低能力，好记性不如烂笔头」写入 AGENTS.md。动作：合并第 1 节两条旧表述为新的一条（删去冗余",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "agentmd_rule_update",
+          "timestamp": "2026-08-01 22:50"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "54ea17f95ff29feb",
+      "intent": "对照 介绍.md + 最佳实践文章.md 两份参考文，体检26页PPT的内容与排版缺陷并出修复方案",
+      "context": "上轮 auto_ai_daily_ppt 已完成26页PPT（22:06版）；本轮/plan只读体检，未改PPT",
+      "tools_used": [
+        "python-pptx",
+        "PowerPoint COM渲染(export_ppt_images.py)",
+        "自建audit_ppt_layout.py"
+      ],
+      "feedback_signals": [
+        "待用户确认"
+      ],
+      "outcome": "unknown",
+      "tags": [
+        "ppt",
+        "review",
+        "v3fix"
+      ],
+      "source_entries": [
+        {
+          "task": "auto_ai_daily_ppt_v3fix",
+          "timestamp": "2026-08-01 22:56"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "f8a52c51be8ba1a9",
+      "intent": "2026-08-08 Q&A：用户问 opencode 有没有识图插件。结论：识图是模型能力不是插件——opencode 支持拖图进终端直接发给视觉模型；前提是该模型在 opencode.jsonc",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "opencode_vision_qna",
+          "timestamp": "2026-08-08 15:24"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "8b3db16e9e80c508",
+      "intent": "2026-08-08 追问：opencode-vision 原理已解释（翻译官类比）：插件钩子 experimental.chat.messages.transform 在消息发给模型前拦截→图片存到",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "opencode_vision_qna",
+          "timestamp": "2026-08-08 15:26"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "b00d7b4b86dff3ac",
+      "intent": "任务：安装 RedSkill 商店 + khazix-human-writing 技能。结果 success。1) RedSkill CLI 0.1.0 已装到 ~/.redskill/ 和 ~/.l",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "redskill_install",
+          "timestamp": "2026-08-06 14:53"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "f7120a65d49e107d",
+      "intent": "**???? ? doc_sync_act_learn_desc?2026-08-04?**\n**??**???????.html / README.md / protocol/routing.py",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "riji-skill",
+          "timestamp": "2026-08-04 13:28"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "981c8027a0a11ae6",
+      "intent": "SKILL.md 结构瘦身完成。1391→1087行（-304/-22%），零规则丢失。6 commits：去重（双写合并/导图/判定块/§1.6§0.56压缩）→ 下沉5模块（memory条目格式/",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "skill_md_slim",
+          "timestamp": "2026-08-01 23:51"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "5aeb11be850f71f0",
+      "intent": "任务：为发布到 skill-lub 平台制作发布文件夹。产出：C:\\Users\\86029\\Desktop\\github_gitee 开源项目\\riji-skill-v1.0.1-skilllub（1",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "skilllub_release_pack",
+          "timestamp": "2026-08-10 20:42"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "34fd28465aa29463",
+      "intent": "完善 02_Riji技能推文/riji-skill_TRAE_Work最佳实践_原始版本.docx 的排版与内容（用户：排版和内容还是不够好）。",
+      "context": "直播 PPT（riji-skill_直播PPT_v1.pptx）已完成作为品质参照；DOCX 为 42KB 纯文字转换稿。",
+      "tools_used": [
+        "tencent-local-office-edit（降级）",
+        "python-docx",
+        "python-pptx",
+        "edsdk.py"
+      ],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [
+        "docx-layout",
+        "office_processing",
+        "02_Riji技能推文"
+      ],
+      "source_entries": [
+        {
+          "task": "t04_docx_refine_20260801",
+          "timestamp": "2026-08-01 22:39"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "0fd7b85599178167",
+      "intent": "**任务概述**\n- 任务：将两个直播 PPT 合并为一个 PPTX 文件（保留原格式，顺序为先汽车行业案例，后 AI HOT 案例）\n- 输出路径：c:\\Users\\86029\\Desktop\\08",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "t02_merge_pptx_20260813",
+          "timestamp": "2026-08-13 22:01"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "710449b2747f5b55",
+      "intent": "install_pdca_skill 任务完成（2026-08-14）：已将 PDCA-skill-public v1.0.1（源：C:\\Users\\86029\\Desktop\\github_gite",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "opencode_config",
+          "timestamp": "2026-08-14 00:02"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "1b917ab0869858de",
+      "intent": "任务：技术架构文档落盘。产出 C:\\Users\\86029\\Desktop\\思维导图技术架构\\技术架构说明.md（v1.0.0，12KB 279 行）：7 章完整技术架构（背景目标/选型对比/Mark",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "mindmap_workflow",
+          "timestamp": "2026-08-14 10:17"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "fc75979154600bed",
+      "intent": "**记忆条目 · learn_gap_fix（2026-08-20 22:50）**\n\n【任务】记忆凝炼触发修复：/act 的 learn 环连续两次静默未触发（用户发现并要求根治）\n\n【根因三层】①",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "learn_gap_fix",
+          "timestamp": "2026-08-20 15:36"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "e7b6ec26e3454a55",
+      "intent": "【任务】给 pdca-skill references/ 新增「建 Skill 参考」（skill_creation.md）\n\n【做了什么】\n1. 新建 c:/Users/86029/.trae-cn",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "add_skill_creation_ref",
+          "timestamp": "2026-08-20 12:01"
+        }
+      ],
+      "split": "val"
+    },
+    {
+      "id": "d1714f7c0e2e51f4",
+      "intent": "任务：简介完善（第二轮）。用户确认 pdca-skill 简介保持原样（347字符不截断偏好），只改 car-research-ai 和 yixian-literacy，双端已同步完成并验证。新简介：",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "repo_desc_refine_20260820",
+          "timestamp": "2026-08-20 11:24"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "db08b0cc56e34ac4",
+      "intent": "任务：双端(GitHub/Gitee)仓库元数据规整。完成：①删除 web-screenshot 仓库（双端均已404验证）②ai-hot-research-hub 双端补简介+GitHub topi",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "repo_metadata_cleanup_20260820",
+          "timestamp": "2026-08-20 11:14"
+        }
+      ],
+      "split": "train"
+    },
+    {
+      "id": "d741b648b651e845",
+      "intent": "任务：为内网用户搭建 Markdown 思维导图工作流（markmap）。产出目录 C:\\Users\\86029\\mindmap-workflow\\：example.md、生成导图.ps1、READM",
+      "context": "",
+      "tools_used": [],
+      "feedback_signals": [],
+      "outcome": "unknown",
+      "tags": [],
+      "source_entries": [
+        {
+          "task": "mindmap_workflow",
+          "timestamp": "2026-08-14 09:42"
+        }
+      ],
+      "split": "train"
+    }
+  ],
+  "task_outcome_distribution": {
+    "success": 12,
+    "fail": 0,
+    "mixed": 0,
+    "unknown": 28
+  },
+  "task_split_distribution": {
+    "train": 24,
+    "val": 16
+  },
+  "total_tasks": 40,
+  "prompt_metrics": {
+    "absolute_terms": {
+      "total": 410,
+      "by_term": {
+        "ALWAYS": {
+          "count": 279,
+          "terms": [
+            "ALWAYS",
+            "永远",
+            "必须"
+          ]
+        },
+        "NEVER": {
+          "count": 131,
+          "terms": [
+            "NEVER",
+            "永不",
+            "禁止"
+          ]
+        }
+      }
+    },
+    "rule_repetitions": [
+      {
+        "phrase": "HARD-GATE",
+        "count": 23,
+        "files": [
+          "SKILL.md",
+          "references/act/learn/learn_cycle.md",
+          "references/act/learn/prompt_optimization.md",
+          "references/act/persist/act_procedure.md",
+          "references/check/red_flags.md",
+          "references/common/da/git_backup_cleanup.md",
+          "references/common/dc/communication_rules.md",
+          "references/common/pa/memory_governance.md",
+          "references/common/pa/trigger_hooks.md",
+          "references/common/pa/working_memory_rules.md",
+          "references/common/pc/acceptance_criteria.md",
+          "references/common/pc/adversarial_review.md",
+          "references/common/pd/minimal_code_principles.md",
+          "references/common/pda/subagents_rj.md",
+          "references/do/code/code_rules.md",
+          "references/do/code/git_workflow.md",
+          "references/do/comm/insert_new_task.md",
+          "references/do/danger/loop_constraints.md",
+          "references/do/danger/security.md",
+          "references/plan/bootstrap/bootstrap.md",
+          "references/plan/design/goal_brief.md",
+          "references/plan/design/project_structure.md",
+          "references/plan/route/usage_examples.md"
+        ]
+      },
+      {
+        "phrase": "Memory First",
+        "count": 13,
+        "files": [
+          "SKILL.md",
+          "references/act/learn/learn_cycle.md",
+          "references/check/red_flags.md",
+          "references/common/da/sync-matrix.md",
+          "references/common/pa/memory_governance.md",
+          "references/common/pa/working_memory_rules.md",
+          "references/common/pc/adversarial_review.md",
+          "references/common/pd/minimal_code_principles.md",
+          "references/do/danger/security.md",
+          "references/plan/bootstrap/bootstrap.md",
+          "references/plan/bootstrap/compaction_recovery.md",
+          "references/plan/design/goal_brief.md",
+          "references/plan/design/project_structure.md"
+        ]
+      },
+      {
+        "phrase": "No Placeholders",
+        "count": 11,
+        "files": [
+          "SKILL.md",
+          "references/act/learn/learn_cycle.md",
+          "references/check/red_flags.md",
+          "references/common/pa/trigger_hooks.md",
+          "references/common/pc/acceptance_criteria.md",
+          "references/common/pd/minimal_code_principles.md",
+          "references/common/pda/document_specs.md",
+          "references/common/pda/subagents_rj.md",
+          "references/do/code/code_rules.md",
+          "references/do/danger/security.md",
+          "references/plan/design/project_structure.md"
+        ]
+      },
+      {
+        "phrase": "报错询问机制",
+        "count": 3,
+        "files": [
+          "SKILL.md",
+          "references/act/learn/prompt_optimization.md",
+          "references/common/pa/trigger_hooks.md"
+        ]
+      },
+      {
+        "phrase": "逐项核对",
+        "count": 7,
+        "files": [
+          "SKILL.md",
+          "references/common/da/sync-matrix.md",
+          "references/common/pa/trigger_hooks.md",
+          "references/common/pc/acceptance_criteria.md",
+          "references/common/pc/adversarial_review.md",
+          "references/do/code/git_workflow.md",
+          "references/do/comm/insert_new_task.md"
+        ]
+      },
+      {
+        "phrase": "回溯保障",
+        "count": 10,
+        "files": [
+          "SKILL.md",
+          "references/check/red_flags.md",
+          "references/common/da/git_backup_cleanup.md",
+          "references/common/pa/trigger_hooks.md",
+          "references/common/pc/acceptance_criteria.md",
+          "references/common/pc/adversarial_review.md",
+          "references/do/code/git_workflow.md",
+          "references/do/danger/loop_constraints.md",
+          "references/plan/bootstrap/bootstrap.md",
+          "references/plan/route/skill_creation.md"
+        ]
+      }
+    ],
+    "hardmark_density": {
+      "total": 172,
+      "total_lines": 14272,
+      "density_per_lines": 83.0
+    },
+    "process_vs_outcome": {
+      "process_count": 1120,
+      "outcome_count": 129,
+      "ratio": 8.68
+    }
+  },
+  "gate_score": {
+    "conflict_quality": 0.0,
+    "duplicate_quality": 0.6,
+    "stale_quality": 1.0,
+    "outcome_clarity": 0.3,
+    "split_coverage": 0.82,
+    "layer_consistency": 0.0,
+    "overall": 0.388,
+    "recommendation": "reject"
+  },
+  "lessons_extracted": {
+    "total_lessons": 10,
+    "importance_distribution": {
+      "high": 9,
+      "medium": 30,
+      "low": 0
+    }
+  },
+  "summary": {
+    "total_issues": 74,
+    "by_severity": {
+      "high": 59,
+      "medium": 15,
+      "low": 0
+    },
+    "errors_count": 0
+  }
+}

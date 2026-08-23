@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
 version: v1.0.3
-last_updated: 2026-08-20
+last_updated: 2026-08-23
 author: huihui
 ---
 
@@ -442,6 +442,23 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 同批修复：HISTORY.md 与 _sync_tmp/HISTORY.md 既有分叉对齐（工作区补 Excel 升级/v1.0.2 发布/建 Skill 融合/learn_gap_fix 4 条，_sync_tmp 补 marker 修复 1 条，两边 18 条条目一致）；_sync_tmp 新增 assets/spec_template.md
 - 验证：探针词红→绿（停止条件（操作化）/问诊收口/10.1 问诊收口摘要 改前 0 命中→命中）；"每答即写回/三分领导的话/BRD 5 问/§10 标题"原样保留；validate_skill 32/32 pass MUST FIX=0；版本号保持 v1.0.3
 
+### 2026-08-23：v1.0.3 第五批——跨机 5 修复落地 v1.0.3 + 对抗性审查 H1 缓解
+
+- 背景：用户在他机（`C:\Users\liu.xukun\.config\opencode\skills\PDCA-skill-public v1.0.1\`）2026-08-21 memory_distill 产出 5 修复，移植回本机 v1.0.3 时发现**跨版本结构漂移**风险：v1.0.1 vs v1.0.3 已历 7 批迭代，5 修复不能直接 apply，必须逐项 diff 后再 patch
+- 方案：/plan 阶段 5 修复 vs v1.0.3 逐项 diff 判定 still_valid → spec + task 落档 → 对抗性审查 6 维 4 级（1 HIGH 触发缓解）→ /do 阶段 T000 robocopy 备份 + T001-T005 一提交一修复 + T006 总回归 8 AC 全 PASS → /act 收尾
+- 5 修复（一提交一修复，conventional commits，Refs: v103_t3 footer）：
+  - `a654197` memory_shadow_write.py — CLI 强制 UTF-8 stdin 防 PowerShell 中文 stdin 损坏（sys.stdin reconfigure fallback）
+  - `5bd0d09` handoff_tidy.py — 禁 cwd 基名作 project_name（cwd='data' 时 project_name='v103t3_ac002_test' 而非 'data'，防 cwd 污染）
+  - `46181d1` memory_distill.py — 跳过 archived/demoted 状态条目（治理条目不混入蒸馏）
+  - `6a3a37d` validate_skill.py — 加 opencode skills 搜索根（`~/.config/opencode/skills/` 兜底，brainstorming/writing-plans 临时移走时 32/32 仍 PASS）
+  - `7d4a606` learn_tidy.py — scan_memory_layer_drift 改全段扫描（修 global_total=0 误报，原仅扫 `## {project_name}` 单段导致外置数据目录下恒为空）
+- 6 维 4 级对抗性审查：1 HIGH（H1：spec 描述 < 真实代码结构漂移——spec 文档可能引用旧代码段，新版本重构后位置/接口/行号可能漂移）→ 缓解：spec + task 加占位说明「§X.Y 标定项请 Read 真实代码确认」+ task 加 H1 强制前置「patch 前必须先 Read 真实代码段」+ 0 MEDIUM / 2 LOW / 0 CRITICAL
+- 总回归 8 AC 全部 PASS（AC-001 中文 stdin 保留 / AC-002 handoff_tidy project_name 正确 / AC-003 archived 过滤 / AC-004 opencode fallback / AC-005 global_total=39>0 / AC-006 validate_skill 32/32 / AC-007 git log 5 fix commits / AC-008 sha256 5/5 备份完整）
+- 决策记录：5 独立 commit 不合并（保持 git history 可独立 cherry-pick / revert）✅ / spec 占位说明不可省（补 H1 后再 patch）✅ / PowerShell 习惯用 Select-String -Pattern 替 head、用 `;` 替 `&&`、不依赖 `<` 重定向 stdin（改 Python subprocess / --content）✅ / T000_backup.sha256 5/5 + _sync_tmp/scripts/ 入 .gitignore 备查不入仓 ✅
+- 影响面：5 文件 +1 chore（路径标签同步 `5610895`） + docs_rj/spec_rj/ + docs_rj/task_rj/ + docs_rj/learn_rj/20260823-231938/SUMMARY_v103_t3.md + scan_report.json；版本号保持 v1.0.3
+- 验证：validate_skill 32/32 pass MUST FIX=0（修复前后各跑一轮均全绿） + 8 AC 反向验证全 PASS + 5 commit 全部在 git log + sha256 校验 5/5 + 项目+全局 memory 双写成功
+- 待办（v103_t4 范畴）：handoff_tidy INDEX.md / DEPENDENCY_MAP.md 写失败（EOF + 权限拒绝，handoff_tidy 自身健壮性 bug）
+
 ---
 
-**版本**:v1.0.3 | **最后更新**:2026-08-22 | **作者**:huihui
+**版本**:v1.0.3 | **最后更新**:2026-08-23 | **作者**:huihui

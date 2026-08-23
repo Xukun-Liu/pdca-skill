@@ -38,10 +38,17 @@ memory/memory_main.md
 # 用户数据默认在 ~/.pdca-skill/data/，但若用户误放包内也排除
 memory/*
 !memory/memory_main.md
-docs_rj/
+docs_rj/**
 !docs_rj/SUMMARY_RJ.md
 !docs_rj/spec_rj/
 !docs_rj/spec_rj/spec_main_rj.md
+# v103_t3 跨机 5 修复落地（任务级 spec/task/SUMMARY 入仓作可追溯证据）
+!docs_rj/spec_rj/v103_t3_*.md
+!docs_rj/task_rj/
+!docs_rj/task_rj/v103_t3_*.md
+!docs_rj/learn_rj/20260823-231938/
+!docs_rj/learn_rj/20260823-231938/SUMMARY_v103_t3.md
+!docs_rj/learn_rj/20260823-231938/scan_report.json
 outputs_rj/
 server_lite_data/
 server_lite/data/
@@ -69,3 +76,11 @@ exa.env.json
 
 # 浏览器自动化测试缓存（运行时产物，不进 git）
 .playwright-mcp/
+
+# v103_t3 跨机 5 修复落地（开发期临时产物，不入仓）
+# _sync_tmp：T000 robocopy 备份 5 脚本目录
+# T000_backup.sha256：备份完整性校验清单
+# handoff_tidy_out.txt：handoff_tidy 运行日志
+_sync_tmp/
+T000_backup.sha256
+handoff_tidy_out.txt
