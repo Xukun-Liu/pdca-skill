@@ -99,6 +99,11 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        两批能力升级（Excel v1.3.0 + HTML/PPT 模块）+ 发布瘦身（缓存/私人数据/占位外链清理）
 2026-08-20  v1.0.3     修复 .primary_docs_rj 无效 marker 导致项目记忆静默 fallback 用户目录（D1/D2/D3 三缺陷）
                         ── G1 reader 容 BOM；G2 write_project/force_sync 对齐 R3 解析链+fallback 告警+返回落点；G3 8 要素口径"存在"→"有效"；G4 startup_tidy marker 健康检查
+2026-08-23  v1.0.3     🚀 pdca-skill-public v1.0.3 公开发布版（当前版本）
+                        ── 五批增量修复：marker fallback + learn_gap_fix + restore_adhd + clarify_stop + v103_t3 跨机 5 修复
+                        ── 详情：CHANGELOG_v1.0.3.md（4 任务 7 commit）
+                        ── 平台：https://www.skillhub.cn/skills/user_9b3f5380/huihui（v1.0.2 → v1.0.3 同步）
+                        ── 备注：源目录名因 OS Rename-Item Access Denied 暂保留 v1.0.2_开发环境，SKILL.md version 字段为权威 v1.0.3 标识
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
