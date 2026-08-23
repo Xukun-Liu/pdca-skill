@@ -1115,7 +1115,13 @@ def main():
         if sys.stdin.isatty():
             content = ''
         else:
+            try:
+                sys.stdin.reconfigure(encoding='utf-8', errors='replace')
+            except (AttributeError, ValueError, OSError):
+                pass
             content = sys.stdin.read()
+            if '\ufffd' in content and any(ord(c) > 0x4E00 for c in content[:200]):
+                logger.warning('stdin 读入含 U+FFFD 替换符（疑似 GBK→UTF-8 误解码）— 写入可能含乱码，建议 PowerShell 用 `[Console]::InputEncoding=[Text.UTF8Encoding]::UTF8`')
 
     result = write_project(args.project, content)
     print(json.dumps(result, ensure_ascii=False, indent=2))
