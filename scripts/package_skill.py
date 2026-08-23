@@ -36,6 +36,7 @@ EXCLUDE_PATTERNS = [
     r"^\.git/",
     r"^dist/",
     r"^tmp_.*\.png$",
+    r"^assets/readme/.*\.png$",  # v103_t4: skillhub.cn 不允许二进制，PNG 由发布者手动替换为 placeholder 引用
     r"^\.pytest_cache/",
     r"\.pytest_cache/",  # 任意层级的 pytest 缓存（含 tests/.pytest_cache/）
     r"^\.pdca-skill/",  # 本地外置目录（若误放包内）

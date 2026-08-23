@@ -16,6 +16,13 @@ docs_rj/learn_rj/*/
 # 临时验证输出
 validate_*.json
 scripts/validate_result.json
+# v103_t4 发布准备临时校验日志/脚本（不入仓）
+validate_v*.log
+package_v*.log
+verify_zip.log
+verify_zip.ps1.tmp
+# scripts/verify_zip.ps1 例外（永久入仓作 release 工具）
+!scripts/verify_zip.ps1
 
 # 临时调试脚本
 tmp_*.py
