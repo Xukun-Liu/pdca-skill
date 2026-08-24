@@ -1,7 +1,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.0.2-green.svg)](HISTORY.md)
+[![Version](https://img.shields.io/badge/version-v1.0.3-green.svg)](HISTORY.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
@@ -121,7 +121,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **技能编排器**：按触发词读手册 / 调度外部专业 skill | 自带画图、Excel、爬虫的万能工具箱 |
 | 纯本地 Markdown + Python 标准库脚本，零云依赖 | 必须联网/开账号才能跑的在线服务 |
 
-> 包内：**48** 个参考模块 · **12** 个模板 · **34** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
+> 包内：**49** 个参考模块 · **12** 个模板 · **34** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
 
 **装前 2 个前提**：
 
