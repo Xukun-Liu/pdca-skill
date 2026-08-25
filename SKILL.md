@@ -356,6 +356,7 @@ category: workflow
 - **"技能/测试"泛词 vs skill 域词**：泛词（装skill行的"技能"、测试行的"测试"）与 skill 域触发词（建/改/优化/测试+skill）同时命中时，**skill 域词优先**——用户明确说了 skill 就路由到 skill 域（建/改→skill_creation.md，装/找→skill_security.md+skill_management.md）
 - **"梳理一下"**：默认走 sync-matrix.md（整理规范），除非明确说"梳理一下做了什么"才走 hand-drawn-report.md
 - **"需求分析/出方案"**：带 /plan 前缀或"从头开始/新项目"→走 /plan 硬指令（计划 md 顶部按 hand-drawn-report.md 带图）；否则→document_specs.md，**方案文档顶部按 hand-drawn-report.md 内联手绘 SVG 速览图（默认带图、单文件自包含）**
+- **"汇报"（v1.0.4）**：按上下文限定——"给领导/向上/给老板/周报月报"→leader_report.md（六段结构汇报文档）；"验收报告/总结/手绘图"→hand-drawn-report.md；"做PPT/演示文稿"→html_ppt_creation.md（可用 leader_report 六段结构做内容底稿）；无上下文→澄清菜单问三选一
 
 ### 澄清菜单递进规则
 
@@ -748,6 +749,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 │   ├─ 文档汇总视图/根索引 → references/common/pa/summary_view.md（SUMMARY_RJ.md 规范+漂移检查）
 │   ├─ 用户技能图谱/能力画像/掌握度分析 → references/act/learn/skill_graph.md（三段式：已掌握/未掌握/额外掌握，A.learn）
 │   ├─ 版本同步矩阵/规则一致性核对 → references/common/da/sync-matrix.md（升级后核对版本号/死引用/规则一致性）
+│   ├─ 给领导汇报/向上汇报/出汇报文档/周报月报 → references/common/da/leader_report.md（六段结构汇报文档：结论→进展→数据→风险→计划→求助，数据源自动拉取，v1.0.4）
 │   ├─ git 备份清理 5 阶段 → references/common/da/git_backup_cleanup.md（手动备份/自动备份/历史清理/回收/校验）
 │   ├─ git 工作流规范 → references/do/code/git_workflow.md（commit 规范/分支策略/标签管理/冲突处理）
 │   ├─ 执行中插入新任务/打断处置 → references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case）

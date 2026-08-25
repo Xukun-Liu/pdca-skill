@@ -7,7 +7,7 @@
 > 版本：v1.2.5 | 创建：2026-07-25 | pdca-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
-> 本索引是 references/ 目录的导航地图。49 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
+> 本索引是 references/ 目录的导航地图。50 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
 
 ---
 
@@ -102,11 +102,11 @@ references/
 
 ---
 
-## 四、文件归属速查表（49 个模块 × 所属子文件夹 × 引用范围）
+## 四、文件归属速查表（50 个模块 × 所属子文件夹 × 引用范围）
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
-### common/（22个）
+### common/（23个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -123,6 +123,7 @@ references/
 | communication_rules.md | common/dc/ | D.comm C.verify | main + code_eng |
 | debugging.md | common/dc/ | D.code C.verify | main + code_eng |
 | hand-drawn-report.md | common/da/ | D.comm A.handoff | main + doc_proc + sync |
+| leader_report.md | common/da/ | A.handoff | main |
 | git_backup_cleanup.md | common/da/ | A.tidy D.danger | main + code_eng |
 | sync-matrix.md | common/da/ | D.code A.tidy | main + sync |
 | writing_style.md | common/style/ | P.design D.comm | main |
@@ -276,7 +277,7 @@ references/
 
 | 指标 | 值 |
 |------|-----|
-| reference 总数 | 49 |
+| reference 总数 | 50 |
 | 仅 main 读的 reference | 12（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md + memory_governance.md + writing_style.md + goal_brief.md + article-writing 入口 + 5 子模块） |
 | 被 2+ 副 agent 共读的 reference | 3（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐） |
 | 知识库最大的副 agent | bootstrap_agent(10 个 reference) |
@@ -297,3 +298,4 @@ references/
 | v1.2.3 | 2026-08-13 | 融合 HTML/PPT 制作：新增 html_ppt_creation.md（D.code），47→48、do 8→9、code 5→6、doc_proc_agent 4→5；速查表 + 反向索引同步 |
 | v1.2.4 | 2026-08-20 | 融合建 Skill 参考：新增 skill_creation.md（P.route，方法论提炼自外部开源资产，归属见包级 NOTICE），48→49、plan 11→12、route 5→6、skill_mgmt_agent 3→4；速查表 + 正/反向索引同步 |
 | v1.2.5 | 2026-08-20 | 对抗审查修复（14 HIGH）：目录树/分类表 plan·route 计数同步（11→12、5→6）、§6.2 反向索引表补 skill_creation.md 行（修正 v1.2.4"反向索引同步"未兑现）、subagents_rj/config json 权威源同步（见各文件自身版本） |
+| v1.2.6 | 2026-08-25 | v1.0.4 新增 leader_report.md（common/da/，A.handoff，领导汇报六段结构），49→50、common 22→23；速查表 + 总数同步；触发钩子/仲裁规则见 trigger_hooks.md v1.1.8 与 SKILL.md |

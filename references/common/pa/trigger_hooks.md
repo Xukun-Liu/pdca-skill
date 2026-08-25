@@ -1,13 +1,13 @@
 <!-- PDCA标签：P.route A.handoff -->
 <!-- 子标签场景：路由判断、关键词触发、reference 索引 -->
-<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck -->
+<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck/给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 -->
 <!-- 引用范围：main + bootstrap_agent -->
 
 # 触发钩子表（从 SKILL.md §0 外迁）
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.7 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-20（新增建 skill 触发钩子（10 词：建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 → skill_creation.md）；对抗审查修复：声明 skill 域词优先于"技能/测试/优化"泛词、登记指令改为两分支、改 skill 先快照）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.8 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-25（v1.0.4 新增领导汇报触发钩子：给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 → leader_report.md，精确关键词集禁裸"汇报"防三重命中）| PDCA 标签：P.route A.handoff
 > 本文件是 pdca-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -66,6 +66,7 @@
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
 | 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
 | 写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味 | references/common/style/article-writing.md（活人感写作入口：按任务链式读 article-writing/ 下子模块） | **写作任务不生成 spec/task，直接出稿；材料澄清最多三问；正文只交作品（详见入口"流程覆盖声明"）** |
+| 给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 | references/common/da/leader_report.md（六段结构：结论→进展→数据→风险→计划→求助，v1.0.4 新增） | **精确关键词集（禁裸"汇报"——与 hand-drawn-report/html_ppt 三重命中，见 SKILL.md 仲裁规则）；数据源映射表自动拉 TASK_STATE/task.md/memory，缺数据标"暂无数据"不编造；产出文档顶部按 hand-drawn-report 内联手绘 SVG** |
 | 做网页/前端/HTML/落地页/网站/组件/页面/landing/网页制作 | references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，内网可用） | **按本文档手写 HTML/CSS/JS 制作；图片用用户提供/本地素材（无在线生成时），图表手写 SVG 或本地 echarts** |
 | 做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck/PPT制作 | references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，内网可用） | **按本文档制作：python-pptx（纯 Python）或 PptxGenJS（Node）生成可编辑 .pptx，或手写单文件 HTML 幻灯片；视觉方法论见 §一/§二** |
 
@@ -133,3 +134,4 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | v1.1.5 | 2026-08-13 | 新增 HTML/PPT 制作两行触发钩子（做网页/前端/HTML/落地页/做PPT/幻灯片/演示文稿/课件 → html_ppt_creation.md 自包含方法论），自动触发列注明"按本文档自包含制作（python-pptx / PptxGenJS / 手写 HTML，内网可用）"；头部关键词注释同步 |
 | v1.1.6 | 2026-08-20 | 新增建 skill 触发钩子（建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 → skill_creation.md），自动触发列注明"先过找现成vs自建闸+建完登记索引和记忆"；头部关键词注释同步 |
 | v1.1.7 | 2026-08-20 | 对抗审查修复（H9/H7）：触发行声明 skill 域词优先于"技能/测试/优化"泛词（与 SKILL.md 仲裁规则联动）；登记指令改为两分支（reference 模块→SKILL.md 索引表 / 独立 skill→memory）；补"改 skill 先快照旧版"；头部版本说明词数修正（4→10） |
+| v1.1.8 | 2026-08-25 | v1.0.4 新增领导汇报触发钩子（给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 → leader_report.md）；精确关键词集禁裸"汇报"（与 hand-drawn-report/html_ppt 三重命中由 SKILL.md 仲裁规则分流）；头部关键词注释同步 |
