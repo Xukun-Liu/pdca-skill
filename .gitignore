@@ -51,8 +51,11 @@ docs_rj/**
 !docs_rj/spec_rj/spec_main_rj.md
 # v103_t3 跨机 5 修复落地（任务级 spec/task/SUMMARY 入仓作可追溯证据）
 !docs_rj/spec_rj/v103_t3_*.md
-!docs_rj/task_rj/
 !docs_rj/task_rj/v103_t3_*.md
+# v104 三痛点改造：任务级 spec/task/对抗审查报告/50轮测试报告 入仓作可追溯证据
+!docs_rj/spec_rj/v104_*.md
+!docs_rj/task_rj/v104_*.md
+!docs_rj/check_rj/v104_*.md
 !docs_rj/learn_rj/20260823-231938/
 !docs_rj/learn_rj/20260823-231938/SUMMARY_v103_t3.md
 !docs_rj/learn_rj/20260823-231938/scan_report.json
