@@ -42,6 +42,9 @@ def parse_memory_entries(memory_content: str, project_name: str = None) -> List[
     **是否经验**: {bool}
     **经验标签**: {tags}
     {content}
+
+    v1.0.4：输入先经 expand_index_lines 展开（索引行 file:/// 链接 → 正文完整条目），
+    解析逻辑不变。同 (project, task) 多条时保留最后一条（最新）。
     """
     entries = []
     lines = memory_content.split('\n')
@@ -101,7 +104,45 @@ def parse_memory_entries(memory_content: str, project_name: str = None) -> List[
         entries = [e for e in entries if e["project"] == project_name]
     # v103t3 修复#3：跳过 archived/demoted 条目，避免把已经下线/归档的经验再次蒸馏
     entries = [e for e in entries if e.get("status", "active") not in ("archived", "demoted")]
+    # v1.0.4：同 (project, task) 去重保最新（索引展开后与旧完整条目可能并存）
+    dedup = {}
+    for e in entries:
+        dedup[(e["project"], e["task"])] = e
+    entries = list(dedup.values())
     return entries
+
+
+# v1.0.4 索引行格式：- {ts} | {task} | {tag} | 重要性{level} | is_lesson={bool} | {summary} | [正文](file:///{path})
+_INDEX_LINE_RE = re.compile(
+    r'^- \d{4}-\d{2}-\d{2} \d{2}:\d{2} \| .+? \| .+? \| 重要性\w+ \| is_lesson=\w+ \| .+? \| \[正文\]\(file:///(.+?)\)\s*$'
+)
+
+
+def expand_index_lines(memory_content: str) -> str:
+    """把 memory_main.md 中的索引行展开为正文完整条目（v1.0.4，对抗审查 H1 修复）。
+
+    索引行的 [正文](file:///{abs_path}) 指向项目侧标签文件夹里的正文文件
+    （### 记忆条目 · {task}（{ts}） + frontmatter + content 完整格式）。
+    展开后直接喂 parse_memory_entries，解析逻辑零改动复用。
+    正文文件读取失败时保留原索引行（不中断，条目自然跳过）。
+    """
+    try:
+        from urllib.request import url2pathname
+    except ImportError:
+        return memory_content
+    out_lines = []
+    for line in memory_content.split('\n'):
+        m = _INDEX_LINE_RE.match(line.strip())
+        if m:
+            body_path = url2pathname(m.group(1))
+            try:
+                with open(body_path, 'r', encoding='utf-8', errors='replace') as bf:
+                    out_lines.append(bf.read().rstrip('\n'))
+            except OSError:
+                out_lines.append(line)  # 正文丢失保索引行（parse 不识别，自然跳过）
+            continue
+        out_lines.append(line)
+    return '\n'.join(out_lines)
 
 
 def distill(project_name: str, memory_file: str = None, output_dir: str = None) -> Dict[str, Any]:
@@ -122,6 +163,9 @@ def distill(project_name: str, memory_file: str = None, output_dir: str = None) 
 
     with open(memory_file, 'r', encoding='utf-8', errors='replace') as f:
         content = f.read()
+
+    # v1.0.4：索引行 → 正文完整条目展开（对抗审查 H1 修复：索引化后 distill 数据链不断）
+    content = expand_index_lines(content)
 
     entries = parse_memory_entries(content, project_name)
     lesson_entries = [e for e in entries if e["is_lesson"]]

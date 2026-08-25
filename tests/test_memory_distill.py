@@ -34,6 +34,8 @@ def isolated_memory(tmp_path, monkeypatch):
 
     write_project 内部会 upsert_global_memory 写全局 memory_main.md，
     若不隔离会污染真实的 skill 包内 memory/memory_main.md。
+    v1.0.4：默认固定 schema=False（未迁移模式，v1.0.3 扁平行为）——
+    旧测试语义不变；v1.0.4 新模式用 isolated_memory_v104 fixture。
     """
     import memory_shadow_write
 
@@ -50,6 +52,29 @@ def isolated_memory(tmp_path, monkeypatch):
         memory_shadow_write, "_GLOBAL_CP_LOCK",
         memory_shadow_write._CrossProcessLock(str(tmp_memory))
     )
+    # v1.0.4：固定未迁移模式（与真实数据目录的 .schema_version 状态解耦）
+    monkeypatch.setattr(memory_shadow_write, "check_schema_version", lambda: False)
+    return tmp_memory
+
+
+@pytest.fixture
+def isolated_memory_v104(tmp_path, monkeypatch):
+    """v1.0.4 已迁移模式：schema=True → 标签文件夹深层落盘 + 全局索引行。"""
+    import memory_shadow_write
+
+    tmp_memory = tmp_path / "memory_main.md"
+    tmp_memory.write_text(
+        "# 主记忆（全局聚合 · 主次跟进）\n\n"
+        "> ⚠️ 仅供参考，以你当前指令为准。\n\n",
+        encoding="utf-8"
+    )
+    monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", str(tmp_memory))
+    monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_DIR", str(tmp_path))
+    monkeypatch.setattr(
+        memory_shadow_write, "_GLOBAL_CP_LOCK",
+        memory_shadow_write._CrossProcessLock(str(tmp_memory))
+    )
+    monkeypatch.setattr(memory_shadow_write, "check_schema_version", lambda: True)
     return tmp_memory
 
 
@@ -214,3 +239,95 @@ def test_distill_empty(tmp_path):
     result = distill(project_name="test_project", memory_file=str(memory_file))
     assert result["total_lessons"] == 0
     assert result["lessons"] == []
+
+
+# ---------------------------------------------------------------------------
+# T003 (v1.0.4): write_project 标签文件夹路由 + 索引行 + distill 索引展开
+# ---------------------------------------------------------------------------
+
+def test_write_project_v104_tag_folder_routing(tmp_path, isolated_memory_v104):
+    """v1.0.4 已迁移模式：memory_class=pitfall → 正文落 {memory_rj}/pitfall/{YYYYMM}/，
+    全局写索引行（含 task/tag/重要性/is_lesson/摘要/正文链接）。"""
+    import memory_shadow_write
+
+    proj_dir = tmp_path / "memory_rj"
+    proj_dir.mkdir()
+
+    result = memory_shadow_write.write_project(
+        task="v104_route_test",
+        content="这次踩坑了：mkstemp 被沙箱拦截",
+        project_memory_dir=str(proj_dir),
+        project_name="test_project",
+        memory_class="pitfall",
+    )
+
+    assert result["memory_class"] == "pitfall"
+    assert result["schema_v104"] is True
+    # 正文落标签文件夹（深层 rglob）
+    files = list(proj_dir.rglob("v104_route_test_memory_*.md"))
+    assert len(files) == 1, "正文应落 pitfall/{YYYYMM}/ 深层目录"
+    assert files[0].parent.parent.name == "pitfall"
+    body = files[0].read_text(encoding="utf-8")
+    assert "**重要性**: medium" in body  # 正文仍含完整 frontmatter
+    # 全局只有索引行（无完整条目）
+    global_content = isolated_memory_v104.read_text(encoding="utf-8")
+    assert "### 记忆条目 · v104_route_test" not in global_content, "已迁移模式全局不应写完整条目"
+    idx_line = [l for l in global_content.split("\n") if "v104_route_test" in l]
+    assert len(idx_line) == 1, "应有 1 行索引行"
+    assert "| pitfall |" in idx_line[0]
+    assert "is_lesson=false" in idx_line[0]
+    assert "[正文](file:///" in idx_line[0]
+
+
+def test_write_project_v104_illegal_class_falls_back(tmp_path, isolated_memory_v104):
+    """v1.0.4 非法 memory_class → 兜底 workflow 落盘。"""
+    import memory_shadow_write
+
+    proj_dir = tmp_path / "memory_rj"
+    proj_dir.mkdir()
+
+    result = memory_shadow_write.write_project(
+        task="v104_fallback_test",
+        content="非法值测试",
+        project_memory_dir=str(proj_dir),
+        project_name="test_project",
+        memory_class="发布",  # 非法中文值
+    )
+
+    assert result["memory_class"] == "workflow", "非法值应兜底 workflow"
+    files = list(proj_dir.rglob("v104_fallback_test_memory_*.md"))
+    assert len(files) == 1
+    assert files[0].parent.parent.name == "workflow"
+
+
+def test_distill_expands_index_lines(tmp_path):
+    """v1.0.4 索引行展开：memory_main.md 只有索引行时 distill 仍能经 file:/// 链接
+    读到正文并提取 is_lesson=true 条目（对抗审查 H1 修复的回归测试）。"""
+    # 构造正文文件（write_project block 格式）
+    body_dir = tmp_path / "memory_rj" / "pitfall" / "202608"
+    body_dir.mkdir(parents=True)
+    body_file = body_dir / "lesson_task_memory_20260825_1200.md"
+    body_file.write_text(
+        "### 记忆条目 · lesson_task（2026-08-25 12:00）\n"
+        "**重要性**: high\n"
+        "**是否经验**: true\n"
+        "**经验标签**: bugfix, sandbox\n"
+        "**状态**: active\n\n"
+        "沙箱拦截 mkstemp 的规避方案：open() 直写。\n",
+        encoding="utf-8"
+    )
+    # 构造只有索引行的 memory_main.md
+    memory_file = tmp_path / "memory_main.md"
+    body_url = body_file.resolve().as_posix()
+    memory_file.write_text(
+        "# 主记忆\n\n## test_project\n\n"
+        "- 2026-08-25 12:00 | lesson_task | pitfall | 重要性high | is_lesson=true | "
+        "沙箱拦截 mkstemp 规避 | [正文](file:///%s)\n" % body_url,
+        encoding="utf-8"
+    )
+
+    from memory_distill import distill
+    result = distill(project_name="test_project", memory_file=str(memory_file))
+    assert result["total_lessons"] == 1, "索引行应展开为正文条目并提取经验"
+    assert result["lessons"][0]["title"] == "lesson_task"
+    assert "沙箱拦截" in result["lessons"][0]["content"]

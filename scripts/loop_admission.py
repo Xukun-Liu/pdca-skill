@@ -238,13 +238,16 @@ def detect_memory_main(root: Path) -> tuple[bool, list[str]]:
 
 
 def detect_memory_rj_recent(root: Path) -> tuple[bool, list[str]]:
-    """检测 docs_rj/memory_rj/ 有 *_memory_*.md 且 mtime ≥ now-7天（+4）。"""
+    """检测 docs_rj/memory_rj/ 有 *_memory_*.md 且 mtime ≥ now-7天（+4）。
+
+    v1.0.4：rglob 兼容标签文件夹深层结构（{tag}/{YYYYMM}/*.md）+ 扁平根目录。
+    """
     mem_dir = root / 'docs_rj' / 'memory_rj'
     if not mem_dir.is_dir():
         return (False, [])
     now = time.time()
     seven_days = 7 * 24 * 3600
-    for f in mem_dir.glob('*_memory_*.md'):
+    for f in mem_dir.rglob('*_memory_*.md'):  # v1.0.4 深层扫描
         try:
             mtime = f.stat().st_mtime
             if now - mtime <= seven_days:

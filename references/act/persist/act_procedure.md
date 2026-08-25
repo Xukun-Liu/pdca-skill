@@ -17,8 +17,8 @@
 
 （GAP2 修复，handoff_tidy 产出的 TASK_STATE.md 是数据源）
 
-- **取最新硬性步骤【硬性】**：用 Glob 取最新文件，按文件名时间戳 `YYYYMMDD_HHMM` 降序取第一个（不用 mtime，避免 touch/checkout 漂移）；TASK_STATE 文件无时间戳，按"当前活跃任务名"匹配 `TASK_STATE_{task_id}.md`
-- §1⑦当前状态总览：更新"最新项目记忆"链接（Glob `memory_rj/*_memory_*.md` 取最新）+ "最新任务状态"链接（取 `TASK_STATE_{当前活跃任务}.md`）+ "最近交接文档"链接（Glob `handoff_rj/*_handoff_*.md` 取最新）
+- **取最新硬性步骤【硬性】**：用 Glob 取最新文件，按文件名时间戳 `YYYYMMDD_HHMM` 降序取第一个（不用 mtime，避免 touch/checkout 漂移）；TASK_STATE 文件无时间戳，按"当前活跃任务名"匹配 `TASK_STATE_{task_id}.md`；**v1.0.4 起 memory_rj 为标签文件夹结构，Glob 模式用 `memory_rj/**/*_memory_*.md`（深层递归）**
+- §1⑦当前状态总览：更新"最新项目记忆"链接（Glob `memory_rj/**/*_memory_*.md` 取最新，v1.0.4 深层递归）+ "最新任务状态"链接（取 `TASK_STATE_{当前活跃任务}.md`）+ "最近交接文档"链接（Glob `handoff_rj/*_handoff_*.md` 取最新）
 - **占位文字恢复为链接【硬性·LOW-2 上轮遗留·M8 修复】**：实例中残留的模板格式占位文字（如 `{task}_memory_{YYYYMMDD_HHMM}.md`）必须替换为 Glob 取到的最新文件实际 markdown 链接（格式 `[文件名](./相对路径)`，如 `[spec_main_template_memory_20260718_1300.md](./memory_rj/spec_main_template_memory_20260718_1300.md)`），不保留占位文字
   - **触发条件**：每次 /act 步骤 3.5 执行时，检测实例 §1/§2 链接是否为 `{xxx}` 格式占位文字，若是则替换
   - **降级方案**：若 Glob 取不到最新文件（如 memory_rj/ 为空或 Glob 失败），保留原占位文字，告警用户"§1/§2 链接未刷新，下次 /act 补刷"，不阻断 /act 流程

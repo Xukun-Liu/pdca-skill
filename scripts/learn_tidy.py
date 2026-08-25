@@ -93,6 +93,41 @@ def _read_text(path):
     except (OSError, UnicodeDecodeError):
         return ''
 
+def _read_memory_main_expanded(path):
+    """读 memory_main.md 并展开索引行为正文条目（v1.0.4，对抗审查 H1 修复）。
+
+    索引化后 memory_main.md 只有一行式索引（无 ### 记忆条目），直接扫描恒为 0。
+    展开逻辑复用 memory_distill.expand_index_lines（file:/// 链接 → 正文文件内容）。
+    """
+    content = _read_text(path)
+    if not content:
+        return content
+    try:
+        from memory_distill import expand_index_lines
+        return expand_index_lines(content)
+    except ImportError:
+        return content
+
+def _list_memory_md_files(memory_rj_path):
+    """枚举 memory_rj 下全部记忆 md 文件（v1.0.4，对抗审查 H2 修复）。
+
+    兼容两种结构：v1.0.4 标签文件夹（{tag}/{YYYYMM}/*.md，rglob 深层）+
+    v1.0.3 扁平根目录。只匹配 *_memory_*.md 文件名模式，跳过 .keep/TASK_STATE/INDEX 等。
+    """
+    import glob as _glob
+    if not os.path.isdir(memory_rj_path):
+        return []
+    deep = _glob.glob(os.path.join(memory_rj_path, '**', '*_memory_*.md'), recursive=True)
+    flat = _glob.glob(os.path.join(memory_rj_path, '*_memory_*.md'))
+    seen = set()
+    out = []
+    for p in sorted(set(deep + flat)):
+        norm = os.path.normpath(p)
+        if norm not in seen:
+            seen.add(norm)
+            out.append(p)
+    return out
+
 def _write_text(path, content):
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
@@ -137,7 +172,7 @@ def cmd_count(args):
         }, ensure_ascii=False, indent=2))
         return 2
 
-    content = _read_text(memory_path)
+    content = _read_memory_main_expanded(memory_path)  # v1.0.4 索引行展开
     entries = MEMORY_ENTRY_RE.findall(content)
     total = len(entries)
     # H4 修复：total=0 时强制 should_run=false（即使 threshold=0），避免空跑
@@ -1214,17 +1249,9 @@ def adopt(proposals_path, dry_run=True):
             files_to_backup = [MEMORY_MAIN_PATH]
         elif target == 'project_memory_rj':
             memory_rj_dir = os.path.join(os.path.dirname(staging_dir), 'memory_rj')
-            if os.path.isdir(memory_rj_dir):
-                files_to_backup = [os.path.join(memory_rj_dir, f) 
-                                  for f in os.listdir(memory_rj_dir) if f.endswith('.md')]
-            else:
-                files_to_backup = []
+            files_to_backup = _list_memory_md_files(memory_rj_dir)  # v1.0.4 rglob 深层兼容
         elif target == 'memory_main.md':
             files_to_backup = [MEMORY_MAIN_PATH]
-        elif target == 'project_memory_rj':
-            memory_rj_dir = os.path.join(os.path.dirname(staging_dir), 'memory_rj')
-            files_to_backup = [os.path.join(memory_rj_dir, f) 
-                              for f in os.listdir(memory_rj_dir) if f.endswith('.md')] if os.path.isdir(memory_rj_dir) else []
         else:
             files_to_backup = []
         
@@ -1356,11 +1383,8 @@ def scan_project_memory_rj(primary_docs):
     all_entries = []
     file_list = []
 
-    for f in sorted(os.listdir(memory_rj_path)):
-        if not f.endswith('.md'):
-            continue
-        file_path = os.path.join(memory_rj_path, f)
-        file_list.append(f)
+    for file_path in _list_memory_md_files(memory_rj_path):  # v1.0.4 rglob 深层兼容
+        file_list.append(os.path.relpath(file_path, memory_rj_path))
         content = _read_text(file_path)
         entries = _parse_memory_entries(content, file_path)
         all_entries.extend(entries)
@@ -1384,18 +1408,16 @@ def scan_memory_layer_drift(primary_docs, project_name=None):
     project_name = project_name or os.path.basename(os.getcwd())
 
     project_entries = {}
-    for f in sorted(os.listdir(memory_rj_path)):
-        if not f.endswith('.md'):
-            continue
-        file_path = os.path.join(memory_rj_path, f)
+    for file_path in _list_memory_md_files(memory_rj_path):  # v1.0.4 rglob 深层兼容
+        rel_name = os.path.relpath(file_path, memory_rj_path)
         content = _read_text(file_path)
         entries = _parse_memory_entries(content, file_path)
         for e in entries:
             key = e.get('task', '') + '|' + e.get('timestamp', '')
-            project_entries[key] = {'task': e['task'], 'timestamp': e['timestamp'], 'source': 'memory_rj/' + f}
+            project_entries[key] = {'task': e['task'], 'timestamp': e['timestamp'], 'source': 'memory_rj/' + rel_name}
 
     global_entries = {}
-    memory_content = _read_text(MEMORY_MAIN_PATH)
+    memory_content = _read_memory_main_expanded(MEMORY_MAIN_PATH)  # v1.0.4 索引行展开
     if memory_content:
         lines = memory_content.split('\n')
         in_section = False
@@ -1491,11 +1513,8 @@ def migrate_memory_entries(primary_docs, dry_run=True):
 
     backup_dir = os.path.join(memory_rj_path, 'backup_migrate')
 
-    for f in sorted(os.listdir(memory_rj_path)):
-        if not f.endswith('.md'):
-            continue
-
-        file_path = os.path.join(memory_rj_path, f)
+    for file_path in _list_memory_md_files(memory_rj_path):  # v1.0.4 rglob 深层兼容
+        f = os.path.relpath(file_path, memory_rj_path)
         content = _read_text(file_path)
 
         if not _is_old_format(content):
@@ -1645,7 +1664,7 @@ def scan(scope='all', dry_run=True, memory_path=None):
 
     # ── 全局 memory_main.md 扫描 ──────────────────────────────────────
     try:
-        memory_content = _read_text(actual_memory_path)
+        memory_content = _read_memory_main_expanded(actual_memory_path)  # v1.0.4 索引行展开
         if not memory_content:
             report['errors'].append({
                 'step': 'memory_scan',
@@ -1686,21 +1705,18 @@ def scan(scope='all', dry_run=True, memory_path=None):
         all_entries = []
         
         # 从全局 memory_main.md 收集
-        memory_content = _read_text(actual_memory_path)
+        memory_content = _read_memory_main_expanded(actual_memory_path)  # v1.0.4 索引行展开
         if memory_content:
             global_entries = _parse_memory_entries(memory_content, actual_memory_path)
             all_entries.extend(global_entries)
-        
-        # 从项目级 memory_rj 收集
+
+        # 从项目级 memory_rj 收集（v1.0.4 rglob 兼容标签文件夹深层结构）
         if primary_docs:
             memory_rj_path = os.path.join(primary_docs, MEMORY_RJ_DIR)
-            if os.path.isdir(memory_rj_path):
-                for f in sorted(os.listdir(memory_rj_path)):
-                    if f.endswith('.md'):
-                        file_path = os.path.join(memory_rj_path, f)
-                        content = _read_text(file_path)
-                        entries = _parse_memory_entries(content, file_path)
-                        all_entries.extend(entries)
+            for file_path in _list_memory_md_files(memory_rj_path):
+                content = _read_text(file_path)
+                entries = _parse_memory_entries(content, file_path)
+                all_entries.extend(entries)
         
         # 任务挖掘流程
         raw_tasks = heuristic_mine(all_entries, max_tasks=40)
@@ -2027,7 +2043,7 @@ def scan_memory_for_rule_signals(memory_dir):
     ]
     if not os.path.isdir(memory_dir):
         return signals
-    for fp in glob.glob(os.path.join(memory_dir, '*.md')):
+    for fp in _list_memory_md_files(memory_dir):  # v1.0.4 rglob 深层兼容
         try:
             with open(fp, 'r', encoding='utf-8', errors='ignore') as f:
                 for i, line in enumerate(f, start=1):

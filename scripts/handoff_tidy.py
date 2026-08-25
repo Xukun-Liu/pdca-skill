@@ -496,12 +496,19 @@ class HandoffTidy:
         return []
 
     def _find_task_files(self, primary, subdir):
-        """查找指定子目录下的文件"""
+        """查找指定子目录下的文件。
+
+        v1.0.4：memory_rj 用 rglob 深层扫描（标签文件夹 {tag}/{YYYYMM}/ 结构），
+        其他子目录（spec_rj/task_rj/handoff_rj/archive_rj）保持扁平单层。
+        """
         if not primary:
             return []
         dir_path = os.path.join(primary, subdir)
         if not os.path.isdir(dir_path):
             return []
+        if subdir == 'memory_rj':
+            import glob as _glob
+            return _glob.glob(os.path.join(dir_path, '**', '*.md'), recursive=True)
         return [os.path.join(dir_path, f) for f in os.listdir(dir_path) if f.endswith('.md')]
 
     def _read_file(self, path):

@@ -890,11 +890,21 @@ GLOBAL_MAX_ENTRIES = 500       # 全局最大条目数
 MEMORY_RJ_MAX_LINES = 500      # memory_rj/ 单文件最大行数
 
 
+def _is_entry_line(line):
+    """判断一行是否记忆条目：v1.0.3 完整条目（### 记忆条目 ·）或 v1.0.4 索引行
+    （- {ts} | {task} | {tag} | 重要性… | is_lesson=… | … | [正文](file:///…)）。"""
+    if line.startswith('### 记忆条目 ·'):
+        return True
+    if line.startswith('- ') and '[正文](file:///' in line:
+        return True
+    return False
+
+
 def _count_segment_entries(lines, seg_start, seg_end):
-    """统计项目段内的条目数（### 记忆条目 · 开头的行数）。"""
+    """统计项目段内的条目数（v1.0.3 ### 条目 + v1.0.4 索引行，对抗审查 M4 修复）。"""
     count = 0
     for i in range(seg_start, seg_end):
-        if lines[i].startswith('### 记忆条目 ·'):
+        if _is_entry_line(lines[i]):
             count += 1
     return count
 
@@ -905,10 +915,10 @@ def _count_segment_chars(lines, seg_start, seg_end):
 
 
 def _count_global_entries(lines):
-    """统计全局 memory_main.md 的总条目数。"""
+    """统计全局 memory_main.md 的总条目数（v1.0.4 含索引行口径）。"""
     count = 0
     for ln in lines:
-        if ln.startswith('### 记忆条目 ·'):
+        if _is_entry_line(ln):
             count += 1
     return count
 
