@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
-version: v1.0.3
-last_updated: 2026-08-23
+version: v1.0.4
+last_updated: 2026-08-25
 author: huihui
 ---
 
@@ -99,11 +99,26 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        两批能力升级（Excel v1.3.0 + HTML/PPT 模块）+ 发布瘦身（缓存/私人数据/占位外链清理）
 2026-08-20  v1.0.3     修复 .primary_docs_rj 无效 marker 导致项目记忆静默 fallback 用户目录（D1/D2/D3 三缺陷）
                         ── G1 reader 容 BOM；G2 write_project/force_sync 对齐 R3 解析链+fallback 告警+返回落点；G3 8 要素口径"存在"→"有效"；G4 startup_tidy marker 健康检查
-2026-08-23  v1.0.3     🚀 pdca-skill-public v1.0.3 公开发布版（当前版本）
-                        ── 五批增量修复：marker fallback + learn_gap_fix + restore_adhd + clarify_stop + v103_t3 跨机 5 修复
-                        ── 详情：CHANGELOG_v1.0.3.md（4 任务 7 commit）
-                        ── 平台：https://www.skillhub.cn/skills/user_9b3f5380/huihui（v1.0.2 → v1.0.3 同步）
-                        ── 备注：源目录名因 OS Rename-Item Access Denied 暂保留 v1.0.2_开发环境，SKILL.md version 字段为权威 v1.0.3 标识
+2026-08-23  v1.0.3     🚀 pdca-skill-public v1.0.3 公开发布版
+                       ── 五批增量修复：marker fallback + learn_gap_fix + restore_adhd + clarify_stop + v103_t3 跨机 5 修复
+                       ── 详情：CHANGELOG_v1.0.3.md（4 任务 7 commit）
+                       ── 平台：https://www.skillhub.cn/skills/user_9b3f5380/huihui（v1.0.2 → v1.0.3 同步）
+                       ── 备注：源目录名因 OS Rename-Item Access Denied 暂保留 v1.0.2_开发环境，SKILL.md version 字段为权威 v1.0.3 标识
+2026-08-25  v1.0.4     🚀 三痛点体系化改造（当前版本）
+                       ── 痛点1 记忆文件夹制：6 主分类（tech_solution/pitfall/workflow/tool_usage/decision/status）
+                         + {标签}/{YYYYMM}/ 两层文件夹 + memory_main.md 索引化（索引行直达正文）+ memory_tags.py
+                         单点常量 + migrate_memory_v104.py 全量迁移（126 条对账 equal + 110 扁平文件迁深层 +
+                         双备份 + schema_version 防混写 + AC-015 反向验证）
+                       ── 痛点2 /act 互动复盘：步骤 1.5 动态 2-3 问（教训/决策/下一步）+ 回答并入同次
+                         write_project + SKIPPED 语义 + /loop auto 自动跳过留痕
+                       ── 痛点3 领导汇报：references/common/da/leader_report.md 六段结构（结论→进展→数据→
+                         风险→计划→求助）+ 数据源映射表 + 三级领导适配 + trigger_hooks v1.1.8 精确关键词
+                         （禁裸"汇报"防三重命中）+ SKILL.md 仲裁规则 + index 49→50
+                       ── 对抗审查：独立 subagent 4H/7M/4L 全部修复回填（H1 distill/learn 索引行展开防
+                         经验闭环静默死亡 / H2 下游 6 处 rglob 适配 / H3 memory_class 接口 / H4 汇报仲裁）
+                       ── 工程记忆：迁移实测教训——启发式"完成/状态"泛词致 81% 误归 status，改为
+                         INFER_ARBITRATION 特异度仲裁（决策入坑已写 memory_tags.py 注释）
+                       ── 测试：226 passed（+26 新增：tags 18 + migrate 4 + distill v1.0.4 3 + 修正 1）
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)

@@ -6,7 +6,7 @@
 # 工作记忆规则（Working Memory Rules）
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 更新：2026-08-01（新增 §2.2 记忆条目增强格式，自 SKILL.md 下沉为唯一维护源）
+> 版本：v1.2.0 | 更新：2026-08-25（v1.0.4：§2.2 加 memory_class 字段 + 两层标签设计说明 + memory_main 索引视图格式；原 2026-08-01 新增 §2.2 下沉为唯一维护源）
 
 > 📦 **用户数据外置说明（v1.0.0 新增）**：全局聚合记忆 `memory/memory_main.md` 与项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 均位于外置目录 `~/.pdca-skill/data/` 下（非 skill 包内）。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落外置项目记忆 + 幂等 upsert 外置全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
 
@@ -139,9 +139,12 @@ AI 必须理解：
 | importance_level | string | 否 | 重要性（high/medium/low），agent 自评，默认 medium |
 | is_lesson | bool | 否 | 是否可复用经验，默认 false |
 | experience_tags | list | 否 | 经验标签（如 bugfix, architecture） |
+| memory_class | string | 否 | **主分类（v1.0.4）**：tech_solution/pitfall/workflow/tool_usage/decision/status 六选一，决定正文落哪个标签文件夹（单点常量见 scripts/memory_tags.py）；未传时按内容启发式推断（特异词优先），非法值兜底 workflow |
 | status | string | 否 | 治理状态（active/archived/demoted），默认 active。archived=已归档软隐藏；demoted=已降级 |
 | archive_reason | string | 否 | 归档/降级原因（status 非 active 时填写） |
 | reflection | string | 否 | 反思备注（memory_rethink 工具填写） |
+
+**两层标签设计（v1.0.4）**：第 1 层=主分类（memory_class，决定 `memory_rj/{主分类}/{YYYYMM}/` 文件夹，固定 6 值保秩序）；第 2 层=自由标签（tags/experience_tags，文件内标注保灵活）。全局 `memory_main.md` 为**索引视图**（每条一行：`时间 | task | 主分类 | 重要性 | is_lesson | 摘要 | 正文链接`），正文 source of truth 在项目侧标签文件夹。多分类冲突人工仲裁按 TAG_PRIORITY（status > decision > pitfall > tech_solution > tool_usage > workflow）；机器推断按 INFER_ARBITRATION（特异词优先，防"完成/状态"泛词误归——v1.0.4 迁移实测教训：泛词曾致 81% 条目误归 status）。
 
 > 治理 flag（active/archived/demoted）与容量阈值：见本文件 §2「治理 flag」节（唯一维护源，此处不重复）。
 
