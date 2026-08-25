@@ -350,8 +350,12 @@ def upsert_global_memory(project_name, block):
                 if existing_match and existing_match.group(1).strip() == block_task_name:
                     # 同 task 已有 → 替换为新版本（保留最新时间戳）
                     # 找到原条目的结束位置（下一个 ### 或 ## 或段尾）
+                    # v1.0.4 check-fix（BUG-B）：索引行（- … | [正文](file:///…)）也是条目边界——
+                    # 旧通道块替换若不在此终止，会把后随索引行当"块内容"整片吃掉（实测吃掉 44 行索引）
                     block_end = j + 1
-                    while block_end < seg_end and not lines[block_end].startswith('### ') and not lines[block_end].startswith('## '):
+                    while block_end < seg_end and not lines[block_end].startswith('### ') \
+                            and not lines[block_end].startswith('## ') \
+                            and not _is_entry_line(lines[block_end]):
                         block_end += 1
                     # 用新 block 替换原条目（按行拆分，确保每行有换行符）
                     new_block_lines = []

@@ -331,3 +331,45 @@ def test_distill_expands_index_lines(tmp_path):
     assert result["total_lessons"] == 1, "索引行应展开为正文条目并提取经验"
     assert result["lessons"][0]["title"] == "lesson_task"
     assert "沙箱拦截" in result["lessons"][0]["content"]
+
+
+def test_upsert_global_memory_does_not_eat_index_lines(tmp_path, isolated_memory):
+    """混合态回归（BUG-B 防回归）：索引化 memory_main 上走旧通道 upsert_global_memory
+    同 task 块替换时，后随索引行必须完好——v1.0.4 check 实测曾吃掉 44 行索引。"""
+    import memory_shadow_write
+
+    proj_dir = tmp_path / "memory_rj"
+    proj_dir.mkdir()
+    global_path = isolated_memory
+
+    # 构造混合态：先写一条旧格式完整块（迁移前遗留），紧跟一行索引行
+    global_path.write_text(
+        "# 主记忆（全局聚合 · 主次跟进）\n\n"
+        "## test_project\n\n"
+        "### 记忆条目 · legacy_task（2026-08-01 10:00）\n"
+        "**重要性**: medium\n"
+        "**是否经验**: false\n"
+        "**经验标签**: 无\n\n"
+        "旧格式完整条目正文。\n"
+        "- 2026-08-25 12:00 | other_task | pitfall | 重要性high | is_lesson=true | "
+        "其他条目索引 | [正文](file:///C:/nonexistent/other_task_body.md)\n"
+        "- 2026-08-25 13:00 | another_task | workflow | 重要性medium | is_lesson=false | "
+        "再一行索引 | [正文](file:///C:/nonexistent/another_task_body.md)\n",
+        encoding="utf-8"
+    )
+
+    # 旧通道再写同 task 条目（触发块替换路径）
+    memory_shadow_write.upsert_global_memory(
+        "test_project",
+        "### 记忆条目 · legacy_task（2026-08-25 23:00）\n"
+        "**重要性**: medium\n"
+        "**是否经验**: false\n"
+        "**经验标签**: 无\n\n"
+        "新版本正文。\n"
+    )
+
+    content = global_path.read_text(encoding="utf-8")
+    # 断言：两条索引行完好（BUG-B 修复前会被整片吃掉）
+    assert "other_task_body.md" in content, "后随索引行被吃掉（BUG-B 回归）"
+    assert "another_task_body.md" in content, "第二条索引行被吃掉（BUG-B 回归）"
+    assert "legacy_task（2026-08-25 23:00）" in content, "新版本块未写入"

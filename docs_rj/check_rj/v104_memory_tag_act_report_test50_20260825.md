@@ -1,8 +1,20 @@
 # v1.0.4 50 轮全流程测试报告（T008 / AC-014）
 
-> 测试时间：2026-08-25 22:30-22:50 | 测试人：主 agent + fresh subagent（对话层）
+> 测试时间：2026-08-25 22:30-22:50（首轮）+ 23:20-23:40（/check 修补轮）| 测试人：主 agent + fresh subagent（对话层）
 > 对应 spec：v104_memory_tag_act_report_spec_20260825_2127.md §5 AC-014
-> 结论：**50/50 通过 + 对话层 3/3 PASS，全量回归 278 passed / 1 skipped，validate 32/32**
+> 结论：**50/50 通过 + 对话层 3/3 PASS，全量回归 279 passed / 1 skipped（含 BUG-B 回归测试），validate 32/32，真实数据零污染**
+
+## 〇、/check 修补轮记录（Convergence Phase 1）
+
+/check 复验 AC-004 时抓到 CRITICAL：迁移后索引被吃 44 行（82≠126）。根因两个 BUG，全修复：
+
+| BUG | 位置 | 修复 | 验证 |
+|-----|------|------|------|
+| **BUG-B**：旧通道 upsert_global_memory 块替换边界不含索引行 → 替换时整片吃掉后随索引 | memory_shadow_write.py L354（check-fix） | 块边界加 `_is_entry_line()` 终止 | 新增回归测试 test_upsert_global_memory_does_not_eat_index_lines PASS |
+| **BUG-A**：governance 测试组合运行时穿透写真实 memory_main（v1.0.3 遗留，索引化后危害放大） | tests/ 部分 fixture 隔离缺口 | conftest.py autouse fixture `_isolate_global_memory` 兜底隔离（只 patch 路径不建目录，防 mkdir 冲突） | 全量 pytest 前后真实文件 md5 一致（True）；fixes+phase1+2+3 组合复验 same=True |
+| 数据重建 | memory_main.md | 删 25 个污染块 + 从 legacy_body 重建 45 行缺失索引 | 对账 legacy=126 ≤ index=127、污染块=0；正文零丢失（126 文件完好） |
+
+修补后全量：279 passed（+1 BUG-B 回归）、validate 32/32、learn count 恢复正常口径。
 
 ## 一、测试构成（机械层 + 对话层双层设计）
 

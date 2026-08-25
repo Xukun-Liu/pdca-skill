@@ -144,3 +144,43 @@ def _ensure_no_sys_path_pollution():
     original_path = list(sys.path)
     yield
     sys.path[:] = original_path
+
+
+class _DummyLock:
+    """测试用空锁，避免跨进程文件锁干扰"""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+
+@pytest.fixture(autouse=True)
+def _isolate_global_memory(monkeypatch, tmp_path):
+    """自动 fixture（v1.0.4 check-fix BUG-A）：全局 memory 路径默认隔离到 tmp。
+
+    背景：部分 governance 测试组合运行时 write_project/memory_promote 穿透到
+    真实 ~/.pdca-skill/data/memory/memory_main.md（v1.0.3 时代同构污染无害未被
+    发现；v1.0.4 索引化后污染块会触发 upsert 边界 BUG 吃掉索引行——实测丢 44 行）。
+
+    策略：autouse 兜底隔离——所有测试默认写 tmp_path 下的 fake memory_main；
+    测试内自己 monkeypatch GLOBAL_MEMORY_FILE 时以测试内 patch 为准（后设优先），
+    原有隔离型测试零影响；未隔离的测试从此被兜底，根治穿透。
+    """
+    scripts_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    try:
+        import memory_shadow_write
+    except ImportError:
+        yield  # 不依赖该模块的测试直接放行
+        return
+    # 只 patch 路径属性，不预创建目录/文件——避免与测试自身 fixture 的裸 mkdir()
+    # 冲突（FileExistsError）；upsert_global_memory 对缺失文件有标准头兜底初始化。
+    fake_dir = tmp_path / "memory"
+    fake_global = fake_dir / "memory_main.md"
+    monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", str(fake_global))
+    monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_DIR", str(fake_dir))
+    monkeypatch.setattr(memory_shadow_write, "_GLOBAL_CP_LOCK", _DummyLock())
+    yield
