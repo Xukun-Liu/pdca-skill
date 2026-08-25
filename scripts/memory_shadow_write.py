@@ -39,6 +39,7 @@ import threading
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import generate_docs  # noqa: E402
 import user_data_path  # noqa: E402
+from memory_tags import validate_memory_class, infer_memory_class  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
@@ -151,6 +152,114 @@ class _CrossProcessLock:
 
 _WRITE_LOCK = threading.RLock()
 _GLOBAL_CP_LOCK = _CrossProcessLock(GLOBAL_MEMORY_FILE)
+
+
+def check_schema_version():
+    """检测外置数据目录结构版本（v1.0.4 tag_folder_monthly，对抗审查 M3 修复）。
+
+    返回 True=已迁移到标签文件夹结构；False=旧结构/无标记（此时 write_project
+    降级为 v1.0.3 行为：正文落 memory_rj 根目录 + 全局写完整 block，
+    防新旧版本混写撕裂结构）。
+    """
+    try:
+        p = user_data_path.get_user_data_dir() / '.schema_version'
+        if not p.is_file():
+            return False
+        # utf-8-sig 容错 BOM（PowerShell Set-Content -Encoding UTF8 会写 BOM，历史坑）
+        with open(str(p), 'r', encoding='utf-8-sig') as f:
+            data = json.load(f)
+        return data.get('structure') == 'tag_folder_monthly'
+    except Exception:
+        return False
+
+
+def _extract_summary(content, limit=40):
+    """从记忆正文提取一句话摘要（首个非空行，去 markdown 加粗符号，截 limit 字）。"""
+    for line in (content or '').split('\n'):
+        text = line.strip()
+        if not text:
+            continue
+        text = re.sub(r'\*\*(.+?)\*\*', r'\1', text)  # 去加粗
+        text = re.sub(r'^[-*]\s+', '', text)  # 去列表符
+        text = re.sub(r'[|`]', ' ', text)  # 去管道/反引号（防污染索引行分隔）
+        text = text.strip()
+        if text:
+            return text[:limit]
+    return '（无摘要）'
+
+
+def upsert_global_index(project_name, task, index_line):
+    """幂等把一行索引 upsert 进全局 memory_main.md 的 ``## {project_name}`` 分段（v1.0.4）。
+
+    与 upsert_global_memory 的分工：本函数只写一行索引（时间|主分类|重要性|is_lesson|摘要|正文链接），
+    正文完整条目在项目侧标签文件夹内（source of truth）。同 task 旧索引行被替换（保最新），
+    语义对齐 upsert_global_memory 的"每 task 保 1 条最新"。
+    """
+    heading = '## %s' % project_name
+    if not os.path.isfile(GLOBAL_MEMORY_FILE):
+        with open(GLOBAL_MEMORY_FILE, 'w', encoding='utf-8') as f:
+            f.write('# 主记忆（全局聚合 · 主次跟进）\n\n')
+    with open(GLOBAL_MEMORY_FILE, 'r', encoding='utf-8') as f:
+        raw = f.read()
+    lines = raw.split('\n')
+
+    # 定位项目分段
+    seg_idx = None
+    for i, ln in enumerate(lines):
+        if ln.strip() == heading:
+            seg_idx = i
+            break
+
+    # 索引行 task key：行内含 [task] 标记（索引行格式含 | {task} | 槽位）
+    task_key = '| %s |' % task
+
+    if seg_idx is not None:
+        seg_end = len(lines)
+        for j in range(seg_idx + 1, len(lines)):
+            if lines[j].startswith('## '):
+                seg_end = j
+                break
+        # 先清同 task 旧完整条目块（### 记忆条目 · {task}…到下一 ### / ## 前）——
+        # 覆盖"迁移前旧通道写过完整 block，迁移后新通道写索引行"的混合态
+        j = seg_idx + 1
+        while j < seg_end:
+            m = re.match(r'^### 记忆条目 · (.+?)(?:（\d{4}-\d{2}-\d{2} \d{2}:\d{2}）)?\s*$', lines[j].strip())
+            if m and m.group(1).strip() == task:
+                block_end = j + 1
+                while block_end < seg_end and not lines[block_end].startswith('### ') \
+                        and not lines[block_end].startswith('## '):
+                    block_end += 1
+                # 顺带吃掉条目块后的空行（防分段内空洞累积）
+                while block_end < seg_end and lines[block_end].strip() == '':
+                    block_end += 1
+                del lines[j:block_end]
+                seg_end -= (block_end - j)
+                continue
+            j += 1
+        # 分段内找同 task 索引行（以 "- " 开头且含 task_key）
+        for j in range(seg_idx + 1, seg_end):
+            if lines[j].startswith('- ') and task_key in lines[j]:
+                lines[j] = index_line  # 替换为最新
+                generate_docs.atomic_write(GLOBAL_MEMORY_FILE, '\n'.join(lines))
+                return
+        # 无同 task 行 → 插到分段内已有的索引行块尾部（### 完整条目块之前），
+        # 保持"索引行区在上、历史完整 block 区在下"的段内布局
+        insert_at = seg_idx + 1
+        while insert_at < seg_end and lines[insert_at].strip() == '':
+            insert_at += 1
+        while insert_at < seg_end and lines[insert_at].startswith('- '):
+            insert_at += 1
+        lines.insert(insert_at, index_line)
+        generate_docs.atomic_write(GLOBAL_MEMORY_FILE, '\n'.join(lines))
+        return
+
+    # 分段不存在 → 新建（索引行紧跟分段标题；确保与上文有空行）
+    if lines and lines[-1].strip():
+        lines.append('')
+    lines.append(heading)
+    lines.append('')
+    lines.append(index_line)
+    generate_docs.atomic_write(GLOBAL_MEMORY_FILE, '\n'.join(lines))
 
 
 def upsert_global_memory(project_name, block):
@@ -288,11 +397,15 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
                   intent="", context="", tools_used=None, feedback_signals=None,
                   outcome="unknown", tags=None,
                   importance_level="medium", is_lesson=False, experience_tags=None,
-                  status="active", archive_reason="", reflection=""):
+                  status="active", archive_reason="", reflection="",
+                  memory_class=None):
     """项目级记忆双写（主次跟进）+ 评估参数 + 治理 flag：
 
-    1. 落 docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md
-    2. 幂等 upsert 进全局 memory/memory_main.md（按 ## {项目名} 分段）
+    1. 落 docs_rj/memory_rj/[{memory_class}/{YYYYMM}/]{task}_memory_YYYYMMDD_HHMM.md
+       （schema 已迁移 v1.0.4 时按标签+月份路由；未迁移时降级扁平根目录，v1.0.3 兼容）
+    2. 幂等 upsert 进全局 memory/memory_main.md（按 ``## {项目名}`` 分段）：
+       schema 已迁移 → 写一行索引行（时间|task|主分类|重要性|is_lesson|摘要|正文链接）；
+       未迁移 → 写完整 block（v1.0.3 行为，防旧环境混合撕裂）
 
     Args:
         task: 任务名（文件名前缀）。
@@ -313,6 +426,9 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
             archived=已归档（软隐藏，不物理移动）；demoted=已降级（全局→项目）。
         archive_reason: 归档/降级原因（status 非 active 时填写）。
         reflection: 反思备注（memory_rethink 工具填写）。
+        memory_class: 主分类（v1.0.4，决定正文落哪个标签文件夹）。合法值见
+            memory_tags.MEMORY_TAGS；None 时按 content 关键词启发式推断；
+            非法值兜底 workflow（validate_memory_class 保证）。
 
     Returns:
         dict: {'project_ok': True, 'global_ok': True}
@@ -336,6 +452,13 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
     if status not in valid_status:
         logger.warning("[memory_shadow_write] status 非法值 %r，用默认 active", status)
         status = "active"
+
+    # === 主分类处理（v1.0.4）：None 时推断，非法值兜底 workflow ===
+    if memory_class is None:
+        memory_class = infer_memory_class(content)
+        logger.info("[memory_shadow_write] 未传 memory_class，按内容启发式推断为 '%s'", memory_class)
+    else:
+        memory_class = validate_memory_class(memory_class)
 
     # === 评估参数 + 治理 flag frontmatter 构建 ===
     tags_str = ", ".join([_sanitize_content(t) for t in experience_tags]) if experience_tags else "无"
@@ -440,15 +563,48 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
             + content
         )
 
+    # === schema 版本检测（v1.0.4，对抗审查 M3）：旧结构降级为 v1.0.3 行为 ===
+    schema_ok = check_schema_version()
+    if not schema_ok:
+        logger.warning("[memory_shadow_write] 数据结构未迁移 v1.0.4（.schema_version 缺失或"
+                       " structure!=tag_folder_monthly），本次按旧扁平结构落盘；"
+                       "如需启用标签文件夹请先跑 scripts/migrate_memory_v104.py")
+
     with _WRITE_LOCK, _GLOBAL_CP_LOCK:
         # 1) 项目级 memory 文件（append-only）
-        _ensure_parent(os.path.join(project_memory_dir, '.keep'))
-        proj_path = os.path.join(project_memory_dir, '%s_memory_%s.md' % (safe_task, ts))
+        #    schema 已迁移 → {memory_rj}/{主分类}/{YYYYMM}/{task}_memory_{ts}.md
+        #    schema 未迁移 → {memory_rj}/{task}_memory_{ts}.md（v1.0.3 扁平兼容）
+        if schema_ok:
+            month_dir = os.path.join(project_memory_dir, memory_class,
+                                     datetime.now().strftime('%Y%m'))
+            try:
+                _ensure_parent(os.path.join(month_dir, '.keep'))
+                proj_path = os.path.join(month_dir, '%s_memory_%s.md' % (safe_task, ts))
+            except Exception as exc:
+                # 标签文件夹创建失败 → 降级根目录（不丢数据，告警可见）
+                logger.warning("[memory_shadow_write] 标签文件夹创建失败（%s），降级落 %s 根目录",
+                               exc, project_memory_dir)
+                _ensure_parent(os.path.join(project_memory_dir, '.keep'))
+                proj_path = os.path.join(project_memory_dir, '%s_memory_%s.md' % (safe_task, ts))
+        else:
+            _ensure_parent(os.path.join(project_memory_dir, '.keep'))
+            proj_path = os.path.join(project_memory_dir, '%s_memory_%s.md' % (safe_task, ts))
         _append_atomic(proj_path, block)
 
-        # 2) 全局 upsert（按项目分段）
+        # 2) 全局 upsert（按项目分段）：
+        #    schema 已迁移 → 索引行（时间|task|主分类|重要性|is_lesson|摘要|正文链接）
+        #    schema 未迁移 → 完整 block（v1.0.3 行为）
         project_name = project_name or os.path.basename(os.getcwd())
-        upsert_global_memory(project_name, block)
+        if schema_ok:
+            abs_path = os.path.abspath(proj_path).replace('\\', '/')
+            file_url = 'file:///%s' % abs_path
+            index_line = ('- %s | %s | %s | 重要性%s | is_lesson=%s | %s | [正文](%s)'
+                          % (stamp, _sanitize_content(task), memory_class,
+                             importance_level, str(is_lesson).lower(),
+                             _extract_summary(content), file_url))
+            upsert_global_index(project_name, task, index_line)
+        else:
+            upsert_global_memory(project_name, block)
 
         # S7 修复：write_project 后自动检查容量阈值（超限告警，不自动清洗）
         try:
@@ -458,9 +614,10 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
         except Exception as exc:
             logger.debug("[write_project] 容量检查失败（不影响写入）: %s", exc)
 
-    # G5：返回落点信息（fallback 标志 + 实际目录），CLI stdout 可核对每次记忆落点
+    # G5：返回落点信息（fallback 标志 + 实际目录 + 主分类），CLI stdout 可核对每次记忆落点
     return {'project_ok': True, 'global_ok': True,
-            'fallback': fallback_used, 'project_memory_dir': project_memory_dir}
+            'fallback': fallback_used, 'project_memory_dir': project_memory_dir,
+            'memory_class': memory_class, 'schema_v104': schema_ok}
 
 
 def _ensure_parent(path):
@@ -1098,6 +1255,9 @@ def main():
                         help='要写入的内容（省略则从 stdin 读取）')
     parser.add_argument('--rollback', default=None,
                         help='回滚模式：指定 undo 目录的 timestamp（如 20260730_103022）')
+    parser.add_argument('--memory-class', default=None,
+                        help='主分类（v1.0.4）：tech_solution/pitfall/workflow/tool_usage/decision/status；'
+                             '省略时按内容启发式推断；非法值兜底 workflow')
     args = parser.parse_args()
 
     # 回滚模式
@@ -1123,7 +1283,7 @@ def main():
             if '\ufffd' in content and any(ord(c) > 0x4E00 for c in content[:200]):
                 logger.warning('stdin 读入含 U+FFFD 替换符（疑似 GBK→UTF-8 误解码）— 写入可能含乱码，建议 PowerShell 用 `[Console]::InputEncoding=[Text.UTF8Encoding]::UTF8`')
 
-    result = write_project(args.project, content)
+    result = write_project(args.project, content, memory_class=args.memory_class)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result.get('project_ok') else 1
 
