@@ -16,14 +16,22 @@ TAG_PRIORITY = ["status", "decision", "pitfall", "tech_solution", "tool_usage", 
 FALLBACK_TAG = "workflow"
 
 # 启发式推断规则：关键词 → 主分类（infer_memory_class 用）
+# 关键词设计原则：特异词优先（踩坑/沙箱/架构），泛词（完成/状态）收紧或排除——
+# v1.0.4 迁移实测教训：status 含"完成/状态"时 81% 条目被误归 status
 INFER_RULES = {
-    "pitfall": ["踩坑", "报错", "失败", "异常", "rollback", "回滚", "bug", "修不好", "拦截"],
-    "tech_solution": ["方案", "架构", "实现", "部署", "设计", "改造", "重构", "技术路线", "接口"],
-    "status": ["完成", "进度", "状态", "交接", "收尾", "阶段", "汇总", "巡检", "周期"],
-    "decision": ["决策", "拍板", "选择", "取舍", "确认了", "选定", "评审通过"],
+    "pitfall": ["踩坑", "报错", "失败", "异常", "rollback", "回滚", "bug", "修不好", "拦截", "沙箱", "坑"],
+    "tech_solution": ["方案", "架构", "实现", "部署", "设计", "改造", "重构", "技术路线", "接口", "修复方案"],
+    "decision": ["决策", "拍板", "选定", "取舍", "评审通过", "确认方案", "最终选择"],
     "tool_usage": ["工具", "命令", "脚本", "用法", "安装", "配置", "参数", "CLI"],
+    "status": ["任务完成总结", "进度更新", "交接", "收尾", "巡检", "周报", "里程碑", "阶段汇总"],
     # workflow 不设关键词：默认兜底
 }
+
+# 推断仲裁顺序：按关键词特异度（特异→泛），不是 TAG_PRIORITY——
+# TAG_PRIORITY 用于"显式多分类冲突时人工仲裁"；机器推断必须特异词优先，
+# 否则泛词（status 类）抢走一切（迁移实测 81% 误归）。
+# decision 的"拍板/选定"（动作强信号）特异于 tech_solution 的"方案"（高频名词泛词）
+INFER_ARBITRATION = ["pitfall", "decision", "tech_solution", "tool_usage", "status", "workflow"]
 
 
 def validate_memory_class(value):
@@ -60,8 +68,8 @@ def infer_memory_class(content):
                 break
     if not hits:
         return FALLBACK_TAG
-    # 按 TAG_PRIORITY 顺序取第一个命中的
-    for tag in TAG_PRIORITY:
+    # 按 INFER_ARBITRATION 顺序取第一个命中的（特异词优先，防泛词抢归类）
+    for tag in INFER_ARBITRATION:
         if tag in hits:
             return tag
     return FALLBACK_TAG

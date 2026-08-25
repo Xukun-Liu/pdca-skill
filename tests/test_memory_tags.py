@@ -75,8 +75,14 @@ class TestInfer:
         assert infer_memory_class("随便一段没有关键词的文本") == FALLBACK_TAG
 
     def test_multi_hit_priority(self):
-        # 同时命中 pitfall + status → TAG_PRIORITY 中 status 在前
-        assert infer_memory_class("报错了但任务完成") == "status"
+        # 同时命中 pitfall + status → 推断仲裁按特异度 pitfall 优先
+        # （TAG_PRIORITY 的 status 优先仅用于显式分类冲突的人工仲裁，v1.0.4 修订）
+        assert infer_memory_class("报错了但任务收尾") == "pitfall"
+
+    def test_status_requires_specific_phrase(self):
+        # 泛词"完成/状态"不再触发 status（迁移实测 81% 误归教训）
+        assert infer_memory_class("这个功能开发完成了，用的是分层架构") == "tech_solution"
+        assert infer_memory_class("阶段汇总：本周进展") == "status"
 
     def test_empty_content_falls_back(self):
         assert infer_memory_class("") == FALLBACK_TAG
