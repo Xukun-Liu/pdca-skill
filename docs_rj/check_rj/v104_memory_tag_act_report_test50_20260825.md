@@ -13,8 +13,9 @@
 | **BUG-B**：旧通道 upsert_global_memory 块替换边界不含索引行 → 替换时整片吃掉后随索引 | memory_shadow_write.py L354（check-fix） | 块边界加 `_is_entry_line()` 终止 | 新增回归测试 test_upsert_global_memory_does_not_eat_index_lines PASS |
 | **BUG-A**：governance 测试组合运行时穿透写真实 memory_main（v1.0.3 遗留，索引化后危害放大） | tests/ 部分 fixture 隔离缺口 | conftest.py autouse fixture `_isolate_global_memory` 兜底隔离（只 patch 路径不建目录，防 mkdir 冲突） | 全量 pytest 前后真实文件 md5 一致（True）；fixes+phase1+2+3 组合复验 same=True |
 | 数据重建 | memory_main.md | 删 25 个污染块 + 从 legacy_body 重建 45 行缺失索引 | 对账 legacy=126 ≤ index=127、污染块=0；正文零丢失（126 文件完好） |
+| **修补3**（复验新发现）：45 行历史脏 ts 索引行（时间戳小时十位丢失，如 `22:14`→`_2:14`，不匹配 expand 正则致 distill=0） | memory_main.md 索引行 | 36 行按 URL 文件名反推规范 ts 重写 + 9 行无法反推者删后从 legacy_body 补回（9 行） | distill 恢复提取 10 条经验、learn count=115、终态对账 126≤127 PASS、0 不匹配行 |
 
-修补后全量：279 passed（+1 BUG-B 回归）、validate 32/32、learn count 恢复正常口径。
+修补后全量：279 passed（+1 BUG-B 回归）、validate 32/32、loop 100/100、真实文件零污染（pytest 前后 md5 一致）。
 
 ## 一、测试构成（机械层 + 对话层双层设计）
 

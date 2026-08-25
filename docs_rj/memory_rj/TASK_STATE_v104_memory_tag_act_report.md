@@ -31,9 +31,9 @@ completed（/do T000-T009 全勾 + /check 复验含 Convergence 修补轮全过�
 
 ## Gate Evidence
 
-- gate1_spec_verification: pass (15/15)（AC-004 经 Convergence 修补轮后复验通过：legacy=126 ≤ index=127、污染块=0）
+- gate1_spec_verification: pass (15/15)（AC-004 经 Convergence 修补轮三轮复验通过：终态 legacy=126 ≤ index=127、污染块=0、脏 ts 行=0）
 - gate2_adversarial: pass (0 HIGH) | 证据: docs_rj/check_rj/v104_memory_tag_act_report_adversarial_20260825.md（4H/7M/4L 全修复回填）
-- gate3_consistency: pass (0 HIGH) | 证据: docs_rj/check_rj/v104_memory_tag_act_report_test50_20260825.md §〇（/check 修补轮：BUG-A/BUG-B/数据重建三项修复全验证，组合穿透复验 same=True）
+- gate3_consistency: pass (0 HIGH) | 证据: docs_rj/check_rj/v104_memory_tag_act_report_test50_20260825.md §〇（/check 修补轮：BUG-A/BUG-B/数据重建/脏 ts 修复四项全验证，组合穿透复验 same=True，distill 恢复 10 条）
 - gate4_user_confirm: pending | 说明: 待用户确认 /check 通过后进 /act
 
 ## Sign-off
