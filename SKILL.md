@@ -416,10 +416,12 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 
 ### 记忆双写与全局跟进（write_project 主次跟进，无独立归档步骤）【硬性】
 
-对话中每完成一段实质工作即经 `scripts/memory_shadow_write.write_project(task, content)` 落盘，**写入即归档**——无需手工剪切/移动：
-1. **项目记忆（落盘，必须成功）**：`{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md`（append-only，分钟级时间戳天然按时间排序；跨午夜的两条记忆各落当日文件，无需分流）
-2. **全局聚合（自动 upsert，失败仅告警不阻断——B5 隔离）**：`memory/memory_main.md` 按 `## {项目名}` 分段幂等插入。**禁止手工单文件写 memory_main**（会破坏主次跟进一致性、产生漂移）
+对话中每完成一段实质工作即经 `scripts/memory_shadow_write.write_project(task, content, memory_class=主分类)` 落盘，**写入即归档**——无需手工剪切/移动：
+1. **项目记忆（落盘，必须成功）**：`{项目根}/docs_rj/memory_rj/{主分类}/{YYYYMM}/{task}_memory_YYYYMMDD_HHMM.md`（v1.0.4 标签文件夹结构；主分类 6 选 1，单点常量见 scripts/memory_tags.py，未传时按内容推断、非法值兜底 workflow；跨午夜/跨月各落当月文件夹）
+2. **全局聚合（自动 upsert，失败仅告警不阻断——B5 隔离）**：`memory/memory_main.md` 按 `## {项目名}` 分段写**索引行**（`时间 | task | 主分类 | 重要性 | is_lesson | 摘要 | 正文链接`），正文 source of truth 在项目侧标签文件夹。**禁止手工单文件写 memory_main**（会破坏主次跟进一致性、产生漂移）
 3. **刷新 `{主docs}/SUMMARY_RJ.md`**（见 [summary_view.md](references/common/pa/summary_view.md) §三触发2）
+
+**两层标签设计（v1.0.4）**：第 1 层=主分类（memory_class，决定文件夹，6 固定值保秩序）；第 2 层=自由标签（tags/experience_tags，写在文件内，保灵活）。多分类冲突按 TAG_PRIORITY 人工仲裁（status > decision > pitfall > tech_solution > tool_usage > workflow）；机器推断按特异度仲裁（INFER_ARBITRATION，特异词优先防泛词误归）。
 
 **长期经验（关键决策/约定）**：经 `write_project` 写入全局对应项目分段，始终保留、不参与"当日归档"。分类路由（R5）与失败策略详见 [working_memory_rules.md](references/common/pa/working_memory_rules.md) §2 / §2.1。
 
@@ -1089,7 +1091,8 @@ docs_rj/
    - **立即修复**：优先回 /do 修复 MUST FIX 项（同一会话内）
    - **跨会话降级**：若用户明确说"先关闭，下次修"，记录到 memory + TASK_STATE.md 留痕"MUST FIX 未清零，用户豁免"，允许 status=completed 但标注 `with_known_debt: true`
    - **原因**：历史执行中曾出现 MUST FIX 项从批次前遗留到收尾才修，技术债跨批次累积
-1. **写项目记忆**：经 `write_project(task, content)` 落 `docs_rj/memory_rj/{task}_memory_*.md` + 自动 upsert 全局 `memory/memory_main.md`
+1.5. **互动复盘【v1.0.4 硬性】**：写记忆**之前**，按本次任务内容动态生成 2-3 个针对性问题追问用户（AskUserQuestion 呈现）：至少 1 问教训/风险（"这次哪里最容易再犯？"）+ 1 问决策依据（"为什么选这个方案？"）+ 0-1 问下一步（"下次类似情况第一步做什么？"）。用户回答拼进 content 的`【互动复盘】`段（Q/A 格式），**与步骤 1 同一次 write_project 落盘**（禁止先写盘再问——会产生两个记忆文件）。跳过语义：用户说"跳过/不用"→ SKIPPED 留痕（TASK_STATE 记"用户跳过互动复盘"），不 BLOCKED；/loop auto 无人值守 → 不弹问题自动 SKIPPED+留痕；问题数硬上限 3 个（ADD 用户长任务不超载）。详见 [references/act/persist/act_procedure.md](references/act/persist/act_procedure.md) 步骤 1.5 节
+1. **写项目记忆**：经 `write_project(task, content, memory_class=主分类)` 落 `docs_rj/memory_rj/{主分类}/{YYYYMM}/{task}_memory_*.md`（v1.0.4 标签文件夹结构）+ 全局 `memory/memory_main.md` 索引行（含 task/主分类/重要性/is_lesson/摘要/正文链接）；主分类 6 选 1（tech_solution/pitfall/workflow/tool_usage/decision/status，定义见 scripts/memory_tags.py 单点常量），未传时按内容推断、非法值兜底 workflow
 2. **刷新 `{主docs}/SUMMARY_RJ.md`**（见 references/common/pa/summary_view.md §三触发2）
 3. **跑 `python scripts/handoff_tidy.py --task {任务名}`** 整理归档（含临时文件清理/死引用清理/漂移检查/平台记忆融入/五问预跑/loop_guard ledger 归档/**生成 `docs_rj/memory_rj/TASK_STATE_{task_id}.md`**）；**若 handoff_tidy 失败**（脚本异常/Python 缺失），至少手动 `write_project` 写 memory + 刷 SUMMARY + 手写 TASK_STATE.md，告警用户"handoff_tidy 失败，已手动落盘核心产出，下次 /act 补跑"；**手动 TASK_STATE.md 必须补一行 `learn_distill_pending: true`**（learn/distill 补跑挂起标记——下次 /act 步骤 3.6 检测到即强制补跑，防降级丢步骤【learn_gap_fix】）
 3.5. **刷新 `spec_main_rj.md` §1§2§7 指针目标**【硬性】（数据源=TASK_STATE.md）：§1⑦状态总览链接（Glob 按文件名时间戳取最新，残留 `{xxx}` 占位文字必须替换为实际链接，取不到则保留+告警）、§2⑤任务大纲（最新任务置顶）、§7⑥ADR（新决策加行+TOP5 归档）；不重写 §3§4§5§6，刷新后更新 frontmatter `last_updated`。完整操作细则（Glob 规则/TOP5/降级分支）见 [references/act/persist/act_procedure.md](references/act/persist/act_procedure.md)
