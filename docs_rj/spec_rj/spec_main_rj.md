@@ -3,7 +3,7 @@ title: PDCA-skill spec main registry (empty skeleton)
 version: v1.0.0
 skill_version: v1.0.3
 date_created: 2026-08-23
-last_updated: 2026-08-23
+last_updated: 2026-08-24 22:04
 owner: 86029
 tags: [pdca-skill, skeleton, spec]
 ---

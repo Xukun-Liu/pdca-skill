@@ -1,8 +1,8 @@
 ---
 title: riji-skill
 version: v1.0.0
-last_updated: 2026-08-23 23:23
-total_docs: 101
+last_updated: 2026-08-24 22:04
+total_docs: 110
 require-rule-mention: true
 ---
 
@@ -75,6 +75,12 @@ require-rule-mention: true
 - [memory_rj/v103_t2_clarify_stop_memory_20260822_0033.md](memory_rj/v103_t2_clarify_stop_memory_20260822_0033.md) `最新·2026-08-22 00:33` — v103_t2_clarify_stop_memory_20260822_0033
 - [memory_rj/v103_t3_apply_cross_machine_5fix_memory_20260823_2322.md](memory_rj/v103_t3_apply_cross_machine_5fix_memory_20260823_2322.md) `最新·2026-08-23 23:22` — v103_t3_apply_cross_machine_5fix_memory_20260823_2322
 - [memory_rj/v103t3_ac001_test_memory_20260823_2318.md](memory_rj/v103t3_ac001_test_memory_20260823_2318.md) `最新·2026-08-23 23:18` — v103t3_ac001_test_memory_20260823_2318
+- [memory_rj/TASK_STATE_v103_t3_apply_cross_machine_5fix.md](memory_rj/TASK_STATE_v103_t3_apply_cross_machine_5fix.md) `最新·无时间戳` — TASK_STATE_v103_t3_apply_cross_machine_5fix
+- [memory_rj/v103_sync_github_gitee_memory_20260824_1811.md](memory_rj/v103_sync_github_gitee_memory_20260824_1811.md) `历史·2026-08-24 18:11` — v103_sync_github_gitee_memory_20260824_1811
+- [memory_rj/v103_sync_github_gitee_memory_20260824_1816.md](memory_rj/v103_sync_github_gitee_memory_20260824_1816.md) `历史·2026-08-24 18:16` — v103_sync_github_gitee_memory_20260824_1816
+- [memory_rj/v103_sync_github_gitee_memory_20260824_1837.md](memory_rj/v103_sync_github_gitee_memory_20260824_1837.md) `历史·2026-08-24 18:37` — v103_sync_github_gitee_memory_20260824_1837
+- [memory_rj/v103_sync_github_gitee_memory_20260824_2203.md](memory_rj/v103_sync_github_gitee_memory_20260824_2203.md) `最新·2026-08-24 22:03` — v103_sync_github_gitee_memory_20260824_2203
+- [memory_rj/v103_t3_apply_cross_machine_5fix_handoff_memory_20260823_2323.md](memory_rj/v103_t3_apply_cross_machine_5fix_handoff_memory_20260823_2323.md) `最新·2026-08-23 23:23` — v103_t3_apply_cross_machine_5fix_handoff_memory_20260823_2323
 ## 📋 Spec 文档
 
 需求规格——每个任务一个 spec.md，含 2-3 方案对比，通过 Self-Review。
@@ -108,6 +114,8 @@ require-rule-mention: true
 - [spec_rj/v103_t1_restore_adhd_spec_20260821_1729.md](spec_rj/v103_t1_restore_adhd_spec_20260821_1729.md) `最新·2026-08-21 17:29` — v103_t1_restore_adhd_spec_20260821_1729
 - [spec_rj/v103_t2_clarify_stop_spec_20260822_0020.md](spec_rj/v103_t2_clarify_stop_spec_20260822_0020.md) `最新·2026-08-22 00:20` — v103_t2_clarify_stop_spec_20260822_0020
 - [spec_rj/v103_t3_apply_cross_machine_5fix_spec_20260823_2302.md](spec_rj/v103_t3_apply_cross_machine_5fix_spec_20260823_2302.md) `最新·2026-08-23 23:02` — v103_t3_apply_cross_machine_5fix_spec_20260823_2302
+- [spec_rj/spec_main_rj.md](spec_rj/spec_main_rj.md) `最新·无时间戳` — spec_main_rj
+- [spec_rj/v103_t4_skillhub_release_spec_20260823_2330.md](spec_rj/v103_t4_skillhub_release_spec_20260823_2330.md) `最新·2026-08-23 23:30` — v103_t4_skillhub_release_spec_20260823_2330
 ## ✅ Task 文档
 
 任务清单——每个任务一个 task.md，每条含「怎么做+怎么验证」。
@@ -119,6 +127,7 @@ require-rule-mention: true
 - [task_rj/v103_t1_restore_adhd_task_20260821_1729.md](task_rj/v103_t1_restore_adhd_task_20260821_1729.md) `最新·2026-08-21 17:29` — v103_t1_restore_adhd_task_20260821_1729
 - [task_rj/v103_t2_clarify_stop_task_20260822_0020.md](task_rj/v103_t2_clarify_stop_task_20260822_0020.md) `最新·2026-08-22 00:20` — v103_t2_clarify_stop_task_20260822_0020
 - [task_rj/v103_t3_apply_cross_machine_5fix_task_20260823_2302.md](task_rj/v103_t3_apply_cross_machine_5fix_task_20260823_2302.md) `最新·2026-08-23 23:02` — v103_t3_apply_cross_machine_5fix_task_20260823_2302
+- [task_rj/v103_t4_skillhub_release_task_20260823_2330.md](task_rj/v103_t4_skillhub_release_task_20260823_2330.md) `最新·2026-08-23 23:30` — v103_t4_skillhub_release_task_20260823_2330
 ## 🤝 Handoff 文档
 
 交接文档——当前状态、已完成、待办、阻塞项，30 秒接手。
