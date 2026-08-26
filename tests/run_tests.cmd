@@ -5,6 +5,10 @@ REM 依赖: Python 3.8+ 和 pytest
 
 setlocal
 
+REM v1.0.4: 强制 UTF-8 模式，防 GBK 控制台下子进程 UTF-8 输出解码崩溃
+set PYTHONUTF8=1
+set PYTHONIOENCODING=utf-8
+
 REM 切到项目根(SKILL.md 所在目录)
 cd /d "%~dp0\.."
 

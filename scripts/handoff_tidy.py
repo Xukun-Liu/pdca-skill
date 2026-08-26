@@ -541,7 +541,8 @@ class HandoffTidy:
         guard_script = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'loop_guard.py')
         cmd = [sys.executable, guard_script, 'finalize', '--task-id', self.task_name]
-        proc = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        proc = subprocess.run(cmd, capture_output=True, text=True, check=False,
+                              encoding='utf-8', errors='replace')
         try:
             data = json.loads(proc.stdout) if proc.stdout.strip() else {}
         except json.JSONDecodeError:

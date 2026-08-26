@@ -393,6 +393,7 @@ class TestCLI(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, self.script_path, '--help'],
             capture_output=True, text=True, timeout=10,
+            encoding='utf-8', errors='replace',
         )
         self.assertEqual(result.returncode, 0, f'--help 应退码 0，实际 {result.returncode}')
         self.assertIn('usage', result.stdout.lower(), 'stdout 应含 usage')
@@ -402,6 +403,7 @@ class TestCLI(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, self.script_path, self.project_root, '--json'],
             capture_output=True, text=True, timeout=30,
+            encoding='utf-8', errors='replace',
         )
         self.assertEqual(result.returncode, 0, f'项目根应退码 0，实际 {result.returncode}')
         try:
@@ -600,6 +602,7 @@ class TestExitCodes(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, self.script_path, self.project_root],
             capture_output=True, text=True, timeout=30,
+            encoding='utf-8', errors='replace',
         )
         self.assertEqual(result.returncode, 0, f'项目根应退码 0，实际 {result.returncode}')
 
@@ -609,6 +612,7 @@ class TestExitCodes(unittest.TestCase):
         result = subprocess.run(
             [sys.executable, self.script_path, invalid_path],
             capture_output=True, text=True, timeout=10,
+            encoding='utf-8', errors='replace',
         )
         self.assertEqual(result.returncode, 1, f'路径不存在应退码 1，实际 {result.returncode}')
         self.assertIn('错误', result.stderr, f'stderr 应含错误提示，实际 {result.stderr}')
@@ -619,6 +623,7 @@ class TestExitCodes(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, self.script_path, tmp],
                 capture_output=True, text=True, timeout=10,
+                encoding='utf-8', errors='replace',
             )
             self.assertEqual(result.returncode, 2, f'空目录应退码 2，实际 {result.returncode}')
 

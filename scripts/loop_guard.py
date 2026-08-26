@@ -306,6 +306,7 @@ def count_changed_files(root='.'):
         rev_result = subprocess.run(
             ['git', 'rev-parse', '--is-inside-work-tree'],
             cwd=root, capture_output=True, text=True, timeout=2,
+            encoding='utf-8', errors='replace',
         )
         if rev_result.returncode != 0 or rev_result.stdout.strip() != 'true':
             return -1  # 非 git 仓库
@@ -316,12 +317,14 @@ def count_changed_files(root='.'):
         diff_result = subprocess.run(
             ['git', 'diff', '--name-only'],
             cwd=root, capture_output=True, text=True, timeout=2,
+            encoding='utf-8', errors='replace',
         )
         diff_files = diff_result.stdout.strip().split('\n') if diff_result.stdout.strip() else []
 
         untracked_result = subprocess.run(
             ['git', 'ls-files', '--others', '--exclude-standard'],
             cwd=root, capture_output=True, text=True, timeout=2,
+            encoding='utf-8', errors='replace',
         )
         untracked_files = untracked_result.stdout.strip().split('\n') if untracked_result.stdout.strip() else []
 
@@ -370,6 +373,7 @@ def check_loop_allow(task_id, root='.'):
         result = subprocess.run(
             ['git', 'rev-parse', '--is-inside-work-tree'],
             cwd=root, capture_output=True, text=True, timeout=2,
+            encoding='utf-8', errors='replace',
         )
         checks['git_repo'] = result.returncode == 0 and result.stdout.strip() == 'true'
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):

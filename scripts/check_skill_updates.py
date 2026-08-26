@@ -86,6 +86,7 @@ def _run_git(args, cwd, timeout=_DEFAULT_TIMEOUT):
             text=True,
             timeout=timeout,
             shell=False,
+            encoding='utf-8', errors='replace',
         )
         return result
     except FileNotFoundError:

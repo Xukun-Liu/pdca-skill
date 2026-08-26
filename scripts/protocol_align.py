@@ -89,6 +89,7 @@ def detect_git_changed_files(cwd, timeout=10):
             text=True,
             timeout=timeout,
             shell=False,
+            encoding='utf-8', errors='replace',
         )
     except FileNotFoundError:
         # git 可执行文件不存在（未装 git）

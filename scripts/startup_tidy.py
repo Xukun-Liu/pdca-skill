@@ -325,6 +325,7 @@ def check_skill_update(skill_dir):
                 capture_output=True,
                 text=True,
                 timeout=30,
+                encoding='utf-8', errors='replace',
             )
         except subprocess.TimeoutExpired:
             logger.warning("skill 更新检查：执行超时（>30s）")

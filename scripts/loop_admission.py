@@ -358,6 +358,7 @@ def detect_loop_activity(root: Path) -> tuple[bool, list[str]]:
         rev_result = subprocess.run(
             ['git', 'rev-parse', '--is-inside-work-tree'],
             cwd=str(root), capture_output=True, text=True, timeout=1.5,
+            encoding='utf-8', errors='replace',
         )
         if rev_result.returncode != 0 or rev_result.stdout.strip() != 'true':
             # 非 git 仓库 → 降级到 ③④
@@ -369,6 +370,7 @@ def detect_loop_activity(root: Path) -> tuple[bool, list[str]]:
         log_result = subprocess.run(
             ['git', 'log', '-1', '--format=%H %ci'],
             cwd=str(root), capture_output=True, text=True, timeout=1.5,
+            encoding='utf-8', errors='replace',
         )
         if log_result.returncode == 0 and log_result.stdout.strip():
             return (True, [f'git log: {log_result.stdout.strip()[:80]}'])

@@ -42,6 +42,17 @@ EXCLUDE_PATTERNS = [
     r"^\.pdca-skill/",  # 本地外置目录（若误放包内）
     r"^_test_run/",  # 测试运行快照（本地临时产物，不进发布包）
     r"^agents_rj/subagent_call_log\.jsonl$",  # 副 agent 调用日志（运行时产物，不进发布包）
+    # ── v1.0.4 发布包质量修复（实测测试报告 P0/P1，2026-08-26）──
+    r"^\.primary_docs_rj$",            # P0: 开发机 marker（内含开发机绝对路径，绝不能进包）
+    r"^\.gitignore$",                 # 开发文件（git 元数据不随包分发）
+    r"^_sync_tmp/",                   # 同步临时目录（含旧版脚本副本，与正式 scripts/ 不一致）
+    r"^package_.*\.log$",             # 打包日志（内含开发机路径）
+    r"^T000_backup\.sha256$",         # 备份校验残留
+    r"_out\.txt$",                    # 运行时输出残留（handoff_tidy_out.txt 等）
+    r"^\.playwright-mcp/",            # 浏览器调试残留
+    r"^网页说明\.html$",               # skillhub 发布展示页（发布者手动上传用，用户无需）
+    r"^scripts/verify_zip\.ps1$",     # 开发打包辅助脚本（硬编码版本，随包无用）
+    r"^scripts/test_loop_admission\.py$",  # 测试文件误放 scripts/（历史保留原地，仅排除出包）
     # 发布骨架例外：以下文件必须进发布包（使用者首次启动需读这些空骨架）
     # 通过 _should_exclude 返回 False 后再继续判断其他规则
 ]

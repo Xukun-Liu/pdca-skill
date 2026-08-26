@@ -41,7 +41,8 @@ from find_similar import (
 def _run_script(*args):
     """辅助：运行 find_similar.py 子命令。"""
     cmd = [sys.executable, "scripts/find_similar.py"] + list(args)
-    return subprocess.run(cmd, capture_output=True, text=True, cwd=SKILL_ROOT)
+    return subprocess.run(cmd, capture_output=True, text=True, cwd=SKILL_ROOT,
+                          encoding='utf-8', errors='replace')
 
 
 class TestListCommand:

@@ -20,7 +20,8 @@ def _run_dispatch(task, json_flag=False):
     if json_flag:
         cmd.append("--json")
     return subprocess.run(
-        cmd, capture_output=True, text=True, cwd=SKILL_ROOT
+        cmd, capture_output=True, text=True, cwd=SKILL_ROOT,
+        encoding='utf-8', errors='replace',
     )
 
 

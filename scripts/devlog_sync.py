@@ -77,6 +77,7 @@ def get_actor(cwd=None):
             capture_output=True,
             text=True,
             timeout=5,
+            encoding='utf-8', errors='replace',
         )
         if result.returncode != 0:
             logger.debug('git config user.name 返回非零: %s', result.stderr.strip())

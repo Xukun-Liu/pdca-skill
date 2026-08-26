@@ -226,6 +226,7 @@ class TestMainSmoke:
              "--source", "pdca", "--skill-dir", str(skill_dir),
              "--skip-taxonomy", "--no-cache", "--output", str(out)],
             capture_output=True, text=True, timeout=120,
+            encoding='utf-8', errors='replace',
             env={**os.environ, "PYTHONIOENCODING": "utf-8",
                  "PDCA_DATA_DIR": str(data_dir)},
         )

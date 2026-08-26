@@ -444,6 +444,7 @@ def get_changed_files():
         result = subprocess.run(
             ['git', 'diff', '--cached', '--name-only'],
             capture_output=True, text=True, timeout=5,
+            encoding='utf-8', errors='replace',
         )
         if result.returncode == 0:
             return [f.strip() for f in result.stdout.split('\n') if f.strip()]
@@ -502,6 +503,7 @@ def cmd_check_last(args):
         result = subprocess.run(
             ['git', 'log', f'-{n}', '--pretty=format:%H%n%B%n---END---'],
             capture_output=True, text=True, timeout=10,
+            encoding='utf-8', errors='replace',
         )
         if result.returncode != 0:
             print(json.dumps({
