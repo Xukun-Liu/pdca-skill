@@ -213,3 +213,67 @@ class TestPackageSkill:
         assert os.path.exists(zip_path)
         report = package_skill._verify_package(zip_path)
         assert report["valid"] is True
+
+
+class TestSkeletonTemplates:
+    """v1.0.4 B7 白名单骨架模板化：zip 内骨架内容 ≡ 模板/内置骨架，活数据禁入"""
+
+    def _make_minimal_root(self, tmp_path):
+        root = tmp_path / "root"
+        root.mkdir()
+        (root / "SKILL.md").write_text("# minimal", encoding="utf-8")
+        return root
+
+    def test_fallback_injected_when_assets_missing(self, tmp_path):
+        """assets 模板缺失时，SUMMARY/spec_main 写入内置骨架且活数据被强制覆盖"""
+        root = self._make_minimal_root(tmp_path)
+        docs_rj = root / "docs_rj"
+        (docs_rj / "spec_rj").mkdir(parents=True)
+        (docs_rj / "SUMMARY_RJ.md").write_text(
+            "# live data total_docs: 112 owner: 86029", encoding="utf-8")
+        (docs_rj / "spec_rj" / "spec_main_rj.md").write_text(
+            "# live spec", encoding="utf-8")
+        out_dir = str(tmp_path / "out")
+        zip_path = package_skill.package_skill("vT-fb", out_dir, str(root))
+        with zipfile.ZipFile(zip_path) as zf:
+            summary = zf.read("docs_rj/SUMMARY_RJ.md").decode("utf-8")
+            spec = zf.read("docs_rj/spec_rj/spec_main_rj.md").decode("utf-8")
+        assert summary == package_skill._SKELETON_FALLBACKS["docs_rj/SUMMARY_RJ.md"]
+        assert spec == package_skill._SKELETON_FALLBACKS["docs_rj/spec_rj/spec_main_rj.md"]
+        report = package_skill._verify_package(zip_path)
+        assert report["valid"] is True
+
+    def test_template_wins_when_assets_present(self, tmp_path):
+        """assets 模板存在时优先写模板内容，而非内置骨架"""
+        root = self._make_minimal_root(tmp_path)
+        assets = root / "assets"
+        assets.mkdir()
+        (assets / "summary_template.md").write_text(
+            "# summary template sentinel", encoding="utf-8")
+        docs_rj = root / "docs_rj"
+        docs_rj.mkdir()
+        (docs_rj / "SUMMARY_RJ.md").write_text(
+            "# dev machine live data", encoding="utf-8")
+        out_dir = str(tmp_path / "out")
+        zip_path = package_skill.package_skill("vT-tpl", out_dir, str(root))
+        with zipfile.ZipFile(zip_path) as zf:
+            content = zf.read("docs_rj/SUMMARY_RJ.md").decode("utf-8")
+        assert content == "# summary template sentinel"
+        assert content != package_skill._SKELETON_FALLBACKS["docs_rj/SUMMARY_RJ.md"]
+
+    def test_memory_skeleton_version_and_no_live_data(self, tmp_path):
+        """memory_main 一律写入内置纯净骨架并完成 {version} 替换，磁盘活数据不进包"""
+        root = self._make_minimal_root(tmp_path)
+        memory = root / "memory"
+        memory.mkdir()
+        (memory / "memory_main.md").write_text(
+            "# live owner: 86029 total_docs: 112 title: riji-skill", encoding="utf-8")
+        out_dir = str(tmp_path / "out")
+        zip_path = package_skill.package_skill("vT-mem", out_dir, str(root))
+        with zipfile.ZipFile(zip_path) as zf:
+            content = zf.read("memory/memory_main.md").decode("utf-8")
+        expected = package_skill._MEMORY_MAIN_SKELETON_TEMPLATE.format(version="vT-mem")
+        assert content == expected
+        assert "total_docs: 112" not in content
+        report = package_skill._verify_package(zip_path)
+        assert report["valid"] is True
