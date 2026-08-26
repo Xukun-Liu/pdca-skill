@@ -10,6 +10,8 @@ migrate_memory_v104.py — v1.0.4 存量记忆迁移脚本（一次性）
      memory_rj 扁平 *_memory_*.md → {tag}/{YYYYMM}/ 深层（物理移动，原文件删除前已备份）
   4. 对账校验：迁移前条目数 == 索引行数 == legacy_body 文件数；扁平文件数 == 深层文件数
   5. 写 .schema_version（structure=tag_folder_monthly）
+     （位置在外置 DATA_DIR 根下，即 ~/.pdca-skill/data/.schema_version，
+       与 memory/ 子目录平级——不在 memory/ 内，标志整个数据域 schema 版本）
 
 用法：
   python scripts/migrate_memory_v104.py                 # 迁外置数据目录

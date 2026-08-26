@@ -188,12 +188,26 @@ def _extract_summary(content, limit=40):
     return '（无摘要）'
 
 
+def _index_line_time_key(line):
+    """提取索引行时间戳作排序键（'- YYYY-MM-DD HH:MM | task | ...'）。
+
+    v1.0.4 修复（实测报告 P2）：追加式写入会让分段内索引行时间乱序，
+    本 key 供 stable sort 用。解析失败/脏行返回 '9999' 排块尾，不阻塞正常行顺序。
+    """
+    m = re.match(r'^-\s*(\d{4}-\d{2}-\d{2} \d{2}:\d{2})\s*\|', line)
+    return m.group(1) if m else '9999'
+
+
 def upsert_global_index(project_name, task, index_line):
     """幂等把一行索引 upsert 进全局 memory_main.md 的 ``## {project_name}`` 分段（v1.0.4）。
 
     与 upsert_global_memory 的分工：本函数只写一行索引（时间|主分类|重要性|is_lesson|摘要|正文链接），
     正文完整条目在项目侧标签文件夹内（source of truth）。同 task 旧索引行被替换（保最新），
     语义对齐 upsert_global_memory 的"每 task 保 1 条最新"。
+
+    v1.0.4 修复（实测报告 P2）：
+      ① 同 task 历史可能残留多行 → 全部清除只保留最新 1 行；
+      ② 分段内索引行区按时间戳升序 stable 排序，修复纯追加导致的时间乱序。
     """
     heading = '## %s' % project_name
     if not os.path.isfile(GLOBAL_MEMORY_FILE):
@@ -236,20 +250,36 @@ def upsert_global_index(project_name, task, index_line):
                 seg_end -= (block_end - j)
                 continue
             j += 1
-        # 分段内找同 task 索引行（以 "- " 开头且含 task_key）
-        for j in range(seg_idx + 1, seg_end):
-            if lines[j].startswith('- ') and task_key in lines[j]:
-                lines[j] = index_line  # 替换为最新
-                generate_docs.atomic_write(GLOBAL_MEMORY_FILE, '\n'.join(lines))
-                return
-        # 无同 task 行 → 插到分段内已有的索引行块尾部（### 完整条目块之前），
-        # 保持"索引行区在上、历史完整 block 区在下"的段内布局
-        insert_at = seg_idx + 1
-        while insert_at < seg_end and lines[insert_at].strip() == '':
-            insert_at += 1
-        while insert_at < seg_end and lines[insert_at].startswith('- '):
-            insert_at += 1
-        lines.insert(insert_at, index_line)
+        # 分段内收集全部同 task 索引行（"- " 开头且含 task_key）
+        hits = [j for j in range(seg_idx + 1, seg_end)
+                if lines[j].startswith('- ') and task_key in lines[j]]
+        if hits:
+            # v1.0.4 P2 去重：历史可能残留多行同 task，倒序全删，第一处替换为最新
+            for j in reversed(hits[1:]):
+                del lines[j]
+                seg_end -= 1
+            lines[hits[0]] = index_line
+        else:
+            # 无同 task 行 → 插到分段内已有的索引行块尾部（### 完整条目块之前），
+            # 保持"索引行区在上、历史完整 block 区在下"的段内布局
+            insert_at = seg_idx + 1
+            while insert_at < seg_end and lines[insert_at].strip() == '':
+                insert_at += 1
+            while insert_at < seg_end and lines[insert_at].startswith('- '):
+                insert_at += 1
+            lines.insert(insert_at, index_line)
+
+        # v1.0.4 P2 时间严格排序：分段头部连续索引行块按时间戳升序 stable sort
+        # （脏行 key='9999' 排块尾；同时间戳保持原有相对次序）
+        blk_start = seg_idx + 1
+        while blk_start < len(lines) and lines[blk_start].strip() == '':
+            blk_start += 1
+        blk_end = blk_start
+        while blk_end < len(lines) and lines[blk_end].startswith('- '):
+            blk_end += 1
+        lines[blk_start:blk_end] = sorted(lines[blk_start:blk_end],
+                                          key=_index_line_time_key)
+
         generate_docs.atomic_write(GLOBAL_MEMORY_FILE, '\n'.join(lines))
         return
 
