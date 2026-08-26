@@ -108,14 +108,14 @@ with open("数据.md", "w", encoding="utf-8") as f:
 
 | 场景 | 问题 | 处理方式 |
 |------|------|----------|
-| **公式** | 转 MD 只保留当前值，不保留公式 | 需要公式时在 `excel_analysis.md` 中用 openpyxl 读公式（`data_only=False`），或保留 `xlsx` 原文件 |
+| **公式** | 转 MD 只保留当前值，不保留公式 | 需要公式时在 `data_analysis.md` 中用 openpyxl 读公式（`data_only=False`），或保留 `xlsx` 原文件 |
 | **合并单元格** | 合并格只保留左上角值，其余为 NaN | 转前先用 pandas `ffill()` 填充合并值 |
 | **多级表头** | 转 MD 后表头可能变 MultiIndex | 转前 `df.columns = ['_'.join(col).strip() for col in df.columns]` 拉平 |
 | **日期格式** | 转 MD 后日期可能变时间戳 | 转前 `df['日期'] = df['日期'].astype(str)` 固化字符串 |
 | **大数据量（>10万行）** | MD 文件过大（>10MB），AI 读取困难 | 先抽样（`df.sample(1000)`）或只转关键列 |
-| **条件格式/颜色** | MD 无颜色概念，语义色丢失 | 颜色编码见 `excel_analysis.md` §十六，转 MD 前用额外列标注语义 |
+| **条件格式/颜色** | MD 无颜色概念，语义色丢失 | 颜色编码见 `data_analysis.md` §十六，转 MD 前用额外列标注语义 |
 
-> 需要先分析再转 MD（如清洗→透视→转 MD 做报告）？测 `excel_analysis.md` 的分析流程，再做转换。
+> 需要先分析再转 MD（如清洗→透视→转 MD 做报告）？测 `data_analysis.md` 的分析流程，再做转换。
 
 ---
 
@@ -150,7 +150,7 @@ pip install --index-url <私有源URL> \
 - [ ] 如涉及扫描件 PDF，已说明"离线无法 OCR，转不出文字"
 - [ ] 叠加 acceptance_criteria.md 的 4 道质量闸门（规格自检 → diff 复查 → 测试证据 → 你签收）
 
-> 本模块与 office_processing.md（二期，管"读写 Office 文件"）、excel_analysis.md（三期，管"分析 Excel"）分工明确：**本模块只管"转成 MD"这一条单向通道**。
+> 本模块与 office_processing.md（二期，管"读写 Office 文件"）、data_analysis.md（三期，管"分析 Excel"）分工明确：**本模块只管"转成 MD"这一条单向通道**。
 
 ---
 

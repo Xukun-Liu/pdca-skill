@@ -277,7 +277,7 @@ document.addEventListener('keydown', e => {
 | 处理已有 Office 文件（读/写/改 .pptx 等） | **[office_processing.md](office_processing.md)**（D.code，文件操作层） |
 | Office 文件转 Markdown | **[file_to_markdown.md](file_to_markdown.md)**（D.code） |
 | 画示意图/速览图/报告顶图（非网页非 PPT） | **[hand-drawn-report.md](../../common/da/hand-drawn-report.md)**（D+A，手绘 SVG） |
-| 数据分析 + 图表方法 | **[excel_analysis.md](../../common/pd/excel_analysis.md)**（P+D，第十七章可视化设计原则） |
+| 数据分析 + 图表方法 | **[data_analysis.md](../../common/pd/data_analysis.md)**（P+D，第十七章可视化设计原则） |
 | 网页/PPT 视觉 QA 交子代理 | **[subagents_rj.md](../../common/pda/subagents_rj.md)**（doc_proc_agent） |
 
 > 关系：office_processing 管"PPT 文件怎么读写"，本文档管"HTML/PPT 怎么做得好"（视觉方法论 + 可执行骨架），两者互补。

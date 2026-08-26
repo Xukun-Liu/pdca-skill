@@ -299,7 +299,7 @@
 - references/do/code/office_processing.md
 - references/do/code/file_to_markdown.md
 - references/do/code/html_ppt_creation.md
-- references/common/pd/excel_analysis.md
+- references/common/pd/data_analysis.md
 - references/common/da/hand-drawn-report.md
 
 **触发关键词**：

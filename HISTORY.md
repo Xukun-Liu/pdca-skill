@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
-version: v1.0.4
-last_updated: 2026-08-25
+version: v1.0.5
+last_updated: 2026-08-26
 author: huihui
 ---
 
@@ -104,7 +104,7 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        ── 详情：CHANGELOG_v1.0.3.md（4 任务 7 commit）
                        ── 平台：https://www.skillhub.cn/skills/user_9b3f5380/huihui（v1.0.2 → v1.0.3 同步）
                        ── 备注：源目录名因 OS Rename-Item Access Denied 暂保留 v1.0.2_开发环境，SKILL.md version 字段为权威 v1.0.3 标识
-2026-08-25  v1.0.4     🚀 三痛点体系化改造（当前版本）
+2026-08-25  v1.0.4     🚀 三痛点体系化改造
                        ── 痛点1 记忆文件夹制：6 主分类（tech_solution/pitfall/workflow/tool_usage/decision/status）
                          + {标签}/{YYYYMM}/ 两层文件夹 + memory_main.md 索引化（索引行直达正文）+ memory_tags.py
                          单点常量 + migrate_memory_v104.py 全量迁移（126 条对账 equal + 110 扁平文件迁深层 +
@@ -119,6 +119,17 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        ── 工程记忆：迁移实测教训——启发式"完成/状态"泛词致 81% 误归 status，改为
                          INFER_ARBITRATION 特异度仲裁（决策入坑已写 memory_tags.py 注释）
                        ── 测试：226 passed（+26 新增：tags 18 + migrate 4 + distill v1.0.4 3 + 修正 1）
+2026-08-26  v1.0.5     🚀 数据融合升级 + 导师型改造（当前版本）
+                       ── 数据参考融合：excel_analysis.md → data_analysis.md（v2.0.0），内容从"Excel 分析"
+                         扩展为"数据全流程方法论"，融入 huashu-excel 12 项防错机制（结构体检三问/对账四道/
+                         独立质控七问/Twyman's Law 五问排查/抗差统计/图表感知精度阶梯/洞察三层/探索vs推断红线/
+                         口径哲学/七条红线），核心命题"AI 数据分析最致命缺陷是算错不报错"
+                       ── SKILL.md 导师型改造：引入层身份宣言式重写 + 三定位"是什么"→"让你敢做什么" +
+                         新增"你相信什么"信条节（7 条铁律配存在理由+引导问，硬规则零改动，Chesterton's Fence）+
+                         Agent 人格对齐 Coaching Style
+                       ── 全库引用同步：references/index.md + office_processing + file_to_markdown 等
+                         8 处 excel_analysis 引用改名 data_analysis（AC-2 死引用清零）
+                       ── 致谢：huashu-excel / summit-claude-skills(mentor-attia) / obra-superpowers / anthropics-skills
 ```
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
@@ -278,6 +289,9 @@ riji-skill 的诞生离不开以下开源项目的启发与对标,正是在反�
 | **Graphiti Bi-Temporal** | 冷记忆时间维度 |
 | **Yuzc-001/hand-drawn-note-generator** | 手绘呈现能力的设计思想(clean-room 重写) |
 | **agentmemory** | 集中式记忆服务器架构 |
+| **huashu-excel** | 数据分析防错 12 项机制（结构体检三问 / 对账四道 / 独立质控七问 / Twyman's Law 五问排查 / 抗差统计 / 图表感知精度阶梯 / 洞察三层 / 探索vs推断红线 / 口径哲学 / 七条红线）——核心命题"AI 数据分析最致命缺陷是算错不报错" |
+| **summit-claude-skills（mentor-attia 模式）** | 导师型口吻（框架 + Ask 提问 + Coaching Style：不急着给答案，先问目标、你的理解，再引导你自己走到结论） |
+| **obra/superpowers** | 伙伴口吻 mentor 模式（ceremony scales with the task：仪式感随任务轻重伸缩） |
 
 > 没有这些先行者的探索,就没有 riji-skill 的今天。本框架的每一条规则,都能在这些项目中找到思想源头。
 

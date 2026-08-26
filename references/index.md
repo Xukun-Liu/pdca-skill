@@ -94,7 +94,7 @@ references/
 | 偏离自检/感觉不对 | `check/`（red_flags） |
 | 交接/同步/整理 | `common/da/`（sync-matrix, hand-drawn-report, git_backup_cleanup） |
 | 学习进化/prompt 优化 | `act/learn/` |
-| 处理 Office/PDF/Excel | `do/code/`（office_processing, file_to_markdown）+ `common/pd/`（excel_analysis） |
+| 处理 Office/PDF/Excel | `do/code/`（office_processing, file_to_markdown）+ `common/pd/`（data_analysis） |
 | 找/装/建外部 skill | `plan/route/`（skill_management, skill_security, skill_creation, agent_find） |
 | 多项目管理 | `plan/bootstrap/`（multi_project） |
 | 上下文压缩恢复 | `plan/bootstrap/`（compaction_recovery）+ `common/pa/`（working_memory_rules） |
@@ -117,7 +117,7 @@ references/
 | acceptance_criteria.md | common/pc/ | P.design C.verify | main + spec_design |
 | adversarial_review.md | common/pc/ | P.design C.adversarial | main + spec_design + learn_opt |
 | minimal_code_principles.md | common/pd/ | P.design D.code | main + bootstrap |
-| excel_analysis.md | common/pd/ | P.design D.code | main + doc_proc |
+| data_analysis.md | common/pd/ | P.design D.code | main + doc_proc |
 | document_specs.md | common/pda/ | P.design D.code A.handoff | main + spec_design |
 | subagents_rj.md | common/pda/ | P.route D.code A.handoff | main（元数据） |
 | communication_rules.md | common/dc/ | D.comm C.verify | main + code_eng |
@@ -213,7 +213,7 @@ references/
 | skill_mgmt_agent | 4 | plan/route/{skill_management, skill_security, skill_creation, agent_find}.md |
 | spec_design_agent | 3 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md |
 | code_eng_agent | 7 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md |
-| doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown, html_ppt_creation}.md · common/pd/excel_analysis.md · common/da/hand-drawn-report.md |
+| doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown, html_ppt_creation}.md · common/pd/data_analysis.md · common/da/hand-drawn-report.md |
 | loop_agent | 3 | plan/route/loop_triage.md · do/danger/loop_constraints.md · check/loop_verifier.md |
 | learn_opt_agent | 4 | act/learn/{learn_cycle, prompt_optimization, skill_graph}.md · common/pc/adversarial_review.md |
 | sync_agent | 3 | common/da/{sync-matrix, hand-drawn-report}.md · common/pa/summary_view.md |
@@ -242,7 +242,7 @@ references/
 | acceptance_criteria.md | common/pc/ | main + spec_design |
 | adversarial_review.md ⭐ | common/pc/ | main + spec_design + learn_opt |
 | minimal_code_principles.md | common/pd/ | main + bootstrap |
-| excel_analysis.md | common/pd/ | main + doc_proc |
+| data_analysis.md | common/pd/ | main + doc_proc |
 | document_specs.md | common/pda/ | main + spec_design |
 | subagents_rj.md | common/pda/ | main(元数据) |
 | communication_rules.md | common/dc/ | main + code_eng |
@@ -294,7 +294,7 @@ references/
 | v1.1.0 | 2026-08-01 | SKILL.md 瘦身同步：登记 5 个模块（memory_governance/writing_style/goal_brief 补登记 + insert_new_task/act_procedure 新增）；目录/计数/agent 引用更新 |
 | v1.2.0 | 2026-08-06 | 融合文章写作模块：41→47、common 16→22、style 1→7（article-writing 入口 + 5 子模块）；2.1 补嵌套例外条款；顺手修 agent 知识库计数漂移（bootstrap 11→10 / spec_design 5→3 / code_eng 8→7 / doc_proc 5→4，以 subagents_rj.md 正向配置为权威源） |
 | v1.2.1 | 2026-08-06 | 对抗审查第 1 轮修复：common 21→22、style 6→7、分类规则表 style 行 1→7（补入口文件计数）；速查表 memory_governance/goal_brief 引用范围列对齐 main；头部版本同步 v1.2.1 |
-| v1.2.2 | 2026-08-10 | excel_analysis.md v1.0.0→v1.1.0 内容变更触发索引版本刷新（新增7章方法论：数据质量评估/趋势分析/结构拆解/异常识别/可视化升级/报告合成/数据合并；描述列/PDCA标签/引用范围均不变；SKILL.md §3 资源索引描述同步更新）|
+| v1.2.2 | 2026-08-10 | data_analysis.md v1.0.0→v1.1.0 内容变更触发索引版本刷新（新增7章方法论：数据质量评估/趋势分析/结构拆解/异常识别/可视化升级/报告合成/数据合并；描述列/PDCA标签/引用范围均不变；SKILL.md §3 资源索引描述同步更新）|
 | v1.2.3 | 2026-08-13 | 融合 HTML/PPT 制作：新增 html_ppt_creation.md（D.code），47→48、do 8→9、code 5→6、doc_proc_agent 4→5；速查表 + 反向索引同步 |
 | v1.2.4 | 2026-08-20 | 融合建 Skill 参考：新增 skill_creation.md（P.route，方法论提炼自外部开源资产，归属见包级 NOTICE），48→49、plan 11→12、route 5→6、skill_mgmt_agent 3→4；速查表 + 正/反向索引同步 |
 | v1.2.5 | 2026-08-20 | 对抗审查修复（14 HIGH）：目录树/分类表 plan·route 计数同步（11→12、5→6）、§6.2 反向索引表补 skill_creation.md 行（修正 v1.2.4"反向索引同步"未兑现）、subagents_rj/config json 权威源同步（见各文件自身版本） |
