@@ -3,7 +3,7 @@ name: pdca-skill
 description: 协作框架 + 技能编排器。自身不实现具体能力，只负责跨任务硬规则（7条铁律/HARD-GATE/Memory First/触发钩子路由）与按需加载 references/ 下的专业模块；每次对话自动加载，全局生效。
 agent_created: true
 license: Non-Commercial Source-Available License v1.0
-version: "v1.0.5"
+version: "v1.0.4"
 author: pdca-skill contributors
 keywords:
   - 协作框架
@@ -14,7 +14,7 @@ keywords:
 category: workflow
 ---
 
-<!-- Skill 版本：v1.0.5 | 更新：2026-08-26 | 历史变更详见 HISTORY.md -->
+<!-- Skill 版本：v1.0.4 | 更新：2026-08-26 | 历史变更详见 HISTORY.md -->
 
 # pdca skill
 

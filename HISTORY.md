@@ -1,6 +1,6 @@
 ---
 title: pdca-skill 版本历史
-version: v1.0.5
+version: v1.0.4
 last_updated: 2026-08-26
 author: huihui
 ---
@@ -119,7 +119,7 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        ── 工程记忆：迁移实测教训——启发式"完成/状态"泛词致 81% 误归 status，改为
                          INFER_ARBITRATION 特异度仲裁（决策入坑已写 memory_tags.py 注释）
                        ── 测试：226 passed（+26 新增：tags 18 + migrate 4 + distill v1.0.4 3 + 修正 1）
-2026-08-26  v1.0.5     🚀 数据融合升级 + 导师型改造（当前版本）
+2026-08-26  v1.0.4     🚀 数据融合升级 + 导师型改造（当前版本，并入 v1.0.4）
                        ── 数据参考融合：excel_analysis.md → data_analysis.md（v2.0.0），内容从"Excel 分析"
                          扩展为"数据全流程方法论"，融入 huashu-excel 12 项防错机制（结构体检三问/对账四道/
                          独立质控七问/Twyman's Law 五问排查/抗差统计/图表感知精度阶梯/洞察三层/探索vs推断红线/
