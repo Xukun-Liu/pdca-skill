@@ -5,7 +5,16 @@ $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $distDir = Join-Path $projectRoot "dist"
-$latestZip = Get-ChildItem -Path $distDir -Filter "pdca-skill-v1.0.3-*.zip" |
+
+# v1.0.4: 版本号从 SKILL.md frontmatter 动态读取，不再硬编码（防版本漂移）
+$skillMd = Get-Content (Join-Path $projectRoot "SKILL.md") -Raw -Encoding UTF8
+if ($skillMd -match 'version:\s*"?v?(\d+\.\d+\.\d+)"?') {
+    $skillVersion = $Matches[1]
+} else {
+    Write-Host "ERROR: cannot read version from SKILL.md"
+    exit 1
+}
+$latestZip = Get-ChildItem -Path $distDir -Filter "pdca-skill-v$skillVersion-*.zip" |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
 $zipPath = $latestZip.FullName

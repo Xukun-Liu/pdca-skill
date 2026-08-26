@@ -1,7 +1,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.0.3-green.svg)](HISTORY.md)
+[![Version](https://img.shields.io/badge/version-v1.0.4-green.svg)](HISTORY.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 

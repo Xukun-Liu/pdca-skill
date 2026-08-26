@@ -582,6 +582,73 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
             return (True, 'evals.json JSON 版本号格式正确: %s' % ver, False)
         return (False, 'evals.json 缺少 version 字段或格式错误', False)
 
+    # ---- [scripts] SCR-13: 五方版本号联动一致（v1.0.4 发布包质量修复）----
+    def c_version_consistency():
+        """五方版本一致探针：SKILL.md frontmatter == HISTORY.md frontmatter ==
+        HISTORY.md 页脚 == README.md 徽章 == evals.json version。
+        防「一个以版本联动为核心纪律的框架自己版本漂移」（实测报告 P1）。"""
+        import re
+        import json
+
+        def _extract_version(text, pattern, label, errors):
+            m = re.search(pattern, text)
+            if not m:
+                errors.append('%s 未找到版本号' % label)
+                return None
+            return m.group(1)
+
+        errors = []
+        # ① SKILL.md frontmatter（version: "v1.0.4" 或 version: v1.0.4）
+        skill_ver = _extract_version(
+            skill_md, r'version:\s*"?v(\d+\.\d+\.\d+)"?', 'SKILL.md frontmatter', errors)
+        # ② HISTORY.md frontmatter
+        hist_path = os.path.join(skill_dir, 'HISTORY.md')
+        try:
+            with open(hist_path, 'r', encoding='utf-8') as f:
+                hist_content = f.read()
+        except Exception as e:
+            return (False, '读取 HISTORY.md 失败: %s' % e, False)
+        hist_ver = _extract_version(
+            hist_content, r'version:\s*v(\d+\.\d+\.\d+)', 'HISTORY.md frontmatter', errors)
+        # ③ HISTORY.md 页脚（**版本**:v1.0.4 | ...）
+        hist_footer_ver = _extract_version(
+            hist_content, r'\*\*版本\*\*:\s*v(\d+\.\d+\.\d+)', 'HISTORY.md 页脚', errors)
+        # ④ README.md 徽章（version-v1.0.4-green）
+        readme_path = os.path.join(skill_dir, 'README.md')
+        try:
+            with open(readme_path, 'r', encoding='utf-8') as f:
+                readme_content = f.read()
+        except Exception as e:
+            return (False, '读取 README.md 失败: %s' % e, False)
+        readme_ver = _extract_version(
+            readme_content, r'version-v(\d+\.\d+\.\d+)-', 'README.md 徽章', errors)
+        # ⑤ evals.json version
+        evals_path = os.path.join(skill_dir, 'evals', 'evals.json')
+        try:
+            with open(evals_path, 'r', encoding='utf-8') as f:
+                evals_ver = json.load(f).get('version', '')
+        except Exception as e:
+            return (False, '读取 evals.json 失败: %s' % e, False)
+        m = re.match(r'v(\d+\.\d+\.\d+)', str(evals_ver))
+        evals_ver_num = m.group(1) if m else None
+        if not evals_ver_num:
+            errors.append('evals.json version 格式错误: %s' % evals_ver)
+
+        versions = {
+            'SKILL.md frontmatter': skill_ver,
+            'HISTORY.md frontmatter': hist_ver,
+            'HISTORY.md 页脚': hist_footer_ver,
+            'README.md 徽章': readme_ver,
+            'evals.json': evals_ver_num,
+        }
+        valid = [v for v in versions.values() if v]
+        if errors:
+            return (False, '版本探针提取失败: %s' % '; '.join(errors), True)
+        if len(set(valid)) != 1:
+            detail = ', '.join('%s=v%s' % (k, v) for k, v in versions.items())
+            return (False, '五方版本不一致（漂移）: %s' % detail, True)
+        return (True, '五方版本一致: v%s' % valid[0], False)
+
     # ---- [routing] ----
     def c_plan_routing():
         lines = skill_md.splitlines()
@@ -1138,6 +1205,7 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
         ('SCR-10', 'references/*.md 引用块版本号格式', 'scripts', c_ref_version_block),
         ('SCR-11', 'HISTORY.md YAML frontmatter 版本号格式', 'scripts', c_history_version_yaml),
         ('SCR-12', 'evals.json JSON 版本号格式', 'scripts', c_evals_version_json),
+        ('SCR-13', '五方版本号联动一致（SKILL/HISTORY frontmatter/HISTORY 页脚/README 徽章/evals.json）', 'scripts', c_version_consistency),
         ('ROUT-01', '/plan 触发+决策树 HARD-GATE', 'routing', c_plan_routing),
         ('ROUT-02', 'references/*.md 链接图可达(无孤儿)', 'routing', c_reference_reachability),
         ('ROUT-03', 'references/*.md 均含阶段标签', 'routing', c_reference_tagged),
