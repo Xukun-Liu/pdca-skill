@@ -104,21 +104,35 @@ def _run_git(args, cwd, timeout=_DEFAULT_TIMEOUT):
 # 4 级 check 函数(任一失败降级,不抛异常)
 # ===========================================================================
 def check_git_available(cwd):
-    """Check 1: 检查 cwd 是 git 仓库(`git rev-parse --is-inside-work-tree`),4s 超时。
+    """Check 1: 检查 cwd 是 git 仓库根(`git rev-parse --show-toplevel`),4s 超时。
+
+    v1.0.4 修复（实测报告 P1 git 上溯）：
+      旧实现只查 `--is-inside-work-tree`，当 cwd 是某上层仓库的子目录时
+      （如技能目录位于用户主目录仓库下）返回 true，导致后续 fetch/rev-list
+      对整个上层仓库执行（隐私 + 性能 + 30s 卡顿）。
+      现改为 `--show-toplevel` 拿到仓库根，与 cwd 规范化比较：不一致=非仓库根 → 降级 False。
 
     Args:
         cwd: 待检查的工作目录。
 
     Returns:
-        bool: True=cwd 是 git 仓库;False=不是 git 仓库/git 未装/超时/异常。
+        bool: True=cwd 是 git 仓库根;False=不是 git 仓库/git 未装/超时/异常/处于上层仓库子目录。
     """
-    result = _run_git(['rev-parse', '--is-inside-work-tree'], cwd)
+    result = _run_git(['rev-parse', '--show-toplevel'], cwd)
     if result is None:
         return False
     if result.returncode != 0:
         return False
-    stdout = (result.stdout or '').strip()
-    return stdout == 'true'
+    toplevel = (result.stdout or '').strip()
+    if not toplevel:
+        return False
+    # 规范化比较：Windows 大小写不敏感 + 尾部斜杠归一
+    try:
+        norm_cwd = os.path.normcase(os.path.normpath(os.path.abspath(cwd)))
+        norm_toplevel = os.path.normcase(os.path.normpath(os.path.abspath(toplevel)))
+    except Exception:
+        return False
+    return norm_cwd == norm_toplevel
 
 
 def check_remote_configured(cwd):

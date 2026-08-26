@@ -184,7 +184,7 @@ def test_link_indexer_broken_and_reverse_link_detection(tmp_path):
 # ===========================================================================
 # 3. check_skill_updates:非 git 目录降级
 # ===========================================================================
-def test_check_skill_updates_non_git_dir_returns_false(tmp_path):
+def test_check_skill_updates_non_git_dir_returns_false(tmp_path, monkeypatch):
     """验证 check_skill_updates.check_updates 在非 git 目录的降级行为。
 
     测试逻辑:
@@ -194,8 +194,14 @@ def test_check_skill_updates_non_git_dir_returns_false(tmp_path):
     4. check_updates 应返回 (False, 'not git')
 
     注: 这是测 4 级降级链的第一级降级(对齐脚本 docstring)。
+    v1.0.4(实测报告 P1 git 上溯): 注入 GIT_CEILING_DIRECTORIES 天花板,
+    防 tmp_path 恰位于上层真实仓库内部时 git rev-parse 向上误判/变慢;
+    与 v1.0.4 check_git_available 的 --show-toplevel 根目录校验形成双保险。
     """
     check_skill_updates = _import_script_module("check_skill_updates")
+
+    # v1.0.4: git 上溯天花板 = tmp_path 的父目录,禁止 rev-parse 越过 tmp_path 向上
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path.parent))
 
     # 确认 tmp_path 非 git 仓库
     assert not (tmp_path / ".git").exists(), "tmp_path 不应是 git 仓库"

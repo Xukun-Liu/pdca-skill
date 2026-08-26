@@ -316,7 +316,8 @@ def check_skill_update(skill_dir):
                 'reason': 'check_skill_updates.py not yet implemented',
             }
 
-        # T06 已实现：subprocess 调用，超时 30s，捕获 stdout/stderr
+        # T06 已实现：subprocess 调用，超时 8s（v1.0.4 实测报告 P1/F6：
+        # 更新检查不应阻塞启动主链路），捕获 stdout/stderr
         import subprocess
         try:
             proc = subprocess.run(
@@ -324,15 +325,16 @@ def check_skill_update(skill_dir):
                 cwd=skill_dir,
                 capture_output=True,
                 text=True,
-                timeout=30,
+                timeout=8,
                 encoding='utf-8', errors='replace',
             )
         except subprocess.TimeoutExpired:
-            logger.warning("skill 更新检查：执行超时（>30s）")
+            logger.warning("skill 更新检查：执行超时（>8s），已跳过（WARN，不阻塞启动）")
             return {
-                'passed': False,
+                'passed': True,
+                'warn': True,
                 'behind_count': -1,
-                'detail': 'timeout: check_skill_updates.py 未在 30s 内完成',
+                'detail': 'timeout: check_skill_updates.py 未在 8s 内完成（网络慢或环境干扰），已跳过',
             }
 
         stdout = (proc.stdout or '').strip()
