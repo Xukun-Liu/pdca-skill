@@ -377,6 +377,7 @@ category: workflow
 - **"梳理一下"**：默认走 sync-matrix.md（整理规范），除非明确说"梳理一下做了什么"才走 hand-drawn-report.md
 - **"需求分析/出方案"**：带 /plan 前缀或"从头开始/新项目"→走 /plan 硬指令（计划 md 顶部按 hand-drawn-report.md 带图）；否则→document_specs.md，**方案文档顶部按 hand-drawn-report.md 内联手绘 SVG 速览图（默认带图、单文件自包含）**
 - **"汇报"（v1.0.4）**：按上下文限定——"给领导/向上/给老板/周报月报"→leader_report.md（六段结构汇报文档）；"验收报告/总结/手绘图"→hand-drawn-report.md；"做PPT/演示文稿"→html_ppt_creation.md（可用 leader_report 六段结构做内容底稿）；无上下文→澄清菜单问三选一
+- **"同步到 skill"（v1.0.4）**：先判内容域再路由，双源探测防猜错目标——① 改动属 skill 自身文件（SKILL.md、references/、scripts/、tests/、evals/、HISTORY.md、README.md）→ 走 skill_creation.md 更新流程（版本联动必过 sync-matrix.md 核对）；② 改动属项目业务代码 → 不属 skill 域，先向用户确认意图：提炼经验写 memory（经 write_project）还是确有框架改动诉求，不机械拷贝；③ skill 安装位置双源探测：`~/.opencode/skills/` 目录存在性 + `~/.opencode/opencode.json` 的 `skills.paths` 配置同时查，两源一致→直接用；两源不一致或均查不到→HARD-GATE 问用户目标路径，禁止凭猜测写入
 
 ### 澄清菜单递进规则
 

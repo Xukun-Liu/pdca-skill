@@ -147,6 +147,24 @@
       "expected": "agent 拒绝 L0/L1 任务的 /loop 请求；只 L2/L3 允许 /loop",
       "assertion": "SKILL.md §0 Loop Engineering 明确\"L1 → 拒绝 /loop\"；agent 遇 L1 /loop 有拒绝响应",
       "source": "SKILL.md §0 Loop Engineering"
+    },
+    {
+      "id": "eval_sync_to_skill_routing",
+      "name": "F5 '同步到 skill' 内容域仲裁 + 双源安装探测",
+      "category": "routing",
+      "input": "用户说\"把这个经验同步到 skill\"",
+      "expected": "agent 先判内容域：skill 自身文件（SKILL.md/references/scripts/tests/evals/HISTORY.md/README.md）改动走 skill_creation.md 更新流程（版本联动+sync-matrix 核对）；业务代码改动不属 skill 域，先向用户确认意图（写 memory 还是框架改动），不机械拷贝",
+      "assertion": "SKILL.md 多行命中仲裁规则含'同步到 skill'三段式条目；skill 安装位置双源探测（~/.opencode/skills/ 目录 + ~/.opencode/opencode.json 的 skills.paths），两源不一致或均查不到时 HARD-GATE 问用户目标路径，禁止凭猜测写入",
+      "source": "SKILL.md 多行命中仲裁规则（v1.0.4 新增）"
+    },
+    {
+      "id": "eval_visual_claim_requires_evidence",
+      "name": "F6 目检结论必须附客观证据",
+      "category": "verification",
+      "input": "agent 验证完成时只回复\"看过一遍很清晰/没问题\"且无任何命令输出或行号引用",
+      "expected": "agent 触发偏离类 Red Flag #20，停下补充 file:line / 实际命令输出 / diff 摘要三者之一的客观证据后再声明完成",
+      "assertion": "red_flags.md 导图含第20条目且标注共20条、与表格逐条一一对应（导图条目数=20）；表格含 #20 行（偏离 Verification-before-Completion + Verifier Theater）；理性化反驳表含第25条「我看了一遍没问题」",
+      "source": "references/check/red_flags.md 第20条偏离信号（v1.0.4 新增）"
     }
   ]
 }
