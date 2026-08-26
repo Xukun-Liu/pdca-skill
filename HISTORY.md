@@ -130,7 +130,23 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        ── 全库引用同步：references/index.md + office_processing + file_to_markdown 等
                          8 处 excel_analysis 引用改名 data_analysis（AC-2 死引用清零）
                        ── 致谢：huashu-excel / summit-claude-skills(mentor-attia) / obra-superpowers / anthropics-skills
-```
+2026-08-26  v1.0.4     🔧 发布包质量修复（并入 v1.0.4，实机打包测试驱动 B1-B6）
+                       ── P0 打包健壮性（161c433）：EXCLUDE_PATTERNS 补用户数据泄漏规则 +
+                         subprocess 强制 UTF-8 编码（防 Windows GBK 乱码）+ 子进程注入 PYTHONUTF8=1
+                       ── 版本联动（fb3033c）：bump_version 四处版本一键更新 +
+                         validate_skill.py SCR-13 五方探针（SKILL.md/HISTORY frontmatter/
+                         evals.json/red_flags.md 版本一致性校验）
+                       ── 打包质量（de1d389）：_verify_package 嗅探器逐文件校验包内容完整 +
+                         README/CHANGELOG 缺失时骨架模板化生成
+                       ── git 上溯（6f07e01）：toplevel 校验防嵌套仓库打包错位 +
+                         测试 GIT_CEILING 隔离外层仓库干扰
+                       ── P2 小修（9bb0f04）：docstring 修正 / 打包索引去重排序 / schema 说明补齐
+                       ── F 系列规则（3eade35）：SKILL.md 多行命中仲裁新增「同步到 skill」三段式
+                         （内容域判定→skill_creation 更新流程 / 业务域不机械拷贝 / 安装位置双源探测）+
+                         red_flags.md 新增第 20 条红旗「目检不附客观证据 = Verifier Theater」+
+                         反驳表第 25 条 + 导图补齐 #18/#19 行（导图 20 条与表格逐条一一对应）+
+                         evals 15→17 场景（sync_to_skill_routing / visual_claim_requires_evidence）
+                       ── 测试：validate_skill.py 33/33 PASS，0 MUST FIX；pytest 回归通过
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
 

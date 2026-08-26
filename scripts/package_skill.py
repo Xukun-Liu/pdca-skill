@@ -70,7 +70,8 @@ _SKELETON_WHITELIST = {
 
 # ── v1.0.4 发布包质量修复：骨架模板化（防开发机活数据污染发布包）──
 # 打包时白名单文件一律写入模板内容，而非开发环境的活数据。
-# memory_main 用内置纯净骨架；SUMMARY_RJ / spec_main_rj 从 assets/ 模板读取。
+# memory_main 用内置纯净骨架；SUMMARY_RJ / spec_main_rj 优先从 assets/ 模板读取，
+# assets 缺失（如最小化 skill 结构）时回退内置极简骨架，不阻断打包。
 _MEMORY_MAIN_SKELETON_TEMPLATE = """---
 title: pdca-skill global memory
 version: v1.0.0
@@ -99,6 +100,34 @@ _SKELETON_TEMPLATE_SOURCES = {
     "docs_rj/spec_rj/spec_main_rj.md": "assets/spec_main_template.md",
 }
 
+# assets 模板缺失时的内置极简骨架（回退，不阻断打包）
+_SUMMARY_RJ_FALLBACK = """---
+title: SUMMARY_RJ
+type: summary_index
+---
+
+# SUMMARY_RJ（发布骨架）
+
+> 发布包最小骨架：实际文档索引由使用者首次启动后由 Bootstrap / summary_view 自动生成。
+> 规范见 references/common/pa/summary_view.md。
+"""
+
+_SPEC_MAIN_RJ_FALLBACK = """---
+title: spec_main_rj
+type: project_spec_main
+---
+
+# spec_main_rj（发布骨架）
+
+> 发布包最小骨架：项目级 source of truth 由使用者首次启动后按 SKILL.md §6 /plan 步骤1.5 初始化。
+> 完整模板见 skill 仓库 assets/spec_main_template.md。
+"""
+
+_SKELETON_FALLBACKS = {
+    "docs_rj/SUMMARY_RJ.md": _SUMMARY_RJ_FALLBACK,
+    "docs_rj/spec_rj/spec_main_rj.md": _SPEC_MAIN_RJ_FALLBACK,
+}
+
 
 def _skeleton_content(rel_path: str, version: str, skill_root) -> str:
     """返回白名单骨架文件的模板内容（v1.0.4：防活数据进包）。
@@ -109,17 +138,17 @@ def _skeleton_content(rel_path: str, version: str, skill_root) -> str:
         skill_root: skill 包根目录（读 assets 模板用）
 
     Returns:
-        模板字符串
-
-    Raises:
-        FileNotFoundError: assets 模板缺失
+        模板字符串：assets 模板存在时返回其内容；缺失时回退内置极简骨架
     """
     if rel_path == "memory/memory_main.md":
         return _MEMORY_MAIN_SKELETON_TEMPLATE.format(version=version)
     template_rel = _SKELETON_TEMPLATE_SOURCES.get(rel_path)
     template_path = Path(skill_root) / template_rel
     if not template_path.is_file():
-        raise FileNotFoundError(f"骨架模板缺失: {template_path}")
+        fallback = _SKELETON_FALLBACKS.get(rel_path)
+        if fallback is None:
+            raise FileNotFoundError(f"骨架模板缺失且无内置降级: {template_path}")
+        return fallback
     return template_path.read_text(encoding="utf-8")
 
 
