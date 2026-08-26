@@ -421,7 +421,7 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 方案：自包含方法论（从已装 trae 插件提炼精华后内化，**不依赖插件**）——新增 `references/do/code/html_ppt_creation.md`：PPT 用 python-pptx（纯 Python）/PptxGenJS（Node）生成可编辑 .pptx + 六风格视觉配方；HTML 幻灯片手写单文件（16:9 舞台 + 键盘翻页 + Node 导出）；HTML 网页手写 + 前端设计五原则；图表手写 SVG / 本地 echarts；内网边界见 §四
 - 登记 7 处：trigger_hooks.md（+2 触发钩子行 v1.1.4→v1.1.5）/ index.md（47→48、do 8→9、code 5→6、doc_proc 4→5）/ SKILL.md §0.5 资源索引（+2 行）/ README.md（能力地图 + 参考手册 23→24 高频模块 + 包内 47→48）/ subagents_rj.md（doc_proc_agent 知识库 + 触发词）/ 网页说明.html / HISTORY.md 本节
 - 验证：validate_skill MUST FIX=0 + 残留 grep 0 + 版本号一致性
-- 决策记录：自包含方法论（非路由、非整体嵌入）✅ / HTML 与 PPT 都做 ✅ / 版本不 bump 保持 v1.0.1 ✅ / 变更记录落盘 `C:\Users\86029\Desktop\PDCA-skill v1.0.2升级\` ✅
+- 决策记录：自包含方法论（非路由、非整体嵌入）✅ / HTML 与 PPT 都做 ✅ / 版本不 bump 保持 v1.0.1 ✅ / 变更记录落盘（本机开发目录）✅
 
 ### 2026-08-11：Excel 分析能力系统性升级（v1.0.2 内容，本节 2026-08-19 补登）
 
@@ -478,7 +478,7 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 
 ### 2026-08-23：v1.0.3 第五批——跨机 5 修复落地 v1.0.3 + 对抗性审查 H1 缓解
 
-- 背景：用户在他机（`C:\Users\liu.xukun\.config\opencode\skills\PDCA-skill-public v1.0.1\`）2026-08-21 memory_distill 产出 5 修复，移植回本机 v1.0.3 时发现**跨版本结构漂移**风险：v1.0.1 vs v1.0.3 已历 7 批迭代，5 修复不能直接 apply，必须逐项 diff 后再 patch
+- 背景：用户在他机（其 `.config/opencode/skills/` 下的 PDCA-skill-public v1.0.1）2026-08-21 memory_distill 产出 5 修复，移植回本机 v1.0.3 时发现**跨版本结构漂移**风险：v1.0.1 vs v1.0.3 已历 7 批迭代，5 修复不能直接 apply，必须逐项 diff 后再 patch
 - 方案：/plan 阶段 5 修复 vs v1.0.3 逐项 diff 判定 still_valid → spec + task 落档 → 对抗性审查 6 维 4 级（1 HIGH 触发缓解）→ /do 阶段 T000 robocopy 备份 + T001-T005 一提交一修复 + T006 总回归 8 AC 全 PASS → /act 收尾
 - 5 修复（一提交一修复，conventional commits，Refs: v103_t3 footer）：
   - `a654197` memory_shadow_write.py — CLI 强制 UTF-8 stdin 防 PowerShell 中文 stdin 损坏（sys.stdin reconfigure fallback）

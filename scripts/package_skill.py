@@ -68,6 +68,87 @@ _SKELETON_WHITELIST = {
     "docs_rj/spec_rj/spec_main_rj.md",
 }
 
+# ── v1.0.4 发布包质量修复：骨架模板化（防开发机活数据污染发布包）──
+# 打包时白名单文件一律写入模板内容，而非开发环境的活数据。
+# memory_main 用内置纯净骨架；SUMMARY_RJ / spec_main_rj 从 assets/ 模板读取。
+_MEMORY_MAIN_SKELETON_TEMPLATE = """---
+title: pdca-skill global memory
+version: v1.0.0
+skill_version: {version}
+date_created: 1970-01-01 00:00
+last_updated: 1970-01-01 00:00
+tags: [pdca-skill, memory, skeleton]
+---
+
+# memory_main（发布骨架）
+
+> 此文件为 `scripts/package_skill.py` 白名单要求的最小骨架，避免发布包被打包排除。
+>
+> 实际全局记忆由使用者首次启动后由 Bootstrap 自动填充：
+> - Bootstrap 阶段读取项目 + 跨项目知识
+> - 写入路径：本机 `~/.pdca-skill/data/memory/memory_main.md`（用户数据外置，不进 git）
+> - 写入时机：每次 /act 阶段 learn_tidy + handoff_tidy
+>
+> 本骨架仅作为发布包占位，仓库内保持空内容。
+"""
+
+# 骨架来源映射：白名单文件 -> assets 模板路径（None 表示用内置模板）
+_SKELETON_TEMPLATE_SOURCES = {
+    "memory/memory_main.md": None,                       # 内置 _MEMORY_MAIN_SKELETON_TEMPLATE
+    "docs_rj/SUMMARY_RJ.md": "assets/summary_template.md",
+    "docs_rj/spec_rj/spec_main_rj.md": "assets/spec_main_template.md",
+}
+
+
+def _skeleton_content(rel_path: str, version: str, skill_root) -> str:
+    """返回白名单骨架文件的模板内容（v1.0.4：防活数据进包）。
+
+    Args:
+        rel_path: zip 内相对路径
+        version: 本次打包版本号（如 v1.0.4）
+        skill_root: skill 包根目录（读 assets 模板用）
+
+    Returns:
+        模板字符串
+
+    Raises:
+        FileNotFoundError: assets 模板缺失
+    """
+    if rel_path == "memory/memory_main.md":
+        return _MEMORY_MAIN_SKELETON_TEMPLATE.format(version=version)
+    template_rel = _SKELETON_TEMPLATE_SOURCES.get(rel_path)
+    template_path = Path(skill_root) / template_rel
+    if not template_path.is_file():
+        raise FileNotFoundError(f"骨架模板缺失: {template_path}")
+    return template_path.read_text(encoding="utf-8")
+
+
+# ── v1.0.4 发布包质量修复：_verify_package 独立产物嗅探 ──
+# 与 _should_exclude（打包规则）同源的检查「规则漏了什么，验证就瞎什么」，
+# 故验证环节用独立特征清单 + 内容嗅探，双保险。
+_ARTIFACT_SNIFF_PATTERNS = [
+    r"\.log$", r"_out\.txt$", r"\.sha256$", r"\.tmp$", r"\.bak$",
+    r"^_sync_tmp/", r"^\.playwright-mcp/", r"^\.primary_docs_rj$", r"^\.gitignore$",
+    r"^~\$", r"__pycache__/", r"\.pyc$",
+]
+_ARTIFACT_SNIFF_REGEX = [re.compile(p) for p in _ARTIFACT_SNIFF_PATTERNS]
+
+# 开发机隐私嗅探：绝对路径 + 真实用户名模式（命中即告警，防泄露开发者机器信息）。
+# 排除规则（负向前瞻）：占位词/系统目录（xxx/你/All Users/Default/Public/.../{用户名}）后
+# 不跟字母数字 = 完整占位词 -> 豁免；只抓真实用户名（如 86029 / liu.xukun）。
+# Default/Public 为 Windows 系统内置用户目录（server_lite 合法白名单），非开发者信息。
+_DEV_MACHINE_PATTERN = re.compile(
+    r"C:[\\/]+Users[\\/]+"
+    r"(?!(?:xxx|你|All[ ]Users|Default|Public|\.\.\.)(?![A-Za-z0-9_\u4e00-\u9fa5]))"
+    r"[A-Za-z0-9_.\u4e00-\u9fa5-]+")
+
+# 骨架活数据嗅探：白名单文件若含开发环境活数据特征则告警
+_SKELETON_DIRTY_PATTERNS = [
+    re.compile(r"owner:\s*\d+"),                    # owner: 86029（开发机用户名）
+    re.compile(r"total_docs:\s*[1-9]\d*"),          # total_docs: 112（开发仓库真数据）
+    re.compile(r"title:\s*riji-skill"),             # 开发仓库自己的文档索引
+]
+
 
 def _should_exclude(rel_path: str) -> bool:
     """判断相对路径是否应被排除。
@@ -159,7 +240,12 @@ def package_skill(version: str, output_dir: str, skill_root: str = None) -> str:
                 if _should_exclude(rel_path):
                     excluded_count += 1
                     continue
-                zf.write(abs_file, arcname=rel_path)
+                # v1.0.4: 白名单骨架文件写模板内容（防开发机活数据进包）
+                if rel_path in _SKELETON_WHITELIST:
+                    zf.writestr(rel_path,
+                                _skeleton_content(rel_path, version, skill_root_path))
+                else:
+                    zf.write(abs_file, arcname=rel_path)
                 included_count += 1
 
     print(f"[package] 打包完成: {zip_path}")
@@ -169,6 +255,11 @@ def package_skill(version: str, output_dir: str, skill_root: str = None) -> str:
 
 def _verify_package(zip_path: str) -> dict:
     """验证 zip 包不含用户数据目录。
+
+    v1.0.4 升级为三层验证：
+    ① 排除规则复查（原有，与打包同源）
+    ② 独立产物嗅探（特征清单与打包规则解耦，规则漏了也能拦）
+    ③ 内容嗅探（开发机路径 / 骨架活数据）
 
     Args:
         zip_path: zip 文件路径
@@ -182,7 +273,28 @@ def _verify_package(zip_path: str) -> dict:
         for name in zf.namelist():
             total_files += 1
             if _should_exclude(name):
-                violations.append(name)
+                violations.append(f"[排除规则命中] {name}")
+            # ② 独立产物嗅探（与打包规则解耦的双保险）
+            for rx in _ARTIFACT_SNIFF_REGEX:
+                if rx.search(name):
+                    violations.append(f"[产物残留] {name}")
+                    break
+            # ③a 开发机路径嗅探（文本文件 ≤ 2MB 才读，避免读大二进制）
+            if name.endswith((".md", ".txt", ".json", ".py", ".ps1", ".cmd", ".html", ".jsonl", ".log", ".yaml", ".yml")):
+                try:
+                    info = zf.getinfo(name)
+                    if info.file_size <= 2 * 1024 * 1024:
+                        content = zf.read(name).decode("utf-8", errors="replace")
+                        if _DEV_MACHINE_PATTERN.search(content):
+                            violations.append(f"[开发机路径泄露] {name}")
+                        # ③b 骨架活数据嗅探
+                        if name in _SKELETON_WHITELIST:
+                            for dirty_rx in _SKELETON_DIRTY_PATTERNS:
+                                if dirty_rx.search(content):
+                                    violations.append(f"[骨架活数据污染] {name}")
+                                    break
+                except (OSError, zipfile.BadZipFile):
+                    pass
 
     valid = len(violations) == 0
     report = {
