@@ -633,7 +633,7 @@ def style_data_area(ws, min_row, max_row, min_col, max_col):
             cell.border = THIN_BORDER
 ```
 
-> 完整样式函数（含 KPI 高亮、合计行强调、数字格式）见 `excel_analysis.md` §十八「可复用样式助手函数」。
+> 完整样式函数（含 KPI 高亮、合计行强调、数字格式）见 `data_analysis.md` §十八「可复用样式助手函数」。
 
 ---
 

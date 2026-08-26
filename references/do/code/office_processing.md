@@ -152,14 +152,14 @@ python -m 某工具 deck.pptx | grep -iE "xxxx|lorem|ipsum|this.*(page|slide).*l
 
 | 需要做什么 | 读哪个文件 |
 |-----------|-----------|
-| 数据分析（清洗/透视/统计/图表/趋势/拆解/异常/看板/报告） | **[excel_analysis.md](../../common/pd/excel_analysis.md)**（数据分析方法论，D.code/P.design） |
-| 颜色编码体系（金融模型蓝/黑/绿/红标准） | `excel_analysis.md` 第十六章 |
-| 可视化设计原则（反"AI 生成味"） | `excel_analysis.md` 第十七章 |
-| 专业表格格式规范（斑马纹/边框/KPI 高亮/样式助手函数） | `excel_analysis.md` 第十八章 |
-| 做表前规划方法论（Sheet/Schema/Style 三计划） | `excel_analysis.md` 第十九章 |
+| 数据分析（清洗/透视/统计/图表/趋势/拆解/异常/看板/报告） | **[data_analysis.md](../../common/pd/data_analysis.md)**（数据分析方法论，D.code/P.design） |
+| 颜色编码体系（金融模型蓝/黑/绿/红标准） | `data_analysis.md` 第十六章 |
+| 可视化设计原则（反"AI 生成味"） | `data_analysis.md` 第十七章 |
+| 专业表格格式规范（斑马纹/边框/KPI 高亮/样式助手函数） | `data_analysis.md` 第十八章 |
+| 做表前规划方法论（Sheet/Schema/Style 三计划） | `data_analysis.md` 第十九章 |
 | 文件转 Markdown | **[file_to_markdown.md](file_to_markdown.md)**（D.code，单向转换） |
 
-> 关系：**office_processing.md** 管"Excel 文件的读写改"（文件操作层），**excel_analysis.md** 管"Excel 数据怎么分析"（分析方法论层），两者互补。涉及分析/透视/图表/看板时优先读 `excel_analysis.md`。
+> 关系：**office_processing.md** 管"Excel 文件的读写改"（文件操作层），**data_analysis.md** 管"Excel 数据怎么分析"（分析方法论层），两者互补。涉及分析/透视/图表/看板时优先读 `data_analysis.md`。
 
 ---
 
