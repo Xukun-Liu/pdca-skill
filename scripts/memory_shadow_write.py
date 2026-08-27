@@ -548,9 +548,11 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
         if primary and os.path.isdir(primary) and os.path.abspath(primary) != external_docs:
             project_memory_dir = os.path.join(primary, 'memory_rj')
         else:
-            logger.warning("[write_project] R3 解析链无结果，记忆 fallback 用户目录: %s",
-                           user_data_path.get_memory_rj_path())
-            project_memory_dir = str(user_data_path.get_memory_rj_path())
+            # v1.0.4（REQ-105）：fallback 回项目 ./docs_rj/memory_rj（文档跟项目走），
+            # 不再默认落外置用户目录——旧版此处落外置导致项目记忆跑去主目录
+            fallback_dir = os.path.abspath('./docs_rj/memory_rj')
+            logger.warning("[write_project] R3 解析链无结果，记忆 fallback 项目目录: %s", fallback_dir)
+            project_memory_dir = fallback_dir
             fallback_used = True
         # marker 存在但无效（空/BOM/坏路径）→ 显式告警提示修复（不静默、不代写 marker，守 R3）
         if os.path.isfile('.primary_docs_rj') and generate_docs.read_primary_docs_marker() is None:

@@ -197,8 +197,7 @@ def _resolve_required_path(item, project_root):
     Args:
         item: REQUIRED_MEMORY 中的逻辑标识
             - "memory/memory_main.md" → user_data_path.get_memory_main_path()
-            - "docs_rj/memory_rj" → user_data_path.get_docs_rj_path() / "memory_rj"
-            - "docs_rj/SUMMARY_RJ.md" → user_data_path.get_docs_rj_path() / "SUMMARY_RJ.md"
+            - "docs_rj/..." 前缀 item → 项目侧 R3 链优先（存在才用），外置遗留存档兜底（v1.0.4 M1）
         project_root: 项目根目录（未知 item 或解析失败时的回退基准）。
 
     Returns:
@@ -207,10 +206,21 @@ def _resolve_required_path(item, project_root):
     try:
         if item == "memory/memory_main.md":
             return str(user_data_path.get_memory_main_path())
-        elif item == "docs_rj/memory_rj":
-            return str(user_data_path.get_docs_rj_path() / "memory_rj")
-        elif item == "docs_rj/SUMMARY_RJ.md":
-            return str(user_data_path.get_docs_rj_path() / "SUMMARY_RJ.md")
+        elif item.startswith("docs_rj/"):
+            # v1.0.4（/check 第2轮 M1 修复）：项目侧优先（R3 链，存在才用），外置遗留兜底（只读兼容）
+            sub = item[len("docs_rj/"):]
+            # 1) 项目侧优先（R3 解析链：标记 > 约定 > 扫描 > ./docs_rj 候选）
+            try:
+                import generate_docs as _gd
+                primary = _gd.find_docs_dir(create=False)
+                if primary:
+                    cand = os.path.join(primary, sub)
+                    if os.path.exists(cand):
+                        return cand
+            except Exception:
+                pass
+            # 2) 外置遗留存档（只读兼容）
+            return str(user_data_path.get_docs_rj_path() / sub)
     except (PermissionError, OSError):
         # 外置目录不可创建：回退到 project_root 拼接（兼容老用户包内数据）
         pass
