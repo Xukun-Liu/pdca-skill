@@ -8,7 +8,7 @@
 
 > 版本：v1.0.0 | 更新：2026-07-24
 
-> 📦 **用户数据外置说明（v1.0.0 新增）**：用户数据（memory/ docs_rj/ outputs_rj/ server_lite_data/）外置到 `~/.pdca-skill/data/`，skill 包纯框架。其中 `server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，该目录即使为空也无负面影响）。本流程初始化的是**外置目录下的结构**（从 `assets/` 模板复制到外置 `docs_rj/`），不是包内。路径解析经 `scripts/user_data_path.py`（三级优先级：环境变量 > 配置文件 > 默认值）。老用户首次启动新版时 `startup_tidy.py` 自动迁移包内数据到外置目录。
+> 📦 **用户数据外置说明（v1.0.0 新增，v1.0.4 修订）**：跟人走的数据（memory/ outputs_rj/ server_lite_data/）外置到 `~/.pdca-skill/data/`，skill 包纯框架；**跟项目走的 docs_rj 建在项目根**。其中 `server_lite_data/` 为框架自动创建的占位目录（server_lite 当前不主动引导使用，该目录即使为空也无负面影响）。本流程初始化的是**项目根下的 docs_rj 结构**（从 `assets/` 模板复制到项目 `./docs_rj/`），不是包内也不是外置。外置遗留数据按**只读存档**原地保留（不迁移、不续写）。路径解析经 `scripts/user_data_path.py`（三级优先级：环境变量 > 配置文件 > 默认值）。老用户首次启动新版时 `startup_tidy.py` 自动迁移包内数据到外置目录。
 
 > 📖 **什么时候读这个文件**：
 > - 首次使用 pdca-skill 时

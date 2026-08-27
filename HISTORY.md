@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
 version: v1.0.4
-last_updated: 2026-08-26
+last_updated: 2026-08-28
 author: huihui
 ---
 
@@ -147,6 +147,21 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                          反驳表第 25 条 + 导图补齐 #18/#19 行（导图 20 条与表格逐条一一对应）+
                          evals 15→17 场景（sync_to_skill_routing / visual_claim_requires_evidence）
                        ── 测试：validate_skill.py 33/33 PASS，0 MUST FIX；pytest 回归通过
+2026-08-28 v1.0.4     🔧 文档回项目 + /plan 默认轻量（并入 v1.0.4，外部反馈两处体验问题根治）
+                       ── 根因1（文档跑去主目录）：v1.0.0 用户数据外置把 docs_rj 也外置到
+                         ~/.pdca-skill/data/docs_rj，与"文档跟项目走"心智相反
+                       ── 修复：默认写入落点回项目根 ./docs_rj（find_docs_dir/PRIORITY_PATHS/
+                         startup_tidy 守卫/write_project/force_sync/merge-docs 共 6 处）+
+                         external_docs_has_content() 单一检测函数（只数递归 *.md，防"外置空骨架
+                         误判为遗留"把新项目又骗回主目录）
+                       ── 老用户兼容：外置有真实遗留（*.md >0）→ 只读存档：旧数据原地保留可读、
+                         不迁移、不续写，新写入一律进项目（防同一任务 spec/task 与 memory 撕裂两处）
+                       ── 根因2（/plan 文本太多）：spec/task 模板 370/242 行 + 13 字段/任务
+                       ── 修复：新增轻量模板（≤90/≤70 行，每任务 4 字段）为默认；--full 机械门禁
+                         （必须附 ≥10 字理由，否则 exit 2）；升级重型信号四条需 HARD-GATE 确认
+                       ── 产物链保留声明：只瘦文字量不砍触发——TASK_STATE/spec_main 步骤1.5/
+                         handoff/memory 双写/SUMMARY 刷新/HARD-GATE 全部照旧
+                       ── 测试：新增 7 用例 + 治理测试 4 处旧语义改新语义 + 全套回归
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
 
