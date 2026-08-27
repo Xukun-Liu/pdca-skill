@@ -288,21 +288,38 @@ def score_scripts_health(project_root):
 
 
 def score_recent_activity(project_root):
-    """评分最近活动（用户数据外置后扫描外置 docs_rj/）。"""
+    """评分最近活动（v1.0.4：项目 docs_rj 优先，兼扫外置遗留存档——两处取并集）"""
     cutoff = datetime.now(timezone.utc) - timedelta(days=7)
     detail = {"memory_files": 0, "task_state_files": 0, "recent_paths": []}
     score = 0.0
 
-    # AC-005 修补（T008 遗漏）：扫描外置 docs_rj/ 而非 project_root/docs_rj/，
-    # 解析失败回退到 project_root（兼容老用户包内数据或外置目录不可创建场景）。
+    # v1.0.4（/check 第2轮对抗审查 M1 修复）：新数据落项目、旧数据可能在外置存档，
+    # 两处都扫（去重），防"写入回项目后活动扫描失明"
+    docs_roots = []
     try:
-        docs_rj_path = user_data_path.get_docs_rj_path()
+        import generate_docs as _gd
+        primary = _gd.find_docs_dir(create=False)
+        if primary:
+            docs_roots.append(str(primary))
+    except Exception:
+        pass
+    try:
+        docs_roots.append(str(user_data_path.get_docs_rj_path()))
     except (PermissionError, OSError):
-        docs_rj_path = os.path.join(project_root, "docs_rj")
-    scan_dirs = [
-        os.path.join(str(docs_rj_path), "memory_rj"),
-        os.path.join(str(docs_rj_path), "task_rj"),
-    ]
+        pass
+    docs_roots.append(os.path.join(project_root, "docs_rj"))
+    # 去重（大小写不敏感文件系统安全）
+    seen = set()
+    unique_roots = []
+    for r in docs_roots:
+        key = os.path.normcase(os.path.abspath(r))
+        if key not in seen:
+            seen.add(key)
+            unique_roots.append(r)
+    scan_dirs = []
+    for docs_rj_path in unique_roots:
+        scan_dirs.append(os.path.join(docs_rj_path, "memory_rj"))
+        scan_dirs.append(os.path.join(docs_rj_path, "task_rj"))
 
     recent_count = 0
     for scan_dir in scan_dirs:
