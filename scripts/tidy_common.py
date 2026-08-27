@@ -601,9 +601,10 @@ def force_sync_project_to_global(project_memory_dir=None):
         if primary and os.path.isdir(primary) and os.path.abspath(primary) != external_docs:
             project_memory_dir = os.path.join(primary, 'memory_rj')
         else:
-            logger.warning("[force_sync] R3 解析链无结果，fallback 用户目录: %s",
-                           user_data_path.get_memory_rj_path())
-            project_memory_dir = str(user_data_path.get_memory_rj_path())
+            # v1.0.4（REQ-105 同源）：fallback 回项目 ./docs_rj/memory_rj，与 write_project 对齐
+            fallback_dir = os.path.abspath('./docs_rj/memory_rj')
+            logger.warning("[force_sync] R3 解析链无结果，fallback 项目目录: %s", fallback_dir)
+            project_memory_dir = fallback_dir
     result = {'synced': [], 'skipped': [], 'errors': []}
     if not os.path.isdir(project_memory_dir):
         result['skipped'].append({'reason': '项目级 memory 目录不存在: %s' % project_memory_dir})

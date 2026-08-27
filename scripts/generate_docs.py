@@ -481,9 +481,17 @@ def find_docs_dir(custom_dir=None, create=True):
         found_dirs = [d for d in found_dirs if 'docs_rj' in d or 'documents' in d]
 
     if not found_dirs:
-        default_path = str(user_data_path.get_docs_rj_path())
+        # v1.0.4（REQ-101 + /check 第2轮对抗审查 H2 修复）：文档跟项目走——默认落点回项目根 ./docs_rj。
+        # 外置有真实遗留（递归 *.md >0，REQ-108 共用检测）→ 只读存档：旧数据原地保留可读，
+        # 但新写入一律进项目——若让 spec/task 续写外置而 memory 落项目，同一任务会撕裂在两处
+        # （H2：spec/task→外置、memory→项目，SUMMARY/启动守卫链断）。
+        # ⚠️ 禁止按目录存在性判断遗留（get_user_data_dir 自动创建空子目录会误判，对抗审查 H1）
+        if user_data_path.external_docs_has_content():
+            logger.warning(f"检测到外置遗留 docs 存档 {user_data_path.get_docs_rj_path()}（只读，原地保留）；"
+                           f"新文档写入项目根 ./docs_rj。如需把旧数据搬回项目：手动移动后用 --declare-primary 宣告")
+        default_path = os.path.abspath('./docs_rj')
         if create:
-            logger.info(f"未找到 docs 目录，在根目录创建 pdca-skill 规范目录: {default_path}")
+            logger.info(f"未找到 docs 目录，在项目根创建 pdca-skill 规范目录: {default_path}")
             try:
                 os.makedirs(default_path, exist_ok=True)
             except OSError as e:
@@ -1329,8 +1337,9 @@ def main():
         print("📦 合并 docs/ → docs_rj/")
         print("=" * 60)
         docs_abs = os.path.abspath('./docs')
-        docs_rj_abs = str(user_data_path.get_docs_rj_path())
-        if not os.path.isdir(docs_abs):
+        # v1.0.4（REQ-106）：合并目标遵循 R3 解析链（项目优先），不再硬编码外置目录
+        docs_rj_abs = find_docs_dir()
+        if not (os.path.isdir(docs_abs)):
             print(f"❌ docs/ 目录不存在: {docs_abs}")
             sys.exit(1)
         if not os.path.isdir(docs_rj_abs):

@@ -684,14 +684,23 @@ def _append_atomic(path, content):
 def _resolve_memory_rj_dir():
     """统一解析项目记忆目录（与 write_project 路径优先级一致）。
 
+    v1.0.4（/check 第2轮对抗审查 H1 修复）：原实现只有两级（marker → 外置），
+    与 write_project 新链路分裂——无 marker 时记忆落项目而备份/回滚找外置，
+    治理工具（delete/archive/promote/demote/rethink）的安全网静默失效。
+    现统一走 find_docs_dir R3 解析链（含项目 ./docs_rj 默认落点），
+    解析不出可用目录时兜底项目 ./docs_rj/memory_rj。
+
     优先级：
-      1. primary_docs marker（.primary_docs_rj 标记，项目级 docs）
-      2. user_data_path.get_memory_rj_path()（外置用户数据目录）
+      1. R3 解析链（.primary_docs_rj 标记 > MEMORY_RJ 约定 > 项目扫描 > 项目 ./docs_rj 候选）
+      2. 兜底 ./docs_rj/memory_rj（项目侧）
     """
-    primary_marker = generate_docs.read_primary_docs_marker()
-    if primary_marker:
-        return os.path.join(primary_marker, 'memory_rj')
-    return str(user_data_path.get_memory_rj_path())
+    try:
+        primary = generate_docs.find_docs_dir(create=False)
+    except Exception:
+        primary = None
+    if primary:
+        return os.path.join(primary, 'memory_rj')
+    return os.path.abspath('./docs_rj/memory_rj')
 
 
 def _backup_before_operation(tool_name):

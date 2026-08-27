@@ -403,7 +403,7 @@ class StartupTidy:
         # 注意：不能用 "and not primary" 作条件——R3 路由会在 marker 无效时仍解析出 primary（那样永不触发）
         if os.path.isfile('.primary_docs_rj') and generate_docs.read_primary_docs_marker() is None:
             logger.warning(".primary_docs_rj 存在但无效（空/BOM/路径不存在），"
-                           "建议运行 python generate_docs.py --declare-primary 修复，否则项目记忆 fallback 用户目录")
+                           "建议运行 python generate_docs.py --declare-primary 修复，否则项目记忆 fallback 项目 ./docs_rj/memory_rj（v1.0.4 起不再落外置用户目录）")
             self.report.errors.append({'stage': 'marker_invalid',
                                        'error': '.primary_docs_rj 存在但无效'})
 

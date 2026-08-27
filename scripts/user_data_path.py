@@ -252,3 +252,27 @@ def get_outputs_rj_path() -> Path:
 def get_server_lite_data_path() -> Path:
     """返回 server_lite 数据目录路径（server_lite_data/）。"""
     return get_user_data_dir() / "server_lite_data"
+
+
+def external_docs_has_content() -> bool:
+    """判断外置用户数据目录下是否有真实遗留文档（递归数 *.md 文件，>0 返 True）。
+
+    v1.0.4 新增（REQ-108，对抗审查 H1/H2 共用检测源）：
+    - 供 generate_docs.find_docs_dir 与 startup_tidy._ensure_project_structure 共用，
+      禁止各自实现判定（防两套标准漂移）。
+    - ⚠️ 不得用"目录存在/子目录非空"判断——get_user_data_dir(ensure_subdirs=True)
+      会为所有用户自动创建 memory/docs_rj/outputs_rj/server_lite_data 空子目录，
+      目录存在性判断会把新项目全部误判为"有遗留"而路由回外置（复现旧版
+      "文档跑去主目录"问题）。
+    - 目录不存在/任意异常一律返 False（宽捕获：守卫有不抛出契约，
+      Path.resolve 符号链接死循环会抛 RuntimeError，不可穿透）。
+    """
+    try:
+        docs_dir = get_docs_rj_path()
+        if not docs_dir.is_dir():
+            return False
+        for _ in docs_dir.rglob('*.md'):
+            return True
+        return False
+    except Exception:
+        return False
