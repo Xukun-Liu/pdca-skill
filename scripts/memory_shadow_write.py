@@ -532,10 +532,9 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
         experience_tags = [experience_tags]
 
     # 向后兼容：project_memory_dir 为 None 时自动检测
-    # 优先级（与 handoff_tidy/archive_tidy 对齐，修路径分裂 bug）：
-    #   1. primary_docs marker（.primary_docs_rj 标记，项目级 docs）
-    #   2. user_data_path.get_memory_rj_path()（外置用户数据目录）
-    #   3. 老路径 ./memory/（向后兼容）
+    # v1.0.4（REQ-105）落点契约：marker 优先；无 marker 时经 find_docs_dir R3 链解析项目 docs，
+    # 项目无 docs → fallback 项目 ./docs_rj/memory_rj（文档跟项目走，不再落外置用户目录）
+    # 3. 老路径 ./memory/（向后兼容）
     fallback_used = False
     if project_memory_dir is None:
         # 对齐 startup_tidy 的 R3 解析链（marker→MEMORY_RJ约定→路由 ./docs_rj>./.agent/documents>./src/docs>首个docs_rj）

@@ -375,7 +375,7 @@ def auto_merge_if_conflict(docs_dir='./docs', docs_rj_dir=None, verbose=True):
 
     Args:
         docs_dir: 平台 docs/ 路径（默认 ./docs）
-        docs_rj_dir: pdca-skill docs_rj/ 路径（默认 None → 外置 ~/.pdca-skill/data/docs_rj）
+        docs_rj_dir: pdca-skill docs_rj/ 路径（默认 None → 项目 ./docs_rj，v1.0.4 起不再默认外置）
         verbose: 是否输出详细日志（默认 True）
 
     Returns:
@@ -1365,8 +1365,10 @@ def main():
         print("📦 合并 docs/ → docs_rj/")
         print("=" * 60)
         docs_abs = os.path.abspath('./docs')
-        # v1.0.4（REQ-106）：合并目标遵循 R3 解析链（项目优先），不再硬编码外置目录
-        docs_rj_abs = find_docs_dir()
+        # v1.0.4（REQ-106 + /check H-1 修复）：合并目标显式取项目 ./docs_rj（与 auto_merge 新默认同源）。
+        # 不用 find_docs_dir()：其语义是"解析主 docs"——仅 docs 无 docs_rj 时会返回 ./docs 源目录致自合并；
+        # 且其内部 auto_merge_if_conflict 会先于本模式真实合并+删 docs/，击穿 --dry-run 契约。
+        docs_rj_abs = os.path.abspath('./docs_rj')
         if not (os.path.isdir(docs_abs)):
             print(f"❌ docs/ 目录不存在: {docs_abs}")
             sys.exit(1)
