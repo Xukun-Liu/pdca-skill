@@ -1,8 +1,8 @@
 ---
 title: riji-skill
 version: v1.0.0
-last_updated: 2026-08-26 00:26
-total_docs: 112
+last_updated: 2026-08-27 09:16
+total_docs: 148
 require-rule-mention: true
 ---
 
@@ -91,7 +91,7 @@ require-rule-mention: true
 - [memory_rj/e2e_task_0_memory_20260825_2326.md](memory_rj/e2e_task_0_memory_20260825_2326.md) `历史·2026-08-25 23:26` — e2e_task_0_memory_20260825_2326
 - [memory_rj/e2e_task_0_memory_20260825_2327.md](memory_rj/e2e_task_0_memory_20260825_2327.md) `历史·2026-08-25 23:27` — e2e_task_0_memory_20260825_2327
 - [memory_rj/e2e_task_0_memory_20260825_2329.md](memory_rj/e2e_task_0_memory_20260825_2329.md) `历史·2026-08-25 23:29` — e2e_task_0_memory_20260825_2329
-- [memory_rj/e2e_task_0_memory_20260825_2341.md](memory_rj/e2e_task_0_memory_20260825_2341.md) `最新·2026-08-25 23:41` — e2e_task_0_memory_20260825_2341
+- [memory_rj/e2e_task_0_memory_20260825_2341.md](memory_rj/e2e_task_0_memory_20260825_2341.md) `历史·2026-08-25 23:41` — e2e_task_0_memory_20260825_2341
 - [memory_rj/e2e_task_1_memory_20260825_2227.md](memory_rj/e2e_task_1_memory_20260825_2227.md) `历史·2026-08-25 22:27` — e2e_task_1_memory_20260825_2227
 - [memory_rj/e2e_task_1_memory_20260825_2246.md](memory_rj/e2e_task_1_memory_20260825_2246.md) `历史·2026-08-25 22:46` — e2e_task_1_memory_20260825_2246
 - [memory_rj/e2e_task_1_memory_20260825_2309.md](memory_rj/e2e_task_1_memory_20260825_2309.md) `历史·2026-08-25 23:09` — e2e_task_1_memory_20260825_2309
@@ -100,7 +100,7 @@ require-rule-mention: true
 - [memory_rj/e2e_task_1_memory_20260825_2326.md](memory_rj/e2e_task_1_memory_20260825_2326.md) `历史·2026-08-25 23:26` — e2e_task_1_memory_20260825_2326
 - [memory_rj/e2e_task_1_memory_20260825_2327.md](memory_rj/e2e_task_1_memory_20260825_2327.md) `历史·2026-08-25 23:27` — e2e_task_1_memory_20260825_2327
 - [memory_rj/e2e_task_1_memory_20260825_2329.md](memory_rj/e2e_task_1_memory_20260825_2329.md) `历史·2026-08-25 23:29` — e2e_task_1_memory_20260825_2329
-- [memory_rj/e2e_task_1_memory_20260825_2341.md](memory_rj/e2e_task_1_memory_20260825_2341.md) `最新·2026-08-25 23:41` — e2e_task_1_memory_20260825_2341
+- [memory_rj/e2e_task_1_memory_20260825_2341.md](memory_rj/e2e_task_1_memory_20260825_2341.md) `历史·2026-08-25 23:41` — e2e_task_1_memory_20260825_2341
 - [memory_rj/e2e_task_2_memory_20260825_2227.md](memory_rj/e2e_task_2_memory_20260825_2227.md) `历史·2026-08-25 22:27` — e2e_task_2_memory_20260825_2227
 - [memory_rj/e2e_task_2_memory_20260825_2246.md](memory_rj/e2e_task_2_memory_20260825_2246.md) `历史·2026-08-25 22:46` — e2e_task_2_memory_20260825_2246
 - [memory_rj/e2e_task_2_memory_20260825_2309.md](memory_rj/e2e_task_2_memory_20260825_2309.md) `历史·2026-08-25 23:09` — e2e_task_2_memory_20260825_2309
@@ -109,7 +109,7 @@ require-rule-mention: true
 - [memory_rj/e2e_task_2_memory_20260825_2326.md](memory_rj/e2e_task_2_memory_20260825_2326.md) `历史·2026-08-25 23:26` — e2e_task_2_memory_20260825_2326
 - [memory_rj/e2e_task_2_memory_20260825_2327.md](memory_rj/e2e_task_2_memory_20260825_2327.md) `历史·2026-08-25 23:27` — e2e_task_2_memory_20260825_2327
 - [memory_rj/e2e_task_2_memory_20260825_2329.md](memory_rj/e2e_task_2_memory_20260825_2329.md) `历史·2026-08-25 23:29` — e2e_task_2_memory_20260825_2329
-- [memory_rj/e2e_task_2_memory_20260825_2341.md](memory_rj/e2e_task_2_memory_20260825_2341.md) `最新·2026-08-25 23:41` — e2e_task_2_memory_20260825_2341
+- [memory_rj/e2e_task_2_memory_20260825_2341.md](memory_rj/e2e_task_2_memory_20260825_2341.md) `历史·2026-08-25 23:41` — e2e_task_2_memory_20260825_2341
 - [memory_rj/promote_task_memory_20260825_2227.md](memory_rj/promote_task_memory_20260825_2227.md) `历史·2026-08-25 22:27` — promote_task_memory_20260825_2227
 - [memory_rj/promote_task_memory_20260825_2246.md](memory_rj/promote_task_memory_20260825_2246.md) `历史·2026-08-25 22:46` — promote_task_memory_20260825_2246
 - [memory_rj/promote_task_memory_20260825_2309.md](memory_rj/promote_task_memory_20260825_2309.md) `历史·2026-08-25 23:09` — promote_task_memory_20260825_2309
@@ -117,8 +117,36 @@ require-rule-mention: true
 - [memory_rj/promote_task_memory_20260825_2319.md](memory_rj/promote_task_memory_20260825_2319.md) `历史·2026-08-25 23:19` — promote_task_memory_20260825_2319
 - [memory_rj/promote_task_memory_20260825_2327.md](memory_rj/promote_task_memory_20260825_2327.md) `历史·2026-08-25 23:27` — promote_task_memory_20260825_2327
 - [memory_rj/promote_task_memory_20260825_2329.md](memory_rj/promote_task_memory_20260825_2329.md) `历史·2026-08-25 23:29` — promote_task_memory_20260825_2329
-- [memory_rj/promote_task_memory_20260825_2341.md](memory_rj/promote_task_memory_20260825_2341.md) `最新·2026-08-25 23:41` — promote_task_memory_20260825_2341
+- [memory_rj/promote_task_memory_20260825_2341.md](memory_rj/promote_task_memory_20260825_2341.md) `历史·2026-08-25 23:41` — promote_task_memory_20260825_2341
+- [memory_rj/status/202608/v104_pkg_quality_fix_memory_20260826_2321.md](memory_rj/status/202608/v104_pkg_quality_fix_memory_20260826_2321.md) — v104_pkg_quality_fix B1-B7 实施记录
+- [memory_rj/status/202608/v104_pkg_quality_fix_memory_20260827_0036.md](memory_rj/status/202608/v104_pkg_quality_fix_memory_20260827_0036.md) — v104_pkg_quality_fix /check 收口
+- [memory_rj/status/202608/v104_pkg_quality_fix_memory_20260827_0847.md](memory_rj/status/202608/v104_pkg_quality_fix_memory_20260827_0847.md) — v104_pkg_quality_fix /act 启动+ARC-05 修复
+- [memory_rj/pitfall/202608/v104_pkg_quality_fix_memory_20260827_0853.md](memory_rj/pitfall/202608/v104_pkg_quality_fix_memory_20260827_0853.md) — v104 落盘误判排查教训（schema 子目录路由）
+- [memory_rj/TASK_STATE_v104_pkg_quality_fix.md](memory_rj/TASK_STATE_v104_pkg_quality_fix.md) `最新·无时间戳` — TASK_STATE_v104_pkg_quality_fix
 - [memory_rj/INDEX_locked.md](memory_rj/INDEX_locked.md) `最新·无时间戳` — INDEX_locked
+- [memory_rj/e2e_task_0_memory_20260826_2259.md](memory_rj/e2e_task_0_memory_20260826_2259.md) `历史·2026-08-26 22:59` — e2e_task_0_memory_20260826_2259
+- [memory_rj/e2e_task_0_memory_20260826_2315.md](memory_rj/e2e_task_0_memory_20260826_2315.md) `历史·2026-08-26 23:15` — e2e_task_0_memory_20260826_2315
+- [memory_rj/e2e_task_0_memory_20260826_2318.md](memory_rj/e2e_task_0_memory_20260826_2318.md) `历史·2026-08-26 23:18` — e2e_task_0_memory_20260826_2318
+- [memory_rj/e2e_task_0_memory_20260826_2345.md](memory_rj/e2e_task_0_memory_20260826_2345.md) `历史·2026-08-26 23:45` — e2e_task_0_memory_20260826_2345
+- [memory_rj/e2e_task_0_memory_20260826_2351.md](memory_rj/e2e_task_0_memory_20260826_2351.md) `历史·2026-08-26 23:51` — e2e_task_0_memory_20260826_2351
+- [memory_rj/e2e_task_0_memory_20260827_0018.md](memory_rj/e2e_task_0_memory_20260827_0018.md) `最新·2026-08-27 00:18` — e2e_task_0_memory_20260827_0018
+- [memory_rj/e2e_task_1_memory_20260826_2259.md](memory_rj/e2e_task_1_memory_20260826_2259.md) `历史·2026-08-26 22:59` — e2e_task_1_memory_20260826_2259
+- [memory_rj/e2e_task_1_memory_20260826_2315.md](memory_rj/e2e_task_1_memory_20260826_2315.md) `历史·2026-08-26 23:15` — e2e_task_1_memory_20260826_2315
+- [memory_rj/e2e_task_1_memory_20260826_2318.md](memory_rj/e2e_task_1_memory_20260826_2318.md) `历史·2026-08-26 23:18` — e2e_task_1_memory_20260826_2318
+- [memory_rj/e2e_task_1_memory_20260826_2345.md](memory_rj/e2e_task_1_memory_20260826_2345.md) `历史·2026-08-26 23:45` — e2e_task_1_memory_20260826_2345
+- [memory_rj/e2e_task_1_memory_20260826_2351.md](memory_rj/e2e_task_1_memory_20260826_2351.md) `历史·2026-08-26 23:51` — e2e_task_1_memory_20260826_2351
+- [memory_rj/e2e_task_1_memory_20260827_0018.md](memory_rj/e2e_task_1_memory_20260827_0018.md) `最新·2026-08-27 00:18` — e2e_task_1_memory_20260827_0018
+- [memory_rj/e2e_task_2_memory_20260826_2259.md](memory_rj/e2e_task_2_memory_20260826_2259.md) `历史·2026-08-26 22:59` — e2e_task_2_memory_20260826_2259
+- [memory_rj/e2e_task_2_memory_20260826_2315.md](memory_rj/e2e_task_2_memory_20260826_2315.md) `历史·2026-08-26 23:15` — e2e_task_2_memory_20260826_2315
+- [memory_rj/e2e_task_2_memory_20260826_2318.md](memory_rj/e2e_task_2_memory_20260826_2318.md) `历史·2026-08-26 23:18` — e2e_task_2_memory_20260826_2318
+- [memory_rj/e2e_task_2_memory_20260826_2345.md](memory_rj/e2e_task_2_memory_20260826_2345.md) `历史·2026-08-26 23:45` — e2e_task_2_memory_20260826_2345
+- [memory_rj/e2e_task_2_memory_20260826_2351.md](memory_rj/e2e_task_2_memory_20260826_2351.md) `历史·2026-08-26 23:51` — e2e_task_2_memory_20260826_2351
+- [memory_rj/e2e_task_2_memory_20260827_0018.md](memory_rj/e2e_task_2_memory_20260827_0018.md) `最新·2026-08-27 00:18` — e2e_task_2_memory_20260827_0018
+- [memory_rj/promote_task_memory_20260826_2315.md](memory_rj/promote_task_memory_20260826_2315.md) `历史·2026-08-26 23:15` — promote_task_memory_20260826_2315
+- [memory_rj/promote_task_memory_20260826_2318.md](memory_rj/promote_task_memory_20260826_2318.md) `历史·2026-08-26 23:18` — promote_task_memory_20260826_2318
+- [memory_rj/promote_task_memory_20260826_2345.md](memory_rj/promote_task_memory_20260826_2345.md) `历史·2026-08-26 23:45` — promote_task_memory_20260826_2345
+- [memory_rj/promote_task_memory_20260826_2351.md](memory_rj/promote_task_memory_20260826_2351.md) `历史·2026-08-26 23:51` — promote_task_memory_20260826_2351
+- [memory_rj/promote_task_memory_20260827_0018.md](memory_rj/promote_task_memory_20260827_0018.md) `最新·2026-08-27 00:18` — promote_task_memory_20260827_0018
 ## 📋 Spec 文档
 
 需求规格——每个任务一个 spec.md，含 2-3 方案对比，通过 Self-Review。
@@ -168,6 +196,12 @@ require-rule-mention: true
 - [spec_rj/test_reuse_20260825_2341.md](spec_rj/test_reuse_20260825_2341.md) `最新·无时间戳` — test_reuse_20260825_2341
 - [spec_rj/v104_memory_tag_act_report_spec_20260825_2127.md](spec_rj/v104_memory_tag_act_report_spec_20260825_2127.md) `最新·2026-08-25 21:27` — v104_memory_tag_act_report_spec_20260825_2127
 - [spec_rj/INDEX_old_locked.md](spec_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
+- [spec_rj/test_reuse_20260826_2315.md](spec_rj/test_reuse_20260826_2315.md) `最新·无时间戳` — test_reuse_20260826_2315
+- [spec_rj/test_reuse_20260826_2318.md](spec_rj/test_reuse_20260826_2318.md) `最新·无时间戳` — test_reuse_20260826_2318
+- [spec_rj/test_reuse_20260826_2344.md](spec_rj/test_reuse_20260826_2344.md) `最新·无时间戳` — test_reuse_20260826_2344
+- [spec_rj/test_reuse_20260826_2351.md](spec_rj/test_reuse_20260826_2351.md) `最新·无时间戳` — test_reuse_20260826_2351
+- [spec_rj/test_reuse_20260827_0018.md](spec_rj/test_reuse_20260827_0018.md) `最新·无时间戳` — test_reuse_20260827_0018
+- [spec_rj/v105_data_fusion_mentor_spec_20260826_1132.md](spec_rj/v105_data_fusion_mentor_spec_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_spec_20260826_1132
 ## ✅ Task 文档
 
 任务清单——每个任务一个 task.md，每条含「怎么做+怎么验证」。
@@ -182,6 +216,7 @@ require-rule-mention: true
 - [task_rj/v103_t4_skillhub_release_task_20260823_2330.md](task_rj/v103_t4_skillhub_release_task_20260823_2330.md) `最新·2026-08-23 23:30` — v103_t4_skillhub_release_task_20260823_2330
 - [task_rj/v104_memory_tag_act_report_task_20260825_2127.md](task_rj/v104_memory_tag_act_report_task_20260825_2127.md) `最新·2026-08-25 21:27` — v104_memory_tag_act_report_task_20260825_2127
 - [task_rj/INDEX_old_locked.md](task_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
+- [task_rj/v105_data_fusion_mentor_task_20260826_1132.md](task_rj/v105_data_fusion_mentor_task_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_task_20260826_1132
 ## 🤝 Handoff 文档
 
 交接文档——当前状态、已完成、待办、阻塞项，30 秒接手。
@@ -195,6 +230,7 @@ require-rule-mention: true
 - [handoff_rj/v103_t3_apply_cross_machine_5fix_handoff_20260823_2302.md](handoff_rj/v103_t3_apply_cross_machine_5fix_handoff_20260823_2302.md) `最新·2026-08-23 23:02` — v103_t3_apply_cross_machine_5fix_handoff_20260823_2302
 - [handoff_rj/v104_memory_tag_act_report_handoff_20260825_2127.md](handoff_rj/v104_memory_tag_act_report_handoff_20260825_2127.md) `最新·2026-08-25 21:27` — v104_memory_tag_act_report_handoff_20260825_2127
 - [handoff_rj/INDEX_old_locked.md](handoff_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
+- [handoff_rj/v105_data_fusion_mentor_handoff_20260826_1132.md](handoff_rj/v105_data_fusion_mentor_handoff_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_handoff_20260826_1132
 ## 🗄️ Archive 文档
 
 归档沉淀——按任务子文件夹聚合（{task}_{ts}/），保留决策轨迹。
@@ -209,6 +245,7 @@ require-rule-mention: true
 - [archive_rj/v103_t3_apply_cross_machine_5fix_archive_20260823_2302.md](archive_rj/v103_t3_apply_cross_machine_5fix_archive_20260823_2302.md) `最新·2026-08-23 23:02` — v103_t3_apply_cross_machine_5fix_archive_20260823_2302
 - [archive_rj/v104_memory_tag_act_report_archive_20260825_2127.md](archive_rj/v104_memory_tag_act_report_archive_20260825_2127.md) `最新·2026-08-25 21:27` — v104_memory_tag_act_report_archive_20260825_2127
 - [archive_rj/INDEX_old_locked.md](archive_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
+- [archive_rj/v105_data_fusion_mentor_archive_20260826_1132.md](archive_rj/v105_data_fusion_mentor_archive_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_archive_20260826_1132
 ## 🔗 漂移检查清单
 
 每次更新 SUMMARY 后必跑（三触发都跑）。用 grep + ls 做漂移检查。
