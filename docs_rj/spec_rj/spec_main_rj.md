@@ -3,7 +3,7 @@ title: PDCA-SKILL 项目总 spec（source of truth）
 version: v1.0.0
 skill_version: v1.0.4
 date_created: 2026-08-26 00:26
-last_updated: 2026-08-27 09:16
+last_updated: 2026-08-28 09:19
 owner: 86029
 tags: [project-spec, constitution, source-of-truth]
 derived_from: null
@@ -34,12 +34,12 @@ based_on: assets/spec_main_template.md
 > **最新置顶**：最新 memory/TASK_STATE/handoff 排第一行。
 
 **最新项目记忆**：
+- [promote_task_memory_20260828_0049.md](./memory_rj\promote_task_memory_20260828_0049.md)（2026-08-28 00:49，**重要性**: medium）
 - [promote_task_memory_20260827_0018.md](./memory_rj\promote_task_memory_20260827_0018.md)（2026-08-27 00:18，**重要性**: medium）
-- [promote_task_memory_20260826_2351.md](./memory_rj\promote_task_memory_20260826_2351.md)（2026-08-26 23:51，**重要性**: medium）
 **最新任务状态**：
-- [TASK_STATE_v104_pkg_quality_fix.md](./memory_rj/TASK_STATE_v104_pkg_quality_fix.md)（当前最新任务状态）
+- [TASK_STATE_v105_docs2proj_lite.md](./memory_rj/TASK_STATE_v105_docs2proj_lite.md)（当前最新任务状态）
 **最近交接文档**：
-- [v105_data_fusion_mentor_handoff_20260826_1132.md](./handoff_rj/v105_data_fusion_mentor_handoff_20260826_1132.md)（最新 handoff 文档）
+- [v105_docs2proj_lite_handoff_20260828_0023.md](./handoff_rj/v105_docs2proj_lite_handoff_20260828_0023.md)（最新 handoff 文档）
 **全局聚合记忆**：
 - 详见 `memory/memory_main.md` `## PDCA-skill-public v1.0.3开发环境` 段（跨任务长期经验，仅供参考，以当前指令为准；路径相对 skill 包根目录，实际全局记忆在外置 `~/.pdca-skill/data/memory/memory_main.md`）
 
@@ -55,6 +55,7 @@ based_on: assets/spec_main_template.md
 
 | 任务名 | 状态 | 派生自 | TASK_STATE | 最近更新 |
 |---|---|---|---|---|
+| v105_docs2proj_lite | completed | spec_main_rj.md §6 | [TASK_STATE_v105_docs2proj_lite.md](./memory_rj/TASK_STATE_v105_docs2proj_lite.md) | 2026-08-28 09:19 |
 | v104_pkg_quality_fix | pending | spec_main_rj.md §6 | [TASK_STATE_v104_pkg_quality_fix.md](./memory_rj/TASK_STATE_v104_pkg_quality_fix.md) | 2026-08-27 09:16 |
 | v104_memory_tag_act_report | completed（v1.0.4 三痛点改造：记忆标签文件夹制 + /act 互动复盘 + leader_report，50 轮测试 + validate 32/32 + Sign-off 已签） | spec_main_rj.md §3§4 | [TASK_STATE_v104_memory_tag_act_report.md](./memory_rj/TASK_STATE_v104_memory_tag_act_report.md) | 2026-08-26 00:26 |
 | v103_t4_skillhub_release | completed（v1.0.3 skillhub 平台发布） | spec_main_rj.md §3 | [TASK_STATE_v103_sync_github_gitee.md](./memory_rj/TASK_STATE_v103_sync_github_gitee.md) | 2026-08-24 22:04 |

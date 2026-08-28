@@ -8,7 +8,7 @@
 
 > 版本：v1.2.0 | 更新：2026-08-25（v1.0.4：§2.2 加 memory_class 字段 + 两层标签设计说明 + memory_main 索引视图格式；原 2026-08-01 新增 §2.2 下沉为唯一维护源）
 
-> 📦 **用户数据外置说明（v1.0.0 新增）**：全局聚合记忆 `memory/memory_main.md` 与项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 均位于外置目录 `~/.pdca-skill/data/` 下（非 skill 包内）。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落外置项目记忆 + 幂等 upsert 外置全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
+> 📦 **用户数据外置说明（v1.0.0 新增，v1.0.4 修订）**：全局聚合记忆 `memory/memory_main.md` 位于外置目录 `~/.pdca-skill/data/` 下（跟人走）；**项目记忆 `docs_rj/memory_rj/{task}_memory_*.md` 位于项目根 `./docs_rj/`（跟项目走）**。经 `scripts/memory_shadow_write.py` 的 `write_project()` 双写：落项目记忆 + 幂等 upsert 全局 `memory/memory_main.md`。路径解析经 `scripts/user_data_path.py`。
 
 > 📖 **什么时候读这个文件**：
 > - 不知道memory该写什么/怎么写时

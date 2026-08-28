@@ -73,11 +73,16 @@ class TestFlagUpdate:
 class TestWriteProjectWithFlag:
     def test_write_with_archived_status(self, monkeypatch, tmp_path):
         monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
+        # v1.0.4：chdir 到 tmp 项目目录，防污染仓库真实 docs_rj（§2.14 加粗要求）
+        proj = tmp_path / "proj"
+        proj.mkdir()
+        monkeypatch.chdir(proj)
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
-        # v1.0.3：隔离 cwd 下真实 docs_rj（同 phase1，还原"项目无任何 docs 目录"场景）
+        # mock 返回 None 模拟"项目无任何 docs 目录"
         monkeypatch.setattr(generate_docs, "find_docs_dir", lambda custom_dir=None, create=True: None)
-        expected_dir = str(user_data_path.get_memory_rj_path())
+        # v1.0.4（REQ-105）：expected_dir 改项目路径 ./docs_rj/memory_rj
+        expected_dir = os.path.abspath('./docs_rj/memory_rj')
         os.makedirs(expected_dir, exist_ok=True)
         fake_global = str(tmp_path / "memory" / "memory_main.md")
         monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", fake_global)

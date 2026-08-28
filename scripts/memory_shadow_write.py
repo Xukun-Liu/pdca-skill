@@ -532,10 +532,9 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
         experience_tags = [experience_tags]
 
     # 向后兼容：project_memory_dir 为 None 时自动检测
-    # 优先级（与 handoff_tidy/archive_tidy 对齐，修路径分裂 bug）：
-    #   1. primary_docs marker（.primary_docs_rj 标记，项目级 docs）
-    #   2. user_data_path.get_memory_rj_path()（外置用户数据目录）
-    #   3. 老路径 ./memory/（向后兼容）
+    # v1.0.4（REQ-105）落点契约：marker 优先；无 marker 时经 find_docs_dir R3 链解析项目 docs，
+    # 项目无 docs → fallback 项目 ./docs_rj/memory_rj（文档跟项目走，不再落外置用户目录）
+    # 3. 老路径 ./memory/（向后兼容）
     fallback_used = False
     if project_memory_dir is None:
         # 对齐 startup_tidy 的 R3 解析链（marker→MEMORY_RJ约定→路由 ./docs_rj>./.agent/documents>./src/docs>首个docs_rj）
@@ -548,9 +547,11 @@ def write_project(task, content, project_memory_dir=None, project_name=None,
         if primary and os.path.isdir(primary) and os.path.abspath(primary) != external_docs:
             project_memory_dir = os.path.join(primary, 'memory_rj')
         else:
-            logger.warning("[write_project] R3 解析链无结果，记忆 fallback 用户目录: %s",
-                           user_data_path.get_memory_rj_path())
-            project_memory_dir = str(user_data_path.get_memory_rj_path())
+            # v1.0.4（REQ-105）：fallback 回项目 ./docs_rj/memory_rj（文档跟项目走），
+            # 不再默认落外置用户目录——旧版此处落外置导致项目记忆跑去主目录
+            fallback_dir = os.path.abspath('./docs_rj/memory_rj')
+            logger.warning("[write_project] R3 解析链无结果，记忆 fallback 项目目录: %s", fallback_dir)
+            project_memory_dir = fallback_dir
             fallback_used = True
         # marker 存在但无效（空/BOM/坏路径）→ 显式告警提示修复（不静默、不代写 marker，守 R3）
         if os.path.isfile('.primary_docs_rj') and generate_docs.read_primary_docs_marker() is None:
@@ -684,14 +685,23 @@ def _append_atomic(path, content):
 def _resolve_memory_rj_dir():
     """统一解析项目记忆目录（与 write_project 路径优先级一致）。
 
+    v1.0.4（/check 第2轮对抗审查 H1 修复）：原实现只有两级（marker → 外置），
+    与 write_project 新链路分裂——无 marker 时记忆落项目而备份/回滚找外置，
+    治理工具（delete/archive/promote/demote/rethink）的安全网静默失效。
+    现统一走 find_docs_dir R3 解析链（含项目 ./docs_rj 默认落点），
+    解析不出可用目录时兜底项目 ./docs_rj/memory_rj。
+
     优先级：
-      1. primary_docs marker（.primary_docs_rj 标记，项目级 docs）
-      2. user_data_path.get_memory_rj_path()（外置用户数据目录）
+      1. R3 解析链（.primary_docs_rj 标记 > MEMORY_RJ 约定 > 项目扫描 > 项目 ./docs_rj 候选）
+      2. 兜底 ./docs_rj/memory_rj（项目侧）
     """
-    primary_marker = generate_docs.read_primary_docs_marker()
-    if primary_marker:
-        return os.path.join(primary_marker, 'memory_rj')
-    return str(user_data_path.get_memory_rj_path())
+    try:
+        primary = generate_docs.find_docs_dir(create=False)
+    except Exception:
+        primary = None
+    if primary:
+        return os.path.join(primary, 'memory_rj')
+    return os.path.abspath('./docs_rj/memory_rj')
 
 
 def _backup_before_operation(tool_name):

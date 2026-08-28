@@ -111,8 +111,10 @@ pdca-skill 产出的任务文档有固定结构：
 
 模板文件存放在 `assets/` 目录：
 - `assets/spec_main_template.md`（项目级总 spec 模板，通用，其他项目复制填空即可用；实例：docs_rj/spec_main_{项目名}.md）
-- `assets/spec_template.md`
-- `assets/task_template.md`
+- `assets/spec_template_lite.md`（**v1.0.4 起默认**，≤90 行轻量版）
+- `assets/task_template_lite.md`（**v1.0.4 起默认**，≤70 行轻量版）
+- `assets/spec_template.md`（重型，仅 `--full` 场景）
+- `assets/task_template.md`（重型，仅 `--full` 场景）
 - `assets/handoff_template.md`
 - `assets/memory_template.md`
 - `assets/daily_log_template.md`（归档日志模板，文件名保留历史命名）
@@ -122,9 +124,10 @@ pdca-skill 产出的任务文档有固定结构：
 当准备写spec_rj/task文档时，**自动触发**文档生成脚本：
 
 1. **触发时机**：进入阶段1（需求对齐），判断任务为复杂任务时
-2. **自动执行**：调用 `scripts/generate_docs.py --task {任务名} --type all`
+2. **自动执行**：调用 `scripts/generate_docs.py --task {任务名} --type all`（v1.0.4 起默认产出**轻量模板**）
 3. **无需确认**：文档目录结构生成是标准流程，无需额外确认
 4. **后续步骤**：脚本执行完成后，读取生成的模板文件并填充内容
+5. **升级重型（门禁，v1.0.4）**：命中升级信号四条（架构级改动/跨3+文件/动已交付物/用户明说"重型"）→ 先呈现理由经 HARD-GATE 确认，再 `--full --full-reason "{理由}"`（脚本门禁：无理由或 <10 字 exit 2 拒绝、零产出）
 
 **自动触发流程**：
 
@@ -132,7 +135,7 @@ pdca-skill 产出的任务文档有固定结构：
 判断任务为复杂任务
     │
     ├─ 提取任务名（小写+下划线）
-    ├─ 自动调用 generate_docs.py（自动检测主 docs 目录）
+    ├─ 自动调用 generate_docs.py（自动检测主 docs 目录；v1.0.4 默认在项目根 ./docs_rj 创建）
     ├─ 创建 {主docs}/ 扁平 4 类目录结构（spec_rj/task_rj/handoff_rj/archive_rj）
     ├─ 生成 4 类模板 + memory_rj 模板（项目记忆在 docs_rj/memory_rj/ 内）
     └─ 读取模板文件，开始填充内容
@@ -141,10 +144,10 @@ pdca-skill 产出的任务文档有固定结构：
 **降级方案**：如果脚本执行失败（路径错误、Python不可用、权限问题），手动创建目录结构并复制模板文件：
 
 ```bash
-# {主docs} 替换为实际主 docs 路径，默认 ./docs_rj/
+# {主docs} 替换为实际主 docs 路径，默认 ./docs_rj/（v1.0.4 起默认建项目根）
 mkdir -p {主docs}/{spec_rj,task_rj,handoff_rj,archive_rj}
-cp ~/.agent/skills/pdca-skill/assets/spec_template.md {主docs}/spec_rj/{任务名}_spec_YYYYMMDD_HHMM.md
-cp ~/.agent/skills/pdca-skill/assets/task_template.md {主docs}/task_rj/{任务名}_task_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/spec_template_lite.md {主docs}/spec_rj/{任务名}_spec_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/task_template_lite.md {主docs}/task_rj/{任务名}_task_YYYYMMDD_HHMM.md
 cp ~/.agent/skills/pdca-skill/assets/handoff_template.md {主docs}/handoff_rj/{任务名}_handoff_YYYYMMDD_HHMM.md
 # 项目记忆在 docs_rj/memory_rj/ 内，经 memory_shadow_write.write_project 双写
 cp ~/.agent/skills/pdca-skill/assets/memory_template.md {项目根}/docs_rj/memory_rj/{任务名}_memory_YYYYMMDD_HHMM.md
@@ -226,6 +229,8 @@ spec.md和task.md里**绝对禁止**以下模糊描述：
 
 ## spec 完成标准
 
+> **档位说明（v1.0.4）**：以下标准适用于**重型模板**（`--full` 场景）；轻量模板按 `assets/spec_template_lite.md` 骨架达标即可（目标/方案对比/范围/验收标准/风险回退/澄清记录六节齐、无占位符）。
+
 - 看完能写代码，不用再猜
 - 有正例也有反例
 - 有可量化的验收标准
@@ -240,6 +245,8 @@ spec.md和task.md里**绝对禁止**以下模糊描述：
 ---
 
 ## task 完成标准
+
+> **档位说明（v1.0.4）**：以下标准适用于**重型模板**（`--full` 场景）；轻量模板按 `assets/task_template_lite.md` 骨架达标即可（总览含 HARD-GATE/进度状态/阻塞项 + 每任务 4 字段 + 验收闸门 4 道齐、无占位符）。
 
 - 每条有验收标记
 - 按阶段分组（阶段1需求对齐 / 阶段2执行 / 阶段3验收）

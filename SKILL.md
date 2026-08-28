@@ -14,7 +14,7 @@ keywords:
 category: workflow
 ---
 
-<!-- Skill 版本：v1.0.4 | 更新：2026-08-26 | 历史变更详见 HISTORY.md -->
+<!-- Skill 版本：v1.0.4 | 更新：2026-08-28 | 历史变更详见 HISTORY.md -->
 
 # pdca skill
 
@@ -235,15 +235,18 @@ category: workflow
 
 > 本节说明用户数据与框架文件的物理分离机制，所有路径引用以本节为准。
 
-**核心机制**：用户数据外置到 `~/.pdca-skill/data/`（跨平台用户目录下），skill 包纯框架。升级 skill 包（解压覆盖）时用户数据天然不受影响——数据 0 丢失。
+**核心机制**：用户数据外置到 `~/.pdca-skill/data/`（跨平台用户目录下），skill 包纯框架。升级 skill 包（解压覆盖）时用户数据天然不受影响——数据 0 丢失。**v1.0.4：外置只放跟人走的资产（memory_main/outputs_rj/server_lite_data）；跟项目走的文档（docs_rj）建在项目根目录**。
 
 **路径解析三级优先级**：环境变量 `PDCA_DATA_DIR` > 配置文件 `~/.pdca-skill/config.json` 的 `data_dir` 字段 > 默认值 `~/.pdca-skill/data/`。由 `scripts/user_data_path.py` 统一解析，所有脚本经此模块读写用户数据。
 
 **外置目录结构**（`~/.pdca-skill/data/` 下）：
 - `memory/memory_main.md` — 全局聚合记忆（原 skill 包内 `memory/memory_main.md`）
-- `docs_rj/` — 项目文档（spec/task/handoff/memory/archive + SUMMARY_RJ.md + 项目级 spec_main_rj.md）
 - `outputs_rj/` — 任务输出（loop_ledger.json 等）
 - `server_lite_data/` — 框架自动创建的占位目录（server_lite 用户数据；server_lite 当前不主动引导使用，该目录即使为空也无负面影响）
+- `undo/` — 治理工具操作前的备份（delete/archive/promote/demote/rethink 等）
+- `quarantine/` — 隔离区（治理工具删除/隔离的条目暂存）
+
+> **项目文档位置（v1.0.4）**：`docs_rj/` 默认建在**项目根**。外置检测到遗留（递归 `*.md >0`）按**只读存档**处理——旧数据原地保留可读、不迁移、不续写，新文档一律写项目根（防同一任务 spec/task 与 memory 撕裂两处）；搬回需手动移动 + `--declare-primary` 宣告。
 
 **框架文件**（skill 包内，可覆盖升级）：SKILL.md / scripts/ / references/ / assets/ / agents_rj/ / tests/ / evals/ / protocol/ / server_lite/ 框架代码 + assets/ 模板。
 
@@ -1020,7 +1023,9 @@ docs_rj/
 **步骤6 补充：大任务必落 spec/task 文件【硬性·v1.0.0 新增】**：
 - **触发条件**：任务满足以下任一条件——①任务清单≥10 项 ②分批执行（≥2 批）③L2 无人值守模式 ④跨会话执行
 - **必落文件**：必须先生成 `docs_rj/spec_rj/{task}_spec_YYYYMMDD_HHMM.md`（需求规格）+ `docs_rj/task_rj/{task}_task_YYYYMMDD_HHMM.md`（任务清单，每项含边界条件+GWT 验收标准+不通过处理）
-- **禁止行为**：禁止仅靠对话总结承载任务清单（上下文压缩后无法核对全量任务是否完成，违反铁律7逐项核对）
+- **模板档位（v1.0.4）**：默认 `generate_docs.py --task {任务名}`（轻量：spec ≤90 行/task ≤70 行）；升级重型信号四条（架构级改动 / 跨 3+ 文件 / 动已交付物 / 用户明说"重型"）——命中先呈现理由，HARD-GATE 确认后才 `--full --full-reason "{理由}"`（脚本门禁：无理由或 <10 字拒绝）
+- **产物链保障条款（v1.0.4）**：轻量仅指 spec/task 两文件的文字量；TASK_STATE / memory 双写 / SUMMARY 刷新 / 步骤1.5 / handoff / HARD-GATE 全部照旧触发——砍了链路就断
+- **禁止行为**：禁止仅靠对话总结承载任务清单（上下文压缩后无法核对全量任务是否完成，违反铁律7逐项核对）；**禁止绕开 generate_docs.py 手写 spec/task**（门禁会失效）
 - **原因**：历史执行中曾出现任务阻塞时无法核对任务完整清单（任务清单只在压缩后的对话总结里），导致无法 100% 确认全做
 - **降级**：若用户明确说"简单任务不用写 spec/task"，记录到 memory 后跳过，但 TASK_STATE.md 必须留痕"用户豁免 spec/task 文件"
 

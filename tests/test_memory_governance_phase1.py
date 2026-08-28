@@ -55,15 +55,20 @@ class TestGetMemoryRjPath:
 class TestPathAlignment:
     """T002-T005: write_project / force_sync / archive_tidy / handoff_tidy 路径对齐"""
 
-    def test_resolve_memory_rj_dir_returns_user_data_path(self, monkeypatch, tmp_path):
-        """无 primary_docs marker 时，_resolve_memory_rj_dir 应走 user_data_path"""
+    def test_resolve_memory_rj_dir_falls_back_to_project(self, monkeypatch, tmp_path):
+        """无 marker 时 _resolve_memory_rj_dir 兜底项目 ./docs_rj/memory_rj（v1.0.4 H1）"""
         monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
-        # mock read_primary_docs_marker 返回 None
+        # v1.0.4：chdir 到 tmp 项目目录，防解析到仓库真实 docs_rj（§2.14 加粗要求）
+        proj = tmp_path / "proj"
+        proj.mkdir()
+        monkeypatch.chdir(proj)
+        # mock read_primary_docs_marker / find_docs_dir 返回 None
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
+        monkeypatch.setattr(generate_docs, "find_docs_dir", lambda custom_dir=None, create=False: None)
         result = memory_shadow_write._resolve_memory_rj_dir()
-        expected = str(user_data_path.get_memory_rj_path())
-        assert result == expected
+        expected = os.path.abspath('./docs_rj/memory_rj')
+        assert result == expected, "H1：解析应与 write_project 同落点（项目侧）"
 
     def test_resolve_memory_rj_dir_prefers_primary_marker(self, monkeypatch, tmp_path):
         """有 primary_docs marker 时，_resolve_memory_rj_dir 应走 primary/memory_rj"""
@@ -75,16 +80,19 @@ class TestPathAlignment:
         result = memory_shadow_write._resolve_memory_rj_dir()
         assert result == os.path.join(primary_dir, "memory_rj")
 
-    def test_write_project_uses_user_data_path_when_no_marker(self, monkeypatch, tmp_path):
-        """write_project 无 marker 时应写到 user_data_path.get_memory_rj_path()"""
+    def test_write_project_falls_back_to_project_dir_when_no_marker(self, monkeypatch, tmp_path):
+        """write_project 无 marker 时 fallback 项目 ./docs_rj/memory_rj（v1.0.4 REQ-105）"""
         monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
+        # v1.0.4：chdir 到 tmp 项目目录，防污染仓库真实 docs_rj（§2.14 加粗要求）
+        proj = tmp_path / "proj"
+        proj.mkdir()
+        monkeypatch.chdir(proj)
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
-        # v1.0.3：write_project 走 find_docs_dir 完整 R3 链（G2 补丁）。
-        # mock 返回 None 模拟"项目无任何 docs 目录"——隔离 cwd 下真实 docs_rj（Hidden 属性，LS 不可见）
+        # mock 返回 None 模拟"项目无任何 docs 目录"
         monkeypatch.setattr(generate_docs, "find_docs_dir", lambda custom_dir=None, create=True: None)
         # 预先创建新路径目录，避免老路径 ./memory/ 回退触发
-        expected_dir = str(user_data_path.get_memory_rj_path())
+        expected_dir = os.path.abspath('./docs_rj/memory_rj')
         os.makedirs(expected_dir, exist_ok=True)
         # mock GLOBAL_MEMORY_FILE 到临时目录
         fake_global = str(tmp_path / "memory" / "memory_main.md")
@@ -95,10 +103,11 @@ class TestPathAlignment:
         # 写入
         result = memory_shadow_write.write_project("test_task", "test content")
         assert result['project_ok'] is True
-        # 验证项目记忆写到 user_data_path
+        assert result['fallback'] is True, "v1.0.4：无 marker 时应标记 fallback"
+        # 验证项目记忆写到项目 ./docs_rj/memory_rj
         files = os.listdir(expected_dir) if os.path.isdir(expected_dir) else []
         assert any(f.startswith("test_task_memory_") for f in files), \
-            "项目记忆应写到 user_data_path.get_memory_rj_path()"
+            "项目记忆应 fallback 到项目 ./docs_rj/memory_rj（不落外置）"
 
 
 class _DummyLock:
@@ -140,10 +149,15 @@ class TestBackupBeforeOperation:
             assert "# test memory main" in f.read()
 
     def test_backup_includes_memory_rj(self, monkeypatch, tmp_path):
-        """备份应包含 memory_rj/ 目录"""
+        """备份应包含 memory_rj/ 目录（v1.0.4 H1：memory_rj 在项目侧）"""
         monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
+        # v1.0.4：chdir 到 tmp 项目目录，防污染仓库真实 docs_rj（§2.14 加粗要求）
+        proj = tmp_path / "proj"
+        proj.mkdir()
+        monkeypatch.chdir(proj)
         import generate_docs
         monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
+        monkeypatch.setattr(generate_docs, "find_docs_dir", lambda custom_dir=None, create=False: None)
         # 准备 fake memory_main.md
         fake_global = str(tmp_path / "memory" / "memory_main.md")
         os.makedirs(os.path.dirname(fake_global), exist_ok=True)
@@ -151,10 +165,10 @@ class TestBackupBeforeOperation:
             f.write("# test\n")
         monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_FILE", fake_global)
         monkeypatch.setattr(memory_shadow_write, "GLOBAL_MEMORY_DIR", os.path.dirname(fake_global))
-        # 准备 fake memory_rj/
-        mem_rj = user_data_path.get_memory_rj_path()
-        os.makedirs(str(mem_rj), exist_ok=True)
-        with open(os.path.join(str(mem_rj), "test_memory.md"), "w", encoding="utf-8") as f:
+        # 准备 fake memory_rj/（v1.0.4 H1：项目侧 ./docs_rj/memory_rj，与写入同落点）
+        mem_rj = os.path.abspath('./docs_rj/memory_rj')
+        os.makedirs(mem_rj, exist_ok=True)
+        with open(os.path.join(mem_rj, "test_memory.md"), "w", encoding="utf-8") as f:
             f.write("# test memory\n")
         # 执行备份
         undo_dir = memory_shadow_write._backup_before_operation("test_tool")

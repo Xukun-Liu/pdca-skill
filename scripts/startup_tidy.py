@@ -403,7 +403,7 @@ class StartupTidy:
         # 注意：不能用 "and not primary" 作条件——R3 路由会在 marker 无效时仍解析出 primary（那样永不触发）
         if os.path.isfile('.primary_docs_rj') and generate_docs.read_primary_docs_marker() is None:
             logger.warning(".primary_docs_rj 存在但无效（空/BOM/路径不存在），"
-                           "建议运行 python generate_docs.py --declare-primary 修复，否则项目记忆 fallback 用户目录")
+                           "建议运行 python generate_docs.py --declare-primary 修复，否则项目记忆 fallback 项目 ./docs_rj/memory_rj（v1.0.4 起不再落外置用户目录）")
             self.report.errors.append({'stage': 'marker_invalid',
                                        'error': '.primary_docs_rj 存在但无效'})
 
@@ -538,15 +538,17 @@ class StartupTidy:
         始终不抛出、不创建（遵循 bootstrap.md §四「禁止静默创建」）。
         """
         missing = []
-        # 用户数据外置：docs_rj / outputs_rj 检查外置目录；.agent 检查包内
-        # 项目级记忆已搬到 docs_rj/memory_rj/，不再需要项目根 memory/
-        external_checks = [
-            ('docs_rj', str(user_data_path.get_docs_rj_path())),
-            ('outputs_rj', str(user_data_path.get_outputs_rj_path())),
-        ]
-        for name, ext_path in external_checks:
-            if not os.path.isdir(ext_path):
-                missing.append({'path': name + '/', 'reason': '项目结构缺失：外置目录不存在', 'layer': 'project'})
+        # v1.0.4（REQ-103 + /check 第2轮对抗审查 H2 修订）：docs_rj 属项目，检查项目根 ./docs_rj；
+        # outputs_rj 仍外置。外置遗留数据=只读存档（原地保留），不作为"齐备"依据——
+        # 老用户首跑会报缺失，由 bootstrap 在项目内建 8 要素，新链路从此在项目内延续。
+        project_docs_rj = os.path.join(os.getcwd(), 'docs_rj')
+        if not os.path.isdir(project_docs_rj):
+            if user_data_path.external_docs_has_content():
+                logger.info("外置存在遗留 docs 存档（只读保留）：%s；项目根缺 docs_rj，按缺失上报",
+                            user_data_path.get_docs_rj_path())
+            missing.append({'path': 'docs_rj/', 'reason': '项目结构缺失：项目根无 docs_rj 目录', 'layer': 'project'})
+        if not os.path.isdir(str(user_data_path.get_outputs_rj_path())):
+            missing.append({'path': 'outputs_rj/', 'reason': '项目结构缺失：外置目录不存在', 'layer': 'project'})
         # .agent 子目录（包内，agent 配置属项目级）—— 推荐项，不进 missing_dirs
         # 原因：SKILL.md §0 启动前置检查 8 要素不含 .agent/，它是可选的用户 agent 配置
         for d in ['.agent']:
@@ -557,8 +559,12 @@ class StartupTidy:
             p = os.path.join(os.getcwd(), d)
             if not os.path.isdir(p):
                 logger.info("推荐项：%s/ 不存在（agent 侧目录，非必需）", d)
-        # docs_rj 5 类常驻文件夹（优先用主 docs 路径，无标记时回退外置）
-        docs_rj_path = self.report.primary_docs or str(user_data_path.get_docs_rj_path())
+        # docs_rj 5 类常驻文件夹（优先用主 docs 路径；v1.0.4 REQ-104：无标记时回退项目 ./docs_rj；
+        # 外置遗留=只读存档，不参与 5 类检查——检查对象永远是项目侧）
+        if self.report.primary_docs:
+            docs_rj_path = self.report.primary_docs
+        else:
+            docs_rj_path = os.path.join(os.getcwd(), 'docs_rj')
         for sub in generate_docs.DOC_RJ_SUBDIRS:
             p = os.path.join(docs_rj_path, sub)
             if not os.path.isdir(p):

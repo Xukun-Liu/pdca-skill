@@ -37,20 +37,30 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# v1.0.4（REQ-203）：默认产出轻量模板（保骨架去说教）；重型模板经 --full + --full-reason 启用
 DOC_TYPES = {
-    'spec': {'template': 'spec_template.md', 'dir': 'spec_rj'},
-    'task': {'template': 'task_template.md', 'dir': 'task_rj'},
+    'spec': {'template': 'spec_template_lite.md', 'dir': 'spec_rj'},
+    'task': {'template': 'task_template_lite.md', 'dir': 'task_rj'},
     'handoff': {'template': 'handoff_template.md', 'dir': 'handoff_rj'},
     'archive': {'template': 'archive_template.md', 'dir': 'archive_rj'},
+}
+
+# 重型模板（旧版默认；保留供 --full 场景：架构级改动/跨3+文件/动交付物/用户明确要求）
+FULL_TEMPLATES = {
+    'spec': 'spec_template.md',
+    'task': 'task_template.md',
 }
 
 # docs_rj 下常驻的 5 类文档文件夹（按类型聚合，任务名进文件名；memory_rj 为项目级记忆）
 DOC_RJ_SUBDIRS = ['spec_rj', 'task_rj', 'handoff_rj', 'memory_rj', 'archive_rj']
 
+# v1.0.4（REQ-102）：项目内路径优先；外置目录降到末位兜底（仅用于发现旧遗留数据，
+# 永不再优先于项目——旧版外置在首位导致多 docs 场景文档被路由去主目录）
 PRIORITY_PATHS = [
-    str(user_data_path.get_docs_rj_path()),
+    './docs_rj',
     './.agent/documents',
     './src/docs',
+    str(user_data_path.get_docs_rj_path()),
 ]
 
 # pdca-skill 文档特征（扁平结构）：docs_rj 下直接 5 类 _rj 文件夹；
@@ -365,7 +375,7 @@ def auto_merge_if_conflict(docs_dir='./docs', docs_rj_dir=None, verbose=True):
 
     Args:
         docs_dir: 平台 docs/ 路径（默认 ./docs）
-        docs_rj_dir: pdca-skill docs_rj/ 路径（默认 None → 外置 ~/.pdca-skill/data/docs_rj）
+        docs_rj_dir: pdca-skill docs_rj/ 路径（默认 None → 项目 ./docs_rj，v1.0.4 起不再默认外置）
         verbose: 是否输出详细日志（默认 True）
 
     Returns:
@@ -373,7 +383,9 @@ def auto_merge_if_conflict(docs_dir='./docs', docs_rj_dir=None, verbose=True):
               {merged: [...], skipped: [...], errors: [...]}
     """
     if docs_rj_dir is None:
-        docs_rj_dir = str(user_data_path.get_docs_rj_path())
+        # v1.0.4（REQ-106 同源）：默认合并目标回项目 ./docs_rj，不再默认外置目录。
+        # 注意：此处不可调 find_docs_dir()（find_docs_dir→auto_merge_if_conflict→本函数会循环）
+        docs_rj_dir = os.path.abspath('./docs_rj')
     docs_abs = os.path.abspath(docs_dir)
     docs_rj_abs = os.path.abspath(docs_rj_dir)
 
@@ -481,9 +493,17 @@ def find_docs_dir(custom_dir=None, create=True):
         found_dirs = [d for d in found_dirs if 'docs_rj' in d or 'documents' in d]
 
     if not found_dirs:
-        default_path = str(user_data_path.get_docs_rj_path())
+        # v1.0.4（REQ-101 + /check 第2轮对抗审查 H2 修复）：文档跟项目走——默认落点回项目根 ./docs_rj。
+        # 外置有真实遗留（递归 *.md >0，REQ-108 共用检测）→ 只读存档：旧数据原地保留可读，
+        # 但新写入一律进项目——若让 spec/task 续写外置而 memory 落项目，同一任务会撕裂在两处
+        # （H2：spec/task→外置、memory→项目，SUMMARY/启动守卫链断）。
+        # ⚠️ 禁止按目录存在性判断遗留（get_user_data_dir 自动创建空子目录会误判，对抗审查 H1）
+        if user_data_path.external_docs_has_content():
+            logger.warning(f"检测到外置遗留 docs 存档 {user_data_path.get_docs_rj_path()}（只读，原地保留）；"
+                           f"新文档写入项目根 ./docs_rj。如需把旧数据搬回项目：手动移动后用 --declare-primary 宣告")
+        default_path = os.path.abspath('./docs_rj')
         if create:
-            logger.info(f"未找到 docs 目录，在根目录创建 pdca-skill 规范目录: {default_path}")
+            logger.info(f"未找到 docs 目录，在项目根创建 pdca-skill 规范目录: {default_path}")
             try:
                 os.makedirs(default_path, exist_ok=True)
             except OSError as e:
@@ -1220,6 +1240,11 @@ def main():
         help='文档类型（默认 all）',
     )
     parser.add_argument('--docs-dir', help='自定义 docs 目录路径')
+    # v1.0.4（REQ-204）：--full 机械门禁——重型模板必须附理由，防 AI 无理由产出肥文档
+    parser.add_argument('--full', action='store_true',
+                        help='使用重型模板（spec 370行/task 242行）。必须同时给 --full-reason')
+    parser.add_argument('--full-reason',
+                        help='使用重型模板的理由（≥10字，如"架构级改动需全套防失败字段"）')
     # 默认 assets 目录基于脚本位置推导（脚本在 scripts/，assets 在 ../assets/）
     # 修复实战 bug：原默认 './assets' 相对当前工作目录，用户在新项目跑会报"模板目录不存在"
     DEFAULT_ASSETS_DIR = os.path.join(
@@ -1252,6 +1277,17 @@ def main():
                         help='将 docs/ 目录内容合并到 docs_rj/，合并后删除 docs/')
 
     args = parser.parse_args()
+
+    # v1.0.4（REQ-204 + /check M4 修复）：--full 门禁前置到一切副作用钩子之前
+    if args.full:
+        reason = (args.full_reason or '').strip()
+        if len(reason) < 10:
+            sys.stderr.write("[ERROR] 使用 --full 必须给出 --full-reason（≥10字）说明为何此任务需要重型模板，"
+                             "例：--full-reason \"架构级改动需全套防失败字段\"\n")
+            sys.exit(2)
+        for _t, _tpl in FULL_TEMPLATES.items():
+            DOC_TYPES[_t]['template'] = _tpl
+        sys.stderr.write("[FULL-MODE] task=%s reason=%s\n" % (args.task, reason))
 
     # ---- 全局钩子：所有模式入口都先检查 docs/docs_rj 冲突并自动合并 ----
     # 唯一例外：--merge-docs 模式自身就是合并，重复执行会重复提示，所以关闭
@@ -1329,8 +1365,11 @@ def main():
         print("📦 合并 docs/ → docs_rj/")
         print("=" * 60)
         docs_abs = os.path.abspath('./docs')
-        docs_rj_abs = str(user_data_path.get_docs_rj_path())
-        if not os.path.isdir(docs_abs):
+        # v1.0.4（REQ-106 + /check H-1 修复）：合并目标显式取项目 ./docs_rj（与 auto_merge 新默认同源）。
+        # 不用 find_docs_dir()：其语义是"解析主 docs"——仅 docs 无 docs_rj 时会返回 ./docs 源目录致自合并；
+        # 且其内部 auto_merge_if_conflict 会先于本模式真实合并+删 docs/，击穿 --dry-run 契约。
+        docs_rj_abs = os.path.abspath('./docs_rj')
+        if not (os.path.isdir(docs_abs)):
             print(f"❌ docs/ 目录不存在: {docs_abs}")
             sys.exit(1)
         if not os.path.isdir(docs_rj_abs):
