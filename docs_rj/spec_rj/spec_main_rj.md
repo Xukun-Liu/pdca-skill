@@ -41,7 +41,7 @@ based_on: assets/spec_main_template.md
 **最近交接文档**：
 - [v105_docs2proj_lite_handoff_20260828_0023.md](./handoff_rj/v105_docs2proj_lite_handoff_20260828_0023.md)（最新 handoff 文档）
 **全局聚合记忆**：
-- 详见 `memory/memory_main.md` `## PDCA-skill-public v1.0.3开发环境` 段（跨任务长期经验，仅供参考，以当前指令为准；路径相对 skill 包根目录，实际全局记忆在外置 `~/.pdca-skill/data/memory/memory_main.md`）
+- 详见 `memory/memory_main.md` `## PDCA-skill-public v1.0.4开发环境` 段（跨任务长期经验，仅供参考，以当前指令为准；路径相对 skill 包根目录，实际全局记忆在外置 `~/.pdca-skill/data/memory/memory_main.md`）
 
 ---
 
@@ -162,7 +162,7 @@ pdca-skill/
 
 ### §7.1 关键决策全量记录（指针）
 
-**全量记录位置**：按 `memory/memory_main.md` `## PDCA-skill-public v1.0.3开发环境` 段聚合；本节只列 TOP 5 指针，不重复内容。
+**全量记录位置**：按 `memory/memory_main.md` `## PDCA-skill-public v1.0.4开发环境` 段聚合；本节只列 TOP 5 指针，不重复内容。
 
 **TOP 核心 ADR**（手工维护，TOP 5，最新置顶倒序）：
 
