@@ -1,8 +1,8 @@
 ---
 title: riji-skill
 version: v1.0.0
-last_updated: 2026-08-28 01:05
-total_docs: 158
+last_updated: 2026-08-28 09:19
+total_docs: 159
 require-rule-mention: true
 ---
 
@@ -151,6 +151,7 @@ require-rule-mention: true
 - [memory_rj/e2e_task_1_memory_20260828_0049.md](memory_rj/e2e_task_1_memory_20260828_0049.md) `最新·2026-08-28 00:49` — e2e_task_1_memory_20260828_0049
 - [memory_rj/e2e_task_2_memory_20260828_0049.md](memory_rj/e2e_task_2_memory_20260828_0049.md) `最新·2026-08-28 00:49` — e2e_task_2_memory_20260828_0049
 - [memory_rj/promote_task_memory_20260828_0049.md](memory_rj/promote_task_memory_20260828_0049.md) `最新·2026-08-28 00:49` — promote_task_memory_20260828_0049
+- [memory_rj/TASK_STATE_v105_docs2proj_lite.md](memory_rj/TASK_STATE_v105_docs2proj_lite.md) `最新·无时间戳` — TASK_STATE_v105_docs2proj_lite
 ## 📋 Spec 文档
 
 需求规格——每个任务一个 spec.md，含 2-3 方案对比，通过 Self-Review。
