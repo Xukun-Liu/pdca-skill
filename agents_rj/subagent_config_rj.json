@@ -1,6 +1,6 @@
 {
-  "version": "v1.0.3",
-  "last_updated": "2026-08-20",
+  "version": "v1.0.4",
+  "last_updated": "2026-08-31",
   "defaults": {
     "subagent_type": "general_purpose_task",
     "permission": "read_only",
@@ -25,11 +25,24 @@
         "references/common/pd/minimal_code_principles.md"
       ],
       "triggers": [
-        "初始化", "首次使用", "文件不存在", "memory不存在",
-        "项目结构", "目录组织", "架构设计", "分层设计", "模块划分",
-        "多项目", "切换项目", "流程怎么走"
+        "初始化",
+        "首次使用",
+        "文件不存在",
+        "memory不存在",
+        "项目结构",
+        "目录组织",
+        "架构设计",
+        "分层设计",
+        "模块划分",
+        "多项目",
+        "切换项目",
+        "流程怎么走"
       ],
-      "output_format": ["架构建议", "目录结构", "流程建议"]
+      "output_format": [
+        "架构建议",
+        "目录结构",
+        "流程建议"
+      ]
     },
     {
       "name": "skill_mgmt_agent_pdca",
@@ -43,11 +56,31 @@
         "references/plan/route/agent_find.md"
       ],
       "triggers": [
-        "找skill", "装skill", "下载skill", "有没有skill",
-        "建skill", "创建skill", "新建技能", "写一个skill", "做一个skill", "skill开发", "改skill", "优化skill", "测试skill",
-        "部署", "发布", "上线", "CI", "CD", "专业领域工具"
+        "找skill",
+        "装skill",
+        "下载skill",
+        "有没有skill",
+        "建skill",
+        "创建skill",
+        "新建技能",
+        "写一个skill",
+        "做一个skill",
+        "skill开发",
+        "改skill",
+        "优化skill",
+        "测试skill",
+        "部署",
+        "发布",
+        "上线",
+        "CI",
+        "CD",
+        "专业领域工具"
       ],
-      "output_format": ["skill候选列表", "安全扫描报告", "安装建议"]
+      "output_format": [
+        "skill候选列表",
+        "安全扫描报告",
+        "安装建议"
+      ]
     },
     {
       "name": "spec_design_agent_pdca",
@@ -60,10 +93,24 @@
         "references/common/pda/document_specs.md"
       ],
       "triggers": [
-        "写spec", "写task", "写方案", "需求分析", "出方案", "做设计",
-        "验收标准", "DoD", "GivenWhenThen", "对抗审查", "挑刺", "审方案"
+        "写spec",
+        "写task",
+        "写方案",
+        "需求分析",
+        "出方案",
+        "做设计",
+        "验收标准",
+        "DoD",
+        "GivenWhenThen",
+        "对抗审查",
+        "挑刺",
+        "审方案"
       ],
-      "output_format": ["方案对比表", "spec草案", "task清单"]
+      "output_format": [
+        "方案对比表",
+        "spec草案",
+        "task清单"
+      ]
     },
     {
       "name": "code_eng_agent_pdca",
@@ -80,31 +127,103 @@
         "references/do/danger/security.md"
       ],
       "triggers": [
-        "写代码", "改代码", "实现", "开发", "coding", "加功能", "修bug",
-        "重构", "优化代码", "调试", "报错", "出错", "异常",
-        "Git", "commit", "分支", "回滚", "API", "接口", "数据库",
-        "建表", "SQL", "测试", "单测", "集成测试",
-        "git备份", "清理", "瘦身", "释放空间", "git太大", "仓库太大", "仓库体检"
+        "写代码",
+        "改代码",
+        "实现",
+        "开发",
+        "coding",
+        "加功能",
+        "修bug",
+        "重构",
+        "优化代码",
+        "调试",
+        "报错",
+        "出错",
+        "异常",
+        "Git",
+        "commit",
+        "分支",
+        "回滚",
+        "API",
+        "接口",
+        "数据库",
+        "建表",
+        "SQL",
+        "测试",
+        "单测",
+        "集成测试",
+        "git备份",
+        "清理",
+        "瘦身",
+        "释放空间",
+        "git太大",
+        "仓库太大",
+        "仓库体检"
       ],
-      "output_format": ["代码建议", "调试报告", "Git操作建议"]
+      "output_format": [
+        "代码建议",
+        "调试报告",
+        "Git操作建议"
+      ]
     },
     {
       "name": "doc_proc_agent_pdca",
       "role": "文档处理专家",
-      "role_identity": "你是 pdca-skill 的文档处理专家副 agent。职责边界：处理 Office 文档、转 Markdown、Excel 分析。输出要求：文档处理步骤+数据分析报告+验收报告。首行必须声明：[subagent: doc_proc_agent_pdca]。权限：只读调研，不写业务文件。",
-      "description": "处理 Office 文档、转 Markdown、Excel 分析",
+      "role_identity": "你是 pdca-skill 的文档处理专家副 agent。职责边界：处理 Office 文档、转 Markdown、Excel 分析、HTML/PPT 制作、专业图表（diagram-design）。输出要求：文档处理步骤+数据分析报告+验收报告+专业图表。首行必须声明：[subagent: doc_proc_agent_pdca]。权限：只读调研，不写业务文件。",
+      "description": "处理 Office 文档、转 Markdown、Excel 分析、HTML/PPT 制作、专业图表",
       "knowledge": [
         "references/do/code/office_processing.md",
         "references/do/code/file_to_markdown.md",
+        "references/do/code/html_ppt_creation.md",
         "references/common/pd/data_analysis.md",
-        "references/common/da/hand-drawn-report.md"
+        "references/common/da/hand-drawn-report.md",
+        "references/common/da/diagram-design.md",
+        "references/common/da/diagram-design/"
       ],
       "triggers": [
-        "PDF", "Word", "PPT", "Excel", "转Markdown", "转md",
-        "Excel分析", "数据分析", "透视表", "统计分析",
-        "验收报告", "汇报", "总结", "手绘报告"
+        "PDF",
+        "Word",
+        "PPT",
+        "Excel",
+        "转Markdown",
+        "转md",
+        "Excel分析",
+        "数据分析",
+        "透视表",
+        "统计分析",
+        "做网页",
+        "HTML",
+        "落地页",
+        "前端页面",
+        "做PPT",
+        "幻灯片",
+        "演示文稿",
+        "课件",
+        "验收报告",
+        "汇报",
+        "总结",
+        "速览图",
+        "流程图",
+        "架构图",
+        "时序图",
+        "甘特图",
+        "ER图",
+        "泳道图",
+        "桑基图",
+        "鱼骨图",
+        "看板图",
+        "组织架构图",
+        "画个专业的图",
+        "重绘drawio",
+        "重绘mermaid",
+        "导出PNG"
       ],
-      "output_format": ["文档处理步骤", "数据分析报告", "验收报告"]
+      "output_format": [
+        "文档处理步骤（命令+参数）",
+        "数据分析报告（结论+图表）",
+        "验收报告（编辑级速览图 SVG + 文字）",
+        "专业图表（自包含 HTML）"
+      ]
     },
     {
       "name": "loop_agent_pdca",
@@ -117,11 +236,24 @@
         "references/check/loop_verifier.md"
       ],
       "triggers": [
-        "/loop", "自动循环", "跑循环", "loop模式", "自动模式", "L2",
-        "熔断", "stagnation", "no_progress", "max_iter",
-        "loop_admission", "准入检查"
+        "/loop",
+        "自动循环",
+        "跑循环",
+        "loop模式",
+        "自动模式",
+        "L2",
+        "熔断",
+        "stagnation",
+        "no_progress",
+        "max_iter",
+        "loop_admission",
+        "准入检查"
       ],
-      "output_format": ["准入检查报告", "循环策略建议", "熔断规则"]
+      "output_format": [
+        "准入检查报告",
+        "循环策略建议",
+        "熔断规则"
+      ]
     },
     {
       "name": "learn_opt_agent_pdca",
@@ -134,11 +266,23 @@
         "references/common/pc/adversarial_review.md"
       ],
       "triggers": [
-        "learn", "学习一下", "自进化", "自我优化", "扫一下skill",
-        "prompt优化", "减法原则", "规则层扫描",
-        "skill体检", "优化框架", "找可优化点"
+        "learn",
+        "学习一下",
+        "自进化",
+        "自我优化",
+        "扫一下skill",
+        "prompt优化",
+        "减法原则",
+        "规则层扫描",
+        "skill体检",
+        "优化框架",
+        "找可优化点"
       ],
-      "output_format": ["扫描报告解读", "优化建议清单", "prompt改进建议"]
+      "output_format": [
+        "扫描报告解读",
+        "优化建议清单",
+        "prompt改进建议"
+      ]
     },
     {
       "name": "sync_agent_pdca",
@@ -151,10 +295,25 @@
         "references/common/da/hand-drawn-report.md"
       ],
       "triggers": [
-        "同步", "整理", "交接", "收尾", "版本号一致", "一致性检查",
-        "清理", "sync", "neat", "tidy", "规范体检", "梳理一下", "对一下"
+        "同步",
+        "整理",
+        "交接",
+        "收尾",
+        "版本号一致",
+        "一致性检查",
+        "清理",
+        "sync",
+        "neat",
+        "tidy",
+        "规范体检",
+        "梳理一下",
+        "对一下"
       ],
-      "output_format": ["同步报告", "整理清单", "交接文档"]
+      "output_format": [
+        "同步报告",
+        "整理清单",
+        "交接文档"
+      ]
     },
     {
       "name": "browser_agent_pdca",
@@ -165,10 +324,20 @@
         "references/do/code/browser_automation.md"
       ],
       "triggers": [
-        "浏览器操控", "浏览器自动化", "网页操作", "自动填表", "RPA",
-        "Agent浏览", "AI网页抓取", "让AI操作浏览器"
+        "浏览器操控",
+        "浏览器自动化",
+        "网页操作",
+        "自动填表",
+        "RPA",
+        "Agent浏览",
+        "AI网页抓取",
+        "让AI操作浏览器"
       ],
-      "output_format": ["操作步骤", "自动化脚本", "结果验证"]
+      "output_format": [
+        "操作步骤",
+        "自动化脚本",
+        "结果验证"
+      ]
     }
   ]
 }

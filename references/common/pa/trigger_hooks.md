@@ -1,13 +1,13 @@
 <!-- PDCA标签：P.route A.handoff -->
 <!-- 子标签场景：路由判断、关键词触发、reference 索引 -->
-<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck/给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 -->
+<!-- 关键词清单：报错/写代码/写spec/跳过规则/对抗审查/项目结构/设计模式/API/数据库/Git/回滚/memory/沟通/安全/测试/部署/性能/浏览器/Office/转Markdown/Excel分析/装skill/建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板/同步整理/验收交接/bootstrap/多项目/git备份/上下文压缩/learn/写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味/做网页/前端/HTML/落地页/网站/组件/页面/做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck/给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料/流程图/架构图/时序图/状态机图/ER图/甘特图/泳道图/桑基图/鱼骨图/看板图/组织架构图/类图/依赖图/部署图/画个专业的图/画图/画个图/重绘drawio/重绘mermaid/导出PNG/导出SVG -->
 <!-- 引用范围：main + bootstrap_agent -->
 
 # 触发钩子表（从 SKILL.md §0 外迁）
 
 > 阶段标签：P · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.8 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-25（v1.0.4 新增领导汇报触发钩子：给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 → leader_report.md，精确关键词集禁裸"汇报"防三重命中）| PDCA 标签：P.route A.handoff
+> 版本：v1.1.9 | 外迁时间：2026-07-15 12:00 | 更新：2026-08-31（v1.0.4 画图双轨升级两类改动：①新增专业图表行（39 图型词/重绘drawio·mermaid/导出PNG·SVG → diagram-design.md）②手绘退役措辞同步 3 行：验收/汇报行、领导汇报行尾句、写spec行）| PDCA 标签：P.route A.handoff
 > 本文件是 pdca-skill 的关键词→reference 映射总表，从 SKILL.md §0 外迁而来，作为路由层 reference 平级管理。
 > 触发逻辑不变：遇到关键词→读对应 reference→再动手。报错信号不自动读 debugging.md，先询问用户意图（见文末"报错询问机制"节）。
 
@@ -21,7 +21,7 @@
 |---------------------|-----------------|----------------|
 | 报错/出错/不对/不行/坏了/崩了/异常/不好使/修不好/不work/不符合预期/error/failed | references/common/dc/debugging.md（完整读四步调试+3-Strike） | - |
 | 准备写代码/改代码/改文件/写个/帮我写/实现/开发/coding/加功能/新增功能/改功能/修bug/重构/优化代码 | references/do/code/code_rules.md（至少读四原则+HARD-GATE+No Placeholders） | - |
-| 准备写spec/写task/写文档/写需求/做需求/需求分析/写方案/出方案/写设计/做设计/规划 | references/common/pda/document_specs.md | **自动调用 `generate_docs.py` 生成文档目录结构；生成的 spec/task 文档顶部按 hand-drawn-report.md 内联手绘 SVG 速览图（默认带图）** |
+| 准备写spec/写task/写文档/写需求/做需求/需求分析/写方案/出方案/写设计/做设计/规划 | references/common/pda/document_specs.md | **自动调用 `generate_docs.py` 生成文档目录结构；生成的 spec/task 文档顶部按 hand-drawn-report.md 内联编辑级速览图（默认带图）** |
 | 想跳过规则/太简单/不用确认/不确定/该不该继续/感觉不对/是不是偏了/是不是有问题/检查代码/检查逻辑/review一下/复盘 | references/check/red_flags.md（先翻理性化反驳表） | - |
 | 审一下/挑刺/grill/对抗审查/审查方案/审spec/审代码/找漏洞/挑毛病/adversarial | references/common/pc/adversarial_review.md（第一性原理拆解+对抗性审查流程） | **复杂任务自动启动独立 subagent 做对抗性审查** |
 | 文件放哪/目录怎么组织/放哪个目录/结构怎么弄/项目结构/代码放哪/模块怎么分/文件夹怎么建/准备设计项目结构/模块划分/架构设计/分层设计/代码组织 | references/plan/design/project_structure.md | - |
@@ -46,7 +46,7 @@
 | 安装skill/装skill/下载skill/找一个skill/有没有skill/skill推荐/技能/插件/扩展 | references/plan/route/skill_security.md | **自动执行 SkillAudit 安全扫描** |
 | 建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 | references/plan/route/skill_creation.md（意图捕获4问+四件套结构+三级渐进加载+description写法+测试迭代循环） | **建之前先过"找现成 vs 自己建"闸（复用优先，先查 skill_management.md）；建完登记 SKILL.md §0.5 索引 + 经 write_project 记忆** |
 | 同步一下/整理文档/整理一下/更新记忆/梳理一下/收尾/这个阶段做完了/新人能直接上手/检查规范/审计规则/规范体检/交接/里程碑/sync/neat/tidy/版本号一致/一致性检查/清理/打扫/对一下 | references/common/da/sync-matrix.md（按矩阵逐项核对版本号+引用+文件一致性） | **自动执行全局版本号一致性检查** |
-| 验收/验收一下/审核/看一下做得对不对/看一下进度报告/交接/给你接手/handoff/存档/总结/总结一下/汇报/进度/汇总/梳理一下做了什么/产出报告/报告/让我看看总结/确认一下做得对不对/计划/方案/规划一下/出方案/做规划/盘点/能力清单 | references/common/da/hand-drawn-report.md（按内容关系类型生成手绘 SVG） | **报告/计划/盘点类输出默认在对话内附手绘 SVG 速览图，若生成 md 则 md 顶部同时内联同款 SVG（带图、单文件自包含）；交接时额外刷新 {主docs}/SUMMARY_RJ.md（见 summary_view.md）** |
+| 验收/验收一下/审核/看一下做得对不对/看一下进度报告/交接/给你接手/handoff/存档/总结/总结一下/汇报/进度/汇总/梳理一下做了什么/产出报告/报告/让我看看总结/确认一下做得对不对/计划/方案/规划一下/出方案/做规划/盘点/能力清单/把这段可视化/来张信息图/画个速览图/手绘/涂鸦风/手账风 | references/common/da/hand-drawn-report.md（按内容关系类型生成编辑级速览 SVG；手绘/涂鸦/手账风格词命中退役声明→出编辑级并说明） | **报告/计划/盘点类输出默认在对话内附编辑级速览图（手绘风已退役，视觉走 diagram-design 设计系统），若生成 md 则 md 顶部同时内联同款 SVG（带图、单文件自包含）；交接时额外刷新 {主docs}/SUMMARY_RJ.md（见 summary_view.md）** |
 | 交接/收尾/给你接手/handoff/存档/交接工作 | references/common/da/sync-matrix.md → **自动调用 `python scripts/handoff_tidy.py --task {任务名}`** | **硬性：交接时必跑 handoff_tidy**<br>　管线：守卫+归档+刷新+漂移+外部记忆清理+平台记忆融入技能记忆+强制#3→#4同步+五问预跑+sync-matrix核对<br>　效果：自动整理文档+对齐记忆+强制走技能记忆（禁止用平台记忆替代）+融入平台记忆并删除原件 |
 | 定验收标准/写验收/写验收条件/DoD/验收严格点/怎么算做完/acceptance/给定当那么/GivenWhenThen | references/common/pc/acceptance_criteria.md（DoD+Given/When/Then+4道质量闘门） | **定义"做完了"的硬标准——写 spec 验收小节前先读；与 adversarial_review.md(找茬执行)+red_flags.md(偏离报警) 配合成严格验收闭环** |
 | /plan /设计 /方案 /从头开始 /新项目 /帮我规划 /一步一步来 /规划一下 /想清楚再做 /需求分析 /做需求 /出方案 | 按 SKILL.md §6 /plan 完整 7 步流程执行（步骤1 P.bootstrap 读状态→步骤2 P.route 三层挑选+报错询问→步骤3 需求澄清→步骤4 P.design 第一性原理拆解→步骤4a P.reuse 外部资源搜索【自动调用 agent_find 搜索外部资源】→步骤5 brainstorming+HARD-GATE→步骤6 writing-plans+HARD-GATE+Self-Review+对抗审查） | **PDCA /plan 触发词：默认用户零背景，疯狂追问确认，步骤4a 自动搜索外部资源，步骤5/6 各一次 HARD-GATE，确认好再进入 /do** |
@@ -66,7 +66,8 @@
 | 副 agent 调度/召唤副 agent/多 agent/并行调研/专业分工/顾问团/复杂任务深度调研 | references/common/pda/subagents_rj.md（9 副 agent 角色配置 + 调度规则 + 权限白名单） | **可跑 `python scripts/launch_subagent_rj.py suggest --task "任务描述"` 获取调度建议；主 agent 按建议用 Task 工具启动副 agent（subagent_type=general_purpose_task）做只读调研；详见 SKILL.md §0.56** |
 | 执行中插需求/打断/插入新任务/挂起/暂停任务/恢复原任务/paused | references/do/comm/insert_new_task.md（4步打断流程/挂起/恢复/边界case） | **在范围内当子任务追加，超范围走 4 步打断流程；/loop 自动模式下立即熔断 escalate** |
 | 写文章/写知乎/写公众号/写博客/写小说/写故事/写人物稿/写口播稿/写演讲稿/活人感/文风/长文/去AI味 | references/common/style/article-writing.md（活人感写作入口：按任务链式读 article-writing/ 下子模块） | **写作任务不生成 spec/task，直接出稿；材料澄清最多三问；正文只交作品（详见入口"流程覆盖声明"）** |
-| 给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 | references/common/da/leader_report.md（六段结构：结论→进展→数据→风险→计划→求助，v1.0.4 新增） | **精确关键词集（禁裸"汇报"——与 hand-drawn-report/html_ppt 三重命中，见 SKILL.md 仲裁规则）；数据源映射表自动拉 TASK_STATE/task.md/memory，缺数据标"暂无数据"不编造；产出文档顶部按 hand-drawn-report 内联手绘 SVG** |
+| 给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 | references/common/da/leader_report.md（六段结构：结论→进展→数据→风险→计划→求助，v1.0.4 新增） | **精确关键词集（禁裸"汇报"——与 hand-drawn-report/html_ppt 三重命中，见 SKILL.md 仲裁规则）；数据源映射表自动拉 TASK_STATE/task.md/memory，缺数据标"暂无数据"不编造；产出文档顶部按 hand-drawn-report 内联编辑级速览图** |
+| 流程图/架构图/时序图/状态机图/ER图/数据模型图/时间线图/泳道图/象限图/雷达图/循环图/飞轮图/树图/组织架构图/层级图/维恩图/金字塔图/漏斗图/矩形树图/柱状图/折线图/甘特图/散点图/桑基图/鱼骨图/沃德利地图/看板图/用户旅程图/部署图/依赖图/类图/故事地图/数据库表结构图/画个专业的图/画图/画个图/帮我画图/重绘drawio/重绘mermaid/导出PNG/导出SVG | references/common/da/diagram-design.md（嵌入式 diagram-design v2.6.7 MIT：39 种专业图型，自包含 HTML + SVG，新增） | **与 hand-drawn-report 双轨：本行管专业图型（点名图型词/重绘 .drawio·.mmd/导出图表 PNG·SVG）；图型词清单以 diagram-design.md §3 39 种为准；报告伴随速览图、手绘/速记/涂鸦风格词仍走 hand-drawn-report.md；裸"画图/画个图/帮我画图"→澄清菜单二选一；四条补充仲裁（报告词+图型词同现→图型优先/ER图+绘图动词→本行、+建表SQL→code_rules/嵌入既有网页的图表→html_ppt §3.3/导出PNG限图表语境）见 SKILL.md"画图/画个图"条；产出自包含 HTML，交付前跑 `python references/common/da/diagram-design/scripts/self_check.py` 校验** |
 | 做网页/前端/HTML/落地页/网站/组件/页面/landing/网页制作 | references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，内网可用） | **按本文档手写 HTML/CSS/JS 制作；图片用用户提供/本地素材（无在线生成时），图表手写 SVG 或本地 echarts** |
 | 做PPT/幻灯片/演示文稿/课件/汇报/讲课/deck/PPT制作 | references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，内网可用） | **按本文档制作：python-pptx（纯 Python）或 PptxGenJS（Node）生成可编辑 .pptx，或手写单文件 HTML 幻灯片；视觉方法论见 §一/§二** |
 
@@ -135,3 +136,4 @@ PDCA 四触发词（`/plan` `/do` `/check` `/act`）是**显式触发**（用户
 | v1.1.6 | 2026-08-20 | 新增建 skill 触发钩子（建skill/创建skill/新建技能/写一个skill/做一个skill/skill开发/改skill/优化skill/测试skill/skill模板 → skill_creation.md），自动触发列注明"先过找现成vs自建闸+建完登记索引和记忆"；头部关键词注释同步 |
 | v1.1.7 | 2026-08-20 | 对抗审查修复（H9/H7）：触发行声明 skill 域词优先于"技能/测试/优化"泛词（与 SKILL.md 仲裁规则联动）；登记指令改为两分支（reference 模块→SKILL.md 索引表 / 独立 skill→memory）；补"改 skill 先快照旧版"；头部版本说明词数修正（4→10） |
 | v1.1.8 | 2026-08-25 | v1.0.4 新增领导汇报触发钩子（给领导汇报/向上汇报/出汇报文档/给老板汇报/周报月报/对上汇报/汇报材料 → leader_report.md）；精确关键词集禁裸"汇报"（与 hand-drawn-report/html_ppt 三重命中由 SKILL.md 仲裁规则分流）；头部关键词注释同步 |
+| v1.1.9 | 2026-08-31 | 画图双轨升级：新增专业图表触发行（39 图型词/重绘drawio·mermaid/导出PNG·SVG → diagram-design.md，领导汇报行之后）；手绘退役措辞同步 3 行（验收/汇报行关键词列补风格词+中右列改编辑级、领导汇报行尾句、写spec行，手绘 SVG→编辑级速览图）；头部关键词清单加图型词批 |

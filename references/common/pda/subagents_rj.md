@@ -5,7 +5,7 @@
 
 # 副 agent 角色配置总表（pdca-skill 多 agent 架构）
 
-> 版本：v1.0.1 | 创建：2026-07-21 | 更新：2026-08-20（skill_mgmt_agent 知识库 3→4：纳入 skill_creation.md；触发词补建skill域；L528 计数 47→48）| 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
+> 版本：v1.0.2 | 创建：2026-07-21 | 更新：2026-08-31（画图双轨升级：doc_proc_agent 知识库 +diagram-design 入口与子目录、触发词 +图型批、输出格式 +专业图表（自包含 HTML）；手绘报告→速览图；L528 计数 48→51 还旧账）| 阶段标签：P.route D.code A.handoff（以头部 PDCA 标签为准）
 >
 > 本文件定义 pdca-skill 的 9 个副 agent 角色配置。主 agent 按触发钩子表的关键词，用 TRAE Task 工具临时召唤对应副 agent 做只读调研，结果回传给主 agent，主 agent 守 HARD-GATE 后写操作。
 >
@@ -291,7 +291,7 @@
 
 ### 5. doc_proc_agent_pdca（文档处理专家）
 
-**角色定位**：负责处理 Office 文档、转 Markdown、Excel 分析、HTML/PPT 制作。遇到"处理 PDF/Word/Excel""转 Markdown""数据分析""做网页/做PPT"时召唤。
+**角色定位**：负责处理 Office 文档、转 Markdown、Excel 分析、HTML/PPT 制作、专业图表（diagram-design.md 入口 + diagram-design/ 随附 39 图型 references/scripts/assets）。遇到"处理 PDF/Word/Excel""转 Markdown""数据分析""做网页/做PPT""画专业图"时召唤。
 
 **subagent_type**：`general_purpose_task`
 
@@ -301,18 +301,22 @@
 - references/do/code/html_ppt_creation.md
 - references/common/pd/data_analysis.md
 - references/common/da/hand-drawn-report.md
+- references/common/da/diagram-design.md
+- references/common/da/diagram-design/
 
 **触发关键词**：
 - PDF/Word/PPT/Excel/转Markdown/转md
 - Excel分析/数据分析/透视表/统计分析
 - 做网页/HTML/落地页/前端页面
 - 做PPT/幻灯片/演示文稿/课件
-- 验收报告/汇报/总结/手绘报告
+- 验收报告/汇报/总结/速览图
+- 流程图/架构图/时序图/甘特图/ER图/泳道图/桑基图/鱼骨图/看板图/组织架构图/画个专业的图/重绘drawio/重绘mermaid/导出PNG
 
 **输出格式**：
 - 文档处理步骤（命令+参数）
 - 数据分析报告（结论+图表）
-- 验收报告（手绘 SVG + 文字）
+- 验收报告（编辑级速览图 SVG + 文字）
+- 专业图表（自包含 HTML）
 
 ---
 
@@ -525,6 +529,6 @@ python scripts/launch_subagent_rj.py dispatch --task "初始化项目" --json
 > **维护规则**:
 > - 修改副 agent 知识库(本文件第二节)→ 同步更新 [index.md 第六节](../../index.md)的反向索引表
 > - 新增/删除副 agent → 同步更新 index.md 第六节 6.1(agent 分组) + 6.2(reference 分组) + 6.3(统计摘要)
-> - 48 个 reference 文件头部的 `<!-- 引用范围 -->` 标注也需同步更新
+> - 51 个 reference 文件头部的 `<!-- 引用范围 -->` 标注也需同步更新
 >
 > **原因**:历史执行中曾出现同一份数据在两处维护导致漂移(详见用户偏好"先合并再删除")。反向索引集中在 index.md,本文件只放正向配置,避免双源漂移。

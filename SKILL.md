@@ -14,7 +14,7 @@ keywords:
 category: workflow
 ---
 
-<!-- Skill 版本：v1.0.4 | 更新：2026-08-28 | 历史变更详见 HISTORY.md -->
+<!-- Skill 版本：v1.0.4 | 更新：2026-08-31 | 历史变更详见 HISTORY.md -->
 
 # pdca skill
 
@@ -114,7 +114,7 @@ category: workflow
 | PDCA 母标签 | 子标签槽位（可扩展） | 参考模块 |
 |------|------|------|
 | P (Plan) | P.bootstrap · P.route · P.design · P.gate | bootstrap · compaction_recovery · multi_project · summary_view · working_memory_rules · skill_management · skill_security · skill_creation · agent_find · usage_examples · trigger_hooks · acceptance_criteria · adversarial_review · design_patterns · document_specs · data_analysis · project_structure · minimal_code_principles · loop_triage · article-writing |
-| D (Do) | D.code · D.comm · D.danger | browser_automation · code_rules · communication_rules · debugging · document_specs · data_analysis · file_to_markdown · git_workflow · hand-drawn-report · office_processing · security · sync-matrix · minimal_code_principles · loop_constraints · insert_new_task · article-writing |
+| D (Do) | D.code · D.comm · D.danger | browser_automation · code_rules · communication_rules · debugging · document_specs · data_analysis · diagram-design · file_to_markdown · git_workflow · hand-drawn-report · office_processing · security · sync-matrix · minimal_code_principles · loop_constraints · insert_new_task · article-writing |
 | C (Check) | C.verify · C.adversarial · C.reflexion | acceptance_criteria · adversarial_review · communication_rules · debugging · red_flags · loop_verifier · article-writing |
 | A (Act) | A.persist · A.tidy · A.handoff · A.learn | document_specs · summary_view · sync-matrix · working_memory_rules · hand-drawn-report · trigger_hooks · learn_cycle · prompt_optimization · skill_graph · act_procedure |
 
@@ -338,7 +338,7 @@ category: workflow
 │       ├─ 步骤4（P.design）：第一性原理拆解（见 adversarial_review.md 第二章）：本质目标→不可压缩约束→从约束推最优解
 │       ├─ 步骤4a（P.reuse）：外部资源搜索（见 §6 /plan 步骤4a）：从步骤3提取关键词 → 内部复用扫描 → Skill 生态搜索 → 跑 find_similar.py 搜 GitHub/Gitee/国内 skill 平台 → 产出复用资源清单写入 spec；所有任务必做，≤5分钟超时
 │       ├─ 步骤5：调用 brainstorming skill → 2-3方案对比（含拆解推导的方案+复用优先评估+引用步骤4a复用清单）→ HARD-GATE 确认方案（确认后进入步骤6 writing-plans）
-│       ├─ 步骤6：调用 writing-plans skill → 生成实施计划 → HARD-GATE 确认计划；**实施计划 md 顶部按 hand-drawn-report.md 内联手绘计划图（默认带图、单文件自包含）**
+│       ├─ 步骤6：调用 writing-plans skill → 生成实施计划 → HARD-GATE 确认计划；**实施计划 md 顶部按 hand-drawn-report.md 内联编辑级计划速览图（默认带图、单文件自包含）**
 │       └─ /plan 完成 → 停下问"进入 /do 吗？"，不自动串；确认后开始执行（写代码前读 code_rules.md）
 │
 ├─ 第一步：能一句话说清要什么吗？
@@ -357,7 +357,10 @@ category: workflow
 │   │   └─ 🔴立即读 sync-matrix.md → 按矩阵逐项核对（版本号一致性 → 死引用清理 → 文档完整性 → 写memory收尾）
 │   │
 │   ├─ 是验收/审核/汇报/总结/进度/交接/存档/报告/计划/方案/规划（"验收""验收一下""审核""看一下""汇报""总结一下""进度""汇总""交接""给你接手""handoff""存档""产出报告""报告""让我看看""确认一下""检查一下做得对不对""计划""方案""规划一下""出方案"）
-│   │   └─ 🔴立即读 hand-drawn-report.md → 生成的 md 顶部按内容关系类型内联手绘 SVG 速览图（默认带图、单文件自包含），同时对话内附同款手绘 SVG 速览图
+│   │   └─ 🔴立即读 hand-drawn-report.md → 生成的 md 顶部按内容关系类型内联编辑级速览图（SVG，默认带图、单文件自包含），同时对话内附同款速览图
+│   │
+│   ├─ 是画专业图（"流程图""架构图""时序图""甘特图""ER图""泳道图""桑基图""鱼骨图""看板图""组织架构图""状态机图""依赖图""部署图""类图""画个专业的图""重绘drawio""重绘mermaid""导出PNG"等 39 种图型词）
+│   │   └─ 🔴立即读 diagram-design.md → 按 39 种图型选布局语法，产出自包含 HTML（可导出 PNG/SVG）；速览图/报告伴随图仍走 hand-drawn-report.md（双轨仲裁见 diagram-design.md §0.5）
 │   │
 │   ├─ 能一句话说清（改个参数/查个东西/问个具体问题）
 │   │   └─ 轻量git确认（git status检查，工作区干净直接过，脏则问commit/stash/放弃，见§6 /plan 步骤3）→ 一句话方案HARD-GATE确认 → 要改代码？先读code_rules.md → 做 → 当场验证 → 写memory
@@ -372,15 +375,16 @@ category: workflow
 ### 多行命中仲裁规则
 
 触发钩子表多行同时命中时，按以下规则仲裁：
-- **"交接"**：先走 sync-matrix.md（核对版本号+一致性），再走 hand-drawn-report.md（生成手绘交接速记）
+- **"交接"**：先走 sync-matrix.md（核对版本号+一致性），再走 hand-drawn-report.md（生成交接速览图）
 - **"重构"**：先进 brainstorming（方案对比），方案确认后写代码时再读 code_rules.md
 - **"检查一下"**：按上下文限定——"检查代码/逻辑"→red_flags.md；"检查规范/版本号"→sync-matrix.md；"检查做得对不对/产出报告"→hand-drawn-report.md
 - **"优化"**：统一先进澄清菜单（因"优化"目标模糊），澄清后再按目标触发对应 reference；**例外**——"优化skill/改skill/建skill/测试skill"等 skill 域词目标已明确，直接走 skill_creation.md，不进澄清菜单
 - **"技能/测试"泛词 vs skill 域词**：泛词（装skill行的"技能"、测试行的"测试"）与 skill 域触发词（建/改/优化/测试+skill）同时命中时，**skill 域词优先**——用户明确说了 skill 就路由到 skill 域（建/改→skill_creation.md，装/找→skill_security.md+skill_management.md）
 - **"梳理一下"**：默认走 sync-matrix.md（整理规范），除非明确说"梳理一下做了什么"才走 hand-drawn-report.md
-- **"需求分析/出方案"**：带 /plan 前缀或"从头开始/新项目"→走 /plan 硬指令（计划 md 顶部按 hand-drawn-report.md 带图）；否则→document_specs.md，**方案文档顶部按 hand-drawn-report.md 内联手绘 SVG 速览图（默认带图、单文件自包含）**
+- **"需求分析/出方案"**：带 /plan 前缀或"从头开始/新项目"→走 /plan 硬指令（计划 md 顶部按 hand-drawn-report.md 带图）；否则→document_specs.md，**方案文档顶部按 hand-drawn-report.md 内联编辑级速览图（默认带图、单文件自包含）**
 - **"汇报"（v1.0.4）**：按上下文限定——"给领导/向上/给老板/周报月报"→leader_report.md（六段结构汇报文档）；"验收报告/总结/手绘图"→hand-drawn-report.md；"做PPT/演示文稿"→html_ppt_creation.md（可用 leader_report 六段结构做内容底稿）；无上下文→澄清菜单问三选一
 - **"同步到 skill"（v1.0.4）**：先判内容域再路由，双源探测防猜错目标——① 改动属 skill 自身文件（SKILL.md、references/、scripts/、tests/、evals/、HISTORY.md、README.md）→ 走 skill_creation.md 更新流程（版本联动必过 sync-matrix.md 核对）；② 改动属项目业务代码 → 不属 skill 域，先向用户确认意图：提炼经验写 memory（经 write_project）还是确有框架改动诉求，不机械拷贝；③ skill 安装位置双源探测：`~/.opencode/skills/` 目录存在性 + `~/.opencode/opencode.json` 的 `skills.paths` 配置同时查，两源一致→直接用；两源不一致或均查不到→HARD-GATE 问用户目标路径，禁止凭猜测写入
+- **"画图/画个图"（双轨）**：点名专业图型词（流程图/架构图/时序图/甘特图/ER图/泳道图/桑基图等 39 种，清单以 diagram-design.md §3 为准）或给 .drawio/.mmd 源要重绘或要导出图表 PNG/SVG → diagram-design.md；报告伴随速览图、手绘/速记/涂鸦/手账风格词 → hand-drawn-report.md（手绘风已退役，实际出编辑级速览图）；裸"画个图/画图/帮我画图"无图型词无风格词 → 澄清菜单二选一（快速速览 / 专业图型）。四条补充仲裁：①**报告词与图型词同现**（"汇报用的架构图"）→ 图是交付物本体 → diagram-design.md（报告 md 顶部的伴随速览图仍按 hand-drawn-report 带）②**ER图/数据库表结构图 + 画/出/来一张 等绘图动词** → diagram-design.md；ER图 + 建表/写SQL/设计字段 → code_rules.md 第七章 ③**图要嵌进既有网页/HTML 幻灯片**（非独立交付）→ html_ppt_creation.md §3.3（手写 SVG/本地 echarts），不走 diagram-design（其产物是独立整页 HTML）④**导出 PNG/SVG 限图表语境**——速览图导出仍走 hand-drawn-report（存 .svg），Office 页导出走 office_processing
 
 ### 澄清菜单递进规则
 
@@ -761,6 +765,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 │   ├─ 处理 Office 文档（PDF/Word/PPT/Excel 读写改转合并提取）→ references/do/code/office_processing.md（纯本地工具，内网可用）
 │   ├─ 做 HTML 网页/落地页/前端页面 → references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，手写 HTML/CSS/JS，内网可用）
 │   ├─ 做 PPT/幻灯片/演示文稿 → references/do/code/html_ppt_creation.md（HTML/PPT 制作自包含方法论，python-pptx / PptxGenJS / HTML 幻灯片，内网可用）
+│   ├─ 画专业图（架构图/时序图/甘特图/ER图/泳道图/桑基图/鱼骨图/看板图/类图等 39 种）/重绘 drawio·mermaid/导出 PNG·SVG → references/common/da/diagram-design.md（嵌入式 diagram-design v2.6.7 MIT：39 图型+自包含 HTML+校验脚本；报告速览图仍走 hand-drawn-report.md，视觉同源）
 │   ├─ 把文件转成 Markdown（PDF/Word/PPT/Excel/HTML→MD）→ references/do/code/file_to_markdown.md（纯Python离线可用，一键转MD）
 │   ├─ 做 Excel 数据分析（清洗/透视/统计/图表/预测/看板/数据质量/趋势分析/结构拆解/异常识别/报告合成/数据合并）→ references/common/pd/data_analysis.md（纯本地，内网可用）
 │   ├─ memory怎么读写 → references/common/pa/working_memory_rules.md（RAM/Disk+存盘检查点+5问）
@@ -1003,7 +1008,7 @@ docs_rj/
   - 详见 [references/plan/design/goal_brief.md](references/plan/design/goal_brief.md) "执行型 vs 探索型分型"节
 
 **步骤6：实施计划 + HARD-GATE + Self-Review + 对抗审查**【硬性】：
-- 调用 writing-plans skill 生成实施计划；**实施计划 md 顶部按 [references/common/da/hand-drawn-report.md](references/common/da/hand-drawn-report.md) 内联手绘计划图（默认带图、单文件自包含）**
+- 调用 writing-plans skill 生成实施计划；**实施计划 md 顶部按 [references/common/da/hand-drawn-report.md](references/common/da/hand-drawn-report.md) 内联编辑级计划速览图（默认带图、单文件自包含）**
 - **HARD-GATE**：实施计划呈现给你，得到明确确认词才执行
 - **Self-Review**：写完 spec/task 后，自己先过检查：简单任务过 4 项（占位符/一致性/范围/歧义），复杂任务过 9 项（占位符/一致性/范围/歧义/方案对比/验收标准/No Placeholders/错误处理/BRD 业务价值对齐）。改完再交。9 维度清单唯一维护源见 [spec_template.md](assets/spec_template.md) Self-Review 节。
 - **参考项目 发出前自检 6 条（协作版）**【硬性·复杂任务】：Self-Review 时额外核对 6 条：

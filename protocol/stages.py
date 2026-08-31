@@ -89,7 +89,7 @@ GLOBAL_COMPANION_ABILITIES = {
     },
     'writing-plans': {
         'skill': 'writing-plans',
-        'purpose': '生成实施计划 md，顶部带手绘图',
+        'purpose': '生成实施计划 md，顶部带编辑级速览图',
         'installed': False,
         'note': '概念能力名，agent 用通用能力顶上'
     }

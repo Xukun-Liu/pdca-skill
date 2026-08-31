@@ -33,7 +33,7 @@
 │   │   ├─ skill_security.md   ← 安装第三方 Skill 前读
 │   │   ├─ summary_view.md     ← SUMMARY_RJ.md 规范
 │   │   ├─ sync-matrix.md      ← 版本号一致性检查
-│   │   └─ hand-drawn-report.md ← 生成手绘呈现时读
+│   │   └─ hand-drawn-report.md ← 生成报告速览图时读（视觉走 diagram-design 设计系统）
 │   └─ assets/                 ← 模板文件（复制用）
 │       ├─ spec_main_template.md  ← 项目级总 spec 模板（通用）
 │       ├─ spec_template.md

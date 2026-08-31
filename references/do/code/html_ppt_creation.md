@@ -276,7 +276,9 @@ document.addEventListener('keydown', e => {
 |-----------|-----------|
 | 处理已有 Office 文件（读/写/改 .pptx 等） | **[office_processing.md](office_processing.md)**（D.code，文件操作层） |
 | Office 文件转 Markdown | **[file_to_markdown.md](file_to_markdown.md)**（D.code） |
-| 画示意图/速览图/报告顶图（非网页非 PPT） | **[hand-drawn-report.md](../../common/da/hand-drawn-report.md)**（D+A，手绘 SVG） |
+| 画示意图/速览图/报告顶图（非网页非 PPT） | **[hand-drawn-report.md](../../common/da/hand-drawn-report.md)**（D.comm A.handoff，编辑级速览图，视觉走 diagram-design 设计系统） |
+| 专业图型（架构图/时序图/甘特图等 39 种，独立交付） | **[diagram-design.md](../../common/da/diagram-design.md)**（D.code D.comm，39 种编辑级图型，独立交付自包含 HTML，可导出 PNG/SVG） |
+| 图表要嵌进既有网页/HTML 幻灯片（非独立交付） | 本文档 §3.3（手写 SVG / 本地 echarts），不走 diagram-design（其产物是独立整页 HTML） |
 | 数据分析 + 图表方法 | **[data_analysis.md](../../common/pd/data_analysis.md)**（P+D，第十七章可视化设计原则） |
 | 网页/PPT 视觉 QA 交子代理 | **[subagents_rj.md](../../common/pda/subagents_rj.md)**（doc_proc_agent） |
 

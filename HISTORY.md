@@ -1,7 +1,7 @@
 ---
 title: pdca-skill 版本历史
 version: v1.0.4
-last_updated: 2026-08-28
+last_updated: 2026-08-31
 author: huihui
 ---
 
@@ -162,6 +162,54 @@ riji-skill 不是一夜之间写出来的,是**耗时两个月、花费 1036 元
                        ── 产物链保留声明：只瘦文字量不砍触发——TASK_STATE/spec_main 步骤1.5/
                          handoff/memory 双写/SUMMARY 刷新/HARD-GATE 全部照旧
                        ── 测试：新增 7 用例 + 治理测试 4 处旧语义改新语义 + 全套回归
+2026-08-31 v1.0.4     🚀 画图双轨升级：嵌入 diagram-design 专业图表轨（并入 v1.0.4，跨机移植复刻）
+                       ── 背景：原只有手绘速览一条画图轨，无专业图型能力；另一台机器已按移植指南
+                         v2.1（2 轮对抗审查修订版）完成升级，本机基线 v1.0.4（validate 33/33）从零复刻
+                       ── 上游：cathrynlavery/diagram-design（MIT，署名随包）；上游 main 已走到 2.6.11
+                         且无 release tag → git 全量历史锁定 v2.6.7 快照（plugin.json=2.6.7 口径，
+                         SKILL.md frontmatter=2.6 上游自身不一致按指南以 plugin.json 为准）
+                       ── Part A 挂载（70 新增）：入口 references/common/da/diagram-design.md（48K）+
+                         模块目录（1022K：53 图型/原语文档 + 3 零依赖校验脚本 + 4 导入测试 fixtures +
+                         5 模板/1 示例/图标库 7 资产 + LICENSE/THIRD_PARTY_LICENSES）；6 条适配：
+                         python3→python、7 处仓库脚本"未随包"原位标注、<skill-dir> 定义改嵌入路径、
+                         export.md 探测命令去 PS5.1 不兼容语法、导入示例段未随包警示、入口链接前缀重写
+                       ── Part B 路由登记（13 文件，处数 git diff 对账）：SKILL.md 索引表+决策树新分支+
+                         双轨仲裁条（含四条补充仲裁）+资源索引+日期、trigger_hooks.md v1.1.9 新行+3 行
+                         措辞+头部词批、index.md v1.2.7（51 模块，连 v1.2.6 旧账一次还齐：头版本/目录树/
+                         §6.2 补 leader_report 行）+聚合域例外条款、README 计数统一（还 47/12/34 旧账）、
+                         subagents_rj.md+subagent_config_rj.json 双权威源（doc_proc 还 html_ppt 欠账）、
+                         evals +3、sync-matrix、stages.py、网页说明.html、html_ppt_creation、
+                         project_structure、leader_report
+                       ── Part D 校验器：validate_skill.py VENDORED_REF_PREFIXES 豁免（SCR-10 版本块/
+                         ROUT-02 孤儿/ROUT-03 阶段标签三函数过滤；入口不豁免照常校验）
+                       ── 双轨仲裁：点名 39 种图型词/重绘 .drawio·.mmd/导出图表 PNG·SVG → diagram-design；
+                         报告伴随速览图 → hand-drawn-report；裸"画个图" → 澄清菜单二选一；补充仲裁：
+                         报告词+图型词同现图型优先 / ER图+绘图动词→专业轨、+建表SQL→code_rules /
+                         嵌既有网页的图→html_ppt §3.3 / 导出 PNG 限图表语境
+                       ── 验证（指南 §7 七项全绿）：validate 33/33 MUST FIX=0；self_check 示例 OK；
+                         mermaid/drawio extract fixtures 实测（9n/7e、12n/8e）；入口死链 NONE；
+                         端到端出图 OK + 负向测试删 role="img" 判 FAIL（校验非橡皮图章）；双权威源
+                         knowledge 7/triggers 36/output_format 4 逐项一致；launch_subagent validate 9/9
+                       ── 对抗审查：第 1 轮独立盲审 7/10 分 2H/2M/3L → H1 双权威源知识库路径混注释致
+                         validate 8/9（改裸路径）/ H2 animation 标注误入 CSS 围栏（归位 Run 块前）全部
+                         修复 + M1 index 补行 / M2 docstring / L1 README 计数；第 2 轮独立重验 0 HIGH
+                       ── 决策记录：版本号不 bump（v1.0.4 内能力升级，发布流程另走）；L2 引号字形差、
+                         L3 风格词+图型词同现仲裁缺口（指南自带）留档下轮修订
+                       ── 改动量实测：86 文件（70 新增 + 16 修改），+13.2K/-0.2K 行；
+                         commit 链：start tag → 26e9673/3da13d8/3f4b808 → 收尾
+2026-08-31 v1.0.4     🪦 手绘风退役：hand-drawn-report v1.2.0 换体留魂（并入 v1.0.4，与双轨升级同日）
+                       ── 起因：用户反馈手绘速览"丑且看起来复杂" → 视觉层整体并入 diagram-design
+                         编辑级设计系统（paper #f5f5f5 / ink #2d3142 / muted #4f5d75 / accent #eb6c36）
+                       ── 换体留魂：文件整体替换但流程 9 节全保留、文件名不改（20+ 处引用零改动）；
+                         视觉规范删除换薄指针（指向 diagram-design §5/§6/§7，速览预算自定 ≤6 节点 ≤8 箭头）；
+                         5 种受众模式与手绘滤镜（抖动线/手写体）删除
+                       ── 行为变化：手绘/涂鸦/手账风等风格词命中 → 出编辑级速览图并说明已退役；
+                         报告伴随规则不变（默认双带：对话内 + md 顶部内联同款 SVG）
+                       ── 措辞同步（行为性残留清零，陈述性历史保留）：SKILL.md 3 处 + trigger_hooks
+                         3 行 + leader_report 3 处 + 双权威源 + README 能力地图/手册表/门面图注记 +
+                         网页说明.html 功能卡片 + stages.py + html_ppt 相关模块表 + project_structure
+                       ── 回归保障：evals eval_handdrawn_retired_behavior 用例锁定退役行为
+
 
 ### B 线:日积 riji MCP / 产品(Python 实现,独立于 SKILL.md 框架)
 

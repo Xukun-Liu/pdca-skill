@@ -4,10 +4,10 @@
 
 # references/ 目录索引
 
-> 版本：v1.2.5 | 创建：2026-07-25 | pdca-skill 参考模块导航
+> 版本：v1.2.7 | 创建：2026-07-25 | pdca-skill 参考模块导航
 > 阶段标签：P.route A.handoff
 >
-> 本索引是 references/ 目录的导航地图。50 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
+> 本索引是 references/ 目录的导航地图。51 个参考模块按 PDCA 四环节 + common 融合区组织，看到路径即知用途。
 
 ---
 
@@ -16,13 +16,13 @@
 ```
 references/
 ├── index.md                  ← 你在这里（导航索引）
-├── common/                   ← 跨 PDCA 阶段融合（22个）
+├── common/                   ← 跨 PDCA 阶段融合（24个）
 │   ├── pa/   (4个) P+A 启动规划+归档闭环
 │   ├── pc/   (2个) P+C 方案设计+验证审查
 │   ├── pd/   (2个) P+D 方案设计+编码执行
 │   ├── pda/  (2个) P+D+A 贯穿全流程
 │   ├── dc/   (2个) D+C 执行+调试验证
-│   ├── da/   (3个) D+A 执行+归档整理
+│   ├── da/   (5个) D+A 执行+归档整理
 │   └── style/ (7个) P+D 写作风格（特例，含 writing_style + article-writing 入口 + 5 子模块）
 ├── plan/                     ← P 环节：想清楚（12个）
 │   ├── bootstrap/  (3个) P.bootstrap 启动恢复
@@ -55,10 +55,11 @@ references/
 | `pd/` | P+D | 方案设计 + 编码执行 | 2 |
 | `pda/` | P+D+A | 贯穿全流程 | 2 |
 | `dc/` | D+C | 执行 + 调试验证 | 2 |
-| `da/` | D+A | 执行 + 归档整理 | 3 |
+| `da/` | D+A | 执行 + 归档整理 | 5 |
 | `style/` | P+D | 写作风格（子文件夹命名特例，按主题命名） | 7 |
 
 > **嵌套例外条款（2026-08-06 新增）**：`style/` 下允许主题子目录（如 `style/article-writing/`），子模块文件不单独挂 PDCA 标签、不计入分类规则表，由入口文件（`style/article-writing.md`）链式加载。嵌套例外仅适用于 `style/` 主题化组织，其余子文件夹不得再嵌套。
+> **聚合域例外条款（2026-08-31 新增）**：`common/da/` 兼作「交付呈现聚合域」——①汇报/交接类呈现模块（leader_report.md，仅 A.handoff）②vendored 嵌入式第三方模块（diagram-design.md 入口 + `diagram-design/` 随附子文件，PDCA 标签 D.code D.comm）按模块目录就近挂 `common/da/`，不受"单母标签进 do/"规则约束。vendored 子文件豁免版本块/孤儿/阶段标签校验（见 validate_skill.py `VENDORED_REF_PREFIXES`，禁止在该前缀放 pdca 原创文件）。
 
 ### 2.2 PDCA 单阶段归属规则
 
@@ -93,6 +94,7 @@ references/
 | 验收/对抗审查 | `common/pc/`（adversarial_review, acceptance_criteria）+ `check/` |
 | 偏离自检/感觉不对 | `check/`（red_flags） |
 | 交接/同步/整理 | `common/da/`（sync-matrix, hand-drawn-report, git_backup_cleanup） |
+| 画专业图（架构图/时序图/甘特图/ER图等 39 种）/重绘 drawio·mermaid/导出 PNG·SVG | `common/da/`（diagram-design）；报告速览图仍 `common/da/`（hand-drawn-report，视觉同源） |
 | 学习进化/prompt 优化 | `act/learn/` |
 | 处理 Office/PDF/Excel | `do/code/`（office_processing, file_to_markdown）+ `common/pd/`（data_analysis） |
 | 找/装/建外部 skill | `plan/route/`（skill_management, skill_security, skill_creation, agent_find） |
@@ -102,11 +104,11 @@ references/
 
 ---
 
-## 四、文件归属速查表（50 个模块 × 所属子文件夹 × 引用范围）
+## 四、文件归属速查表（51 个模块 × 所属子文件夹 × 引用范围）
 
 > 引用范围列说明:标注该 reference 被哪些 agent 读取(`main` = 主 agent,其余为 9 个副 agent 简称)。详细反向索引见第七节。
 
-### common/（23个）
+### common/（24个）
 
 | 文件 | 子文件夹 | PDCA 标签 | 引用范围 |
 |------|----------|-----------|----------|
@@ -123,6 +125,7 @@ references/
 | communication_rules.md | common/dc/ | D.comm C.verify | main + code_eng |
 | debugging.md | common/dc/ | D.code C.verify | main + code_eng |
 | hand-drawn-report.md | common/da/ | D.comm A.handoff | main + doc_proc + sync |
+| diagram-design.md | common/da/ | D.code D.comm | main + doc_proc |
 | leader_report.md | common/da/ | A.handoff | main |
 | git_backup_cleanup.md | common/da/ | A.tidy D.danger | main + code_eng |
 | sync-matrix.md | common/da/ | D.code A.tidy | main + sync |
@@ -213,7 +216,7 @@ references/
 | skill_mgmt_agent | 4 | plan/route/{skill_management, skill_security, skill_creation, agent_find}.md |
 | spec_design_agent | 3 | common/pc/{acceptance_criteria, adversarial_review}.md · common/pda/document_specs.md |
 | code_eng_agent | 7 | do/code/{code_rules, git_workflow}.md · common/da/git_backup_cleanup.md · common/dc/{debugging, communication_rules}.md · check/red_flags.md · do/danger/security.md |
-| doc_proc_agent | 5 | do/code/{office_processing, file_to_markdown, html_ppt_creation}.md · common/pd/data_analysis.md · common/da/hand-drawn-report.md |
+| doc_proc_agent | 6 | do/code/{office_processing, file_to_markdown, html_ppt_creation}.md · common/pd/data_analysis.md · common/da/{hand-drawn-report, diagram-design}.md |
 | loop_agent | 3 | plan/route/loop_triage.md · do/danger/loop_constraints.md · check/loop_verifier.md |
 | learn_opt_agent | 4 | act/learn/{learn_cycle, prompt_optimization, skill_graph}.md · common/pc/adversarial_review.md |
 | sync_agent | 3 | common/da/{sync-matrix, hand-drawn-report}.md · common/pa/summary_view.md |
@@ -248,6 +251,8 @@ references/
 | communication_rules.md | common/dc/ | main + code_eng |
 | debugging.md | common/dc/ | main + code_eng |
 | hand-drawn-report.md ⭐ | common/da/ | main + doc_proc + sync |
+| leader_report.md | common/da/ | main |
+| diagram-design.md | common/da/ | main + doc_proc |
 | git_backup_cleanup.md | common/da/ | main + code_eng |
 | sync-matrix.md | common/da/ | main + sync |
 | writing_style.md | common/style/ | main |
@@ -277,7 +282,7 @@ references/
 
 | 指标 | 值 |
 |------|-----|
-| reference 总数 | 50 |
+| reference 总数 | 51 |
 | 仅 main 读的 reference | 12（subagents_rj.md 元数据 + insert_new_task.md + act_procedure.md + memory_governance.md + writing_style.md + goal_brief.md + article-writing 入口 + 5 子模块） |
 | 被 2+ 副 agent 共读的 reference | 3（summary_view⭐、adversarial_review⭐、hand-drawn-report⭐） |
 | 知识库最大的副 agent | bootstrap_agent(10 个 reference) |
@@ -299,3 +304,4 @@ references/
 | v1.2.4 | 2026-08-20 | 融合建 Skill 参考：新增 skill_creation.md（P.route，方法论提炼自外部开源资产，归属见包级 NOTICE），48→49、plan 11→12、route 5→6、skill_mgmt_agent 3→4；速查表 + 正/反向索引同步 |
 | v1.2.5 | 2026-08-20 | 对抗审查修复（14 HIGH）：目录树/分类表 plan·route 计数同步（11→12、5→6）、§6.2 反向索引表补 skill_creation.md 行（修正 v1.2.4"反向索引同步"未兑现）、subagents_rj/config json 权威源同步（见各文件自身版本） |
 | v1.2.6 | 2026-08-25 | v1.0.4 新增 leader_report.md（common/da/，A.handoff，领导汇报六段结构），49→50、common 22→23；速查表 + 总数同步；触发钩子/仲裁规则见 trigger_hooks.md v1.1.8 与 SKILL.md |
+| v1.2.7 | 2026-08-31 | 画图双轨升级：新增 diagram-design.md 入口（common/da/，D.code D.comm，嵌入式 diagram-design v2.6.7 MIT，vendored 子目录豁免校验），50→51、common 22→24（还 v1.2.6 leader_report 目录树欠账）、da 3→5、doc_proc 5→6；头部版本还旧账 v1.2.5→v1.2.7；§2.1 加聚合域例外条款 |

@@ -106,6 +106,18 @@ DOC_DIRS_WITH_FILES = [
     'spec_rj', 'task_rj', 'handoff_rj',
 ]
 
+# Vendored 上游 references：嵌入式第三方上游资产（MIT），非 pdca 原创模块，
+# 其头部/版本号/归属按上游惯例（署名与适配说明在入口文件头部 + 随包 LICENSE）。
+# 豁免 SCR-10 版本块 / ROUT-02 孤儿 / ROUT-03 阶段标签三项检查；
+# 入口文件（如 common/da/diagram-design.md）不在豁免前缀内，照常校验（SCR-10/ROUT-03；
+# 注意 INT-02 死链检查只扫 SKILL.md 出链，不覆盖 references 内部链接——入口内链接靠人工/审查兜底）。
+# ⚠️ 禁止在此豁免前缀下放 pdca 原创 reference，否则会静默绕过上述三项校验。
+VENDORED_REF_PREFIXES = (
+    'common/da/diagram-design/references/',
+    'common/da/diagram-design/scripts/fixtures/',  # 上游导入测试源文件（含 .md 样例），非 pdca reference
+    'common/da/diagram-design/THIRD_PARTY_LICENSES.md',  # 上游第三方许可清单，非 pdca reference
+)
+
 # 提取 references/xxx.md 与 assets/xxx.md 引用
 # references/ 已迁移到 PDCA 子文件夹结构，支持子目录路径（如 references/plan/bootstrap/xxx.md）
 # assets/ 保持平铺，不支持子目录
@@ -532,7 +544,10 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
             for f in sorted(files):
                 if f.endswith('.md'):
                     rel = os.path.relpath(os.path.join(root, f), ref_dir)
-                    md_files.append(rel.replace(os.sep, '/'))
+                    rel = rel.replace(os.sep, '/')
+                    if rel.startswith(VENDORED_REF_PREFIXES):
+                        continue
+                    md_files.append(rel)
         md_files.sort()
         missing = []
         for fname in md_files:
@@ -676,7 +691,10 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
                 for f in sorted(files):
                     if f.endswith('.md'):
                         rel = os.path.relpath(os.path.join(root, f), ref_dir)
-                        all_refs.append(rel.replace(os.sep, '/'))
+                        rel = rel.replace(os.sep, '/')
+                        if rel.startswith(VENDORED_REF_PREFIXES):
+                            continue
+                        all_refs.append(rel)
             all_refs.sort()
         except OSError:
             return (False, '无法列举 references/ 目录', False)
@@ -736,7 +754,10 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
                 for f in sorted(files):
                     if f.endswith('.md'):
                         rel = os.path.relpath(os.path.join(root, f), ref_dir)
-                        all_refs.append(rel.replace(os.sep, '/'))
+                        rel = rel.replace(os.sep, '/')
+                        if rel.startswith(VENDORED_REF_PREFIXES):
+                            continue
+                        all_refs.append(rel)
             all_refs.sort()
         except OSError:
             return (False, '无法列举 references/ 目录', False)

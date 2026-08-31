@@ -165,6 +165,33 @@
       "expected": "agent 触发偏离类 Red Flag #20，停下补充 file:line / 实际命令输出 / diff 摘要三者之一的客观证据后再声明完成",
       "assertion": "red_flags.md 导图含第20条目且标注共20条、与表格逐条一一对应（导图条目数=20）；表格含 #20 行（偏离 Verification-before-Completion + Verifier Theater）；理性化反驳表含第25条「我看了一遍没问题」",
       "source": "references/check/red_flags.md 第20条偏离信号（v1.0.4 新增）"
+    },
+    {
+      "id": "eval_diagram_dual_track_routing",
+      "name": "画图双轨：专业图型路由",
+      "category": "routing",
+      "input": "用户说\"画个架构图/画个流程图/把这个drawio重绘一下\"",
+      "expected": "agent 读 references/common/da/diagram-design.md（入口 §0.1 适配说明 + §3 选图型 + 对应 type-*.md），产出自包含 HTML，交付前跑模块内 self_check.py",
+      "assertion": "trigger_hooks.md 专业图表行含 流程图/架构图 等图型词 → diagram-design.md；SKILL.md 决策树含\"是画专业图\"分支；diagram-design.md 入口 §0.5 双轨仲裁表存在",
+      "source": "trigger_hooks.md 专业图表行 + SKILL.md 画图双轨仲裁"
+    },
+    {
+      "id": "eval_diagram_bare_clarify",
+      "name": "画图双轨：裸\"画个图\"澄清菜单",
+      "category": "clarification",
+      "input": "用户只说\"画个图/帮我画图\"（无图型词无风格词）",
+      "expected": "agent 出澄清菜单二选一：①快速速览（hand-drawn-report）②专业图型（diagram-design，追问画哪种），不猜",
+      "assertion": "SKILL.md 仲裁规则\"画图/画个图\"条含裸词处理；diagram-design.md §0.5 与 hand-drawn-report.md 双轨升级路径节表述一致",
+      "source": "SKILL.md 多行命中仲裁规则"
+    },
+    {
+      "id": "eval_handdrawn_retired_behavior",
+      "name": "手绘风退役行为回归",
+      "category": "routing",
+      "input": "用户说\"画成手绘图/涂鸦风/手账风\"",
+      "expected": "agent 不出手绘风（抖动线/手写体），出编辑级速览图并说明\"手绘风已退役（v1.2.0），这是编辑级版本\"",
+      "assertion": "hand-drawn-report.md 含退役声明节（§一）+ 失败防护\"手绘风回潮\"条；trigger_hooks.md 报告行关键词列含 手绘/涂鸦风/手账风 且路由说明含退役声明；SKILL.md 决策树无任何画手绘活路径",
+      "source": "hand-drawn-report.md v1.2.0 退役声明"
     }
   ]
 }

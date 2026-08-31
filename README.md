@@ -66,7 +66,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
   <img src="assets/readme/hero-loop.png" alt="记忆 → PDCA → docs 闭环" width="720">
 </p>
 
-（手绘闭环图；源 SVG 为 `assets/readme/hero-loop.svg`，PNG 为浏览器渲染版——Gitee 对 .svg 的 MIME 适配有误，README 统一引用 PNG 保证两端平台显示一致）
+（闭环图；源 SVG 为 `assets/readme/hero-loop.svg`，PNG 为浏览器渲染版——Gitee 对 .svg 的 MIME 适配有误，README 统一引用 PNG 保证两端平台显示一致）
 
 ---
 
@@ -103,7 +103,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 - [一天里的真实例子](#一天里的真实例子)
 - [工作原理](#工作原理)
 - [完整能力地图](#完整能力地图)
-- [参考手册（47 模块）](#参考手册references-47-个按需读取模块)
+- [参考手册（51 模块）](#参考手册references-51-个按需读取模块)
 - [模板文件（12 个）](#模板文件assets-12-个开箱即用)
 - [安装详解](#安装详解)
 - [可选配置](#可选配置项)
@@ -121,7 +121,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **技能编排器**：按触发词读手册 / 调度外部专业 skill | 自带画图、Excel、爬虫的万能工具箱 |
 | 纯本地 Markdown + Python 标准库脚本，零云依赖 | 必须联网/开账号才能跑的在线服务 |
 
-> 包内：**49** 个参考模块 · **12** 个模板 · **34** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
+> 包内：**51** 个参考模块 · **14** 个模板 · **36** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
 
 **装前 2 个前提**：
 
@@ -185,7 +185,8 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **Git 回溯保障** | 改前检查点、任务级回溯、紧急回滚 SOP |
 | **agent-find** | 外部能力搜索（Exa → WebFetch → WebSearch 降级链） |
 | **Red Flags** | 19 条偏离信号自检 |
-| **手绘呈现** | 验收/汇报 → 手绘 SVG 速记 |
+| **报告速览图** | 验收/汇报 → 编辑级速览 SVG（手绘风退役，视觉并入 diagram-design 设计系统） |
+| **专业图表（diagram-design）** | 39 种编辑级图型 → 自包含 HTML（可导出 PNG/SVG）；重绘 drawio·mermaid，见 `references/common/da/diagram-design.md` |
 | **HTML/PPT 制作** | 做网页/落地页 → 手写 HTML/CSS/JS（前端设计五原则）；做 PPT → python-pptx / PptxGenJS 生成可编辑 .pptx 或 HTML 幻灯片；自包含方法论见 `html_ppt_creation.md`（内网可用） |
 | **活人感写作** | 写文章/知乎/去AI味等 13 触发词 → 直接出稿 + `check_prose.py` |
 | **文件扫描门控** | L0 任务内 / L1 点名文件 / L2 任务外须确认（防误扫敏感目录） |
@@ -195,7 +196,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ---
 
-## 参考手册（references/）—— 49 个按需读取模块
+## 参考手册（references/）—— 51 个按需读取模块
 
 不全部加载到上下文，触发钩子按「你正在做什么」自动指引读取。按使用场景分 8 类：
 
@@ -221,7 +222,8 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | 文件 | 用途 |
 |------|------|
 | [document_specs.md](references/common/pda/document_specs.md) | 文档命名/格式/多 docs 目录处理规范 |
-| [hand-drawn-report.md](references/common/da/hand-drawn-report.md) | 手绘呈现（内容→手绘 SVG 速记/信息图） |
+| [hand-drawn-report.md](references/common/da/hand-drawn-report.md) | 报告速览图（内容→编辑级速览 SVG；手绘风已退役，视觉走 diagram-design 设计系统） |
+| [diagram-design.md](references/common/da/diagram-design.md) | 专业图表（39 种编辑级图型，自包含 HTML，嵌入式 diagram-design v2.6.7 MIT） |
 
 **④ 安全 / 合规时**
 
@@ -811,8 +813,8 @@ pdca-skill/
 │   ├── market_research_template.md
 │   ├── skill_graph_template.md
 │   ├── index_template.md
-│   └── readme/                     # README 配图（hero-loop.svg 手绘闭环图）
-├── references/                 # 49 个参考手册（按需读取，见上表）
+│   └── readme/                     # README 配图（hero-loop.svg 闭环图）
+├── references/                 # 51 个参考手册（按需读取，见上表）
 ├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 34 个）
 │   ├── archive_tidy.py
 │   ├── browser_inspect_docs.py      # 文档浏览器检视辅助
