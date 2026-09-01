@@ -1,8 +1,8 @@
 ---
 title: riji-skill
 version: v1.0.0
-last_updated: 2026-08-28 09:19
-total_docs: 159
+last_updated: 2026-09-01 00:26
+total_docs: 164
 require-rule-mention: true
 ---
 
@@ -210,6 +210,8 @@ require-rule-mention: true
 - [spec_rj/python_CLI_docs_directory_reso_reuse_20260828_0024.md](spec_rj/python_CLI_docs_directory_reso_reuse_20260828_0024.md) `最新·无时间戳` — python_CLI_docs_directory_reso_reuse_20260828_0024
 - [spec_rj/test_reuse_20260828_0049.md](spec_rj/test_reuse_20260828_0049.md) `最新·无时间戳` — test_reuse_20260828_0049
 - [spec_rj/v105_docs2proj_lite_spec_20260828_0023.md](spec_rj/v105_docs2proj_lite_spec_20260828_0023.md) `最新·2026-08-28 00:23` — v105_docs2proj_lite_spec_20260828_0023
+- [spec_rj/v106_diagram_dual_track_upgrade_reuse_20260831_2259.md](spec_rj/v106_diagram_dual_track_upgrade_reuse_20260831_2259.md) `最新·无时间戳` — v106_diagram_dual_track_upgrade_reuse_20260831_2259
+- [spec_rj/v106_diagram_dual_track_upgrade_spec_20260831_2304.md](spec_rj/v106_diagram_dual_track_upgrade_spec_20260831_2304.md) `最新·2026-08-31 23:04` — v106_diagram_dual_track_upgrade_spec_20260831_2304
 ## ✅ Task 文档
 
 任务清单——每个任务一个 task.md，每条含「怎么做+怎么验证」。
@@ -226,6 +228,7 @@ require-rule-mention: true
 - [task_rj/INDEX_old_locked.md](task_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
 - [task_rj/v105_data_fusion_mentor_task_20260826_1132.md](task_rj/v105_data_fusion_mentor_task_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_task_20260826_1132
 - [task_rj/v105_docs2proj_lite_task_20260828_0023.md](task_rj/v105_docs2proj_lite_task_20260828_0023.md) `最新·2026-08-28 00:23` — v105_docs2proj_lite_task_20260828_0023
+- [task_rj/v106_diagram_dual_track_upgrade_task_20260831_2304.md](task_rj/v106_diagram_dual_track_upgrade_task_20260831_2304.md) `最新·2026-08-31 23:04` — v106_diagram_dual_track_upgrade_task_20260831_2304
 ## 🤝 Handoff 文档
 
 交接文档——当前状态、已完成、待办、阻塞项，30 秒接手。
@@ -241,6 +244,7 @@ require-rule-mention: true
 - [handoff_rj/INDEX_old_locked.md](handoff_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
 - [handoff_rj/v105_data_fusion_mentor_handoff_20260826_1132.md](handoff_rj/v105_data_fusion_mentor_handoff_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_handoff_20260826_1132
 - [handoff_rj/v105_docs2proj_lite_handoff_20260828_0023.md](handoff_rj/v105_docs2proj_lite_handoff_20260828_0023.md) `最新·2026-08-28 00:23` — v105_docs2proj_lite_handoff_20260828_0023
+- [handoff_rj/v106_diagram_dual_track_upgrade_handoff_20260831_2304.md](handoff_rj/v106_diagram_dual_track_upgrade_handoff_20260831_2304.md) `最新·2026-08-31 23:04` — v106_diagram_dual_track_upgrade_handoff_20260831_2304
 ## 🗄️ Archive 文档
 
 归档沉淀——按任务子文件夹聚合（{task}_{ts}/），保留决策轨迹。
@@ -257,6 +261,7 @@ require-rule-mention: true
 - [archive_rj/INDEX_old_locked.md](archive_rj/INDEX_old_locked.md) `最新·无时间戳` — INDEX_old_locked
 - [archive_rj/v105_data_fusion_mentor_archive_20260826_1132.md](archive_rj/v105_data_fusion_mentor_archive_20260826_1132.md) `最新·2026-08-26 11:32` — v105_data_fusion_mentor_archive_20260826_1132
 - [archive_rj/v105_docs2proj_lite_archive_20260828_0023.md](archive_rj/v105_docs2proj_lite_archive_20260828_0023.md) `最新·2026-08-28 00:23` — v105_docs2proj_lite_archive_20260828_0023
+- [archive_rj/v106_diagram_dual_track_upgrade_archive_20260831_2304.md](archive_rj/v106_diagram_dual_track_upgrade_archive_20260831_2304.md) `最新·2026-08-31 23:04` — v106_diagram_dual_track_upgrade_archive_20260831_2304
 ## 🔗 漂移检查清单
 
 每次更新 SUMMARY 后必跑（三触发都跑）。用 grep + ls 做漂移检查。
