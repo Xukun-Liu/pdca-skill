@@ -82,6 +82,10 @@ category: workflow
 > **闸门 4 loop_auto**：/loop auto 完成时 /check 步骤 6.5 的 gate4 写 `loop_auto`——handoff_tidy 判为 ready_to_close 停住等用户，**不自动 completed、不卡死不假完成**；你回来后确认通过，补写 gate4=confirm 再收尾。
 > 完整规则（启动流程/模式选择/停检测命令/无人值守细则/Self-Review 4 项）：[loop_constraints.md](references/do/danger/loop_constraints.md)「/loop 触发词完整规则」节（唯一维护源）。
 >
+> ### /memory review 触发词（记忆体检专用，独立于四环与 /loop）
+>
+> 输入 `/memory review`（或"检查记忆""记忆体检""记忆还在吗""记忆读到没"）→ 立即跑 `python scripts/memory_smoke_check.py`，一次体检三件事：①全局记忆 memory_main.md 在不在/多大/何时更新 ②项目记忆 memory_rj 有多少条 ③记忆索引 SUMMARY_RJ.md 有无坏链、total_docs 是否对齐。有 FAIL 按脚本「建议动作」提示修复；**只读不改文件**。重装 skill 后想确认"以前的记忆还在不在、AI 能不能读到"，打这 4 个词即可。
+>
 > ### 4 环任务等级
 >
 > | 等级 | 名称 | 定义 | 人类参与 |
@@ -198,7 +202,10 @@ category: workflow
 │   └─ 任务输入命中某行关键词？→ 按该行「必须立即读」列读对应 reference，再走对应流程
 │       └─ 多行同时命中？→ 按下方「多行命中仲裁规则」处理
 │
-├─ 🔴是 /plan 指令？（"/plan""/pdca-plan""计划一下""/设计""/方案""从头开始""新项目""帮我规划""一步一步来""规划一下""想清楚再做""需求分析""做需求""出方案"）
+├─ 🔴是 /memory review 指令？（"/pdca-memory""/memory review""/memory""检查记忆""记忆体检""记忆还在吗""记忆读到没"）
+│   └─ 立即跑 `python scripts/memory_smoke_check.py` 记忆体检，把三项结果（全局记忆/项目记忆/记忆索引）列给用户；有 FAIL 按脚本建议动作提示修复，只读不改文件
+│
+├─ 🔴是 /plan 指令？（"/pdca-plan""/plan""计划一下""/设计""/方案""从头开始""新项目""帮我规划""一步一步来""规划一下""想清楚再做""需求分析""做需求""出方案"）
 │   └─ PDCA /plan 触发，跳过所有其他分支，执行 7 步：
 │       ├─ 步骤1（P.bootstrap）：读 SUMMARY_RJ.md + memory_main.md + 项目 memory_rj + 5问 Reboot Test + 检测未完成任务
 │       ├─ 🔴步骤1.5（P.bootstrap+）：spec_main_rj.md 存在性检查【补漏洞·修"框架引用但未触发创建"设计空白】
@@ -462,6 +469,7 @@ memory 是协作的唯一持久化载体。以下两条不可跳过，优先级�
 ### /plan（想清楚）
 
 > ⚠️ **触发词撞名提示【v1.3.0】**：`/plan` 与部分 IDE 的 Plan 模式斜杠命令同名，可能被平台截获而不进入本流程。**打 `/pdca-plan` 或说「计划一下」可绕过冲突**，效果完全相同。
+> 🔑 **`/pdca-*` 别名【硬性】**：`/pdca-plan` `/pdca-do` `/pdca-check` `/pdca-act` `/pdca-loop` `/pdca-memory` 一律按「去掉 `pdca-` 前缀」的同义词处理（等价于 `/plan` `/do` `/check` `/act` `/loop` `/memory review`），不反问、不二次确认；裸词别名永久保留，不删。
 > /plan 执行 7 步（与 §0 流程决策树 /plan 分支编号一致）：读状态 → 路由 → 需求澄清 → 第一性原理 → 外部搜索 → brainstorming 方案展示 → writing-plans 实施计划 → HARD-GATE 确认。
 > **完整步骤细则（BRD 5 问 / 三分领导的话 / Git 管理确认 / 实测命令真实性与假绿灯 / 富规格优先 / 执行型 vs 探索型 / Self-Review 9 项 / 对抗审查 / loop 准入）见 [references/plan/route/plan_procedure.md](references/plan/route/plan_procedure.md)（唯一维护源）。**
 > ⚠️ **只读纪律【硬性·零例外】**：本阶段只产出方案类文档（spec/task/plan），严禁修改业务代码、配置文件、源文件、已交付物；任何"顺手改一下"的念头一律转为方案条目留到 /do。
