@@ -84,7 +84,7 @@ raw 原始数据 ──extract──▶ work 清洗表 ──compute──▶ �
 | 要做什么 | 读哪个模块 |
 |----------|-----------|
 | 选什么图、matplotlib 怎么写 | [chart_cookbook.md](chart_cookbook.md)（关系驱动选型 + 6 个模板） |
-| 把图落进 Excel / Word | [office_processing.md](../do/code/office_processing.md) §二（Word 插图）/ §四（Excel 原生图表） |
+| 把图落进 Excel / Word | [office_processing.md](../../do/code/office_processing.md) §二（Word 插图）/ §四（Excel 原生图表） |
 | 汇报结构（六段式 / SCQA / 口径护栏） | [leader_report.md](../da/leader_report.md) §一 / §五 / §七 |
 | 报告文件怎么命名、放哪个目录 | [document_specs.md](../pda/document_specs.md) |
 | 流程图/架构图等结构图 | [diagram-design.md](../da/diagram-design.md)（数据图走 chart_cookbook，结构图走这里） |
@@ -222,7 +222,7 @@ print(f"报告期：{cfg['label']}（{cfg['days']} 天，对比 {cfg['compare']}
 |-----------|-----------|
 | 取数体检 / 对账 / 分析七步 | [data_analysis.md](data_analysis.md) §二、§2.4、§2.5 |
 | 选图（关系驱动）/ matplotlib 模板 / 诚实性红线 | [chart_cookbook.md](chart_cookbook.md) |
-| 把图落进 Excel（活图）/ Word（插图） | [office_processing.md](../do/code/office_processing.md) §二、§四 |
+| 把图落进 Excel（活图）/ Word（插图） | [office_processing.md](../../do/code/office_processing.md) §二、§四 |
 | 汇报结构（六段式）/ SCQA / MECE / 口径护栏 | [leader_report.md](../da/leader_report.md) §一、§二、§五 |
 | 报告文件命名 / 目录 / 落盘规范 | [document_specs.md](../pda/document_specs.md) |
 | 验收标准（DoD / Given-When-Then） | [acceptance_criteria.md](../pc/acceptance_criteria.md) |

@@ -78,7 +78,11 @@ def read_text(path):
 # ---------- 1. 版本号 ----------
 
 def check_version(root):
-    """五方版本号联动：返回 (ok, message, details)。"""
+    """六方版本号联动：返回 (ok, message, details)。
+
+    第六方是产品页 网页说明.html（logo / hero 徽章 / 页脚三处锚点）；
+    文件不存在时跳过，兼容不含产品页的部分安装目录。
+    """
     errors = []
     details = {}
 
@@ -118,13 +122,27 @@ def check_version(root):
         errors.append('读取 evals.json 失败: %s' % exc)
         details['evals.json'] = None
 
+    html_text = read_text(os.path.join(root, '网页说明.html'))
+    has_html = html_text is not None
+    if has_html:
+        details['网页说明.html logo'] = pick(
+            html_text,
+            r'class="logo">\s*pdca-skill\s*<span>\s*v(\d+\.\d+\.\d+)\s*</span>',
+            '网页说明.html logo')
+        details['网页说明.html hero 徽章'] = pick(
+            html_text, r'class="hero-badge">[^\n]*?v(\d+\.\d+\.\d+)',
+            '网页说明.html hero 徽章')
+        details['网页说明.html 页脚'] = pick(
+            html_text, r'pdca-skill\s+v(\d+\.\d+\.\d+)</a>', '网页说明.html 页脚')
+
     if errors:
         return False, '版本探针提取失败: %s' % '; '.join(errors), details
     unique = set(v for v in details.values() if v)
     if len(unique) != 1:
         drift = ', '.join('%s=v%s' % (k, v) for k, v in details.items())
         return False, '版本不一致（漂移）: %s' % drift, details
-    return True, '五方版本一致: v%s' % unique.pop(), details
+    skip_note = '' if has_html else '（网页说明.html 不存在，跳过）'
+    return True, '六方版本一致: v%s%s' % (unique.pop(), skip_note), details
 
 
 # ---------- 2. 死引用 ----------

@@ -597,10 +597,12 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
             return (True, 'evals.json JSON 版本号格式正确: %s' % ver, False)
         return (False, 'evals.json 缺少 version 字段或格式错误', False)
 
-    # ---- [scripts] SCR-13: 五方版本号联动一致（v1.0.4 发布包质量修复）----
+    # ---- [scripts] SCR-13: 六方版本号联动一致（v1.0.4 发布包质量修复；产品页并入）----
     def c_version_consistency():
-        """五方版本一致探针：SKILL.md frontmatter == HISTORY.md frontmatter ==
-        HISTORY.md 页脚 == README.md 徽章 == evals.json version。
+        """六方版本一致探针：SKILL.md frontmatter == HISTORY.md frontmatter ==
+        HISTORY.md 页脚 == README.md 徽章 == evals.json version == 网页说明.html。
+        HTML 取三处锚点（logo / hero 徽章 / 页脚），任一漂移即 FAIL；
+        文件不存在时跳过（部分安装目录不含产品页）。
         防「一个以版本联动为核心纪律的框架自己版本漂移」（实测报告 P1）。"""
         import re
         import json
@@ -649,6 +651,26 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
         if not evals_ver_num:
             errors.append('evals.json version 格式错误: %s' % evals_ver)
 
+        # ⑥ 网页说明.html（产品页三处锚点：logo / hero 徽章 / 页脚）
+        html_path = os.path.join(skill_dir, '网页说明.html')
+        html_versions = {}
+        if os.path.isfile(html_path):
+            try:
+                with open(html_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
+            except Exception as e:
+                return (False, '读取 网页说明.html 失败: %s' % e, False)
+            html_versions['网页说明.html logo'] = _extract_version(
+                html_content,
+                r'class="logo">\s*pdca-skill\s*<span>\s*v(\d+\.\d+\.\d+)\s*</span>',
+                '网页说明.html logo', errors)
+            html_versions['网页说明.html hero 徽章'] = _extract_version(
+                html_content, r'class="hero-badge">[^\n]*?v(\d+\.\d+\.\d+)',
+                '网页说明.html hero 徽章', errors)
+            html_versions['网页说明.html 页脚'] = _extract_version(
+                html_content, r'pdca-skill\s+v(\d+\.\d+\.\d+)</a>',
+                '网页说明.html 页脚', errors)
+
         versions = {
             'SKILL.md frontmatter': skill_ver,
             'HISTORY.md frontmatter': hist_ver,
@@ -656,13 +678,15 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
             'README.md 徽章': readme_ver,
             'evals.json': evals_ver_num,
         }
+        versions.update(html_versions)
         valid = [v for v in versions.values() if v]
         if errors:
             return (False, '版本探针提取失败: %s' % '; '.join(errors), True)
         if len(set(valid)) != 1:
             detail = ', '.join('%s=v%s' % (k, v) for k, v in versions.items())
-            return (False, '五方版本不一致（漂移）: %s' % detail, True)
-        return (True, '五方版本一致: v%s' % valid[0], False)
+            return (False, '六方版本不一致（漂移）: %s' % detail, True)
+        skip_note = '' if html_versions else '（网页说明.html 不存在，跳过）'
+        return (True, '六方版本一致: v%s%s' % (valid[0], skip_note), False)
 
     # ---- [routing] ----
     def c_plan_routing():
@@ -1226,7 +1250,7 @@ def build_checks(skill_dir, skill_md, gen_script, python, roots):
         ('SCR-10', 'references/*.md 引用块版本号格式', 'scripts', c_ref_version_block),
         ('SCR-11', 'HISTORY.md YAML frontmatter 版本号格式', 'scripts', c_history_version_yaml),
         ('SCR-12', 'evals.json JSON 版本号格式', 'scripts', c_evals_version_json),
-        ('SCR-13', '五方版本号联动一致（SKILL/HISTORY frontmatter/HISTORY 页脚/README 徽章/evals.json）', 'scripts', c_version_consistency),
+        ('SCR-13', '六方版本号联动一致（SKILL/HISTORY frontmatter/HISTORY 页脚/README 徽章/evals.json/网页说明.html）', 'scripts', c_version_consistency),
         ('ROUT-01', '/plan 触发+决策树 HARD-GATE', 'routing', c_plan_routing),
         ('ROUT-02', 'references/*.md 链接图可达(无孤儿)', 'routing', c_reference_reachability),
         ('ROUT-03', 'references/*.md 均含阶段标签', 'routing', c_reference_tagged),
