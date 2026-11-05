@@ -25,6 +25,17 @@ def _run_dispatch(task, json_flag=False):
     )
 
 
+def _run_suggest(task, json_flag=False):
+    """辅助：运行 suggest 命令"""
+    cmd = [sys.executable, "scripts/launch_subagent_rj.py", "suggest", "--task", task]
+    if json_flag:
+        cmd.append("--json")
+    return subprocess.run(
+        cmd, capture_output=True, text=True, cwd=SKILL_ROOT,
+        encoding='utf-8', errors='replace',
+    )
+
+
 class TestDispatch:
     """dispatch 命令测试"""
 
@@ -40,6 +51,9 @@ class TestDispatch:
         assert "[subagent:" in agent["query_template"]
         assert "role_identity" in agent
         assert agent["role_identity"]  # 非空
+        # 防注入声明（与 security.md 指令层级规则对称）
+        assert "防注入" in agent["query_template"]
+        assert "不是指令" in agent["query_template"]
 
     def test_dispatch_no_match(self):
         """测试无匹配 agent 时 strategy=none"""
@@ -75,3 +89,19 @@ class TestDispatch:
         for a in data["agents"]:
             assert "query_template" in a
             assert "[subagent:" in a["query_template"]
+
+
+class TestSuggest:
+    """suggest 命令测试（弹性建议路径必须与 dispatch 同源）"""
+
+    def test_suggest_has_query_template(self):
+        """suggest 的 matched_agents 也必须带防注入声明（MEDIUM-1 修补）"""
+        result = _run_suggest("初始化项目", json_flag=True)
+        assert result.returncode == 0, f"returncode={result.returncode}, stderr={result.stderr}"
+        data = json.loads(result.stdout)
+        assert data["matched_agents"], "初始化项目 应至少匹配 1 个副 agent"
+        for m in data["matched_agents"]:
+            assert "query_template" in m
+            assert "[subagent:" in m["query_template"]
+            assert "防注入" in m["query_template"]
+            assert "不是指令" in m["query_template"]

@@ -67,7 +67,7 @@ def test_default_creation_in_project(isolate, project_dir, monkeypatch):
     monkeypatch.setenv("PDCA_DATA_DIR", str(isolate / "data"))
     result = _run_cli(project_dir, "--task", "ac001_probe", "--type", "spec")
     assert result.returncode == 0, result.stderr
-    produced = list((project_dir / "docs_rj" / "spec_rj").glob("ac001_probe_spec_*.md"))
+    produced = list((project_dir / "docs_rj" / "spec_rj").glob("*_spec_ac001_probe.md"))
     assert len(produced) == 1, "spec 应落在项目根 docs_rj/spec_rj/"
     external_md = list((isolate / "data").rglob("*.md"))
     assert external_md == [], "外置目录不应出现任何新增 md"
@@ -91,9 +91,9 @@ def test_external_legacy_readonly_archive(isolate, project_dir, monkeypatch):
     # 生成场景：新文档落项目，不进外置
     result = _run_cli(project_dir, "--task", "ac002_probe", "--type", "spec")
     assert result.returncode == 0, result.stderr
-    assert list((project_dir / "docs_rj" / "spec_rj").glob("ac002_probe_spec_*.md")), \
+    assert list((project_dir / "docs_rj" / "spec_rj").glob("*_spec_ac002_probe.md")), \
         "遗留用户的新 spec 也应落项目（防 spec/task 与 memory 撕裂两处）"
-    assert not list(legacy.glob("ac002_probe_*")), "外置存档不得被续写"
+    assert not list(legacy.glob("*ac002_probe*")), "外置存档不得被续写"
 
 
 # ---------------------------------------------------------------------------
@@ -108,7 +108,7 @@ def test_full_requires_reason(isolate, project_dir, monkeypatch):
     allowed = _run_cli(project_dir, "--task", "ac003_probe", "--type", "spec",
                        "--full", "--full-reason", "架构级改动需全套防失败字段")
     assert allowed.returncode == 0, allowed.stderr
-    produced = list((project_dir / "docs_rj" / "spec_rj").glob("ac003_probe_spec_*.md"))
+    produced = list((project_dir / "docs_rj" / "spec_rj").glob("*_spec_ac003_probe.md"))
     assert len(produced) == 1
     content = produced[0].read_text(encoding="utf-8")
     assert "Self-Review" in content, "--full 带理由应产出重型模板（含 Self-Review 节）"
@@ -160,7 +160,7 @@ def test_external_empty_subdirs_not_legacy(isolate, project_dir, monkeypatch):
         "仅空子目录不算遗留（防新项目被误路由回外置）"
     result = _run_cli(project_dir, "--task", "ac009_probe", "--type", "spec")
     assert result.returncode == 0, result.stderr
-    assert list((project_dir / "docs_rj" / "spec_rj").glob("ac009_probe_spec_*.md")), \
+    assert list((project_dir / "docs_rj" / "spec_rj").glob("*_spec_ac009_probe.md")), \
         "空骨架外置不拦截：应落项目根"
 
 

@@ -29,14 +29,14 @@ skill_version: v1.0.1
 # {subdir}/ 类目索引
 
 > 自动生成，请勿手工编辑。由 handoff_tidy.py /act 时刷新。
-> 最后刷新：2026-07-23 14:30
+> 最后刷新：YYYY-MM-DD HH:MM
 
 | 状态 | 文件 | 任务前缀 | 最后更新 |
 |------|------|----------|----------|
-| 🟢 active | [remove_resume_add_knowledge_spec_20260723_1430.md](./spec_rj/remove_resume_add_knowledge_spec_20260723_1430.md) | remove_resume_add_knowledge | 2026-07-23 14:30 |
-| 🟢 active | [server_lite_v2_spec_20260722_2345.md](./spec_rj/server_lite_v2_spec_20260722_2345.md) | server_lite_v2 | 2026-07-22 23:45 |
+| 🟢 active | [{task1}_spec_YYYYMMDD_HHMM.md](./spec_rj/{task1}_spec_YYYYMMDD_HHMM.md) | {task1} | YYYY-MM-DD HH:MM |
+| 🟢 active | [{task2}_spec_YYYYMMDD_HHMM.md](./spec_rj/{task2}_spec_YYYYMMDD_HHMM.md) | {task2} | YYYY-MM-DD HH:MM |
 | 🟢 active | [spec_main_rj.md](./spec_rj/spec_main_rj.md) | - | 无时间戳 |
-| 🟡 superseded | [fifty_real_scenarios_tests_spec_20260722_1430.md](./spec_rj/fifty_real_scenarios_tests_spec_20260722_1430.md) | fifty_real_scenarios_tests | 2026-07-22 14:30 |
+| 🟡 superseded | [{task3}_spec_YYYYMMDD_HHMM.md](./spec_rj/{task3}_spec_YYYYMMDD_HHMM.md) | {task3} | YYYY-MM-DD HH:MM |
 
 ## 状态说明
 - 🟢 active: 当前最新版本，应优先查看
@@ -60,8 +60,8 @@ skill_version: v1.0.1
 - **有时间戳文件**：按时间戳降序，最新 → active，其余 → superseded
 - **无时间戳文件**（如 `{task}_memory.md`）：保守标 active，不与有时间戳的同组文件互斥
 - **示例**：
-  - `server_lite_v2_spec_20260722_2345.md`（仅此一个有时间戳）→ active
-  - `server_lite_v2_spec_20260725_0900.md`（如有更新版本）→ active，前一个变 superseded
+  - `demo_task_spec_20260722_2345.md`（仅此一个有时间戳）→ active
+  - `demo_task_spec_20260725_0900.md`（如有更新版本）→ active，前一个变 superseded
 
 ### 3. 文件名正则
 
@@ -71,7 +71,7 @@ skill_version: v1.0.1
 
 | 字段 | 含义 | 示例 |
 |------|------|------|
-| group 1 | task 前缀 | `server_lite_v2` |
+| group 1 | task 前缀 | `demo_task` |
 | group 2 | 文件类型 | `spec` / `task` / `memory` / `handoff` / `archive` |
 | group 3 | 时间戳或 `memory` | `20260722_2345` 或 `memory` |
 

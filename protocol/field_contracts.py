@@ -6,8 +6,8 @@
 - spec: 含 background+risks+alternatives，required_when='complex_task'
 - task: label 对齐模板原文"怎么做/验证/验收/状态"
 - handoff: 7 章节
-- skill_main: SKILL.md 4 关键章节（7条铁律/Memory First/§0/§1），match=markdown_header
-- readme: README.md 3 关键章节（安装/快速上手/核心能力），match=markdown_header
+- skill_main: SKILL.md 4 关键章节（条铁律/Memory First/§0/§1），match=markdown_header
+- readme: README.md 3 关键章节（安装/上手/能力地图，短词松匹配），match=markdown_header
 - global_memory: memory_main.md 项目分段（pdca-skill），match=markdown_header
 设计来源: SKILL.md §3 三件套, references/common/pda/document_specs.md
 """
@@ -62,7 +62,7 @@ FIELD_CONTRACTS = {
     'skill_main': {
         'required_when': 'global_file_validation',
         'fields': {
-            '7条铁律': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
+            '条铁律': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
             'Memory First': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
             '§0 流程优先': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
             '§1 启动检查': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
@@ -72,8 +72,9 @@ FIELD_CONTRACTS = {
         'required_when': 'global_file_validation',
         'fields': {
             '安装': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
-            '快速上手': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
-            '核心能力': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
+            # 用短词松匹配，兼容 README 实际章节名（如「30 秒上手」「完整能力地图」）
+            '上手': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
+            '能力地图': {'level': 'required', 'source': 'file', 'match': 'markdown_header'},
         }
     },
     'global_memory': {

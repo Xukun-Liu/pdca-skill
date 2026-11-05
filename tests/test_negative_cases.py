@@ -55,7 +55,7 @@ def test_no_circular_imports():
         )
 
         # 关键符号非空
-        assert len(IRON_RULE_IDS) == 7, f"IRON_RULE_IDS 应有 7 条,实际 {len(IRON_RULE_IDS)}"
+        assert len(IRON_RULE_IDS) == 8, f"IRON_RULE_IDS 应有 8 条,实际 {len(IRON_RULE_IDS)}"
         assert len(STAGE_IDS) == 4, f"STAGE_IDS 应有 4 环,实际 {len(STAGE_IDS)}"
         assert len(FILE_ROLES) == 10, f"FILE_ROLES 应有 10 角色,实际 {len(FILE_ROLES)}"
 

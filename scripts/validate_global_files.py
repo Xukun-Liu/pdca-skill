@@ -280,7 +280,7 @@ def validate_file_against_contract(file_path, contract):
         for label in labels:
             if match_mode == 'markdown_header':
                 # markdown 章节匹配：^## 后含 label 的行（MULTILINE + 部分匹配）
-                # 如 label='7条铁律' 匹配 '## ⚡ 7条铁律'
+                # 如 label='条铁律' 匹配 '## ⚡ 8条铁律'（不锁死条数）
                 pattern = re.compile(
                     r'^##\s+.*' + re.escape(label),
                     re.IGNORECASE | re.MULTILINE,

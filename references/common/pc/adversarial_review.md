@@ -459,7 +459,7 @@ LOW：
 | 1 | **Coverage Gaps** | spec 的每条需求（REQ/AC）是否都有对应 task？task 是否都有对应 spec 需求？ | 需求零任务覆盖（spec 有但 task 没有）/ 任务无对应需求（task 有但 spec 没有） |
 | 2 | **Duplication** | 跨产物是否有重复定义？ | spec §4 和 task T003 描述同一功能两遍，易漂移 |
 | 3 | **Ambiguity** | 跨产物是否有歧义？ | spec 说"用户认证"，task 说"登录验证"，未明确是否同一概念 |
-| 4 | **Constitution Alignment** | 产物是否违反 7 条铁律+硬规则？ | task 要求跳过 Memory First / HARD-GATE |
+| 4 | **Constitution Alignment** | 产物是否违反 8 条铁律+硬规则？ | task 要求跳过 Memory First / HARD-GATE |
 | 5 | **Inconsistency** | 跨产物的技术决策/命名/接口是否一致？ | spec 说用 JWT，task 实现用 session |
 | 6 | **Underspecification** | 是否有 underspecified 的需求被 task 实现了？ | spec 只说"做认证"，task 直接写了 200 行代码，缺中间设计 |
 
@@ -467,7 +467,7 @@ LOW：
 
 | 严重度 | 条件 | 处理 |
 |--------|------|------|
-| **CRITICAL** | 违反 7 条铁律/安全不变量；或 spec 核心需求零 task 覆盖 | **必须修复**，阻断 /act |
+| **CRITICAL** | 违反 8 条铁律/安全不变量；或 spec 核心需求零 task 覆盖 | **必须修复**，阻断 /act |
 | **HIGH** | spec 非核心需求缺 task；或 task 无对应 spec 需求；或跨产物技术决策冲突 | **用户决定**：修复 or 接受风险 |
 | **MEDIUM** | 轻微不一致、命名歧义、underspecified 但已实现 | 仅记录，不阻断 /act |
 | **LOW** | polish、文档格式、注释缺失 | 仅记录，可选修复 |
@@ -518,7 +518,7 @@ Convergence Phase 编号：{Phase N}
 请逐个读取上述文件，按以下 4 项验证：
 1. **原 gap 修复验证**：原 gap 列表中的每一条，确认是否真的已修复（不是只改了描述，而是实际行为/代码/规则已对齐）
 2. **未引入新 gap**：按 6.1 的 6 维度检测，确认修补未引入新的 gap
-3. **Constitution 对齐**：修补未违反 7 条铁律/安全不变量
+3. **Constitution 对齐**：修补未违反 8 条铁律/安全不变量
 4. **Convergence Phase 子项打勾合理性**：task.md 中 Convergence Phase 的子项打勾是否名副其实（不是空打勾）
 
 产出格式：

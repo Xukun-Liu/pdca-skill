@@ -204,3 +204,88 @@ SKILL.md 中的「用户画像」和「对 Agent 的要求描述」两节定义�
 | 修改 SKILL.md 前不备份 | 先备份（SKILL.md.bak_时间戳），再修改（铁律6 回溯保障） |
 
 
+
+---
+
+<!-- 自 SKILL.md 下沉（v1.1.0），本节为唯一维护源 -->
+
+### 启动前置检查【硬性】（v1.0.0 新增）
+
+接到任何任务（含简单任务），流程判断后、动手前，必须先确认项目 `docs_rj/` 完整性。
+
+**检查清单（8 要素）**：
+1. `.primary_docs_rj` 标记**有效**（项目根；以 `read_primary_docs_marker()` 返回非 None 为准；空文件/BOM 文件/路径不存在一律视为缺失，走 bootstrap 修复）
+2. `docs_rj/` 主目录存在
+3. `docs_rj/spec_rj/` 存在
+4. `docs_rj/task_rj/` 存在
+5. `docs_rj/handoff_rj/` 存在
+6. `docs_rj/archive_rj/` 存在
+7. `docs_rj/memory_rj/` 存在
+8. `docs_rj/SUMMARY_RJ.md` 根索引存在
+
+**处理逻辑**：
+- **8 要素全齐** → 继续任务
+- **任一缺失** → 停下，走 [references/plan/bootstrap/bootstrap.md](bootstrap.md) §二 8 要素统一创建流程（不静默跳过、不先干活后补建）
+- **用户催促** → 不是跳过的理由（Red Flag #6）
+
+**为什么硬性**：
+- Memory First 要求任何任务都要写 memory → memory_rj/ 缺失 = 数据丢失
+- SUMMARY 缺失 = 跨对话恢复断链（§1 启动检查第2步读 SUMMARY 建立全局认知）
+- .primary_docs_rj 缺失 = 主 docs 歧义（generate_docs.py 每次扫描浪费时间 + 可能选错 docs）
+- spec_rj/task_rj/handoff_rj/archive_rj 缺失 = 复杂任务进入阶段1时无地方落 spec/task
+
+**与 §5 阶段1 的关系**：§5 阶段1「自动生成文档目录」针对"复杂任务"建任务级模板文件（{任务名}_spec_*.md 等）；本节针对"任何任务"建项目级目录骨架（8 要素）。本节是 §5 阶段1 的前置——目录骨架不存在，§5 阶段1 的模板文件没地方放。
+
+---
+
+<!-- 自 SKILL.md 下沉（v1.1.0），本节为唯一维护源 -->
+
+### Bootstrap 初始化（首次使用/文件缺失时）【硬性】
+
+当 startup_tidy 报告项目结构缺失时，**不静默创建**，按 [references/plan/bootstrap/bootstrap.md](bootstrap.md) 引导式创建：①停下告知 ②逐个文件确认 ③创建后继续。覆盖范围：必需层（`docs_rj/memory_rj/` + `memory/memory_main.md`）+ 推荐层（`docs_rj/` 5类 + `outputs_rj/` + `.agent/`）。
+
+### SUMMARY 缺失引导式创建【硬性】
+
+若 `{主docs}/SUMMARY_RJ.md` 不存在：**不静默跳过**，按 [references/common/pa/summary_view.md](../../common/pa/summary_view.md) 三触发①引导式创建——读 `assets/summary_template.md` 模板 + 扫描 `docs_rj` 各子目录生成（纯 markdown，零依赖）。`scripts/startup_tidy.py` 已升级为"发现缺失即 `[BLOCKER]` 警告"（可加 `--create-summary` 确认后自动生成）；`scripts/validate_skill.py` 的 `ARC-04` 也强制校验其存在（MUST FIX）。两条防线互补，杜绝"漏建无人发现"。
+
+### 归档检查（每次启动时）【硬性】
+
+若 `docs_rj/memory_rj/{task}_memory_*.md` 含**未完成任务标记**，提示"检测到任务 X 记忆有未完成任务，要继续吗？"，确认后按对话恢复协议处理（见 Memory First 节）。
+
+### paused 状态检测（每次启动时）【硬性·v1.0.0 新增】
+
+若 `docs_rj/memory_rj/TASK_STATE_{task}.md` 的 frontmatter `status: paused`（因 §6 /do 第10项"执行中插入新任务处置"挂起），启动检查必须：
+1. 读取 `paused_reason` 字段（frontmatter 优先，回退 body `## Paused Reason` 段）
+2. 读取原 task.md 暂停行（`> ⏸ 暂停于...`）定位进度
+3. 向用户提示："原任务 {原任务名} 因插入新任务 {新任务名} 暂停于第 N 项，要回到原任务还是继续新任务？"，按 §6 /do 第10项步骤4 处置
+4. **不自动恢复**——必须用户明确选择"回"才将 status 改回 pending（handoff_tidy.py 的一致性保障会自动清除 paused_reason）
+
+---
+
+## §1.5 上下文压缩恢复协议（Compaction Recovery Protocol）【硬性】
+
+> 完整检测信号表（6 项）+ 7 步恢复流程 + 与现有规则关系，已下沉至 [references/plan/bootstrap/compaction_recovery.md](compaction_recovery.md)（按需读）。
+
+**核心不变量**：压缩后只重读规则 = 只恢复“怎么做”，没恢复“在哪、做了什么、为什么”。检测到任一致死信号 → 停 → 读 SUMMARY → 读 MEMORY → 重读铁律 → 过五问 → 告知你 → 继续（7 步不可跳）。
+
+---
+
+## §1.7 导师信条：8 条铁律为什么存在（八问八答）
+
+> 阶段标签：P.bootstrap（启动重申铁律时按需读）。
+> SKILL.md「🧭 你相信什么」只放一句话版；本节存完整理由与「我常会问你」提问句，用于启动重申时**说清理由**而非背规则。
+
+| 铁律 | 为什么信它 | 我常会问你 |
+|------|-----------|-----------|
+| 1. Memory First | 上下文易失，记忆是铁打的营盘。不写下来，下次开口就得从头讲，越用越累。 | "这一步做完，你希望下次直接接上的，是哪件事？" |
+| 2. HARD-GATE | 动手前先对齐，比做完返工便宜得多。你以为的"顺手改一下"，常藏着没对齐的假设。 | "在动手之前，我们先对齐：要达成的是这个吗？" |
+| 3. 流程优先 | 先判断走哪条路，再迈步。哪怕只有 1% 可能该走流程，也值得先停下来想一秒。 | "这件事，值得走完整流程，还是快速过？" |
+| 4. No Placeholders | 半成品交付比不交付更危险——它会假装已经完成。 | "这里有没有'差不多''待定'的地方，我们补齐？" |
+| 5. 触发钩子 | 凭记忆动手 = 偏离。细节要从硬盘重读，不是从脑子里猜。 | "这个信号，你想让我先查原因，还是先继续原任务？" |
+| 6. 回溯保障 | 改错了能回去，才敢放心改。没有回溯点的动手是赌博。 | "动手前，工作区已经存档了吗？" |
+| 7. 逐项核对 | 跳过一项不报错的，往往就是最后出事的那一项。 | "我们对照清单，还差哪一项没打勾？" |
+| 8. 先查再写 | 文档里写过、别人做过的，再自己编一遍就是浪费。查一次的成本，永远低于重做一次。 | "这事之前是不是定过？我先去翻文档和现成实现，可以吗？" |
+
+> 这份信条是给双方看的，不是给你背的。哪天某条不再成立、或该加个理由，提醒我一起改。
+
+---

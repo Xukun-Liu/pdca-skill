@@ -1,6 +1,6 @@
 <!-- PDCA标签：P.design D.code A.handoff -->
 <!-- 子标签场景：文档规格 -->
-<!-- 关键词清单：写spec/写task/写文档/写需求/做需求/需求分析/写方案/出方案/写设计/做设计/规划 -->
+<!-- 关键词清单：写spec/写task/写文档/写需求/做需求/需求分析/写方案/出方案/写设计/做设计/规划/文档优先/之前写过/之前定过/落盘/决策落盘 -->
 <!-- 引用范围：main + spec_design_agent -->
 
 # 文档规范
@@ -10,12 +10,38 @@
 
 > 📖 **什么时候读这个文件**：
 > - 准备写spec.md/task.md文档时
+> - **动手前想先查"之前是不是定过"（文档优先）时**
 > - 准备提交spec给你确认前做Self-Review时
 > - 不确定No Placeholders细节时
 > - 不确定主 docs 目录/多个 docs 怎么处理时
 > 🔴 **不要在这时候读**：
 > - 不需要写文档的简单任务
 > - 纯代码执行阶段已有明确task
+
+---
+
+## 文档优先（Doc First）【硬性】
+
+> 铁律8「先查再写」的文档侧。**读 > 问 > 猜**：文档里写过的，别再问一遍、更别推翻重来。
+
+### 三条规则
+
+1. **动手前先读**：接到任务先看 `docs_rj/` 的 spec / task / handoff / memory，以及项目根 README / ADR / 变更日志。**文档已有答案 → 直接沿用并说明"依据 XX 文档"**，不重复追问用户，不另起一套方案。
+2. **决策必须落盘**：对话里定下的实质决策（选型、口径、边界、放弃的方案、用户明确说"就按这个来"）**当场写进 spec / task / memory**。只停在对话里 = 下一轮/换对话就没了，等于没做。
+3. **冲突先问归属**：文档与口头说法不一致时，**不要自己选一个**。先问"以文档为准还是以刚才说的为准"，用户选定后**同步改文档**，让文档继续是唯一事实源。
+
+### 反例（都是真实踩过的坑）
+
+| 反例 | 后果 | 正确做法 |
+|---|---|---|
+| 上次 spec 已经定了方案 A，这次没读就重新设计出方案 B | 返工 + 用户要重复解释 | 先读 spec，发现 A，直接说"沿用 spec 的方案 A，因为…" |
+| 用户口头说"这个字段不要了"，没写进 spec，三天后换对话又加回来 | 需求漂移、反复 | 当场改 spec，并回一句"已更新 spec：删除 XX 字段" |
+| 文档写"用 MySQL"，用户口头说"用 SQLite"，直接按 SQLite 做了 | 文档失效，后续接手的人被误导 | 先问以哪个为准，选定后同步改文档 |
+
+### 与铁律8「先查再写」的分工
+
+- **文档侧**（本节）：先读已有 spec/task/handoff/memory，先落盘新决策。
+- **实现侧**（[minimal_code_principles.md](../pd/minimal_code_principles.md)）：先查能不能不写 / 库里有没有 / 标准库与已装依赖 / 外部有没有现成 skill。
 
 ---
 
@@ -86,7 +112,7 @@ pdca-skill 产出的任务文档有固定结构：
 | 特征 | 说明 | 示例 |
 |------|------|------|
 | 子目录名 | 固定4种 | `spec_rj/` `task_rj/` `handoff_rj/` `archive_rj/`（记忆不在内，独立在根 `memory/`） |
-| 文件名前缀 | 类型+任务名+时间戳（无编号前缀） | `user_auth_spec_20260710_1430.md` |
+| 文件名 | 时间前缀式（时间+任务名+类型，无编号前缀） | `20260710_1430_user_auth_spec.md` |
 
 非 pdca-skill 文档（如 Sphinx API 文档、用户手册）不会被误识别。
 
@@ -103,11 +129,13 @@ pdca-skill 产出的任务文档有固定结构：
 
 | 文件 | 位置 | 性质 |
 |------|------|------|
-| spec | `{主docs}/spec_rj/{任务名}_spec_YYYYMMDD_HHMM.md` | 需求规格 |
-| task | `{主docs}/task_rj/{任务名}_task_YYYYMMDD_HHMM.md` | 任务清单 + 验收标准 + 验证步骤 |
-| handoff（手工） | `{主docs}/handoff_rj/{任务名}_handoff_YYYYMMDD_HHMM.md` | 手工创建的交接文档 |
-| handoff（自动） | `{项目根}/docs_rj/memory_rj/{任务名}_handoff_memory_YYYYMMDD_HHMM.md` | handoff_tidy.py 自动生成（经 write_project 双写，自动 upsert 全局 memory_main；L1 修复·澄清设计意图） |
-| memory | `{项目根}/docs_rj/memory_rj/{任务名}_memory_YYYYMMDD_HHMM.md` | 任务级极简笔记（写入即落盘 + 自动 upsert 全局 `memory/memory_main.md`） |
+| spec | `{主docs}/spec_rj/YYYYMMDD_HHMM_{项目名}_spec_{任务名}.md` | 需求规格 |
+| task | `{主docs}/task_rj/YYYYMMDD_HHMM_{项目名}_task_{任务名}.md` | 任务清单 + 验收标准 + 验证步骤 |
+| handoff（手工） | `{主docs}/handoff_rj/YYYYMMDD_HHMM_{项目名}_handoff_{任务名}.md` | 手工创建的交接文档 |
+| handoff（自动） | `{项目根}/docs_rj/memory_rj/YYYYMMDD_HHMM_{任务名}_handoff_memory.md` | handoff_tidy.py 自动生成（经 write_project 双写，自动 upsert 全局 memory_main；L1 修复·澄清设计意图） |
+| memory | `{项目根}/docs_rj/memory_rj/YYYYMMDD_HHMM_{任务名}_memory.md` | 任务级极简笔记（写入即落盘 + 自动 upsert 全局 `memory/memory_main.md`） |
+
+> 命名说明：spec/task/handoff 由 `generate_docs.py` 生成，统一时间前缀式 4 段 `YYYYMMDD_HHMM_{项目名}_{类型}_{任务名}.md`（项目名缺省取当前目录名，可用 `--project` 指定）；memory 由 `memory_shadow_write.py` 生成，沿用 `YYYYMMDD_HHMM_{任务名}_memory.md`。读取侧两种格式都兼容。
 
 模板文件存放在 `assets/` 目录：
 - `assets/spec_main_template.md`（项目级总 spec 模板，通用，其他项目复制填空即可用；实例：docs_rj/spec_main_{项目名}.md）
@@ -146,11 +174,11 @@ pdca-skill 产出的任务文档有固定结构：
 ```bash
 # {主docs} 替换为实际主 docs 路径，默认 ./docs_rj/（v1.0.4 起默认建项目根）
 mkdir -p {主docs}/{spec_rj,task_rj,handoff_rj,archive_rj}
-cp ~/.agent/skills/pdca-skill/assets/spec_template_lite.md {主docs}/spec_rj/{任务名}_spec_YYYYMMDD_HHMM.md
-cp ~/.agent/skills/pdca-skill/assets/task_template_lite.md {主docs}/task_rj/{任务名}_task_YYYYMMDD_HHMM.md
-cp ~/.agent/skills/pdca-skill/assets/handoff_template.md {主docs}/handoff_rj/{任务名}_handoff_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/spec_template_lite.md {主docs}/spec_rj/YYYYMMDD_HHMM_{项目名}_spec_{任务名}.md
+cp ~/.agent/skills/pdca-skill/assets/task_template_lite.md {主docs}/task_rj/YYYYMMDD_HHMM_{项目名}_task_{任务名}.md
+cp ~/.agent/skills/pdca-skill/assets/handoff_template.md {主docs}/handoff_rj/YYYYMMDD_HHMM_{项目名}_handoff_{任务名}.md
 # 项目记忆在 docs_rj/memory_rj/ 内，经 memory_shadow_write.write_project 双写
-cp ~/.agent/skills/pdca-skill/assets/memory_template.md {项目根}/docs_rj/memory_rj/{任务名}_memory_YYYYMMDD_HHMM.md
+cp ~/.agent/skills/pdca-skill/assets/memory_template.md {项目根}/docs_rj/memory_rj/YYYYMMDD_HHMM_{任务名}_memory.md
 ```
 
 > ⚠️ 脚本路径：`pdca-skill/scripts/generate_docs.py`（skill 安装目录下）
@@ -177,14 +205,14 @@ spec.md和task.md里**绝对禁止**以下模糊描述：
 ## Self-Review：写完必须自检【硬性·Unit Tests for English】
 
 > 借鉴 某开源项目 checklist 命令（Unit Tests for English 隐喻：测试需求文档本身的质量）。
-> **本节为引用说明**：9 维度 Self-Review 清单的**唯一维护源**在 [assets/spec_template.md](../assets/spec_template.md) "Self-Review 自检清单"节，本节不重复维护，避免漂移。
+> **本节为引用说明**：9 维度 Self-Review 清单的**唯一维护源**在 [assets/spec_template.md](../../../assets/spec_template.md) "Self-Review 自检清单"节，本节不重复维护，避免漂移。
 
 写完spec.md或task.md之后、交给你之前，必须自己先检查：
 
 - **简单任务**（一句话能说清）：过 4 项（占位符/一致性/范围/歧义）
 - **复杂任务**：过 9 项（占位符/一致性/范围/歧义/方案对比/验收标准/No Placeholders/错误处理/BRD 业务价值对齐）
 
-检查项详细清单见 [assets/spec_template.md](../assets/spec_template.md) Self-Review 节。
+检查项详细清单见 [assets/spec_template.md](../../../assets/spec_template.md) Self-Review 节。
 
 自检发现问题直接改，不用告诉你"我发现个问题改了"——改完再交。
 
@@ -208,7 +236,7 @@ spec.md和task.md里**绝对禁止**以下模糊描述：
 
 ## 记忆写入与全局聚合
 
-- **项目级记忆**：`{项目根}/docs_rj/memory_rj/{task}_memory_YYYYMMDD_HHMM.md`（任务名进文件名，带分钟级时间戳）。写入经 `memory_shadow_write.write_project(task, content)` 双写——落项目 `docs_rj/memory_rj/` + 幂等 upsert 全局 `memory/memory_main.md`。
+- **项目级记忆**：`{项目根}/docs_rj/memory_rj/YYYYMMDD_HHMM_{task}_memory.md`（任务名进文件名，带分钟级时间戳）。写入经 `memory_shadow_write.write_project(task, content)` 双写——落项目 `docs_rj/memory_rj/` + 幂等 upsert 全局 `memory/memory_main.md`。
 - **全局聚合记忆**（skill 包内）：`memory/memory_main.md` 按 `## {项目名}` 分段聚合各项目记忆（主次跟进）。
 - **写入即落盘**：所有项目记忆经 `write_project` 自动 upsert 全局 memory_main，无需手工同步、无独立归档步骤、无 SESSION_END 收尾标记。
 - **同分钟文件名冲突处理规则**（LOW-3 新增·M4 完善边界 case）：文件名时间戳粒度为分钟，同分钟内多次 `write_project` 可能产生同名文件冲突。处理规则：① 写入前检查同名文件是否存在；② 不存在 → 正常写入；③ 已存在 → 追加序号后缀 `_N`（N 从 2 开始递增，**递增直到找到不存在的值**，上限 N≤99），格式 `{task}_memory_{YYYYMMDD}_{HHMM}_2.md`、`{task}_memory_{YYYYMMDD}_{HHMM}_3.md`，以此类推；④ N=99 仍存在 → 报错并升级用户决策（极端罕见场景）；⑤ 全局 memory_main 仍幂等 upsert（按 `## {项目名}` 段聚合，不重复）；⑥ 并发场景：`write_project` 内部按文件写入串行处理（同分钟多进程并发场景罕见，按写入顺序串行追加 `_N` 后缀）；⑦ 文件名长度校验：task 名 + 时间戳 + `_N` 后缀 ≤ 200 字符（Windows 上限 255，留余量）；⑧ 同分钟多次写入属罕见场景，**正常推荐做法是"同分钟内的多次写入合并为一次写入"**（content 一次写全）。
@@ -381,3 +409,104 @@ last_updated: 2026-07-08 10:30
 - ❌ SUMMARY 里复制原文件内容（违背导航/内容分离）
 - ❌ 链接指向不存在的文件（漂移）
 - ❌ section 无 leading paragraph
+
+---
+
+<!-- 自 SKILL.md 下沉（v1.1.0），本节为唯一维护源 -->
+
+### 用户数据外置说明【硬性·v1.0.0 新增】
+
+> 本节说明用户数据与框架文件的物理分离机制，所有路径引用以本节为准。
+
+**核心机制**：用户数据外置到 `~/.pdca-skill/data/`（跨平台用户目录下），skill 包纯框架。升级 skill 包（解压覆盖）时用户数据天然不受影响——数据 0 丢失。**v1.0.4：外置只放跟人走的资产（memory_main/outputs_rj/server_lite_data）；跟项目走的文档（docs_rj）建在项目根目录**。
+
+**路径解析三级优先级**：环境变量 `PDCA_DATA_DIR` > 配置文件 `~/.pdca-skill/config.json` 的 `data_dir` 字段 > 默认值 `~/.pdca-skill/data/`。由 `scripts/user_data_path.py` 统一解析，所有脚本经此模块读写用户数据。
+
+**外置目录结构**（`~/.pdca-skill/data/` 下）：
+- `memory/memory_main.md` — 全局聚合记忆（原 skill 包内 `memory/memory_main.md`）
+- `outputs_rj/` — 任务输出（loop_ledger.json 等）
+- `server_lite_data/` — 框架自动创建的占位目录（server_lite 用户数据；server_lite 当前不主动引导使用，该目录即使为空也无负面影响）
+- `undo/` — 治理工具操作前的备份（delete/archive/promote/demote/rethink 等）
+- `quarantine/` — 隔离区（治理工具删除/隔离的条目暂存）
+
+> **项目文档位置（v1.0.4）**：`docs_rj/` 默认建在**项目根**。外置检测到遗留（递归 `*.md >0`）按**只读存档**处理——旧数据原地保留可读、不迁移、不续写，新文档一律写项目根（防同一任务 spec/task 与 memory 撕裂两处）；搬回需手动移动 + `--declare-primary` 宣告。
+
+**框架文件**（skill 包内，可覆盖升级）：SKILL.md / scripts/ / references/ / assets/ / agents_rj/ / tests/ / evals/ / protocol/ / server_lite/ 框架代码 + assets/ 模板。
+
+**启动自动迁移**：老用户首次启动新版时，`startup_tidy.py` 检测包内有用户数据 + 外置为空 → 自动迁移到外置目录 + 写 `.migrated` 标记（保留 7 天回滚窗口）。迁移用跨平台文件锁（`~/.pdca-skill/.migrate.lock`）防并发竞争。
+
+**⚠️ 锁文件说明**：`~/.pdca-skill/.migrate.lock` 残留正常（空文件，O_CREAT 复用，不依赖文件不存在），不要手工删除。
+
+**server_lite 说明**：server_lite（日积面板）是已完整实现但不主动引导使用的可选组件——功能与 AI 对话定位重叠，当前版本不再引导用户启动。代码保留供未来扩展或用户主动启用，如需使用：`python run_server.py` 启动后访问 http://127.0.0.1:5210。数据路径管理可由 AI 对话直接改 `~/.pdca-skill/config.json` + 跑 `scripts/migrate_user_data.py` 替代。
+
+**发布打包**：`scripts/package_skill.py --version v1.0.0` 打包时自动排除用户数据目录，发布包只含框架文件。
+
+---
+
+<!-- 自 SKILL.md 下沉（v1.1.0），本节为唯一维护源 -->
+
+## §0.6 任务名关联 key【硬性】
+
+> 任务名是跨文件关联的**唯一 key**。memory / spec / task / handoff 文件都按任务名前缀命名，调用 `write_project` / `generate_docs.py` / `handoff_tidy.py` 时必须传同一 task 名——否则文件散落、跨对话恢复时找不到上下文、`SUMMARY_RJ.md` 链接断链。本节定义任务名的格式规范 + 冲突处理，是 §5 阶段1「自动生成文档目录」的前置约束。
+
+**硬规则**：
+
+1. **任务名必须含项目标识**：每个任务启动时，任务名必须含项目标识（如 `v4_4_t07_learn_phase5`），作为 memory / spec / task / handoff 文件名前缀
+2. **任务名是跨文件关联的唯一 key**：在 `write_project(task, content)` / `generate_docs.py --task {任务名}` / `handoff_tidy.py --task {任务名}` 调用时，**必须传同一 task 名**——否则文件散落，跨对话恢复时 `SUMMARY_RJ.md` 链接断链、`memory_main.md` 项目分段错位
+3. **任务名格式限制**：只允许 `[a-z0-9_]+` 格式（小写字母 + 数字 + 下划线），**不允许空格 / 中文 / 特殊字符**——脚本文件名兼容性 + 跨平台一致性（Windows / macOS / Linux 文件系统都安全）
+4. **任务名冲突处理**：同名任务冲突时（如同一项目内两个 `t07_fix`），新任务必须加时间戳后缀（如 `t07_fix_20260718`），保证文件名唯一不覆盖
+
+**命名示例**：
+
+| 场景 | 任务名 | 文件命名示例 |
+|------|--------|--------------|
+| 某升级第 7 任务 | `t07_learn_phase5` | `20260718_1030_t07_learn_phase5_spec.md` |
+| 简单 bug 修复 | `bugfix_login_timeout_20260718` | `20260718_1400_bugfix_login_timeout_20260718_memory.md` |
+| 同名冲突 | `t07_fix_20260718`（新）vs `t07_fix`（旧） | 两个独立任务，文件不覆盖 |
+
+**与 §5 阶段1 自动生成文档目录的关系**：§5 阶段1 调用 `generate_docs.py --task {任务名}` 自动建 5 类文件夹，本节定义"任务名怎么取"——脚本按本节规则校验任务名格式，不合规直接报错拒绝执行（对齐铁律4 No Placeholders：不写"待定任务名"）。
+
+**与 Memory First 的关系**：`write_project(task, content)` 落盘时 task 名进文件名（`YYYYMMDD_HHMM_{task}_memory.md`），task 名错 = 文件散落到错误位置 = 全局 `memory_main.md` 项目分段错位 = 下一轮 /plan 步骤1 读不到。
+
+> 类比：案件编号——一个案子从立案到结案，所有材料（笔录 / 证据 / 判决）都按同一案件编号归档。编号一错，材料散落，下次接手翻不到。任务名就是案件编号，必须规范 + 唯一 + 全程一致。
+
+---
+
+---
+
+<!-- 自 SKILL.md 下沉（v1.1.0），本节为唯一维护源 -->
+
+### 阶段1：需求对齐——自动生成文档目录【硬性】
+
+当判断任务为复杂任务（需要写spec/task）时，**自动触发**以下流程：
+
+1. **提取任务名**：从用户需求中提取任务名（小写+下划线格式）
+2. **自动生成文档结构**：调用 `scripts/generate_docs.py --task {任务名}`（默认 `--type all`），自动在 `docs_rj/` 下建 5 类常驻文件夹并生成带时间戳的模板；**项目记忆 `docs_rj/memory_rj/` 建在主 docs 内**
+3. **读取模板**：打开生成的 `docs_rj/spec_rj/*_{任务名}_spec.md` / `docs_rj/task_rj/*_{任务名}_task.md` 模板文件
+4. **填充内容**：按模板结构填充需求内容
+
+生成结构（扁平）：
+
+```
+docs_rj/
+├── spec_rj/      YYYYMMDD_HHMM_{任务名}_spec.md
+├── task_rj/      YYYYMMDD_HHMM_{任务名}_task.md
+├── handoff_rj/   YYYYMMDD_HHMM_{任务名}_handoff.md
+├── memory_rj/    YYYYMMDD_HHMM_{任务名}_memory.md   ← 项目记忆，建在主 docs 内
+├── archive_rj/   {task}_YYYYMMDD_HHMM/（按任务子文件夹聚合，任务启动时间戳从原文件名提取）
+└── SUMMARY_RJ.md
+```
+
+> 📁 完整目录树 + 手动降级 bash + 脚本路径/任务名校验细则：见 [references/common/pda/document_specs.md](document_specs.md)「文件用途与位置 / 自动触发机制」（按需读，零系统依赖）。脚本自动检测主 docs 目录，无需手动指定路径。
+
+**自动触发条件**：任务判断为"复杂"（一句话说不清）且需写完整三件套（spec/task/memory）。
+
+**无需用户确认**：文档目录结构生成是标准流程，无需额外确认。
+
+**硬规则**【硬性】：
+- 阶段1未完成，禁止进入阶段2（哪怕你催）
+- 每个task完成必须实际跑验证步骤，看到预期结果才能打勾（Verification-before-Completion）
+- **Stop-the-line**：严重偏离spec/你明确反对/产出质量不可接受时，立即停下沟通
+- 跨对话做不完就更新task.md+memory，下次接着干，不要赶进度跳步骤
+
+---

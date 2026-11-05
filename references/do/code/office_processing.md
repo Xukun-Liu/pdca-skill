@@ -1,14 +1,15 @@
 <!-- PDCA标签：D.code -->
 <!-- 子标签场景：Office 文档处理 -->
-<!-- 关键词清单：处理PDF/Word/PPT/Excel文件/读/写/改/转/合并/拆分/提取表格/做PPT/Excel公式/Office文档操作/文档转换/PDF/Word/PPT/Excel -->
+<!-- 关键词清单：处理PDF/Word/PPT/Excel文件/读/写/改/转/合并/拆分/提取表格/做PPT/Excel公式/Excel作图/Excel图表/Word插图/文档里加图/Office文档操作/文档转换/PDF/Word/PPT/Excel -->
 <!-- 引用范围：main + doc_proc_agent -->
 
 # Office 文档处理（PDF / Word / PPT / Excel）
 
 > 阶段标签：D（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.1.0 | 更新：2026-08-11
-> v1.0 变更：二期交付。综合本地技能库（pdf/docx/pptx/xlsx 四个 skill）+ 网上最佳实践，沉淀为纯文本参考模块，内网可用、零外部依赖。离线边界纠正：用户环境确认=内网离线机只有 Python、不能装系统软件、但私有 PyPI 源可 pip 纯 Python 包。将 pandoc/LibreOffice/Tesseract/Poppler 标「内网离线不可用」，公式重算补纯 Python 替代库 `formulas`，§六 重写为「私有源 pip 装纯 Python + 能力边界表」。沙箱实测纠正——§6.1 依赖清单 `某工具` 加 extras（`某工具[pdf,docx,pptx,xlsx]`），裸装转不了 Office 文件。核心四格式纯 Python 离线路径已实测全 PASS（openpyxl/python-docx/python-pptx/reportlab+pdfplumber）。
+> 版本：v1.2.0 | 更新：2026-11-05
+> v1.2 变更：补「Excel 原生图表」（`openpyxl.chart`：BarChart/LineChart/PieChart/ScatterChart，活图可二次编辑）与「Word 插图」（matplotlib PNG → `doc.add_picture()`，含图题与编号），解决「只在文件里排表格、不会在文件里放图」的缺口；选图与 matplotlib 模板统一外链 [chart_cookbook.md](../../common/pd/chart_cookbook.md)。来源：openpyxl/python-docx 官方文档 + FT Visual Vocabulary 选型约束。
+> v1.1.0 变更：二期交付。综合本地技能库（pdf/docx/pptx/xlsx 四个 skill）+ 网上最佳实践，沉淀为纯文本参考模块，内网可用、零外部依赖。离线边界纠正：用户环境确认=内网离线机只有 Python、不能装系统软件、但私有 PyPI 源可 pip 纯 Python 包。将 pandoc/LibreOffice/Tesseract/Poppler 标「内网离线不可用」，公式重算补纯 Python 替代库 `formulas`，§六 重写为「私有源 pip 装纯 Python + 能力边界表」。沙箱实测纠正——§6.1 依赖清单 `某工具` 加 extras（`某工具[pdf,docx,pptx,xlsx]`），裸装转不了 Office 文件。核心四格式纯 Python 离线路径已实测全 PASS（openpyxl/python-docx/python-pptx/reportlab+pdfplumber）。
 
 > 📖 **什么时候读这个文件**：
 > - 任务涉及「处理 Office 文档」——读/写/改/合并/拆分/提取/转换 PDF·Word·PPT·Excel 任意一种
@@ -83,6 +84,7 @@ python -m 某工具 f.pdf > f_check.md
 | 新建文档（简单） | **python-docx** | `doc = Document(); doc.add_paragraph("正文"); doc.save("out.docx")` |
 | 新建文档（排版强） | **docx-js**（JS） | `npm install -g docx`，用 JS 控制页边距/样式/目录 |
 | 改已有文档（精确） | **拆包改 XML** | `unpack.py → 改 word/document.xml → pack.py`（见下方「Word 改文档铁律」） |
+| **插图 / 放图表** | **python-docx** | `doc.add_picture("chart.png", width=Inches(6))`（见下方「Word 插图」） |
 | 转 PDF / 图片 | **LibreOffice 无头** | `soffice --headless --convert-to pdf f.docx` → `pdftoppm` |
 
 ### Word 改文档铁律（来自 docx skill，违反必翻车）
@@ -95,6 +97,37 @@ python -m 某工具 f.pdf > f_check.md
 7. **智能引号用实体**：新增文本含引号用 `&#x201C;`/`&#x2019;` 等 XML 实体，避免乱码。
 
 > 改已有文件的稳妥路径：`unpack` → 用 Edit 工具直接改 `unpacked/word/document.xml`（不要写 Python 脚本）→ `pack --original 原文件`（自动修复 durableId、xml:space 等）。
+
+### Word 插图（matplotlib 出 PNG → `doc.add_picture()`）
+
+> Word 里放的是**死图**（一张定格的 PNG，对方不能点数据改图）。要活图用 Excel 原生图表（§四）。**画什么图、怎么画**先看 [chart_cookbook.md](../../common/pd/chart_cookbook.md)（关系驱动选型 + 6 个 matplotlib 模板），本节只管"把图塞进 Word 并排好版"。
+
+```python
+from docx import Document
+from docx.shared import Inches, Pt
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+doc = Document()
+doc.add_heading("2026 年三季度经营复盘", level=1)
+doc.add_paragraph("三季度营收同比 +18%，主要来自华东区新客。")
+
+# 1) 插图：PNG 由 matplotlib 预先保存（dpi=200 以上，宽度按版心定）
+doc.add_picture("revenue_trend.png", width=Inches(6.0))
+doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER      # ① 图居中
+
+# 2) 图题：图下、居中、9pt、编号连续（图 1 / 图 2 …）
+cap = doc.add_paragraph("图 1  2026 年 1–9 月营收趋势（口径：含税确认收入，来源：财务系统）")
+cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
+cap.runs[0].font.size = Pt(9)
+
+doc.save("report.docx")
+```
+
+**四条规矩**
+1. **宽度 ≤ 版心**：A4 默认页边距 2.54cm，版心约 16cm；`Inches(6.0)` ≈ 15.2cm 安全，别超过 `Inches(6.3)`。
+2. **图题在图下**：编号连续（图 1、图 2…），图题写"看什么 + 口径 + 数据来源"，不要只写"图 1 营收"。
+3. **分辨率**：matplotlib 保存时 `dpi=200` 起（默认 100 打印会糊），`bbox_inches="tight"` 去白边。
+4. **一图一结论**：图上方正文先写结论句，图只是证据；别放"装饰图"。
 
 ---
 
@@ -133,6 +166,7 @@ python -m 某工具 deck.pptx | grep -iE "xxxx|lorem|ipsum|this.*(page|slide).*l
 | 读（保留公式/格式） | **openpyxl** | `load_workbook("f.xlsx")`（公式用 `data_only=True` 读计算值） |
 | 新建 / 改（格式·公式） | **openpyxl** | `wb = Workbook(); ws['A1']='x'; ws['B2']='=SUM(B3:B9)'` |
 | 公式重算（必做） | **`formulas` 库（纯 Python ✅离线）** | `import formulas; m=formulas.ExcelModel().loads("f.xlsx").finish(); m.calculate(); m.write()` 算出值再写回 |
+| **作图（原生图表·活图）** | **openpyxl.chart** | `ws.add_chart(chart, "E2")`（见下方「Excel 原生图表」；选图先看 chart_cookbook） |
 
 ### Excel 铁律（来自 xlsx skill）
 1. **用公式，别硬编码**：`ws['B10'] = '=SUM(B2:B9)'` ✅；在 Python 算完塞数字 ❌（源数据一变就失效）。
@@ -148,10 +182,96 @@ python -m 某工具 deck.pptx | grep -iE "xxxx|lorem|ipsum|this.*(page|slide).*l
 - [ ] 列映射对（第 64 列是 BL 不是 BK）
 - [ ] 处理 NaN（`pd.notna()`）、除零、跨表引用格式 `Sheet1!A1`
 
+### Excel 原生图表（`openpyxl.chart`，活图）
+
+> **活图 = 图表对象存在 xlsx 里**（对方点一下能改数据、换类型、调样式），比贴 PNG 强的地方就在这。**选什么图**先看 [chart_cookbook.md](../../common/pd/chart_cookbook.md) §一（关系驱动决策表），本节只讲怎么写进 xlsx。
+
+**选型对照（与 chart_cookbook 的 6 类关系一一对应）**
+
+| 想表达 | 用哪个类 | 关键参数 |
+|--------|----------|----------|
+| 比大小（类别 ≤ 12） | `BarChart` | `type="col"`（竖）/"bar"（横）+ `grouping="clustered"` |
+| 看趋势（时间序列） | `LineChart` | `marker=True` 标数据点；**别开 smooth**（会伪造中间值） |
+| 看占比（≤ 5 类） | `PieChart` | 单列数据 + `dataLabels.showPercent=True` |
+| 看相关（两个数值列） | `ScatterChart` | 用 `Series(values, xvalues)`，**不是** `add_data` |
+| 看构成变化 | `BarChart` | `grouping="stacked"` / `"percentStacked"` |
+
+**完整可跑示例（簇状柱：一季度分区营收）**
+
+```python
+from openpyxl import Workbook
+from openpyxl.chart import BarChart, Reference
+from openpyxl.chart.label import DataLabelList
+
+wb = Workbook()
+ws = wb.active
+ws.title = "月度营收"
+
+# ① 先把数据写进单元格——图表只认单元格区域，不认 Python 里的 list
+ws.append(["月份", "华东", "华北"])                      # A1:C1 表头
+for row in [["1月", 120, 90], ["2月", 135, 88], ["3月", 158, 102]]:
+    ws.append(row)                                      # A2:C4 数据
+
+# ② 引用区域（openpyxl 行列均 1 基）
+cats = Reference(ws, min_col=1, min_row=2, max_row=4)                    # 分类轴 A2:A4
+data = Reference(ws, min_col=2, max_col=3, min_row=1, max_row=4)         # B1:C4（含表头）
+
+# ③ 建图 + 绑定数据
+chart = BarChart()
+chart.type = "col"                  # col=纵向柱 / bar=横向条
+chart.grouping = "clustered"        # clustered / stacked / percentStacked
+chart.title = "一季度分区营收（万元）"
+chart.x_axis.title = "月份"
+chart.y_axis.title = "营收（万元）"
+chart.add_data(data, titles_from_data=True)   # 表头 → 图例
+chart.set_categories(cats)                    # 分类轴
+chart.dLbls = DataLabelList()
+chart.dLbls.showVal = True                    # 柱顶显示数值
+chart.height, chart.width = 8, 16             # 单位 cm
+chart.legend.position = "b"
+
+# ④ 锚定到单元格（锚点=图表左上角，别压住数据区）
+ws.add_chart(chart, "E2")
+wb.save("report.xlsx")
+```
+
+**另外三种的最小差异**
+
+```python
+# 折线（趋势）
+from openpyxl.chart import LineChart
+lc = LineChart(); lc.title = "月度营收趋势"; lc.marker = True
+lc.add_data(data, titles_from_data=True); lc.set_categories(cats)
+
+# 饼图（占比，单列数据 + 百分比标签）
+from openpyxl.chart import PieChart
+pc = PieChart(); pc.title = "三季度渠道占比"
+pc.add_data(Reference(ws, min_col=2, min_row=1, max_row=4), titles_from_data=True)
+pc.set_categories(cats)
+pc.dataLabels = DataLabelList(); pc.dataLabels.showPercent = True   # 注意是 dataLabels 不是 dLbls
+
+# 散点（相关，两个数值列 → Series(values, xvalues)，下面示例 x=B 列、y=C 列）
+from openpyxl.chart import ScatterChart, Series
+sc = ScatterChart(); sc.title = "投入 vs 产出"
+xv = Reference(ws, min_col=2, min_row=2, max_row=20)
+yv = Reference(ws, min_col=3, min_row=2, max_row=20)
+sc.series.append(Series(yv, xv))
+sc.x_axis.title = "投入"; sc.y_axis.title = "产出"
+```
+
+**六条铁律**
+1. **先落数据再画图**：图表只认 `Reference` 指向的单元格，Python 变量喂不进去；数据区（分类列 + 数值列）必须相邻且表头唯一。
+2. **`titles_from_data=True` 才有图例**：`min_row` 必须含表头行，否则图例变成 "Series 1"。
+3. **openpyxl 不渲染图**：它只写 XML，**Excel/WPS 打开那一刻才画出来**——所以"打开前看不到图"不是失败，别为验证去装 LibreOffice（§六 已说明离线装不了）。
+4. **图型选择回到 chart_cookbook**：3D、爆炸饼、双 Y 轴属于"视觉噪音"，除非对方明确要求。
+5. **锚点与尺寸**：`add_chart(chart, "E2")` 的锚点要避开数据区；`height/width` 以 cm 计，常用于 8×16（横向）或 10×14（纵向）。
+6. **一表多图要排版**：同一 Sheet 超过 2 张图就按网格对齐锚点，或者拆到独立「看板」Sheet。
+
 ### 📎 交叉引用
 
 | 需要做什么 | 读哪个文件 |
 |-----------|-----------|
+| **选什么图 / matplotlib 怎么画（Word 插图的 PNG 从哪来）** | **[chart_cookbook.md](../../common/pd/chart_cookbook.md)**（关系驱动选型 6 类 + 6 个可复制模板 + 诚实性红线） |
 | 数据分析（清洗/透视/统计/图表/趋势/拆解/异常/看板/报告） | **[data_analysis.md](../../common/pd/data_analysis.md)**（数据分析方法论，D.code/P.design） |
 | 颜色编码体系（金融模型蓝/黑/绿/红标准） | `data_analysis.md` 第十六章 |
 | 可视化设计原则（反"AI 生成味"） | `data_analysis.md` 第十七章 |
@@ -159,7 +279,7 @@ python -m 某工具 deck.pptx | grep -iE "xxxx|lorem|ipsum|this.*(page|slide).*l
 | 做表前规划方法论（Sheet/Schema/Style 三计划） | `data_analysis.md` 第十九章 |
 | 文件转 Markdown | **[file_to_markdown.md](file_to_markdown.md)**（D.code，单向转换） |
 
-> 关系：**office_processing.md** 管"Excel 文件的读写改"（文件操作层），**data_analysis.md** 管"Excel 数据怎么分析"（分析方法论层），两者互补。涉及分析/透视/图表/看板时优先读 `data_analysis.md`。
+> 关系：三个模块分工——**office_processing.md** 管"文件层"（Excel/Word 读写改 + 图怎么落进文件：Excel 原生图表 / Word 插图）；**data_analysis.md** 管"分析层"（数据怎么算出结论）；**chart_cookbook.md** 管"选型 + 画图层"（选什么图、matplotlib 怎么写）。涉及分析/透视时先读 `data_analysis.md`，涉及作图先读 `chart_cookbook.md`。
 
 ---
 
@@ -188,6 +308,8 @@ pip install --index-url <私有源URL> \
 pip install --index-url <私有源URL> camelot-py
 # 按需：Excel 公式离线重算（纯 Python，替代 LibreOffice）
 pip install --index-url <私有源URL> formulas
+# 按需：Word 插图 / matplotlib 出 PNG（带预编译 wheel，离线机可用；选型与模板见 chart_cookbook.md）
+pip install --index-url <私有源URL> matplotlib
 ```
 > 这些全是纯 Python（或带预编译 wheel），**不需要 C 编译器**，私有源里都有，离线机 pip 即得。
 
@@ -203,8 +325,8 @@ pip install --index-url <私有源URL> formulas
 ### 6.3 📊 内网离线能力边界（一眼看清能 / 不能）
 | 格式 | ✅ 能（离线） | ⚠️ 不能（离线，缺系统软件） |
 |------|--------------|------------------------------|
-| Excel `.xlsx` | 读/写/改/公式/数据分析（openpyxl/pandas）、公式重算（`formulas`） | — 全都能 |
-| Word `.docx` | 读/写/改/提取（python-docx） | 转 PDF（保排版）、修订痕迹比对（pandoc） |
+| Excel `.xlsx` | 读/写/改/公式/数据分析（openpyxl/pandas）、公式重算（`formulas`）、**原生图表**（`openpyxl.chart`） | — 全都能（图表由对方 Excel/WPS 打开时渲染） |
+| Word `.docx` | 读/写/改/提取（python-docx）、**插图**（matplotlib PNG + `add_picture`） | 转 PDF（保排版）、修订痕迹比对（pandoc） |
 | PPT `.pptx` | 读/写/改/提取（python-pptx） | 转图做视觉 QA、转 PDF（保排版） |
 | PDF | 提取文字/表格（pdfplumber）、合并/拆分（pypdf）、生成（reportlab） | 扫描件 OCR、PDF↔Word/PPT 互转、转图 QA |
 | 任意 → Markdown | **某工具 一行搞定**（pdf/docx/pptx/xlsx/html） | 保原排版（MD 本就是纯文本，只留结构不留样式） |
@@ -220,9 +342,9 @@ pip install --index-url <私有源URL> formulas
 | 格式 | 必过项 |
 |------|--------|
 | PDF | 文本/表格提取准确（⚠️离线：扫描件 OCR 与转图 QA 不可用，见 §六 边界） |
-| Word | 能正常打开无报错；页码/边距正确；表格不乱；TOC 正常（如有） |
+| Word | 能正常打开无报错；页码/边距正确；表格不乱；TOC 正常（如有）；**插图不超版心、图题居中且编号连续、图上正文有结论句** |
 | PPT | 无占位符残留；转图后无重叠/溢出/低对比；每页有视觉元素 |
-| Excel | **零公式错误**；公式已重算（值正确）；假设单元格独立；源数据变动能联动 |
+| Excel | **零公式错误**；公式已重算（值正确）；假设单元格独立；源数据变动能联动；**图表引用区域正确、锚点不压数据、图型与结论匹配（chart_cookbook）** |
 
 > 这四项是 DoD 的「专项底线」，叠加 acceptance_criteria.md 的 4 道质量闸门（规格自检→diff 复查→测试证据→你签收）构成完整验收闭环。
 

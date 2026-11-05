@@ -241,6 +241,11 @@ class TidyReport:
 # ===========================================================================
 # protocol 对齐 + skill 更新 体检钩子（纯只读，失败仅告警不阻断 B5）
 # ===========================================================================
+# skill 根目录：本文件位于 {skill_root}/scripts/ 下，向上两级即 skill 根。
+# 注意：不能用 os.getcwd()——本脚本常在用户项目目录下被调用，
+# 用 cwd 会把用户项目当成 skill 根，protocol/ 必然「缺失 9/9」误报。
+_SKILL_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # protocol/ 9 个常驻 .py（缺一即对齐失败）
 _PROTOCOL_FILES = (
     '__init__.py',
@@ -339,23 +344,37 @@ def check_skill_update(skill_dir):
 
         stdout = (proc.stdout or '').strip()
         stderr = (proc.stderr or '').strip()
+
+        # 先尝试解析 JSON：check_skill_updates.py 约定 exit=1 表示「不是最新」，
+        # 这是合法结果而非脚本故障（如 reason="no remote"：本地安装无 git 远端）。
+        # 解析成功则按结果处理，避免把正常的「无法判定」误报成 WARNING。
+        payload = {}
+        try:
+            payload = json.loads(stdout) if stdout else {}
+        except (ValueError, TypeError):
+            payload = {}
+        if isinstance(payload, dict) and ('is_up_to_date' in payload or 'behind_count' in payload):
+            behind_count = int(payload.get('behind_count', 0) or 0)
+            reason = payload.get('reason') or ''
+            logger.info("skill 更新检查完成：is_up_to_date=%s reason=%s behind_count=%d",
+                        payload.get('is_up_to_date'), reason or '-', behind_count)
+            return {
+                'passed': True,
+                'behind_count': behind_count,
+                'is_up_to_date': payload.get('is_up_to_date'),
+                'reason': reason,
+                'detail': stdout[:500],
+            }
+
         if proc.returncode != 0:
-            logger.warning("skill 更新检查：脚本退出码 %d", proc.returncode)
+            logger.warning("skill 更新检查：脚本退出码 %d（无法解析 JSON 输出）", proc.returncode)
             return {
                 'passed': False,
                 'behind_count': -1,
                 'detail': 'exit=%d stderr=%s' % (proc.returncode, stderr[:500]),
             }
 
-        # 尝试解析 JSON 输出（约定 check_skill_updates.py --json 输出 {behind_count, ...}）
         behind_count = 0
-        try:
-            payload = json.loads(stdout) if stdout else {}
-            if isinstance(payload, dict) and 'behind_count' in payload:
-                behind_count = int(payload.get('behind_count', 0))
-        except (ValueError, TypeError):
-            payload = {}
-
         logger.info("skill 更新检查完成：behind_count=%d", behind_count)
         return {
             'passed': True,
@@ -484,14 +503,15 @@ class StartupTidy:
 
         # protocol 对齐 + skill 更新 体检（git_health 后、汇总前）
         # 纯只读，失败仅告警不阻断（B5）
+        # 用 _SKILL_ROOT 而非 cwd：这两项体检的是 skill 包自身，与用户项目无关
         try:
-            self.report.protocol_alignment = check_protocol_alignment(os.getcwd())
+            self.report.protocol_alignment = check_protocol_alignment(_SKILL_ROOT)
         except Exception as exc:  # B5
             logger.error("protocol 对齐检查失败（仅告警）: %s", exc)
             self.report.errors.append({'stage': 'protocol_alignment', 'error': str(exc)})
 
         try:
-            self.report.skill_update = check_skill_update(os.getcwd())
+            self.report.skill_update = check_skill_update(_SKILL_ROOT)
         except Exception as exc:  # B5
             logger.error("skill 更新检查失败（仅告警）: %s", exc)
             self.report.errors.append({'stage': 'skill_update', 'error': str(exc)})

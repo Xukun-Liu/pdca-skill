@@ -230,7 +230,7 @@ class TestSkeletonTemplates:
         docs_rj = root / "docs_rj"
         (docs_rj / "spec_rj").mkdir(parents=True)
         (docs_rj / "SUMMARY_RJ.md").write_text(
-            "# live data total_docs: 112 owner: 86029", encoding="utf-8")
+            "# live data total_docs: 112 owner: alice", encoding="utf-8")
         (docs_rj / "spec_rj" / "spec_main_rj.md").write_text(
             "# live spec", encoding="utf-8")
         out_dir = str(tmp_path / "out")
@@ -267,7 +267,7 @@ class TestSkeletonTemplates:
         memory = root / "memory"
         memory.mkdir()
         (memory / "memory_main.md").write_text(
-            "# live owner: 86029 total_docs: 112 title: riji-skill", encoding="utf-8")
+            "# live owner: alice total_docs: 112 title: riji-skill", encoding="utf-8")
         out_dir = str(tmp_path / "out")
         zip_path = package_skill.package_skill("vT-mem", out_dir, str(root))
         with zipfile.ZipFile(zip_path) as zf:

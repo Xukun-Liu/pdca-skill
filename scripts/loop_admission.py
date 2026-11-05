@@ -125,13 +125,13 @@ class ScoreResult(NamedTuple):
 # ===== 22 项信号检测函数（spec §4.3 + §7.3，T002 实现）=====
 
 def detect_skill_md(root: Path) -> tuple[bool, list[str]]:
-    """检测 SKILL.md 存在 + 含'7条铁律'关键词（+8）。"""
+    """检测 SKILL.md 存在 + 含'条铁律'关键词（不锁死条数，7/8/9 条均可）。"""
     skill_md = root / 'SKILL.md'
     if not skill_md.exists():
         return (False, [])
     content = skill_md.read_text(encoding='utf-8', errors='ignore')
-    if '7条铁律' in content or '七条铁律' in content:
-        return (True, [f'{skill_md} 含"7条铁律"关键词'])
+    if '条铁律' in content:
+        return (True, [f'{skill_md} 含"条铁律"关键词'])
     return (False, [])
 
 
@@ -635,7 +635,7 @@ def audit_project(root: Path) -> AuditResult:
     # 生成 recommendations：按 level 给改进建议
     recommendations: list[str] = []
     if level == 'L0':
-        recommendations.append('创建 SKILL.md 含"7条铁律"+ references/ 目录（≥30 个 .md）+ memory/memory_main.md + docs_rj/memory_rj/TASK_STATE_*.md')
+        recommendations.append('创建 SKILL.md 含"条铁律"+ references/ 目录（≥30 个 .md）+ memory/memory_main.md + docs_rj/memory_rj/TASK_STATE_*.md')
     elif level == 'L1':
         recommendations.append('加 references/plan/route/loop_triage.md（+10）+ loop 工具链（loop_guard/loop_audit，+4）→ 升级到 L2')
     elif level == 'L2':

@@ -1,6 +1,6 @@
 {
-  "version": "v1.0.4",
-  "description": "pdca-skill 测试用例库（INT-03 检查项）。每条用例含输入/预期/断言，供 validate_skill.py 校验。v1.0.0 补充 7 铁律 + HARD-GATE + 触发钩子 + 对抗审查覆盖。",
+  "version": "v1.3.0",
+  "description": "pdca-skill 测试用例库（INT-03 检查项）。每条用例含输入/预期/断言，供 validate_skill.py 校验。v1.0.0 补充 7 铁律 + HARD-GATE + 触发钩子 + 对抗审查覆盖；v1.2.1 补充多对话并发认领（session_claim 退码语义）；v1.2.2 补充铁律 8 先查再写（文档优先 / 复用优先）；v1.2.3 补充作图/汇报线路由（chart_cookbook / report_pipeline）。",
   "evals": [
     {
       "id": "eval_handoff_tidy_trigger",
@@ -48,6 +48,17 @@
       "expected_exit_code": 2,
       "expected_rule": "R10",
       "source": "git_workflow.md §2.10"
+    },
+    {
+      "id": "eval_session_claim_exit_code_semantics",
+      "name": "session_claim 退码语义：缺 --session 必须退 3，不能退 2",
+      "category": "multi_session",
+      "input": "多对话并行改同一仓库，agent 执行 acquire 但漏写 --session",
+      "expected": "缺 --session 属参数错误，退码 3。若用 argparse required=True 则退码 2，与\"冲突\"撞码，agent 会把参数写漏误判成撞车而停下",
+      "assertion": "实跑 `python scripts/session_claim.py acquire --task probe --files probe.py`，exit_code=3 且 stderr 含\"必须用 --session\"",
+      "test_command": "python scripts/session_claim.py acquire --task probe --files probe.py",
+      "expected_exit_code": 3,
+      "source": "multi_session.md 退码语义表 / SKILL.md 铁律6"
     },
     {
       "id": "eval_hard_gate_confirmation_words",
@@ -192,6 +203,24 @@
       "expected": "agent 不出手绘风（抖动线/手写体），出编辑级速览图并说明\"手绘风已退役（v1.2.0），这是编辑级版本\"",
       "assertion": "hand-drawn-report.md 含退役声明节（§一）+ 失败防护\"手绘风回潮\"条；trigger_hooks.md 报告行关键词列含 手绘/涂鸦风/手账风 且路由说明含退役声明；SKILL.md 决策树无任何画手绘活路径",
       "source": "hand-drawn-report.md v1.2.0 退役声明"
+    },
+    {
+      "id": "eval_doc_first_lookup",
+      "name": "铁律 8：文档优先（先读已有文档再动手）",
+      "category": "routing",
+      "input": "用户说\"之前是不是定过？/spec 在哪/就按这个来/落盘\"",
+      "expected": "agent 先读 docs_rj 的 spec/task/handoff/memory（+ 项目 README/ADR）再动手，读到就沿用并说明依据哪个文档，不重复追问、不另起方案",
+      "assertion": "SKILL.md §8条铁律含第 8 条\"先查再写\"；document_specs.md 含「文档优先（Doc First）【硬性】」节及三条规则；trigger_hooks.md 含该行关键词 → document_specs.md「文档优先」节",
+      "source": "SKILL.md 铁律8 + document_specs.md 文档优先节"
+    },
+    {
+      "id": "eval_reuse_before_build",
+      "name": "铁律 8：复用优先（先查现成实现再自己写）",
+      "category": "routing",
+      "input": "用户说\"有没有现成的/别自己写/重复造轮子/能不能复用\"",
+      "expected": "agent 按 7 级决策梯子先查（不写 → 库内 → 标准库/原生/已装依赖 → 外部 skill，含 1.5 级 find_similar.py 外部搜索），查到就复用并说明出处，查不到才自己写",
+      "assertion": "SKILL.md 铁律8 引用 minimal_code_principles.md；trigger_hooks.md 含复用行关键词 → minimal_code_principles.md；minimal_code_principles.md 含 1.5 级外部搜索条目",
+      "source": "SKILL.md 铁律8 + minimal_code_principles.md 7 级决策梯子"
     }
   ]
 }

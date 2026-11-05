@@ -6,7 +6,7 @@
 # 变更影响矩阵（Sync Matrix）
 > 阶段标签：D · A（旧标签，以头部 PDCA 标签为准）
 
-> 版本：v1.0.2 | 更新：2026-08-31（画图双轨升级：版本一致性表加 vendored 嵌入模块登记行）
+> 版本：v1.1.0 | 更新：2026-10-28（v1.1.0 新增框架自带模块目录登记行 + 脚本组登记行 + 既有 reference 规则正文升级联动行；v1.0.2：画图双轨升级，版本一致性表加 vendored 嵌入模块登记行）
 
 遇到不确定"这次改动要同步哪些文件"时查这张表。**两个方向都要查**：正向（加了什么） + 反向（该从哪些文件删）。
 
@@ -18,6 +18,7 @@
 |---------|--------------|------|
 | 版本号升级（v1.0） | SKILL.md（头部版本号+变更摘要注释） | 更新版本号、日期、变更摘要（不再在 SKILL.md 内嵌版本历史表，仅保留指向 HISTORY.md 的引用链接） |
 | 新增 vendored 嵌入模块（diagram-design，2026-08-31） | SKILL.md（索引表+决策树+仲裁条+资源索引）、trigger_hooks.md（触发行+版本史）、index.md（计数对账+例外条款）、HISTORY.md | 四件套同步登记；vendored 子目录豁免 validate_skill（VENDORED_REF_PREFIXES）；登记不 bump SKILL.md 版本号（版本升级另走发布流程） |
+| 新增框架自带模块目录（agent_factory，2026-10-28 / v1.1.0） | SKILL.md（≤5 行指针）、references/index.md（登记条目）、HISTORY.md（v1.1.0 节）、本文件 | 模块本体（Agent 三件套模板 + 使用说明）放 `references/common/agent_factory/`，脚本放 `scripts/agent_factory/`；规则正文不进 SKILL.md（只加指针，spec 设计约束）；本文件登记一行即可，不 bump SKILL.md 版本号（版本升级另走发布流程） |
 | | HISTORY.md（版本历史，唯一权威来源） | 追加新版本行（版本历史外置到此文件） |
 | | evals/evals.json（version字段） | 更新版本号，补新规则测试用例 |
 | | references/*.md（版本头，仅当内容有改动时） | 逐一更新 `> 版本：vX.X`（references 有独立版本号，内容没改不升版本） |
@@ -45,6 +46,7 @@
 | | evals/evals.json | 补测试用例 |
 | 删除触发钩子 | SKILL.md（触发钩子表） | 删除对应行 |
 | | evals/evals.json | 删除对应测试用例 |
+| 修改既有 reference 规则正文（如 leader_report 汇报逻辑升级，v1.1.0） | 同域联动文件：trigger_hooks.md（触发行关键词+版本史）、hand-drawn-report.md（同口径节）、HISTORY.md | **规则正文只写一处（唯一维护源）**，联动文件只放关键词/指针/同口径摘要，禁止复制整段规则（防双份规则漂移） |
 
 ---
 
@@ -75,6 +77,7 @@
 | 删除脚本 | SKILL.md（清除引用） | 删除资源索引条目 |
 | | tests/ | 删除对应测试 |
 | | 全局 grep 脚本名 | 清除所有引用 |
+| 新增脚本组（同域 ≥3 个脚本，如 scripts/agent_factory/ 4 脚本，v1.1.0） | SKILL.md（≤5 行指针）、references 对应模块的使用说明、本文件 | 同类脚本聚到一个目录（`scripts/{域}/`），使用说明写进模块目录、SKILL.md 只放指针；统一退出码约定：0 通过 / 1 内容问题 / 2 环境错误 |
 
 ---
 
@@ -96,7 +99,7 @@
 
 ## 五、任务完成/交接/里程碑
 
-> 🚀 **交接时自动调用 `python scripts/handoff_tidy.py --task {任务名}`**（期3新增）：交接整理管线自动执行守卫+归档+刷新+漂移检查+外部记忆清理+强制#3→#4同步+五问预跑+sync-matrix核对。详见 [scripts/handoff_tidy.py](../scripts/handoff_tidy.py)。
+> 🚀 **交接时自动调用 `python scripts/handoff_tidy.py --task {任务名}`**（期3新增）：交接整理管线自动执行守卫+归档+刷新+漂移检查+外部记忆清理+强制#3→#4同步+五问预跑+sync-matrix核对。详见 [scripts/handoff_tidy.py](../../../scripts/handoff_tidy.py)。
 
 | 变更类型 | 必须同步的文件 | 处置 |
 |---------|--------------|------|

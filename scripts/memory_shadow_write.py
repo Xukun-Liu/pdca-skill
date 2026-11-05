@@ -1235,16 +1235,20 @@ def memory_promote(task, timestamp=None, project_name=None, **kwargs):
     mem_rj_dir = _resolve_memory_rj_dir()
     if not os.path.isdir(mem_rj_dir):
         return {'promoted': False, 'reason': '项目记忆目录不存在: %s' % mem_rj_dir}
-    # 查找匹配的文件
+    # 查找匹配的文件：递归兼容 {memory_class}/{YYYYMM}/ 分层与历史扁平结构
+    # （延迟导入 tidy_common，避免与 tidy_common 的模块级互相 import）
+    import tidy_common
     matched_files = []
-    for f in os.listdir(mem_rj_dir):
-        if f.startswith('%s_memory_' % task):
-            if timestamp is None or timestamp in f:
-                matched_files.append(f)
+    for rel in tidy_common.iter_md_rel_paths(mem_rj_dir):
+        base = os.path.basename(rel)
+        if base.startswith('%s_memory_' % task):
+            if timestamp is None or timestamp in base:
+                matched_files.append(rel)
     if not matched_files:
         return {'promoted': False, 'reason': '未找到项目记忆文件: task=%s ts=%s' % (task, timestamp)}
-    matched_files.sort(reverse=True)
-    fpath = os.path.join(mem_rj_dir, matched_files[0])
+    # 时间戳在文件名中，按 basename 倒序取最新
+    matched_files.sort(key=os.path.basename, reverse=True)
+    fpath = os.path.join(mem_rj_dir, matched_files[0].replace('/', os.sep))
     try:
         with open(fpath, 'r', encoding='utf-8') as f:
             content = f.read()

@@ -6,10 +6,11 @@
 1. 主 docs 目录：一个项目只有一个主 docs，位置不固定，默认 ./docs_rj/
 2. 分类文件夹结构（扁平）：docs_rj 下直接常驻 5 类文件夹（spec_rj/task_rj/handoff_rj/memory_rj/archive_rj），不再按任务名分子目录（archive_rj 例外：归档时按 `{task}_YYYYMMDD_HHMM/` 子文件夹聚合，内放 spec.md/task.md/handoff.md/memory.md）
 3. 精确时间戳：文件名和内容都精确到分钟
-4. 命名体系：{task}_{type}_YYYYMMDD_HHMM.md（任务名进文件名，无编号前缀）
+4. 命名体系：YYYYMMDD_HHMM_{project}_{type}_{task}.md（时间前缀式，项目名+任务名进文件名；
+   --project 缺省时取当前目录名；兼容读旧名 YYYYMMDD_HHMM_{task}_{type}.md）
 5. 散落归档：检测散落在非主 docs 的 pdca-skill 文档，归档到主 docs
 6. 命名空间隔离：所有运行时产物加_rj后缀，避免与各大agent平台通用命名撞车
-7. 项目记忆：docs_rj/memory_rj/ 下按 {task}_memory_YYYYMMDD_HHMM.md 命名
+7. 项目记忆：docs_rj/memory_rj/ 下按 YYYYMMDD_HHMM_{task}_memory.md 命名（经 memory_shadow_write.write_project 落盘）
 """
 
 import os
@@ -64,11 +65,12 @@ PRIORITY_PATHS = [
 ]
 
 # pdca-skill 文档特征（扁平结构）：docs_rj 下直接 5 类 _rj 文件夹；
-# 文件名 = {task}_{type}_YYYYMMDD_HHMM.md（无编号前缀，任务名进文件名）
+# 文件名 = YYYYMMDD_HHMM_{project}_{type}_{task}.md（新，时间前缀式）
+#        或 YYYYMMDD_HHMM_{task}_{type}.md（旧，兼容读）
 # 注意：项目级记忆 memory_rj 在 docs_rj/memory_rj/（见 memory_shadow_write.write_project）。
 pdca_SUBDIRS = {'spec_rj', 'task_rj', 'handoff_rj', 'memory_rj', 'archive_rj'}
 pdca_FILE_PATTERN = re.compile(
-    r'^\w+_(spec|task|handoff|memory)_\d{8}_\d{4}\.md$'
+    r'^\d{8}_\d{4}_([\w-]+)_(spec|task|handoff|memory)(?:_([\w-]+))?\.md$'
 )
 
 # 跳过的目录
@@ -76,6 +78,9 @@ SKIP_DIRS = {'.git', 'node_modules', '__pycache__', '.pytest_cache', '.trae'}
 
 # 任务名校验：仅允许小写字母、数字、下划线
 TASK_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$')
+
+# 项目名校验：小写字母/数字开头，允许连字符与下划线（如 pdca-skill）
+PROJECT_NAME_RE = re.compile(r'^[a-z0-9][a-z0-9_-]*$')
 
 
 def validate_task_name(task_name):
@@ -542,9 +547,40 @@ def get_timestamp():
     }
 
 
-def generate_filename(doc_type, task_name, timestamp):
-    """生成文件名（扁平命名：{task}_{type}_YYYYMMDD_HHMM.md）"""
-    return f"{task_name}_{doc_type}_{timestamp['date']}_{timestamp['time']}.md"
+def resolve_project_name(project=None):
+    """解析项目名：--project 优先，缺省取当前目录名（小写，非字母数字转连字符）。"""
+    if project:
+        name = project.strip().lower()
+    else:
+        name = os.path.basename(os.path.abspath(os.getcwd())).lower()
+        name = re.sub(r'[^a-z0-9]+', '-', name).strip('-')
+    if not name or not PROJECT_NAME_RE.match(name):
+        raise ValueError(
+            f"项目名 '{name}' 格式不合法。必须为小写字母+数字+连字符/下划线，且以字母或数字开头。"
+            f"示例：pdca-skill（可用 --project 显式指定）"
+        )
+    return name
+
+
+def generate_filename(doc_type, task_name, timestamp, project=None):
+    """生成文件名（时间前缀式：YYYYMMDD_HHMM_{project}_{type}_{task}.md）
+
+    project 为空时退回 3 段旧格式 YYYYMMDD_HHMM_{task}_{type}.md（仅为兼容旧调用）。
+    """
+    if project:
+        return f"{timestamp['date']}_{timestamp['time']}_{project}_{doc_type}_{task_name}.md"
+    return f"{timestamp['date']}_{timestamp['time']}_{task_name}_{doc_type}.md"
+
+
+def parse_doc_filename(fname):
+    """解析文档文件名，返回 (task_name, doc_type)；不匹配返回 None。
+
+    兼容新名 YYYYMMDD_HHMM_{project}_{type}_{task}.md 与旧名 YYYYMMDD_HHMM_{task}_{type}.md。
+    """
+    m = pdca_FILE_PATTERN.match(fname)
+    if not m:
+        return None
+    return (m.group(3) or m.group(1), m.group(2))
 
 
 def create_dir_structure(docs_dir, task_name=None):
@@ -628,12 +664,12 @@ def atomic_write(file_path, content, max_retries=5):
     raise RuntimeError(f"写入文件失败 '{file_path}': {last_err}")
 
 
-def generate_doc(docs_dir, task_name, doc_type, assets_dir, timestamp):
+def generate_doc(docs_dir, task_name, doc_type, assets_dir, timestamp, project=None):
     """生成单个文档"""
     info = DOC_TYPES[doc_type]
     template = load_template(assets_dir, info['template'])
     content = replace_placeholders(template, task_name, timestamp)
-    filename = generate_filename(doc_type, task_name, timestamp)
+    filename = generate_filename(doc_type, task_name, timestamp, project)
     file_path = os.path.join(docs_dir, info['dir'], filename)
 
     atomic_write(file_path, content)
@@ -687,9 +723,9 @@ def detect_pdca_task_docs(docs_dir):
             td_path = os.path.join(docs_dir, td)
             try:
                 for fname in os.listdir(td_path):
-                    if pdca_FILE_PATTERN.match(fname):
-                        tname = fname.split('_', 1)[0]
-                        task_types.setdefault(tname, set()).add(td)
+                    parsed = parse_doc_filename(fname)
+                    if parsed:
+                        task_types.setdefault(parsed[0], set()).add(td)
             except OSError:
                 continue
         for tname, dts in sorted(task_types.items()):
@@ -1234,6 +1270,9 @@ def split_if_needed(file_path, max_lines=400):
 def main():
     parser = argparse.ArgumentParser(description='生成任务文档目录结构')
     parser.add_argument('--task', help='任务名称（小写+下划线，如 my_feature）')
+    parser.add_argument('--project',
+                        help='项目名（小写+连字符/下划线，如 pdca-skill）；缺省取当前目录名。'
+                             '用于文件名 YYYYMMDD_HHMM_{项目名}_{类型}_{任务名}.md')
     parser.add_argument(
         '--type', default='all',
         choices=['all', 'spec', 'task', 'handoff', 'memory'],
@@ -1420,9 +1459,11 @@ def main():
         docs_dir = find_docs_dir(args.docs_dir)
         create_dir_structure(docs_dir, task_name)
         timestamp = get_timestamp()
+        project_name = resolve_project_name(args.project)
 
         print(f"\n📅 当前时间: {timestamp['datetime']}")
         print(f"📁 主 docs: {docs_dir}")
+        print(f"📦 项目名: {project_name}")
         print(f"📋 任务名: {task_name}")
         print("\n开始生成文档...")
 
@@ -1430,7 +1471,7 @@ def main():
         errors = []
         for doc_type in doc_types:
             try:
-                if generate_doc(docs_dir, task_name, doc_type, assets_dir, timestamp):
+                if generate_doc(docs_dir, task_name, doc_type, assets_dir, timestamp, project_name):
                     success_count += 1
             except Exception as e:
                 logger.error(f"生成 {doc_type} 失败: {e}")

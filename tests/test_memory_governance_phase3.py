@@ -15,7 +15,6 @@ import pytest
 SCRIPTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts")
 sys.path.insert(0, SCRIPTS_DIR)
 
-import user_data_path
 import memory_shadow_write
 
 
@@ -31,6 +30,9 @@ def _setup_memory_main(monkeypatch, tmp_path, project_name="test_project", task_
     monkeypatch.setenv("PDCA_DATA_DIR", str(tmp_path))
     import generate_docs
     monkeypatch.setattr(generate_docs, "read_primary_docs_marker", lambda: None)
+    # REQ-105（v1.0.4）后项目记忆落 R3 解析出的 docs 目录（不再默认落外置用户目录）；
+    # 把解析结果钉到 tmp_path，使 memory_promote 查找目录与测试写入目录一致。
+    monkeypatch.setattr(generate_docs, "find_docs_dir", lambda create=False: str(tmp_path))
     fake_global = str(tmp_path / "memory" / "memory_main.md")
     os.makedirs(os.path.dirname(fake_global), exist_ok=True)
     content = "# 主记忆\n\n## %s\n\n### 记忆条目 · %s（2026-07-30 14:35）\n**重要性**: high\n**是否经验**: true\n**经验标签**: bugfix\n内容\n\n" % (project_name, task_name)
@@ -42,8 +44,7 @@ def _setup_memory_main(monkeypatch, tmp_path, project_name="test_project", task_
     # mock 备份避免跨进程锁
     monkeypatch.setattr(memory_shadow_write, "_backup_before_operation", lambda *a, **kw: None)
     # 预创建 memory_rj 目录（promote 需要）
-    mem_rj = str(user_data_path.get_memory_rj_path())
-    os.makedirs(mem_rj, exist_ok=True)
+    os.makedirs(os.path.join(str(tmp_path), "memory_rj"), exist_ok=True)
     return fake_global
 
 
@@ -113,9 +114,19 @@ class TestMemoryPromote:
     def test_promote_from_project_memory(self, monkeypatch, tmp_path):
         """从项目记忆文件升格到全局"""
         _setup_memory_main(monkeypatch, tmp_path)
-        # 创建项目记忆文件
-        mem_rj = str(user_data_path.get_memory_rj_path())
+        # 创建项目记忆文件（落点与实际解析结果保持一致）
+        mem_rj = memory_shadow_write._resolve_memory_rj_dir()
         with open(os.path.join(mem_rj, "promote_task_memory_20260730_143500.md"), "w", encoding="utf-8") as f:
+            f.write("# 项目记忆\n内容\n")
+        result = memory_shadow_write.memory_promote("promote_task", project_name="test_project")
+        assert result['promoted'] is True
+
+    def test_promote_finds_layered_memory(self, monkeypatch, tmp_path):
+        """{memory_class}/{YYYYMM}/ 分层目录下的记忆也要能升格"""
+        _setup_memory_main(monkeypatch, tmp_path)
+        month_dir = os.path.join(memory_shadow_write._resolve_memory_rj_dir(), "decision", "202607")
+        os.makedirs(month_dir, exist_ok=True)
+        with open(os.path.join(month_dir, "promote_task_memory_20260730_143500.md"), "w", encoding="utf-8") as f:
             f.write("# 项目记忆\n内容\n")
         result = memory_shadow_write.memory_promote("promote_task", project_name="test_project")
         assert result['promoted'] is True

@@ -8,7 +8,7 @@
 > 阶段标签：A（旧标签，以头部 PDCA 标签为准）
 
 > 版本：v1.0.0 | 新增：2026-07-15 | 最近更新：2026-07-29（learn_into_act 任务：§1 触发时机 + §7 调度行同步） | PDCA 标签：A.learn
-> 对应脚本：[scripts/learn_tidy.py](../scripts/learn_tidy.py)
+> 对应脚本：[scripts/learn_tidy.py](../../../scripts/learn_tidy.py)
 > 对应 spec：[docs_rj/spec_rj/learn_cycle_spec_20260715_1437.md](../docs_rj/spec_rj/learn_cycle_spec_20260715_1437.md)
 
 ---
@@ -241,7 +241,7 @@ for live_file in affected_files:
 
 learn 建议禁止触及以下核心规则（HARD-GATE 时 agent 必须主动标注"核心规则保护"）：
 
-- ❌ 禁止删除 7 条铁律
+- ❌ 禁止删除 8 条铁律
 - ❌ 禁止删除 HARD-GATE 机制
 - ❌ 禁止删除 Memory First 硬规则
 - ❌ 禁止删除 No Placeholders 铁律
@@ -269,7 +269,7 @@ learn 建议禁止触及以下核心规则（HARD-GATE 时 agent 必须主动标
 
 ## §8 Phase 5 状态机与回归保护
 
-> Phase 5 在 §1-§7 基础上新增「状态机管理 + 回归检测 + 回滚机制 + manifest 留痕」四件套，防止 learn 闭环把规则改坏。文档对应代码：[scripts/learn_tidy.py](../scripts/learn_tidy.py) 的 `LearnState` 类 / `detect_regression` / `rollback` / `write_manifest` 函数。
+> Phase 5 在 §1-§7 基础上新增「状态机管理 + 回归检测 + 回滚机制 + manifest 留痕」四件套，防止 learn 闭环把规则改坏。文档对应代码：[scripts/learn_tidy.py](../../../scripts/learn_tidy.py) 的 `LearnState` 类 / `detect_regression` / `rollback` / `write_manifest` 函数。
 
 ### §8.1 LearnState 状态机
 

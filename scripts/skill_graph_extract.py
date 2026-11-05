@@ -51,6 +51,7 @@ _SKILL_DIR = os.path.dirname(_SCRIPT_DIR)
 
 sys.path.insert(0, _SCRIPT_DIR)
 import user_data_path  # noqa: E402  用户数据外置：提供 get_memory_main_path_with_fallback / get_memory_rj_path
+import tidy_common  # noqa: E402  统一记忆目录递归枚举（分层/扁平兼容）
 
 # 缓存目录（外置用户数据目录，避免升级覆盖丢失）
 _CACHE_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'memory_rj', '.skill_graph_cache')
@@ -334,12 +335,10 @@ def read_pdca_memory(skill_dir: str) -> List[RawMemory]:
     if not os.path.isdir(memory_rj_dir):
         memory_rj_dir = os.path.join(skill_dir, 'docs_rj', 'memory_rj')
     if os.path.isdir(memory_rj_dir):
-        for fname in sorted(os.listdir(memory_rj_dir)):
-            if not fname.endswith('.md'):
-                continue
-            fpath = os.path.join(memory_rj_dir, fname)
-            if not os.path.isfile(fpath):
-                continue
+        # 递归遍历，兼容 {memory_class}/{YYYYMM}/ 分层与历史扁平两类结构
+        rel_paths = tidy_common.iter_md_rel_paths(memory_rj_dir)
+        for rel in rel_paths:
+            fpath = os.path.join(memory_rj_dir, rel.replace('/', os.sep))
             content = _safe_read_text(fpath)
             memories.append(RawMemory(
                 source_tool='pdca',

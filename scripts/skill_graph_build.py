@@ -44,6 +44,7 @@ _SKILL_DIR = os.path.dirname(_SCRIPT_DIR)
 
 sys.path.insert(0, _SCRIPT_DIR)
 import user_data_path  # noqa: E402  用户数据外置：提供 get_memory_main_path_with_fallback / get_memory_rj_path
+import tidy_common  # noqa: E402  统一记忆目录递归枚举（分层/扁平兼容）
 
 # 缓存目录与输出目录（外置用户数据目录，避免升级覆盖丢失 / 假缓存命中）
 _CACHE_DIR = os.path.join(user_data_path.get_docs_rj_path(), 'memory_rj', '.skill_graph_cache')
@@ -78,9 +79,11 @@ def _collect_input_files(skill_dir: str) -> list:
     if not os.path.isdir(memory_rj):
         memory_rj = os.path.join(skill_dir, 'docs_rj', 'memory_rj')
     if os.path.isdir(memory_rj):
-        for f in os.listdir(memory_rj):
-            if f.endswith('.md') and not f.startswith('.'):
-                files.append(os.path.join(memory_rj, f))
+        # 递归枚举，兼容 {memory_class}/{YYYYMM}/ 分层与历史扁平两类结构
+        for rel in tidy_common.iter_md_rel_paths(memory_rj):
+            if os.path.basename(rel).startswith('.'):
+                continue
+            files.append(os.path.join(memory_rj, rel.replace('/', os.sep)))
     return files
 
 

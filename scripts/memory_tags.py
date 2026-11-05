@@ -73,3 +73,109 @@ def infer_memory_class(content):
         if tag in hits:
             return tag
     return FALLBACK_TAG
+
+
+# ---------------------------------------------------------------------------
+# CLI（v1.1.0 · B2 / 任务 2.3）：核对某个任务的记忆文件分类落点是否与推断一致
+# 常量区保持不变，CLI 只追加在文件末尾。
+# ---------------------------------------------------------------------------
+
+import argparse  # noqa: E402
+import os  # noqa: E402
+import re  # noqa: E402
+
+TASK_NAME_RE = re.compile(r'^[a-z0-9_]+$')
+
+
+def _collect_task_memories(memory_root, task):
+    """递归收集 memory_rj 下 {task}_memory_*.md，返回 [(路径, 目录分类 or '')]。"""
+    prefix = '%s_memory_' % task
+    hits = []
+    for root, dirs, files in os.walk(memory_root):
+        dirs.sort()
+        for name in sorted(files):
+            if name.startswith(prefix) and name.endswith('.md'):
+                rel = os.path.relpath(root, memory_root)
+                first = '' if rel == '.' else rel.split(os.sep)[0].replace('\\', '/')
+                hits.append((os.path.join(root, name), first))
+    return hits
+
+
+def _read_text(path):
+    try:
+        with open(path, 'r', encoding='utf-8', errors='replace') as handle:
+            return handle.read()
+    except OSError:
+        return ''
+
+
+def _cli_main(argv=None):
+    parser = argparse.ArgumentParser(
+        description='核对任务记忆文件的主分类落点（只读，不做任何写入）')
+    parser.add_argument('--task', required=True, help='任务名（仅 [a-z0-9_]+）')
+    parser.add_argument('--docs-dir', default=None, help='显式指定主 docs（默认走 marker）')
+    parser.add_argument('--dry-run', action='store_true',
+                        help='只打印，不落盘（本命令本就只读，保留以对齐验收命令）')
+    args = parser.parse_args(argv)
+
+    if not TASK_NAME_RE.match(args.task):
+        sys.stderr.write('错误：非法任务名 "%s"（仅允许 [a-z0-9_]+）\n' % args.task)
+        return 2
+
+    try:
+        import tidy_common
+        docs = tidy_common.resolve_primary_docs(args.docs_dir)
+    except Exception as exc:  # noqa: BLE001
+        sys.stderr.write('错误：解析主 docs 失败: %s\n' % exc)
+        return 2
+    if not docs or not os.path.isdir(docs):
+        sys.stderr.write('错误：未解析到主 docs 目录（可传 --docs-dir）\n')
+        return 2
+
+    memory_root = os.path.join(docs, 'memory_rj')
+    if not os.path.isdir(memory_root):
+        sys.stderr.write('错误：memory_rj 不存在: %s\n' % memory_root)
+        return 2
+
+    entries = _collect_task_memories(memory_root, args.task)
+    print('## memory_tags 核对（task=%s）' % args.task)
+    print('- memory_rj: %s' % memory_root)
+    if not entries:
+        print('- 0 个记忆文件（该任务尚无记忆）')
+        return 0
+
+    illegal = []
+    mismatch = []
+    print('\n| 文件 | 目录分类 | 推断分类 | 一致 |')
+    print('|---|---|---|---|')
+    for path, dir_class in entries:
+        rel = os.path.relpath(path, memory_root).replace('\\', '/')
+        inferred = infer_memory_class(_read_text(path))
+        if dir_class and dir_class not in MEMORY_TAGS:
+            illegal.append((rel, dir_class))
+            flag = '目录非法'
+        elif not dir_class:
+            flag = '遗留平铺'
+        elif dir_class == inferred:
+            flag = '是'
+        else:
+            flag = '否'
+            mismatch.append((rel, dir_class, inferred))
+        print('| %s | %s | %s | %s |' % (rel, dir_class or '(平铺)', inferred, flag))
+
+    print('\n## 小结')
+    print('- 文件 %d / 非法目录 %d / 分类不一致 %d'
+          % (len(entries), len(illegal), len(mismatch)))
+    for rel, dir_class in illegal:
+        print('  [非法] %s → 目录 "%s" 不在 %s'
+              % (rel, dir_class, ', '.join(MEMORY_TAGS)))
+    for rel, dir_class, inferred in mismatch:
+        print('  [提示] %s → 目录 %s，内容更像 %s（仅提示，不改文件）'
+              % (rel, dir_class, inferred))
+    if illegal:
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(_cli_main())

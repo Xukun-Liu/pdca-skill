@@ -19,10 +19,7 @@ scripts/validate_result.json
 # v103_t4 发布准备临时校验日志/脚本（不入仓）
 validate_v*.log
 package_v*.log
-verify_zip.log
-verify_zip.ps1.tmp
-# scripts/verify_zip.ps1 例外（永久入仓作 release 工具）
-!scripts/verify_zip.ps1
+verify_zip.*
 
 # 临时调试脚本
 tmp_*.py
@@ -51,19 +48,14 @@ docs_rj/**
 !docs_rj/spec_rj/spec_main_rj.md
 # v103_t3 跨机 5 修复落地（任务级 spec/task/SUMMARY 入仓作可追溯证据）
 !docs_rj/spec_rj/v103_t3_*.md
+!docs_rj/task_rj/
 !docs_rj/task_rj/v103_t3_*.md
-# v104 三痛点改造：任务级 spec/task/对抗审查报告/50轮测试报告 入仓作可追溯证据
-!docs_rj/spec_rj/v104_*.md
-!docs_rj/task_rj/v104_*.md
-!docs_rj/check_rj/v104_*.md
 !docs_rj/learn_rj/20260823-231938/
 !docs_rj/learn_rj/20260823-231938/SUMMARY_v103_t3.md
 !docs_rj/learn_rj/20260823-231938/scan_report.json
 # v103_t4 skillhub 发布准备：release_notes 入仓作可追溯事件记录
 !docs_rj/release_notes/
 !docs_rj/release_notes/v103_t4_*.md
-# v1.0.4 发布说明（面向用户的更新说明，随发布入仓）
-!docs_rj/release_notes/v104_release_*.md
 outputs_rj/
 server_lite_data/
 server_lite/data/
@@ -99,3 +91,9 @@ exa.env.json
 _sync_tmp/
 T000_backup.sha256
 handoff_tidy_out.txt
+
+# v1.1.0 主 docs 迁回项目根：docs_rj 下是作者个人过程文档（含其他项目记忆），整体不入 git
+# 注意：本行位于上面 !docs_rj/* 例外之后，按 gitignore 后匹配优先，会覆盖那些例外
+docs_rj/
+# 主 docs 标记含本机绝对路径，属运行时状态，每台机器用 --declare-primary 自行生成
+.primary_docs_rj

@@ -11,7 +11,7 @@ FILE_ROLES = {
         'role': 'main_entry',
         'written_by': ['agent', 'human'],
         'read_by': ['agent', 'human'],
-        'description': '协作框架主入口，定义7条铁律+触发钩子+流程'
+        'description': '协作框架主入口，定义8条铁律+触发钩子+流程'
     },
     'HISTORY.md': {
         'role': 'version_history',

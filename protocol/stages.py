@@ -1,11 +1,11 @@
 """stages.py - PDCA 阶段决策规则
 
-13 条决策规则：7 条对齐 7 条铁律 + 6 条新增。
+13 条决策规则：7 条对齐前 7 条铁律 + 6 条新增（第 8 条铁律"先查再写"落在 /plan 输入侧，由现有规则覆盖）。
 每条规则含 stage / gate / description。
 
 GLOBAL_COMPANION_ABILITIES：skill 字段为概念能力名，非真实已装。
 如 brainstorming/writing-plans 是概念，实际靠 agent 通用能力或按需搜专用 skill。
-设计来源: SKILL.md §7条铁律 + §6 PDCA, references/common/pc/acceptance_criteria.md
+设计来源: SKILL.md §8条铁律 + §6 PDCA, references/common/pc/acceptance_criteria.md
 """
 
 STAGE_DECISION_RULES = {

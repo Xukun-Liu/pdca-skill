@@ -189,6 +189,32 @@ class HandoffReport:
         }
 
 
+_TASK_NAME_ILLEGAL = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
+
+
+def validate_task_name(name):
+    """--task 值安全校验（系统边界校验，防路径穿越）。
+
+    为什么需要：TASK_STATE_{task}.md 由 ``os.path.join(memory_dir, 'TASK_STATE_%s.md' % task)``
+    直接拼接，若 --task 传 ``../../evil`` 可写出 memory_rj 目录之外。
+    为什么不用严格的 ``^[a-z][a-z0-9_]*$``：历史任务名存在「分析」「report-only」等
+    中文/连字符写法（见 main() 里 level 判定），收紧字符集会误伤。这里只拦危险字符。
+
+    Args:
+        name: --task 传入值；None 表示未传（合法，向后兼容）。
+
+    Returns:
+        (ok: bool, reason: str)
+    """
+    if name is None or name == '':
+        return True, ''
+    if _TASK_NAME_ILLEGAL.search(name):
+        return False, 'task 名含非法字符（路径分隔符 / Windows 保留字符 / 控制字符）：%r' % name
+    if name in ('.', '..') or name != name.strip(' .'):
+        return False, 'task 名不能是 . 或 ..，也不能以点/空格开头或结尾：%r' % name
+    return True, ''
+
+
 class HandoffTidy:
     """交接整理管线"""
 
@@ -1234,11 +1260,20 @@ class HandoffTidy:
             logger.info("[dry-run] 以上为预览，未实际删除")
             return {'found': found, 'deleted': [], 'dry_run': True}
 
-        if sys.stdin.isatty():
+        if not sys.stdin.isatty():
+            # 无 tty（agent / CI / 管道）时无法取得用户确认：不删除，仅提示。
+            # 原实现直接 answer='y' 静默删除，会误删用户自建的 _tmp_* / _temp_* 等同名文件。
+            logger.warning("[非交互环境] 无法交互确认，跳过删除 %d 项（可先 --dry-run 预览，确认后手动删除）",
+                           len(found))
+            return {'found': found, 'deleted': [], 'dry_run': False,
+                    'cancelled': True, 'reason': 'interactive_unavailable'}
+        try:
             answer = input("\n确认删除以上文件？[y/N] ").strip().lower()
-        else:
-            logger.info("[非交互环境] 跳过临时文件清理确认，直接清理")
-            answer = 'y'
+        except (EOFError, KeyboardInterrupt):
+            # stdin 是 tty 但管道已关闭 / 用户 Ctrl-C：等同于未确认，不删
+            logger.warning("未获取到确认输入（EOF/中断），跳过删除")
+            return {'found': found, 'deleted': [], 'dry_run': False,
+                    'cancelled': True, 'reason': 'interactive_unavailable'}
         if answer != 'y':
             logger.info("用户取消删除")
             return {'found': found, 'deleted': [], 'dry_run': False, 'cancelled': True}
@@ -1300,9 +1335,12 @@ class HandoffTidy:
             sub_dir = os.path.join(primary, sub)
             if not os.path.isdir(sub_dir):
                 continue
-            for fname in os.listdir(sub_dir):
-                if fname.endswith('.md'):
-                    all_files.add(fname)
+            # v1.1.0：递归（memory_rj 已分层 {class}/{YYYYMM}/），否则分层链接取不到状态
+            for cur_dir, dirs, fnames in os.walk(sub_dir):
+                dirs[:] = [d for d in dirs if not d.startswith('.')]
+                for fname in fnames:
+                    if fname.endswith('.md'):
+                        all_files.add(fname)
         status_map = tidy_common._classify_file_status(list(all_files))
 
         # 链接正则：匹配 `](path)` 后面可选紧跟 ` `最新·...` ` 标注（先剥离再重写，防重复）
@@ -1510,8 +1548,13 @@ class HandoffTidy:
                         'status': 'archived',
                     })
             else:
-                files = [f for f in os.listdir(sub_dir)
-                         if f.endswith('.md') and f != 'INDEX.md']
+                # v1.1.0：递归扫描（memory_rj 已分层为 {class}/{YYYYMM}/）。
+                # 状态分类正则锚定文件名，故 files 仍用 basename；链接用相对路径。
+                rel_paths = tidy_common.iter_md_rel_paths(sub_dir)
+                rel_by_name = {}
+                for rel in rel_paths:
+                    rel_by_name.setdefault(os.path.basename(rel), rel)
+                files = sorted(rel_by_name.keys())
                 folder_entries = []
 
             if not files and not folder_entries:
@@ -1568,14 +1611,14 @@ class HandoffTidy:
                     tp = entry['name'].rsplit('_', 1)[0] if '_' in entry['name'] else entry['name']
                     ts = entry['timestamp']
                     ts_str = ts.strftime('%Y-%m-%d %H:%M') if ts else '无时间戳'
-                    link = '[%s/](./%s/%s/)' % (entry['name'], subdir, entry['name'])
+                    link = '[%s/](./%s/)' % (entry['name'], entry['name'])
                     lines.append('| %s | %s | %s | %s | %s |' % ('⚪ archived', 'folder', link, tp, ts_str))
                 for fname in sorted_files:
                     info = status_map[fname]
                     tp = info.get('task_prefix') or '-'
                     ts = info.get('timestamp')
                     ts_str = ts.strftime('%Y-%m-%d %H:%M') if ts else '无时间戳'
-                    link = '[%s](./%s/%s)' % (fname, subdir, fname)
+                    link = '[%s](./%s)' % (fname, fname)
                     lines.append('| %s | %s | %s | %s | %s |' % ('🟠 legacy', 'file', link, tp, ts_str))
                 lines.append('')
                 lines.append('## 状态说明')
@@ -1596,9 +1639,11 @@ class HandoffTidy:
                     tp = info.get('task_prefix') or '-'
                     ts = info.get('timestamp')
                     ts_str = ts.strftime('%Y-%m-%d %H:%M') if ts else '无时间戳'
-                    link = '[%s](./%s/%s)' % (fname, subdir, fname)
+                    rel = rel_by_name.get(fname, fname)
+                    # INDEX.md 位于 {subdir}/，链接相对它解析，故直接用 rel（不含 subdir 前缀）
+                    link = '[%s](./%s)' % (rel, rel)
                     # 提取 frontmatter summary 作为概括列（REQ-001）
-                    full_path = os.path.join(sub_dir, fname)
+                    full_path = os.path.join(sub_dir, rel)
                     summary = _extract_frontmatter_summary(full_path)
                     lines.append('| %s | %s | %s | %s | %s |' % (status_icon, link, summary, tp, ts_str))
                 lines.append('')
@@ -1772,6 +1817,10 @@ def main():
     parser.add_argument('--allow-any-dir', action='store_true',
                         help='允许在非仓库根目录运行（cwd 防呆逃生舱，handoff_gate_fix 新增）')
     args = parser.parse_args()
+
+    _ok, _reason = validate_task_name(args.task)
+    if not _ok:
+        parser.error(_reason)  # 退码 2，不进入管线
 
     tidy = HandoffTidy(dry_run=args.dry_run, task_name=args.task, project_name=args.project,
                        allow_any_dir=args.allow_any_dir)

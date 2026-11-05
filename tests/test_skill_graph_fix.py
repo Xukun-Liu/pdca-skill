@@ -89,6 +89,26 @@ def test_read_pdca_memory_external_priority(ext_memory):
     assert any(f.endswith("t1_memory_20260801_1000.md") for f in files)
 
 
+def test_read_pdca_memory_layered_dirs(ext_memory):
+    """v1.1.0：{memory_class}/{YYYYMM}/ 分层记忆也要被扫描到（不再只扫一级）。"""
+    month_dir = os.path.join(ext_memory["rj"], "decision", "202608")
+    os.makedirs(month_dir, exist_ok=True)
+    with open(os.path.join(month_dir, "t2_memory_20260802_1000.md"), "w", encoding="utf-8") as f:
+        f.write("分层记忆")
+    files = [m.file for m in skill_graph_extract.read_pdca_memory("C:/fake_skill_dir")]
+    assert any(f.endswith("t2_memory_20260802_1000.md") for f in files), files
+
+
+def test_collect_input_files_layered_dirs(ext_memory, tmp_path):
+    """v1.1.0：skill_graph_build 的输入收集也要覆盖分层目录。"""
+    month_dir = os.path.join(ext_memory["rj"], "status", "202609")
+    os.makedirs(month_dir, exist_ok=True)
+    with open(os.path.join(month_dir, "t3_memory_20260901_1000.md"), "w", encoding="utf-8") as f:
+        f.write("分层记忆")
+    files = skill_graph_build._collect_input_files(str(tmp_path))
+    assert any(f.endswith("t3_memory_20260901_1000.md") for f in files), files
+
+
 def test_read_pdca_memory_fallback_when_external_missing(tmp_path, monkeypatch):
     """外置目录不存在时退回包内路径（不崩溃，读包内）。"""
     monkeypatch.setattr(user_data_path, "get_memory_main_path_with_fallback",

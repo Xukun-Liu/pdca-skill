@@ -1359,11 +1359,73 @@ def resolve_skill_dir(arg):
     return os.path.abspath(os.path.join(here, '..'))
 
 
+# ---------------------------------------------------------------------------
+# C1 占位符硬门（v1.1.0 B1）——规则原文见 references/common/core/placeholder_gate.md
+# ---------------------------------------------------------------------------
+PLACEHOLDER_RULES = (
+    ('TBD', re.compile(r'\bTBD\b')),
+    ('TODO', re.compile(r'\bTODO\b')),
+    ('适当处理', re.compile(r'适当处理')),
+    ('类似XX', re.compile(r'类似\s*(?:XX|xx|某某)')),
+    ('伪代码', re.compile(r'伪代码')),
+    ('待补充', re.compile(r'待补充|待完善|待定')),
+)
+
+
+def iter_scan_files(target):
+    """文件直接扫；目录递归扫 *.md（按路径排序，输出稳定）。"""
+    if os.path.isfile(target):
+        return [target]
+    hits = []
+    for root, _dirs, files in os.walk(target):
+        for name in files:
+            if name.lower().endswith('.md'):
+                hits.append(os.path.join(root, name))
+    return sorted(hits)
+
+
+def check_placeholders(target, extra_words=None):
+    """扫描占位符；命中即打印 路径:行号: [类型] 原文，返回 1，全清返回 0。"""
+    if not os.path.exists(target):
+        print('错误：路径不存在: %s' % target, file=sys.stderr)
+        return 2
+    rules = list(PLACEHOLDER_RULES)
+    for word in (extra_words or []):
+        word = word.strip()
+        if word:
+            rules.append((word, re.compile(re.escape(word))))
+
+    files = iter_scan_files(target)
+    hits = 0
+    for path in files:
+        try:
+            with open(path, 'r', encoding='utf-8', errors='replace') as handle:
+                lines = handle.readlines()
+        except OSError as exc:
+            print('警告：跳过不可读文件 %s (%s)' % (path, exc), file=sys.stderr)
+            continue
+        for lineno, line in enumerate(lines, 1):
+            if 'placeholder-gate:ignore' in line:
+                continue
+            for label, pattern in rules:
+                if pattern.search(line):
+                    hits += 1
+                    print('%s:%d: [%s] %s' % (path, lineno, label, line.rstrip()))
+                    break
+
+    print('C1 占位符硬门：扫描 %d 个文件，命中 %d 处' % (len(files), hits))
+    return 1 if hits else 0
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description='pdca-skill 工具调用校验 loop 脚本（stdlib-only）')
     parser.add_argument('--skill-dir', default=None,
                         help='skill 根目录（默认 scripts/ 的上级）')
+    parser.add_argument('--placeholder-check', default=None, metavar='PATH',
+                        help='C1 占位符硬门：扫描该文件/目录（目录递归 *.md），命中退码 1')
+    parser.add_argument('--placeholder-words', default=None,
+                        help='额外占位符词表，逗号分隔（叠加内置 6 类）')
     parser.add_argument('--loop', action='store_true',
                         help='开启 loop 模式（持续重跑直到全绿或达 --max-iter）')
     parser.add_argument('--retries', type=int, default=3,
@@ -1381,6 +1443,10 @@ def parse_args():
 
 def main():
     args = parse_args()
+    if args.placeholder_check:
+        extra = (args.placeholder_words or '').split(',')
+        return check_placeholders(args.placeholder_check, extra)
+
     skill_dir = resolve_skill_dir(args.skill_dir)
     if not os.path.isdir(skill_dir):
         print('错误：skill 目录不存在: %s' % skill_dir, file=sys.stderr)

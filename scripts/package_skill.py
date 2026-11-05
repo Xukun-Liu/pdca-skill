@@ -50,7 +50,8 @@ EXCLUDE_PATTERNS = [
     r"^T000_backup\.sha256$",         # 备份校验残留
     r"_out\.txt$",                    # 运行时输出残留（handoff_tidy_out.txt 等）
     r"^\.playwright-mcp/",            # 浏览器调试残留
-    r"^网页说明\.html$",               # skillhub 发布展示页（发布者手动上传用，用户无需）
+    # 注：网页说明.html 不排除——README 顶部「产品页」与正文各一处链接指向它，
+    # 排除会让发布包内产生死链（data_verify --root 包目录直接 FAIL）
     r"^scripts/verify_zip\.ps1$",     # 开发打包辅助脚本（硬编码版本，随包无用）
     r"^scripts/test_loop_admission\.py$",  # 测试文件误放 scripts/（历史保留原地，仅排除出包）
     # 发布骨架例外：以下文件必须进发布包（使用者首次启动需读这些空骨架）
@@ -164,7 +165,7 @@ _ARTIFACT_SNIFF_REGEX = [re.compile(p) for p in _ARTIFACT_SNIFF_PATTERNS]
 
 # 开发机隐私嗅探：绝对路径 + 真实用户名模式（命中即告警，防泄露开发者机器信息）。
 # 排除规则（负向前瞻）：占位词/系统目录（xxx/你/All Users/Default/Public/.../{用户名}）后
-# 不跟字母数字 = 完整占位词 -> 豁免；只抓真实用户名（如 86029 / liu.xukun）。
+# 不跟字母数字 = 完整占位词 -> 豁免；只抓真实用户名（如 alice / liu.xukun）。
 # Default/Public 为 Windows 系统内置用户目录（server_lite 合法白名单），非开发者信息。
 _DEV_MACHINE_PATTERN = re.compile(
     r"C:[\\/]+Users[\\/]+"
@@ -173,7 +174,7 @@ _DEV_MACHINE_PATTERN = re.compile(
 
 # 骨架活数据嗅探：白名单文件若含开发环境活数据特征则告警
 _SKELETON_DIRTY_PATTERNS = [
-    re.compile(r"owner:\s*\d+"),                    # owner: 86029（开发机用户名）
+    re.compile(r"owner:\s*\d+"),                    # owner: alice（开发机用户名）
     re.compile(r"total_docs:\s*[1-9]\d*"),          # total_docs: 112（开发仓库真数据）
     re.compile(r"title:\s*riji-skill"),             # 开发仓库自己的文档索引
 ]

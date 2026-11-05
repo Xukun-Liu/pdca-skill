@@ -6,7 +6,7 @@
 # Prompt 优化参考模块（某 prompting 指导 降维）
 
 > 版本：v1.0.0 | 新增：2026-07-15 | PDCA 标签：A.learn
-> 对应脚本：[scripts/learn_tidy.py](../scripts/learn_tidy.py)（prompt_metrics 字段）
+> 对应脚本：[scripts/learn_tidy.py](../../../scripts/learn_tidy.py)（prompt_metrics 字段）
 > 对应 spec：[docs_rj/spec_rj/prompt_optimization_spec_20260715_1600.md](../docs_rj/spec_rj/prompt_optimization_spec_20260715_1600.md)
 > 参考来源：某 prompting 指导（developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6，2026-07）
 > 阶段标签：A（旧标签，以头部 PDCA 标签为准）

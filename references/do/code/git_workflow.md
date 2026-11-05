@@ -739,7 +739,9 @@ git reset --hard HEAD@{N}  # N 是 reflog 里的序号
    - 校验通过（exit_code=0/1）→ 进 4
    - 校验不通过（exit_code=2）→ agent 修消息 → 重校验（max 3次）→ 通过后进 4
 4. HARD-GATE：呈现 commit 消息给用户确认
-   - 用户确认 → `git add -u` + `git commit`（-u 只 add 已跟踪文件改动，不 add 新文件）
+   - 用户确认 → add 后再 commit，add 范围**按是否多会话区分**：
+     - 本任务已认领（`session_claim.py status` 有自己的记录）→ **只 add 认领清单里的文件**，禁止 `git add -u` / `git add .`
+     - 单会话且无认领记录 → 可用 `git add -u`（-u 只 add 已跟踪文件改动，不 add 新文件）
    - 用户改消息 → 用用户的消息重校验+commit
    - 用户说跳过 → 记录到 memory"用户跳过 /act commit"
 
@@ -754,6 +756,7 @@ git reset --hard HEAD@{N}  # N 是 reflog 里的序号
 - ❌ /act 结束时不 commit 留下脏工作区（交接/启动会告警）
 - ❌ 跳过 commit_lint 校验直接 commit（消息可能不合规）
 - ❌ 不经用户确认直接 commit（违反 HARD-GATE）
+- ❌ 多会话（已认领）时用 `git add -u`（会把其他对话未完成的改动一并提交）
 
 ### 6.5 任务启动 Git 管理询问（场景A）【硬性·复杂任务】
 
@@ -777,6 +780,35 @@ git reset --hard HEAD@{N}  # N 是 reflog 里的序号
 - ❌ 复杂任务跳过 2 问直接动手（违反 HARD-GATE + 铁律6 精神）
 - ❌ 简单任务把 2 问全问一遍（啰嗦，违反轻量原则）
 
+### 6.6 多会话并发认领（场景F）【硬性】
+
+> 目标：同一仓库有多个对话并行改时，把"谁在改哪些文件"变成可见事实，避免 A 的半成品被 B 的收尾 commit 一并提交，事后也查不出是谁改的。前置 commit（6.1）和收尾 commit（6.4）解决的是"能退回"，本节解决的是"事前不撞"。
+
+**触发条件**【硬性】：任一命中即必须先认领
+- 用户提到开了多个对话/多个窗口改同一项目
+- `.git/agents-locks/` 下存在他人未过期的认领记录
+- 同一工作区近 24 小时有大量跨目录改动（疑似并行编辑）
+
+**执行**：
+
+> ⚠️ 脚本在 **skill 包内**，不在业务仓库里（`{SKILL_DIR}` = 本 skill 安装目录，Windows 默认 `C:\Users\你\.trae-cn\skills\pdca-skill`）；且**必须在要改的那个仓库目录下执行**（脚本靠 `git rev-parse` 定位仓库）。
+
+```bash
+python "{SKILL_DIR}\scripts\session_claim.py" acquire --task {任务名} --files {精确文件清单} --session {对话标识}
+python "{SKILL_DIR}\scripts\session_claim.py" release --task {任务名} --session {对话标识}   # /act 收尾，先释放再 commit
+```
+
+**退码**：`0` 进 /do；`2` 冲突必须停下问用户（三选一：换任务 / 等对方 / 确认对方已死再 gc）；`3` 环境或参数错误（非 git 仓库 / 缺 `--session` / 路径指向仓库外）。
+
+**`--session` 必填**：各对话必须写不同标识（如 `对话A-修bug`）。认领身份 = 任务名 + session，两键都相同才视为同一任务；只写任务名会让两个对话的同名任务互相豁免、互相覆盖。
+
+**禁止**【硬性】：
+- ❌ 退码 2 时自动 gc 或改名绕过（绕过的结果是覆盖别人的改动）
+- ❌ 用 `--files .` 或整个仓库认领（等于独占，让其他对话全部阻塞）
+- ❌ 收尾只 release 不 commit，或 commit 范围超出认领清单
+
+> 完整规则（TTL 语义、父子目录与通配符重叠判定、边界说明）见 [multi_session.md](multi_session.md)。
+
 ---
 
 ## 版本历史
@@ -787,3 +819,4 @@ git reset --hard HEAD@{N}  # N 是 reflog 里的序号
 | v1.1 | 2026-07-24 | 新增 §2.4-§2.9：原子提交原则、commit 关联任务名（Refs footer）、框架文件单独 commit、WIP commit 格式、/do 阶段 commit 时机、自动校验（commit_lint.py）|
 | v1.2 | 2026-07-29 | §6 新增 6.4 任务收尾 commit（场景E），与 6.1 改前 commit 互补，形成"改前+改后"双重回溯保障；对齐 SKILL.md /act 步骤5 |
 | v1.3 | 2026-08-01 | §6 新增 6.5 任务启动 Git 管理询问（场景A）：复杂任务必问 2 问（工作区状态/分支策略）+ 3 默认值（git init/WIP commit/任务 tag），简单任务轻量 git status 检查；对齐 SKILL.md §6 /plan 步骤3 与 spec_template §0.G |
+| v1.4 | 2026-10-30 | §6 新增 6.6 多会话并发认领（场景F）：多对话并行改同一仓库时改前先 `session_claim.py acquire`，冲突退码 2 必须停下问用户；§6.4 收尾 commit 的 add 范围由"一律 add -u"改为"已认领只 add 清单内文件"，修掉多会话下把他人半成品一并提交的缺陷 |

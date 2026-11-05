@@ -24,6 +24,7 @@ SKILL_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(SKILL_ROOT, "scripts"))
 
 from handoff_tidy import HandoffTidy  # noqa: E402
+import tidy_common  # noqa: E402
 
 BASE_STATE = """---
 task: t
@@ -211,4 +212,148 @@ class TestCwdGuard:
         assert "仓库根" in r.stderr
         # 逃生舱参数透传不崩
         HandoffTidy(dry_run=True, allow_any_dir=True)
+
+
+# ===========================================================================
+# v1.1.0：记忆分层（{class}/{YYYYMM}/）后，索引/计数/标注三路径必须递归
+# ===========================================================================
+
+def _make_layered_primary(tmp_path):
+    """构造 docs_rj：memory_rj 分层 3 个 + 旧扁平 1 个，其余类目空。"""
+    primary = os.path.join(str(tmp_path), "docs_rj")
+    for sub in ("memory_rj", "spec_rj", "task_rj", "handoff_rj", "archive_rj"):
+        os.makedirs(os.path.join(primary, sub), exist_ok=True)
+    layered = [
+        (("status", "202610"), "alpha_memory_20261001_0900.md"),
+        (("decision", "202610"), "alpha_memory_20261002_0900.md"),
+        (("pitfall", "202609"), "beta_memory_20260915_0900.md"),
+    ]
+    for (cls, month), name in layered:
+        d = os.path.join(primary, "memory_rj", cls, month)
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, name), "w", encoding="utf-8") as f:
+            f.write("---\nsummary: %s\n---\n正文\n" % name)
+    with open(os.path.join(primary, "memory_rj", "legacy_memory_20260801_0900.md"),
+              "w", encoding="utf-8") as f:
+        f.write("---\nsummary: legacy\n---\n正文\n")
+    return primary
+
+
+def _broken_links_relative_to(md_path):
+    """返回 md 中所有相对链接解析不存在的目标。"""
+    import re as _re
+
+    base = os.path.dirname(md_path)
+    with open(md_path, "r", encoding="utf-8") as f:
+        text = f.read()
+    broken = []
+    for m in _re.finditer(r"\]\(([^)]+)\)", text):
+        target = m.group(1).strip()
+        if target.startswith(("http://", "https://", "mailto:", "#")):
+            continue
+        clean = target.split("#", 1)[0]
+        abs_t = clean if os.path.isabs(clean) else os.path.normpath(os.path.join(base, clean))
+        if not (os.path.isfile(abs_t) or os.path.isdir(abs_t)):
+            broken.append(target)
+    return broken
+
+
+class TestLayeredIndexRecursion:
+    """写入分层、读取扁平 = 索引隐身；这些用例锁死三路径同源。"""
+
+    def test_iter_md_rel_paths_recursive(self, tmp_path):
+        root = os.path.join(str(tmp_path), "cat")
+        os.makedirs(os.path.join(root, "status", "202610"))
+        open(os.path.join(root, "status", "202610", "a_memory_20261001_0900.md"),
+             "w", encoding="utf-8").close()
+        open(os.path.join(root, "b_memory_20261002_0900.md"), "w", encoding="utf-8").close()
+        open(os.path.join(root, "INDEX.md"), "w", encoding="utf-8").close()
+        os.makedirs(os.path.join(root, ".hidden"))
+        open(os.path.join(root, ".hidden", "c.md"), "w", encoding="utf-8").close()
+
+        rels = tidy_common.iter_md_rel_paths(root)
+        assert rels == ["b_memory_20261002_0900.md",
+                        "status/202610/a_memory_20261001_0900.md"]
+
+    def test_reconcile_adds_layered_links_and_total_docs(self, tmp_path):
+        primary = _make_layered_primary(tmp_path)
+        summary = os.path.join(primary, "SUMMARY_RJ.md")
+        with open(summary, "w", encoding="utf-8") as f:
+            f.write("---\ntitle: t\ntotal_docs: 1\n---\n\n"
+                    "## 🧠 Memory 文档\n\n## 📋 Spec 文档\n")
+
+        added = tidy_common.reconcile_doc_links(summary, primary)
+        assert added == 4
+
+        with open(summary, "r", encoding="utf-8") as f:
+            content = f.read()
+        assert "total_docs: 4" in content
+        assert "memory_rj/status/202610/alpha_memory_20261001_0900.md" in content
+        assert "memory_rj/legacy_memory_20260801_0900.md" in content
+        # 链接全部可解析（不含子目录前缀错误）
+        assert _broken_links_relative_to(summary) == []
+
+    def test_reconcile_fixes_stale_total_docs_without_new_links(self, tmp_path):
+        primary = _make_layered_primary(tmp_path)
+        summary = os.path.join(primary, "SUMMARY_RJ.md")
+        links = "\n".join([
+            "- [a](memory_rj/status/202610/alpha_memory_20261001_0900.md)",
+            "- [b](memory_rj/decision/202610/alpha_memory_20261002_0900.md)",
+            "- [c](memory_rj/pitfall/202609/beta_memory_20260915_0900.md)",
+            "- [d](memory_rj/legacy_memory_20260801_0900.md)",
+        ])
+        with open(summary, "w", encoding="utf-8") as f:
+            f.write("---\ntitle: t\ntotal_docs: 12\n---\n\n"
+                    "## 🧠 Memory 文档\n%s\n\n" % links)
+
+        added = tidy_common.reconcile_doc_links(summary, primary)
+        assert added == 0
+        with open(summary, "r", encoding="utf-8") as f:
+            content = f.read()
+        assert "total_docs: 4" in content
+        assert "total_docs: 12" not in content
+
+    def test_category_index_layered_links_resolve(self, tmp_path):
+        primary = _make_layered_primary(tmp_path)
+        h = HandoffTidy(dry_run=False, allow_any_dir=True)
+        result = h._refresh_category_indexes(primary)
+
+        mem = [i for i in result["indexes"] if i["category"] == "memory_rj"][0]
+        assert mem["files_count"] == 4
+        assert mem["active_count"] == 3
+        assert mem["superseded_count"] == 1
+
+        index_path = os.path.join(primary, "memory_rj", "INDEX.md")
+        assert _broken_links_relative_to(index_path) == []
+
+    def test_archive_index_links_resolve(self, tmp_path):
+        primary = _make_layered_primary(tmp_path)
+        arc = os.path.join(primary, "archive_rj")
+        os.makedirs(os.path.join(arc, "old_task_20260101_0900"))
+        open(os.path.join(arc, "old_task_20260101_0900", "a_spec_20260101_0900.md"),
+             "w", encoding="utf-8").close()
+        open(os.path.join(arc, "legacy_task_20251201_0900_archived.md"),
+             "w", encoding="utf-8").close()
+
+        h = HandoffTidy(dry_run=False, allow_any_dir=True)
+        h._refresh_category_indexes(primary)
+        index_path = os.path.join(arc, "INDEX.md")
+        assert _broken_links_relative_to(index_path) == []
+
+    def test_annotate_summary_recency_layered(self, tmp_path):
+        primary = _make_layered_primary(tmp_path)
+        summary = os.path.join(primary, "SUMMARY_RJ.md")
+        with open(summary, "w", encoding="utf-8") as f:
+            f.write("---\ntitle: t\ntotal_docs: 4\n---\n\n## 🧠 Memory 文档\n\n"
+                    "- [a](memory_rj/status/202610/alpha_memory_20261001_0900.md)\n"
+                    "- [b](memory_rj/pitfall/202609/beta_memory_20260915_0900.md)\n")
+
+        h = HandoffTidy(dry_run=False, allow_any_dir=True)
+        result = h._annotate_summary_recency(primary)
+        assert result["annotated"] == 2
+        assert result["no_status"] == 0
+
+        with open(summary, "r", encoding="utf-8") as f:
+            content = f.read()
+        assert "最新·2026-09-15" in content or "`最新·" in content
 

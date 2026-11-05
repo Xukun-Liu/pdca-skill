@@ -98,6 +98,29 @@ def scan_and_archive_scattered(primary_docs, dry_run=False):
             'skipped': archive.get('skipped', []), 'errors': archive.get('errors', [])}
 
 
+def iter_md_rel_paths(root_dir):
+    """递归收集 root_dir 下 .md 文件的 POSIX 相对路径。
+
+    v1.1.0：memory_rj 等类目已分层（{class}/{YYYYMM}/），索引/计数必须递归，
+    否则 total_docs 与 INDEX.md 只覆盖一级扁平文件。
+
+    排除：INDEX.md、SUMMARY_RJ.md、隐藏目录。
+    返回：已排序的相对路径列表（正斜杠，如 'status/202610/xxx.md'）。
+    """
+    results = []
+    for cur_dir, dirs, files in os.walk(root_dir):
+        dirs[:] = sorted(d for d in dirs if not d.startswith('.'))
+        for fname in sorted(files):
+            if not fname.endswith('.md'):
+                continue
+            if fname in ('INDEX.md', 'SUMMARY_RJ.md'):
+                continue
+            abs_path = os.path.join(cur_dir, fname)
+            rel = os.path.relpath(abs_path, root_dir).replace(os.sep, '/')
+            results.append(rel)
+    return sorted(results)
+
+
 def drift_check(summary_path):
     """漂移检查：grep SUMMARY 所有链接 → ls 确认存在"""
     if not summary_path or not os.path.isfile(summary_path):
@@ -118,8 +141,13 @@ def drift_check(summary_path):
         if target in seen:
             continue
         seen.add(target)
-        abs_target = target if os.path.isabs(target) else os.path.normpath(os.path.join(base_dir, target))
-        if not os.path.isfile(abs_target):
+        # 去掉锚点（如 xxx.md#L12）再判存在
+        clean = target.split('#', 1)[0].strip()
+        if not clean:
+            continue
+        abs_target = clean if os.path.isabs(clean) else os.path.normpath(os.path.join(base_dir, clean))
+        # v1.1.0：archive_rj 子文件夹链接指向目录本身，isfile 会永久误判 missing
+        if not (os.path.isfile(abs_target) or os.path.isdir(abs_target)):
             missing.append(target)
     return (len(missing), missing)
 
@@ -158,11 +186,18 @@ def reconcile_doc_links(summary_path, primary_docs):
         return 0
 
     # 收集所有现有链接的文件名（用于去重）
+    # v1.1.0：同时收集规范化相对路径，避免分层文件同名误判 / 重复追加
     existing_files = set()
+    existing_rel_paths = set()
     for ln in lines:
         m = re.search(r'\[[^\]]*\]\(([^)]+)\)', ln)
         if m:
-            existing_files.add(os.path.basename(m.group(1)))
+            target = m.group(1).strip()
+            existing_files.add(os.path.basename(target.rstrip('/')))
+            norm = target.split('#', 1)[0].replace('\\', '/')
+            while norm.startswith('./'):
+                norm = norm[2:]
+            existing_rel_paths.add(norm.lstrip('/'))
 
     # 扫描 5 子目录，收集缺失文件
     reconciled = 0
@@ -196,16 +231,15 @@ def reconcile_doc_links(summary_path, primary_docs):
                 new_links.append('- [%s/%s](%s/%s) — %s\n' % (subdir, fname, subdir, fname, desc))
                 reconciled += 1
         else:
-            for fname in sorted(os.listdir(subdir_path)):
-                if not fname.endswith('.md'):
-                    continue
-                if fname == 'SUMMARY_RJ.md':
-                    continue
+            # v1.1.0：递归遍历（{class}/{YYYYMM}/ 分层），链接 write 成 {subdir}/{rel}，
+            # total_docs 也计入分层文件，保证计数与索引同源。
+            for rel in iter_md_rel_paths(subdir_path):
                 total_docs += 1
-                if fname in existing_files:
+                full = '%s/%s' % (subdir, rel)
+                if full in existing_rel_paths:
                     continue
-                desc = os.path.splitext(fname)[0]
-                new_links.append('- [%s/%s](%s/%s) — %s\n' % (subdir, fname, subdir, fname, desc))
+                desc = os.path.splitext(os.path.basename(rel))[0]
+                new_links.append('- [%s](%s) — %s\n' % (full, full, desc))
                 reconciled += 1
         if new_links:
             new_lines_by_section[section_title] = new_links
@@ -228,14 +262,21 @@ def reconcile_doc_links(summary_path, primary_docs):
                     break
             else:
                 i += 1
+    else:
+        new_lines_out = list(lines)
 
-        # 更新 frontmatter total_docs
-        for k, ln in enumerate(new_lines_out):
-            if ln.startswith('total_docs:'):
-                new_lines_out[k] = 'total_docs: %d\n' % total_docs
-                break
+    # v1.1.0：无论是否新增链接，都把 frontmatter total_docs 校准为递归实数。
+    # 否则"链接已齐但计数过期"会长期残留（如 60 篇文档仍写 total_docs: 12）。
+    for k, ln in enumerate(new_lines_out):
+        if ln.startswith('total_docs:'):
+            new_line = 'total_docs: %d\n' % total_docs
+            if ln != new_line:
+                new_lines_out[k] = new_line
+            break
 
+    if new_lines_out != lines:
         generate_docs.atomic_write(summary_path, ''.join(new_lines_out))
+    if new_lines_by_section:
         logger.info("SUMMARY 增量补全：追加 %d 个文档链接", reconciled)
 
     return reconciled

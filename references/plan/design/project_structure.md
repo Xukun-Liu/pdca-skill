@@ -48,13 +48,13 @@
     ├─ spec_main_rj.md           ← 项目总 spec（source of truth，2026-07-18 新增，任务 spec 从它派生）
     ├─ SUMMARY_RJ.md             ← 纯索引（63文件链接）
     ├─ spec_rj/                  ← 需求规格分类文件夹
-    │   └─ {任务名}_spec_YYYYMMDD_HHMM.md
+    │   └─ YYYYMMDD_HHMM_{项目名}_spec_{任务名}.md
     ├─ task_rj/                  ← 任务清单分类文件夹
-    │   └─ {任务名}_task_YYYYMMDD_HHMM.md
+    │   └─ YYYYMMDD_HHMM_{项目名}_task_{任务名}.md
     ├─ handoff_rj/               ← 交接文档分类文件夹
-    │   └─ {任务名}_handoff_YYYYMMDD_HHMM.md
+    │   └─ YYYYMMDD_HHMM_{项目名}_handoff_{任务名}.md
     ├─ memory_rj/                ← 项目记忆分类文件夹（跨对话持久化，建在主 docs 内）
-    │   └─ {任务名}_memory_YYYYMMDD_HHMM.md  ← 任务级记忆（写入即落盘 + 自动 upsert 全局 memory_main）
+    │   └─ YYYYMMDD_HHMM_{任务名}_memory.md  ← 任务级记忆（写入即落盘 + 自动 upsert 全局 memory_main）
     └─ archive_rj/               ← 归档分类文件夹（按任务子文件夹聚合，D1 方案）
         ├─ {task}_YYYYMMDD_HHMM/  ← 任务袋（任务启动时间戳从原文件名提取，不依赖 mtime）
         │   ├─ spec.md
@@ -70,6 +70,22 @@
 > - 需要设计项目结构/模块划分时
 > 🔴 **不要在这时候读**：
 > - 已有明确目录结构且只改现有文件时
+
+---
+
+## 文件夹分类（PARA + Johnny Decimal）
+
+工作目录散乱文件（版本包/发布包/参考素材）按 Johnny Decimal 数字前缀 + PARA 四分类归类：
+
+| 数字前缀 | PARA | 放什么 |
+|----------|------|--------|
+| `10-项目` | Projects | 主开发目录（唯一活跃） |
+| `20-领域` | Areas | 持续维护的核心 |
+| `30-资源` | Resources | 参考素材、研究 |
+| `40-归档` | Archives | 历史版本包、已完成 |
+| `90-系统` | （系统文件） | 日志、临时、截图 |
+
+> `/act` 步骤 3.9「整理文件夹」每次归类散乱文件到上述目录；新文件按时间前缀命名（见 document_specs.md 命名章节）。存量不翻改，渐进迁移。
 
 ---
 

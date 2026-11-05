@@ -73,7 +73,7 @@ denylist 路径模式（完整列表，对齐 loop_constraints.md L15-16）：
   - **显式拒绝 bool**（`isinstance(val, bool)` → 拒绝，因 `True` 会被当作 1）
   - 拒绝字符串（如 `"10"`）、浮点数（如 `10.0`）
 - **运行时再次校验**：/do 进入循环前，agent 必须显式读取 spec.md 的 max_iterations 字段并校验类型（不只靠 validate_skill.py 校验）
-- **代码层校验**：[scripts/validate_skill.py](../scripts/validate_skill.py) 新增 SCR-08，校验 spec/task 模板的 max_iterations 字段是整数非 bool（`isinstance(val, int) and not isinstance(val, bool)`）
+- **代码层校验**：[scripts/validate_skill.py](../../../scripts/validate_skill.py) 新增 SCR-08，校验 spec/task 模板的 max_iterations 字段是整数非 bool（`isinstance(val, int) and not isinstance(val, bool)`）
 
 ### 配置示例
 

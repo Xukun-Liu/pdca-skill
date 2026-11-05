@@ -1,7 +1,7 @@
 <div align="center">
 
 [![License](https://img.shields.io/badge/license-Non--Commercial-orange.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-v1.0.4-green.svg)](HISTORY.md)
+[![Version](https://img.shields.io/badge/version-v1.3.0-green.svg)](HISTORY.md)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#安装详解)
 ![PRs](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
@@ -77,7 +77,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | 1 | **自己的记忆** | 三层记忆 + 数据外置；换工具、升级包，资产还在 |
 | 2 | **文档规整** | 方案/清单/交接自动生成；一致性核对；可交接可复盘 |
 | 3 | **四指令调度一切** | 记住 `/plan` `/do` `/check` `/act` 即可调度全部能力；`/loop` 可自动循环执行 |
-| 4 | **7 条铁律** | Memory First、HARD-GATE、不给半成品、改前可回退……AI 不能凭印象乱来 |
+| 4 | **8 条铁律** | Memory First、HARD-GATE、不给半成品、改前可回退、先查再写……AI 不能凭印象乱来 |
 
 进阶能力（对抗审查、副 agent、技能图谱、活人感写作/去AI味、文件扫描门控等）见下方 [完整能力地图](#完整能力地图)。
 
@@ -103,8 +103,8 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 - [一天里的真实例子](#一天里的真实例子)
 - [工作原理](#工作原理)
 - [完整能力地图](#完整能力地图)
-- [参考手册（51 模块）](#参考手册references-51-个按需读取模块)
-- [模板文件（12 个）](#模板文件assets-12-个开箱即用)
+- [参考手册（61 模块）](#参考手册references-61-个按需读取模块)
+- [模板文件（14 个）](#模板文件assets-14-个开箱即用)
 - [安装详解](#安装详解)
 - [可选配置](#可选配置项)
 - [目录结构](#目录结构)
@@ -121,7 +121,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **技能编排器**：按触发词读手册 / 调度外部专业 skill | 自带画图、Excel、爬虫的万能工具箱 |
 | 纯本地 Markdown + Python 标准库脚本，零云依赖 | 必须联网/开账号才能跑的在线服务 |
 
-> 包内：**51** 个参考模块 · **14** 个模板 · **36** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
+> 包内：**61** 个参考模块 · **14** 个模板 · **47** 个脚本 · **0** 个独立子技能目录。专业能力通过钩子去外部搜索调度。
 
 **装前 2 个前提**：
 
@@ -176,7 +176,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 | **文档规整** | spec/task/handoff 三件套 · SUMMARY 根索引 · sync-matrix 版本与引用核对 · `generate_docs` / `handoff_tidy` / `startup_tidy` · 交接 4 闸门证据 |
 | **用户数据外置** | 数据在 `~/.pdca-skill/data/`，升级框架不丢记忆与文档 |
 | **PDCA 四环** | `/plan` `/do` `/check` `/act`；`/loop` 自动循环；用户只需记 4 个词 |
-| **7 条铁律** | Memory First · HARD-GATE · 流程优先 · No Placeholders · 触发钩子 · 回溯保障 · 逐项核对 |
+| **8 条铁律** | Memory First · HARD-GATE · 流程优先 · No Placeholders · 触发钩子 · 回溯保障 · 逐项核对 · 先查再写 |
 | **第一性原理拆解** | 复杂方案前三问：本质目标 / 不可压缩约束 / 从约束推最优解 |
 | **对抗性审查** | 独立 subagent 6 维度审查，HIGH/MEDIUM/LOW，最多 3 轮 |
 | **安全 HIGH 特殊处理** | 注入/越权等独立流程，X/Y 双计数器 |
@@ -196,7 +196,7 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 
 ---
 
-## 参考手册（references/）—— 51 个按需读取模块
+## 参考手册（references/）—— 61 个按需读取模块
 
 不全部加载到上下文，触发钩子按「你正在做什么」自动指引读取。按使用场景分 8 类：
 
@@ -266,11 +266,11 @@ pdca-skill 不是「又一个 skill 合集」。它解决 AI 协作里最致命�
 |------|------|
 | [article-writing.md](references/common/style/article-writing.md) | 活人感写作入口（知乎/公众号/去AI味等；直接出稿；材料澄清最多三问） |
 
-> 上表按场景收录 25 个高频模块；全量 49 个模块索引见 [references/index.md](references/index.md)。
+> 上表按场景收录 25 个高频模块；全量 61 个模块索引见 [references/index.md](references/index.md)。
 
-## 模板文件（assets/）—— 12 个开箱即用
+## 模板文件（assets/）—— 14 个开箱即用
 
-spec / task / handoff / memory / memory_bootstrap / daily_log / summary / archive / market_research / spec_main / skill_graph / index 十二类模板，配合 `generate_docs.py` 自动生成——**文档规整的物质基础**。
+spec / task / spec_lite / task_lite / handoff / memory / memory_bootstrap / daily_log / summary / archive / market_research / spec_main / skill_graph / index 十四类模板，配合 `generate_docs.py` 自动生成——**文档规整的物质基础**。
 
 ---
 
@@ -814,8 +814,8 @@ pdca-skill/
 │   ├── skill_graph_template.md
 │   ├── index_template.md
 │   └── readme/                     # README 配图（hero-loop.svg 闭环图）
-├── references/                 # 51 个参考手册（按需读取，见上表）
-├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 34 个）
+├── references/                 # 61 个参考手册（按需读取，见上表）
+├── scripts/                    # Python 脚本（协作框架核心 + 用户数据外置 + loop 守卫，共 47 个）
 │   ├── archive_tidy.py
 │   ├── browser_inspect_docs.py      # 文档浏览器检视辅助
 │   ├── check_prose.py               # 文章成稿检查（硬禁词/冒号/破折号/翻案句，见 article-writing）
