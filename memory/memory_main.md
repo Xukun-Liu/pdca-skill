@@ -1,10 +1,10 @@
 ---
 title: pdca-skill global memory
 version: v1.0.0
-skill_version: v1.0.3
+skill_version: v1.0.4
 date_created: 2026-08-23
-last_updated: 2026-08-23
-owner: 86029
+last_updated: 2026-08-28
+owner: pdca-skill
 tags: [pdca-skill, memory, skeleton]
 ---
 
