@@ -548,7 +548,7 @@ riji-skill v1.0.0 是一个新的起点,不是终点。框架已具备:
 - 本版内容（相对 v1.0.1 发布包）：① Excel 分析系统性升级（见 2026-08-11 补登条目）② HTML/PPT 制作模块（见 2026-08-13 条目）③ 发布瘦身
 - 发布瘦身（按可复用 SOP，开发环境复制为发布目录后剔除）：.git/（446 文件 git 历史+个人远端）/ docs_rj/（88 文件私人用户数据）/ outputs_rj/ / .playwright-mcp/ / __pycache__×4（3.10+3.11 双份）/ tests/.pytest_cache / .primary_docs_rj（私人本地路径）/ agents_rj/subagent_call_log.jsonl（运行日志）；README 顶部 img.shields.io 外链徽章换纯文本版本行；网页说明.html 占位 clone 命令（github.com/yourname）改「下载 ZIP 解压」；成品 156 文件（v1.0.1 为 155，差 1 = 新增 html_ppt_creation.md），框架本体零损失
 - 决策记录：exa.env.json.example 保留（README 方式B 引用作配置模板，内容仅占位符无真实 key，用户拍板）✅ / 发布文案 = HISTORY 登记 + 独立《v1.0.2 发布介绍》✅ / 验证后打 zip ✅
-- 验证：validate_skill 32/32 pass MUST FIX=0（版本同步前后各跑一轮均全绿）+ 身份残留扫描 0 命中（Xukun-Liu/huihui_9999/yourname/img.shields.io 全零；HISTORY 内 3 处 `~/.riji-skill/data` 为改名历史保真记录）
+- 验证：validate_skill 32/32 pass MUST FIX=0（版本同步前后各跑一轮均全绿）+ 身份残留扫描 0 命中（平台账号名 2 个/yourname/img.shields.io 全零；HISTORY 内 3 处 `~/.riji-skill/data` 为改名历史保真记录）
 
 ### 2026-08-20：修复 marker 无效导致记忆静默 fallback（v1.0.3）
 

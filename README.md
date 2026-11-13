@@ -467,7 +467,7 @@ tests/test_protocol_align.py::test_check_alignment_returns_correct_structure PAS
 
 #### 当前版本已知状态
 
-当前版本 `validate_skill.py` 32/32 项通过（FAIL=0，MUST FIX=0），pytest 测试套件 202 项中 201 项通过 + 1 skipped，无本版本引入的已知失败项。
+当前版本 `validate_skill.py` 33/33 项通过（FAIL=0，MUST FIX=0），pytest 测试套件 202 项中 201 项通过 + 1 skipped，无本版本引入的已知失败项。
 
 #### 故障排查
 
@@ -792,7 +792,7 @@ max_iterations: 15  # 复杂任务调高（默认 10）
 
 ```
 pdca-skill/
-├── SKILL.md                    # 主入口文件，每次对话自动加载（含 7 铁律 / HARD-GATE / 触发钩子表）
+├── SKILL.md                    # 主入口文件，每次对话自动加载（含 8 铁律 / HARD-GATE / 触发钩子表）
 ├── README.md                   # 本文件
 ├── HISTORY.md                  # 版本历史
 ├── 网页说明.html               # 项目落地页（介绍页，README 顶部"产品页"链接指向此文件）
@@ -876,7 +876,7 @@ pdca-skill/
 本框架历经多轮迭代。关键保障：
 
 - **21 轮**独立 subagent 对抗性审查；HIGH 曾连续 4 轮清零
-- **pytest** 202 项（201 passed + 1 skipped）；`validate_skill.py` **32/32** MUST FIX=0
+- **pytest** 202 项（201 passed + 1 skipped）；`validate_skill.py` **33/33** MUST FIX=0
 - 交接 **4 闸门证据驱动**；文件扫描确认门控；技能图谱数据外置
 
 详细里程碑与变更见 [HISTORY.md](HISTORY.md)。
